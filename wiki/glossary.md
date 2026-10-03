@@ -1,0 +1,121 @@
+---
+title: Glossary
+type: reference
+status: draft
+tags: [reference, terminology]
+sources:
+  - raw/conversations/2026-10-03-initial-vision.md
+updated: 2026-10-03
+---
+
+# Glossary
+
+> Canonical definitions of every game and technology term used in the spec.
+> Pages link here on first use of a term. Terms are alphabetical; each heading is
+> a link anchor.
+
+### Attestation
+[proposed] A signature by the [generation server](#generation-server) over a
+[species record](#species-record), proving the record was produced by the
+official pipeline and has not been altered. See
+[orbitdb-registry](tech/orbitdb-registry.md).
+
+### Biome
+A region type of the procedural world (e.g. forest, desert) that influences
+which Peerlings are encountered there. See
+[procedural-generation](world/procedural-generation.md).
+
+### CID
+Content Identifier — the IPFS address of a piece of content, derived from a hash
+of the content itself. The same bytes always have the same CID, so content can be
+fetched from any peer and verified locally.
+
+### Concept
+The structured description of a new Peerling produced by the
+[concept LLM](#concept-llm) from the player's free-text wish: name, appearance,
+lore, etc. See [creation-pipeline](peerlings/creation-pipeline.md).
+
+### Concept LLM
+The small, self-hosted language model on the generation server that turns
+player wishes into concepts and later assigns types and moves.
+
+### Creator
+The player who designed a Peerling [species](#species). The creator is recorded
+in the species record and credited in-game.
+
+### Encounter
+A meeting with a [wild Peerling](#wild-peerling) during exploration, which
+leads to a battle. See [encounters](gameplay/encounters.md).
+
+### Generation server
+The single operator-hosted server that runs the concept LLM, the image
+generator, the image-to-3D generator, and pins all game content on IPFS. See
+[generation-server](tech/generation-server.md).
+
+### Helia
+A TypeScript implementation of IPFS that runs in the browser. Every game client
+runs a Helia node. See [ipfs-helia](tech/ipfs-helia.md).
+
+### IPFS
+The InterPlanetary File System — a peer-to-peer network for storing and sharing
+content addressed by [CID](#cid).
+
+### Move
+An attack or action a Peerling can use in battle. Every move is an instance of a
+[move template](#move-template). See [moves](peerlings/moves.md).
+
+### Move template
+A predefined, balanced pattern (power range, accuracy, effects, …) that
+generated moves must follow. See [moves](peerlings/moves.md).
+
+### OrbitDB
+A peer-to-peer database built on IPFS and libp2p. The game's
+[registry](#registry) of all Peerling species is an OrbitDB database. See
+[orbitdb-registry](tech/orbitdb-registry.md).
+
+### Peerling
+A creature in the game. The word is ambiguous between a *species* and an
+individual *instance*; when the distinction matters, the spec says
+[species](#species) or [Peerling instance](#peerling-instance).
+Plural: Peerlings. The game itself is also called *Peerlings*.
+
+### Peerling instance
+[proposed] One individual Peerling owned by a player (e.g. the starter, or a
+caught wild Peerling), with its own level, experience, current HP, etc. Many
+instances can exist of the same species. See
+[peerling-species](peerlings/peerling-species.md).
+
+### Pin / pinning
+Telling an IPFS node to keep a piece of content permanently and serve it to
+others. The generation server pins all game content so every CID is always
+reachable from at least one node.
+
+### Player character
+The avatar a player controls in the world. See
+[player-character](gameplay/player-character.md).
+
+### Registry
+The OrbitDB database that lists every published Peerling species. See
+[orbitdb-registry](tech/orbitdb-registry.md).
+
+### Species
+[proposed] A Peerling design: the immutable, content-addressed definition (name,
+description, types, base stats, moves, image, 3D model) created once by its
+creator through the creation pipeline. See
+[peerling-species](peerlings/peerling-species.md).
+
+### Species record
+[proposed] The JSON document stored on IPFS that defines a species. Its CID is
+the species' identity. See [peerling-species](peerlings/peerling-species.md).
+
+### Starter
+The first Peerling a player owns: an instance of the species the player created
+during onboarding. See [onboarding](gameplay/onboarding.md).
+
+### Type
+An elemental category from a predefined list that determines battle
+strengths and weaknesses. See [types](peerlings/types.md).
+
+### Wild Peerling
+An unowned Peerling instance met during exploration, generated from a species
+in the registry. See [encounters](gameplay/encounters.md).

@@ -1,0 +1,47 @@
+---
+title: IPFS Showcase Features
+type: concept
+status: draft
+req_prefix: SHOW
+tags: [tech, ipfs, ux, goals]
+sources:
+  - raw/conversations/2026-10-03-initial-vision.md
+related:
+  - wiki/overview.md
+  - wiki/tech/ipfs-helia.md
+updated: 2026-10-03
+---
+
+# IPFS Showcase Features
+
+> Showing off IPFS is one of the game's two equal goals
+> ([overview](../overview.md#goals)). This page collects the ways the game makes
+> the peer-to-peer technology *visible and meaningful* to players, without
+> getting in the way of the fun.
+
+## Principles
+
+[proposed]
+- Show the tech where it **means something to the player** ("your Peerling is
+  being served to 3 other players right now") rather than as raw jargon.
+- Let curious players drill down to the real thing (CIDs, peer IDs, gateway
+  links), and keep it out of the way for everyone else.
+
+## Ideas (all [proposed])
+
+| Idea | What the player sees |
+|------|----------------------|
+| Network panel | Connected peers, data downloaded/served, number of Peerlings seeded by you |
+| Species card CID | Every species card shows its CID with a "view on IPFS" link to a public gateway |
+| "Fetched from a peer" moment | When a wild Peerling loads, a subtle indicator of where it came from (server vs. another player) |
+| Creator pride | "Your Peerling now lives on N nodes" after publishing |
+| Verified badge | A visible check that content was verified against its CID and the species attestation |
+
+## Requirements
+
+- **SHOW-001** [proposed] The game MUST provide an optional in-game view of the player's IPFS node activity (peers, data served, content held).
+- **SHOW-002** [proposed] Each species MUST display its CID somewhere accessible in the UI.
+
+## Open questions
+
+[Q-021](../open-questions.md#q-021)

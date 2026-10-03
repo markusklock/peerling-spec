@@ -1,0 +1,8 @@
+# Obsidian per-user state (vault settings themselves may be committed)
+.obsidian/workspace*.json
+.obsidian/cache
+.trash/
+
+# OS cruft
+.DS_Store
+Thumbs.db
