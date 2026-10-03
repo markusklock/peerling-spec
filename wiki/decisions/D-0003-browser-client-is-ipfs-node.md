@@ -7,6 +7,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
 related:
   - wiki/tech/ipfs-helia.md
+  - wiki/decisions/D-0007-players-publish-assets.md
 updated: 2026-10-03
 ---
 
@@ -26,6 +27,8 @@ as a full IPFS node that both downloads and serves (uploads) game content.
 - Clients need browser-compatible libp2p transports and help from the server
   for bootstrap/relay (see [ipfs-helia](../tech/ipfs-helia.md)).
 - Content popular with players spreads across player nodes, reducing server load.
+- Players publish their own creations to IPFS from the browser
+  ([D-0007](D-0007-players-publish-assets.md)).
 - Content fetched from untrusted peers is verified by CID.
 
 ## Alternatives considered

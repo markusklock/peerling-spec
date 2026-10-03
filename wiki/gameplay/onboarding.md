@@ -6,6 +6,7 @@ req_prefix: ONB
 tags: [gameplay, onboarding, creation]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
@@ -29,12 +30,14 @@ updated: 2026-10-03
    [creation pipeline](../peerlings/creation-pipeline.md)).
 3. **Meet your Peerling** — the image is shown; accept or regenerate (stages
    3–4).
-4. **Create your character** — while the 3D model and battle profile generate
+4. **Create your character** — while the 3D model, stats and moves generate
    in the background (stages 5–6), the player creates their
    [player character](player-character.md).
 5. **Reveal** — the finished Peerling appears in 3D with its name, type(s) and
-   moves; it is published (stage 7) and becomes the player's
-   [starter](../glossary.md#starter) (stage 8).
+   moves. The player's own browser publishes it to IPFS (stage 7). This is a
+   good moment to show the player that their node now serves their creation to
+   the world ([IPFS showcase](../tech/ipfs-showcase.md)). It then becomes the
+   player's [starter](../glossary.md#starter) (stage 8).
 6. **Into the world** — the player starts exploring; an early guaranteed
    encounter teaches battling and catching.
 
@@ -48,4 +51,4 @@ updated: 2026-10-03
 ## Open questions
 
 [Q-001](../open-questions.md#q-001) · [Q-019](../open-questions.md#q-019) ·
-[Q-020](../open-questions.md#q-020) · [Q-022](../open-questions.md#q-022)
+[Q-022](../open-questions.md#q-022)

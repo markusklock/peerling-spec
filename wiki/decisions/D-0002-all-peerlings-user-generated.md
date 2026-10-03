@@ -5,6 +5,7 @@ status: accepted
 tags: [peerlings, content]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/peerlings/creation-pipeline.md
 updated: 2026-10-03
@@ -28,7 +29,11 @@ each new player creates one as their starter.
 - Balance must come from constraints (types, move templates, stat budgets), not
   hand-tuning — see pillar 4 in the [overview](../overview.md).
 - Content moderation is required ([Q-007](../open-questions.md#q-007)).
-- Cold start must be handled ([Q-020](../open-questions.md#q-020)).
+- Cold start: [accepted] the operator creates a handful of
+  [seed species](../glossary.md#seed-species) at launch through the same
+  pipeline, so the world isn't empty for the first players (resolves
+  [Q-020](../open-questions.md#q-020)). These are still player-made
+  creations, not a hand-designed roster.
 
 ## Alternatives considered
 - A hand-made base roster plus user creations — rejected by the designer's brief.

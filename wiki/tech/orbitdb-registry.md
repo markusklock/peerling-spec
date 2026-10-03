@@ -6,6 +6,7 @@ req_prefix: REG
 tags: [tech, orbitdb, ipfs, data]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
@@ -28,13 +29,14 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 
 ## Design
 
+- [accepted] **Writers:** only the generation server's identity can write
+  ([D-0005](../decisions/D-0005-server-sole-registry-writer.md)). Clients are
+  read-only replicas.
+
 [proposed]
 - **Database type:** an OrbitDB *documents* (or keyvalue) database keyed by
   species CID, so a client can look up and iterate entries cheaply.
 - **Address:** one well-known database address, shipped with the client.
-- **Writers:** only the generation server's identity
-  ([D-0005](../decisions/D-0005-server-sole-registry-writer.md)). Clients are
-  read-only replicas.
 - **Entry contents:** small and index-like — enough to choose an encounter
   without downloading the species record:
 
@@ -60,14 +62,14 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 
 - **REG-001** [accepted] All published species MUST be listed in a single OrbitDB registry database.
 - **REG-002** [accepted] Clients MUST read the registry to choose wild encounters and fetch the chosen species via IPFS.
-- **REG-003** [proposed] Only the generation server's identity MUST be able to write to the registry.
+- **REG-003** [accepted] Only the generation server's identity MUST be able to write to the registry.
 - **REG-004** [proposed] Registry entries MUST contain enough summary data (types, name, thumbnail CID, status) to select encounters without fetching the full species record.
 - **REG-005** [proposed] Clients MUST exclude entries whose status is `removed`.
 - **REG-006** [proposed] The client MUST start with its locally persisted copy of the registry and sync in the background, so the game is usable before sync completes.
 
 ## Open questions
 
-[Q-002](../open-questions.md#q-002) · [Q-007](../open-questions.md#q-007) ·
+[Q-007](../open-questions.md#q-007) ·
 [Q-017](../open-questions.md#q-017) · [Q-021](../open-questions.md#q-021)
 
 ## See also

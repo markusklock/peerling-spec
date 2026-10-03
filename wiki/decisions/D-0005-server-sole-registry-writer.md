@@ -1,8 +1,10 @@
 ---
 title: "D-0005: The generation server is the only registry writer"
 type: decision
-status: proposed
+status: accepted
 tags: [tech, orbitdb, security]
+sources:
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/creation-pipeline.md
@@ -11,25 +13,31 @@ updated: 2026-10-03
 
 # D-0005: The generation server is the only registry writer
 
-**Status:** proposed (awaiting designer review — [Q-002](../open-questions.md#q-002))
+**Status:** accepted (2026-10-03, resolves [Q-002](../open-questions.md#q-002)).
+The attestation (signature) part below is still [proposed].
 
 ## Context
 The [registry](../glossary.md#registry) decides which species appear in every
 player's world. Clients run in the browser and can be modified by anyone, so a
 client-written entry could contain arbitrary stats, moves or unmoderated assets.
 
-## Decision (proposed)
-The OrbitDB registry's access controller grants write access only to the
-generation server's OrbitDB identity. Clients replicate and read the registry;
-they never write to it. Every species record is additionally signed by the
-server ([attestation](../glossary.md#attestation)) so the record stays verifiable
-even when fetched from a peer outside OrbitDB.
+## Decision
+- [accepted] The OrbitDB registry's access controller grants write access only
+  to the generation server's OrbitDB identity. Clients replicate and read the
+  registry; they never write to it.
+- [proposed] Every species record is additionally signed by the server
+  ([attestation](../glossary.md#attestation)), so the record stays verifiable
+  when it is fetched from a peer outside OrbitDB, e.g. during a
+  [PvP battle](../gameplay/pvp-battles.md) or [trade](../gameplay/trading.md).
 
 ## Consequences
 - Only content that went through the pipeline, validation and moderation can
   appear in the game.
 - Takedowns are possible by the server appending a tombstone entry.
 - The registry is still fully peer-to-peer for *reading* and replication.
+- Players still publish the *content* to IPFS themselves
+  ([D-0007](D-0007-players-publish-assets.md)); the server controls only the
+  *listing*.
 
 ## Alternatives considered
 - Open write access with client-side validation of every entry: every client

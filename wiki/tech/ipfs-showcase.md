@@ -6,6 +6,7 @@ req_prefix: SHOW
 tags: [tech, ipfs, ux, goals]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/overview.md
   - wiki/tech/ipfs-helia.md
@@ -35,6 +36,8 @@ updated: 2026-10-03
 | Species card CID | Every species card shows its CID with a "view on IPFS" link to a public gateway |
 | "Fetched from a peer" moment | When a wild Peerling loads, a subtle indicator of where it came from (server vs. another player) |
 | Creator pride | "Your Peerling now lives on N nodes" after publishing |
+| Players found peer-to-peer | Other players appear in the world via libp2p pubsub, with no game server; a debug overlay can show the direct WebRTC connection to a nearby player |
+| "You published this" | During onboarding the player watches their own node add their creation and the server pin it from them |
 | Verified badge | A visible check that content was verified against its CID and the species attestation |
 
 ## Requirements

@@ -5,6 +5,7 @@ status: draft
 tags: [vision, pillars]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/gameplay/core-loop.md
   - wiki/tech/architecture.md
@@ -46,24 +47,26 @@ trade-off in a [decision](decisions/) if one goal must yield.
 
 | # | Pillar | Meaning for the design | Provenance |
 |---|--------|------------------------|------------|
-| 1 | **Every creature is someone's creation** | No developer-authored Peerlings exist at launch. All species come from players via the [creation pipeline](peerlings/creation-pipeline.md). | [accepted] |
+| 1 | **Every creature is someone's creation** | There is no hand-designed roster. All species come from players via the [creation pipeline](peerlings/creation-pipeline.md). Even the operator's handful of launch [seed species](glossary.md#seed-species) go through the same pipeline. | [accepted] |
 | 2 | **IPFS is the backbone, and it shows** | Peerling data and 3D models live on IPFS; the registry lives in [OrbitDB](glossary.md#orbitdb); players are nodes that download *and* serve content. The tech should be visible and celebrated in the UI (see [IPFS showcase](tech/ipfs-showcase.md)). | [accepted] (UI visibility: [proposed]) |
-| 3 | **Familiar creature-collecting fun** | Explore a [procedural world](world/procedural-generation.md), encounter, battle and catch — the Pokémon formula players already understand. | [accepted] |
-| 4 | **Fair by construction** | Generated content is constrained by predefined [types](peerlings/types.md), [move templates](peerlings/moves.md) and stat budgets, so no player's creation is objectively stronger because of how it was described. | [accepted] for types and move templates; stat budgets [proposed] |
+| 3 | **Familiar creature-collecting fun** | Explore a [procedural world](world/procedural-generation.md), encounter, battle and catch — the Pokémon formula players already understand — in one world shared with every other player, who you can battle and trade with ([multiplayer](gameplay/multiplayer.md)). | [accepted] |
+| 4 | **Fair by construction** | Generated content is constrained by predefined [types](peerlings/types.md), [move templates](peerlings/moves.md) and the same base-stat total for every species, so no player's creation is objectively stronger because of how it was described. | [accepted] |
 | 5 | **Minimal central infrastructure** | One operator server runs generation and pinning; everything else is peer-to-peer and client-side. See [architecture](tech/architecture.md). | [accepted] |
 
 ## Scope of the first version
 
-[proposed] The first playable version (v1) contains:
+The first playable version (v1) contains:
 
-- Player onboarding: create a player character and a starter Peerling.
-- Single-player exploration of a procedural world.
-- Wild encounters with player-created Peerlings, turn-based battles, catching.
-- A team/collection of caught Peerlings.
+- [accepted] Player onboarding: create a player character and a starter Peerling.
+- [accepted] Exploration of one procedural world shared by all players, who see
+  each other ([D-0008](decisions/D-0008-shared-multiplayer-world.md)).
+- [accepted] Wild encounters with player-created Peerlings, turn-based battles,
+  catching.
+- [accepted] PvP battles and trading between players.
+- [proposed] A team/collection of caught Peerlings.
 
-[proposed] Explicitly **not** in v1 unless the designer decides otherwise:
-player-vs-player battles, trading, seeing other players in the world, evolution.
-See [Q-013](open-questions.md#q-013).
+[proposed] Not in v1 unless the designer decides otherwise: evolution
+([Q-010](open-questions.md#q-010)).
 
 ## See also
 

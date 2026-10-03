@@ -5,6 +5,7 @@ status: draft
 tags: [reference, terminology]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 updated: 2026-10-03
 ---
 
@@ -64,9 +65,18 @@ content addressed by [CID](#cid).
 An attack or action a Peerling can use in battle. Every move is an instance of a
 [move template](#move-template). See [moves](peerlings/moves.md).
 
+### Move slot
+[proposed] One of the fixed roles in every species' move set: *quick*,
+*strong* and *signature* (possibly *support*). See [moves](peerlings/moves.md#move-slots).
+
 ### Move template
 A predefined, balanced pattern (power range, accuracy, effects, …) that
 generated moves must follow. See [moves](peerlings/moves.md).
+
+### Operator
+The person running the game's [generation server](#generation-server): the
+game's designer. The operator also creates the launch
+[seed species](#seed-species).
 
 ### OrbitDB
 A peer-to-peer database built on IPFS and libp2p. The game's
@@ -94,9 +104,32 @@ reachable from at least one node.
 The avatar a player controls in the world. See
 [player-character](gameplay/player-character.md).
 
+### Presence
+[proposed] The live broadcast of a player's position in the shared world, sent
+to nearby players over libp2p pubsub. See
+[realtime-networking](tech/realtime-networking.md#presence-proposed).
+
+### PvP battle
+A battle between two players' Peerlings, played peer-to-peer. See
+[pvp-battles](gameplay/pvp-battles.md).
+
+### Region
+[proposed] A square area of the world made of several chunks. It is the unit
+for presence topics in multiplayer. See
+[procedural-generation](world/procedural-generation.md).
+
 ### Registry
 The OrbitDB database that lists every published Peerling species. See
 [orbitdb-registry](tech/orbitdb-registry.md).
+
+### Seed species
+One of the handful of species the [operator](#operator) creates at launch,
+through the normal creation pipeline, so the first players have Peerlings to
+meet. See [D-0002](decisions/D-0002-all-peerlings-user-generated.md).
+
+### Signature move
+[proposed] The move in a species' *signature* slot: its characteristic special
+attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
 
 ### Species
 [proposed] A Peerling design: the immutable, content-addressed definition (name,
@@ -111,6 +144,10 @@ the species' identity. See [peerling-species](peerlings/peerling-species.md).
 ### Starter
 The first Peerling a player owns: an instance of the species the player created
 during onboarding. See [onboarding](gameplay/onboarding.md).
+
+### Trade
+An exchange of [Peerling instances](#peerling-instance) between two players.
+See [trading](gameplay/trading.md).
 
 ### Type
 An elemental category from a predefined list that determines battle

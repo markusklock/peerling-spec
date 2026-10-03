@@ -1,0 +1,70 @@
+---
+title: Realtime Peer-to-Peer Networking
+type: system
+status: draft
+req_prefix: NET
+tags: [tech, libp2p, multiplayer, pubsub]
+sources:
+  - raw/conversations/2026-10-03-answers-round-1.md
+related:
+  - wiki/decisions/D-0008-shared-multiplayer-world.md
+  - wiki/gameplay/multiplayer.md
+  - wiki/gameplay/pvp-battles.md
+  - wiki/gameplay/trading.md
+  - wiki/tech/ipfs-helia.md
+updated: 2026-10-03
+---
+
+# Realtime Peer-to-Peer Networking
+
+> How players find and talk to each other in the shared world. Everything runs
+> over the same libp2p node that powers each client's Helia IPFS node, with no
+> game server. This is a showcase of the libp2p stack underneath IPFS.
+
+## Building blocks (proposed)
+
+| Need | Mechanism |
+|------|-----------|
+| Know who is nearby | libp2p **pubsub (gossipsub)** topic per world [region](../glossary.md#region) |
+| Battle, trade, profile | Direct libp2p **streams** with custom protocol IDs |
+| Reaching other browsers | Circuit relay via the operator server, upgraded to direct **WebRTC** connections when possible ([ipfs-helia § Connectivity](ipfs-helia.md#connectivity)) |
+
+## Presence (proposed)
+
+- The world is divided into square regions, e.g. one region per world chunk
+  group. Exact size: [Q-027](../open-questions.md#q-027).
+- A client subscribes to the presence topic of its current region and its 8
+  neighbours (`peerlings/v1/presence/<rx>_<ry>`), and changes subscriptions when
+  it crosses a region border.
+- A client publishes a **presence message** to its current region topic at a
+  limited rate, at most a few per second while moving and a heartbeat every
+  few seconds when idle. Contents: peer ID, player ID, display name, avatar
+  reference, position, facing, timestamp, signature.
+- A player not heard from for a timeout is removed from view.
+- [proposed] The operator server also joins the topics, to help gossip reach
+  browsers that have few direct peers.
+
+## Direct protocols (proposed)
+
+| Protocol ID | Purpose | Canonical page |
+|-------------|---------|----------------|
+| `/peerlings/battle/1.0.0` | PvP battle session | [pvp-battles](../gameplay/pvp-battles.md) |
+| `/peerlings/trade/1.0.0` | Trade session | [trading](../gameplay/trading.md) |
+| `/peerlings/profile/1.0.0` | Request a player's public profile (team, created species) | [multiplayer](../gameplay/multiplayer.md) |
+
+Message formats are still to be specified.
+
+## Requirements
+
+- **NET-001** [proposed] Player-to-player communication MUST use the client's libp2p node; game logic MUST NOT depend on a game server (the operator server MAY relay transport traffic).
+- **NET-002** [proposed] Presence MUST be distributed via pubsub topics scoped to world regions, so a client only receives nearby players.
+- **NET-003** [proposed] Presence messages MUST be signed with the player's identity key and rate-limited by the sender; receivers MUST drop messages that are unsigned, too frequent or impossibly far from the previous position.
+- **NET-004** [proposed] Battles, trades and profile requests MUST use versioned libp2p protocol IDs.
+
+## Open questions
+
+[Q-027](../open-questions.md#q-027) · [Q-028](../open-questions.md#q-028)
+
+## See also
+
+- [Architecture](architecture.md) · [Multiplayer](../gameplay/multiplayer.md)

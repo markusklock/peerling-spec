@@ -6,6 +6,7 @@ req_prefix: CAT
 tags: [gameplay, catching, collection]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
@@ -28,6 +29,7 @@ or notified ([Q-021](../open-questions.md#q-021)).
 in the player's save, referencing its species by CID
 ([D-0006](../decisions/D-0006-species-vs-instance.md)); its assets are then
 retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).
+Caught Peerlings can later be [traded](trading.md).
 
 ## Requirements
 

@@ -6,6 +6,7 @@ req_prefix: ENC
 tags: [gameplay, encounters, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -39,6 +40,17 @@ Candidate factors:
 
 The player's own species MAY appear in the wild (others certainly meet it).
 
+[proposed] Each player meets their own wild Peerlings, even in the shared
+world ([MPL-004](multiplayer.md#requirements)).
+
+## Cold start
+
+[accepted] At launch the registry is not empty: the operator creates a handful
+of [seed species](../glossary.md#seed-species) through the normal pipeline
+([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)). [proposed]
+While the registry is small, the same species simply appear repeatedly at
+different levels.
+
 ## Latency
 
 [proposed] An encounter must never stall on the network. The client keeps a
@@ -55,4 +67,4 @@ species is used.
 
 ## Open questions
 
-[Q-017](../open-questions.md#q-017) · [Q-020](../open-questions.md#q-020)
+[Q-017](../open-questions.md#q-017)

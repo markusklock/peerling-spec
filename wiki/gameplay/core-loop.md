@@ -5,6 +5,7 @@ status: draft
 tags: [gameplay, loop]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/exploration.md
@@ -47,6 +48,12 @@ flowchart LR
 | Battle | [battle](battle.md) | [accepted] |
 | Catch | [catching](catching.md) | [accepted] |
 
+## The social layer
+
+[accepted] The world is shared ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)).
+Around the core loop, players meet each other, [battle](pvp-battles.md) and
+[trade](trading.md). See [multiplayer](multiplayer.md).
+
 ## Motivations (proposed)
 
 [proposed] Why players keep playing:
@@ -55,10 +62,12 @@ flowchart LR
 - **Collection** — catch as many different species as possible (a "Peerdex"
   of everything you have seen and caught).
 - **Mastery** — build a team that handles every type matchup; reach harder
-  regions further from the start.
+  areas further from the start; beat other players.
+- **Exchange** — trade to get species you can't find yourself, or to spread
+  your own creation.
 - **Pride** — see how your own creation spreads through the world
   ([Q-021](../open-questions.md#q-021)).
 
 ## Open questions
 
-[Q-010](../open-questions.md#q-010) · [Q-013](../open-questions.md#q-013)
+[Q-010](../open-questions.md#q-010)

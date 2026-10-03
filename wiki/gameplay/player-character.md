@@ -6,6 +6,7 @@ req_prefix: PLR
 tags: [gameplay, player, identity]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/tech/ipfs-helia.md
@@ -30,11 +31,18 @@ cryptographic keypair; its public key is the player's identity (used as the
 The keypair, the save (collection, team, position, progress) and settings are
 stored in browser storage. Backup/recovery: [Q-014](../open-questions.md#q-014).
 
+[proposed] Because the world is shared ([multiplayer](multiplayer.md)), the
+identity also signs presence messages, PvP commitments and trade records. The
+display name and avatar are visible to other players, so the display name
+must be moderated.
+
 ## Requirements
 
 - **PLR-001** [accepted] Each player MUST have a player character created during onboarding.
 - **PLR-002** [proposed] Each player MUST have a stable cryptographic identity generated client-side.
+- **PLR-003** [proposed] The player's display name MUST be moderated before other players can see it.
 
 ## Open questions
 
-[Q-014](../open-questions.md#q-014) · [Q-019](../open-questions.md#q-019)
+[Q-014](../open-questions.md#q-014) · [Q-019](../open-questions.md#q-019) ·
+[Q-027](../open-questions.md#q-027)

@@ -6,6 +6,7 @@ req_prefix: CRE
 tags: [peerlings, generation, ai, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -13,16 +14,19 @@ related:
   - wiki/peerlings/moderation.md
   - wiki/tech/generation-server.md
   - wiki/tech/orbitdb-registry.md
+  - wiki/tech/ipfs-helia.md
   - wiki/gameplay/onboarding.md
+  - wiki/decisions/D-0007-players-publish-assets.md
 updated: 2026-10-03
 ---
 
 # Peerling Creation Pipeline
 
 > How a player's free-text wish becomes a published Peerling
-> [species](../glossary.md#species): concept → image → player review → 3D model →
-> type, stats and moves → publish to IPFS and the registry. This page is the
-> canonical description of the pipeline's stages and their order.
+> [species](../glossary.md#species): concept (including type) → image → player
+> review → 3D model → stats and moves → the player's browser publishes to IPFS,
+> the server pins and lists it. This page is the canonical description of the
+> pipeline's stages, their order and the publish handshake.
 
 ## Why it works this way
 
@@ -30,43 +34,59 @@ updated: 2026-10-03
   The player only describes; AI models do the art, so anyone can create.
 - [accepted] The player keeps creative control at the most visible point — the
   image — by accepting or regenerating it.
-- [accepted] Battle data (type, moves) is generated within fixed rules so a
-  clever description cannot produce an overpowered creature.
+- [accepted] The type is decided at the concept stage, so the image can show
+  it (a Fire Peerling looks fiery).
+- [accepted] Battle data (type, stats, moves) is generated within fixed rules,
+  so a clever description cannot produce an overpowered creature.
+- [accepted] The player's own browser publishes the result to IPFS
+  ([D-0007](../decisions/D-0007-players-publish-assets.md)). Creating a Peerling
+  is the player's first hands-on IPFS moment.
 - [proposed] The *art style* is fixed by the system, not the player, so every
   Peerling looks like it belongs in the same game. The player controls *what*
   the creature is; the pipeline controls *how* it is drawn.
+
+## Who uses the pipeline
+
+- [accepted] Every new player, during [onboarding](../gameplay/onboarding.md).
+- [accepted] The operator, who creates a handful of
+  [seed species](../glossary.md#seed-species) at launch through this same
+  pipeline ([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)).
+- Whether players can create more species later: [Q-001](../open-questions.md#q-001).
 
 ## Stages
 
 | # | Stage | Runs on | Input | Output | Provenance |
 |---|-------|---------|-------|--------|------------|
 | 1 | Wish | client | player text | wish text | [accepted] |
-| 2 | Concept | server: concept LLM | wish | [concept](../glossary.md#concept) JSON | [accepted] |
+| 2 | Concept | server: concept LLM | wish | [concept](../glossary.md#concept) JSON, including type(s) | [accepted] |
 | 3 | Image | server: image generator | concept → structured (JSON) image prompt | 2D image | [accepted] |
 | 4 | Review | client | image | accept / regenerate | [accepted] |
-| 5 | 3D model | server: image-to-3D | accepted image | 3D model (GLB) | [accepted] |
-| 6 | Battle profile | server: concept LLM + validator | concept, image description | types, stats, moves | [accepted] (stats: [proposed]) |
-| 7 | Publish | server (+ client, see [Q-003](../open-questions.md#q-003)) | everything above | species record on IPFS + registry entry | [accepted] |
+| 5 | 3D model | server: image-to-3D | accepted image | static 3D model (GLB) | [accepted] |
+| 6 | Stats & moves | server: concept LLM + validator | concept | base stats, moves | [accepted] |
+| 7 | Publish | client adds to IPFS; server verifies, pins, lists | everything above | species on IPFS + registry entry | [accepted] (handshake details: [proposed]) |
 | 8 | Starter | client | published species CID | [starter](../glossary.md#starter) instance in the player's save | [accepted] |
 
 ```mermaid
 sequenceDiagram
-  participant P as Player (browser + Helia)
+  participant P as Player browser (Helia)
   participant S as Generation server
-  participant I as IPFS / OrbitDB
+  participant R as OrbitDB registry
   P->>S: 1. wish text
   S->>S: moderate wish
-  S->>S: 2. concept LLM → concept JSON
+  S->>S: 2. concept LLM → concept JSON (incl. types)
   loop until accepted (limit: Q-005)
     S->>S: 3. image prompt JSON → image generator
-    S-->>P: image (+ concept summary)
+    S-->>P: image + concept summary
     P->>S: 4. accept / regenerate
   end
   S->>S: 5. image-to-3D → GLB, post-process
-  S->>S: 6. LLM → types, stats, moves → validator
-  S->>I: 7. add + pin assets & species record, append registry entry
-  S-->>P: species CID
-  P->>I: fetch species via Helia (verify CID)
+  S->>S: 6. LLM → stats, moves → validator
+  S-->>P: 7a. assets + signed species record
+  P->>P: 7b. add all to own Helia node → CIDs
+  P->>S: 7c. report CIDs
+  S->>P: 7d. fetch by CID over IPFS, verify, pin
+  S->>R: 7e. append registry entry
+  S-->>P: 7f. published
   P->>P: 8. create starter instance
 ```
 
@@ -79,19 +99,22 @@ rate limits.
 
 ### Stage 2 — Concept
 The [concept LLM](../glossary.md#concept-llm) turns the wish into a structured
-concept. [proposed] Concept fields:
+concept. [accepted] The concept LLM also decides the Peerling's
+[type(s)](types.md) from the player's description at this stage. Concept
+fields ([proposed] except `types`):
 
 | Field | Description |
 |-------|-------------|
 | `nameSuggestions` | 3 short candidate names ([Q-018](../open-questions.md#q-018)) |
 | `summary` | One sentence describing the creature |
 | `lore` | 2–4 sentences of flavor text shown in-game |
-| `appearance` | Structured visual description: body plan, size class, colors, materials/textures, distinctive features, pose |
+| `types` | [accepted] Type(s) from the type list, chosen to fit the description (count: [TYP-002](types.md#requirements)) |
+| `appearance` | Structured visual description: body plan, size class, colors, materials/textures, distinctive features, pose. Reflects the chosen type(s) |
 | `temperament` | Short personality description (flavor; may inform animation style) |
-| `typeHints` | Candidate [types](types.md) — see [Q-004](../open-questions.md#q-004) |
 
 The concept must stay faithful to the wish; the LLM elaborates, it does not
-replace the player's idea.
+replace the player's idea. [proposed] The validator checks `types` against the
+type list right away, so the image is never generated for an invalid concept.
 
 ### Stage 3 — Image
 The concept's `appearance` is converted to a structured (JSON) prompt for the
@@ -113,7 +136,10 @@ regenerating. Limits: [Q-005](../open-questions.md#q-005).
 
 ### Stage 5 — 3D model
 The accepted image goes to the self-hosted image-to-3D generator (the brief
-names TRELLIS.2 or similar). [proposed] Steps:
+names TRELLIS.2 or similar). [accepted] The output is a **static** 3D asset,
+with no rigging or skeletal animation. Motion in battles comes from simple
+procedural animation ([battle § Presentation](../gameplay/battle.md#presentation)).
+[proposed] Steps:
 1. Background removal / subject matting of the image.
 2. Image-to-3D generation → textured mesh.
 3. Post-processing: normalize scale (fits a unit bounding box), orientation
@@ -122,36 +148,42 @@ names TRELLIS.2 or similar). [proposed] Steps:
    glTF (`.glb`).
 4. Render a small thumbnail of the model for lists and menus.
 
-The resulting mesh is static and unrigged; animation is covered by
-[Q-015](../open-questions.md#q-015). Whether the player reviews the 3D model:
-[Q-006](../open-questions.md#q-006).
+Whether the player reviews the 3D model: [Q-006](../open-questions.md#q-006).
 
-### Stage 6 — Battle profile
-[accepted] The LLM assigns the Peerling's [type](types.md) from the predefined
-type list, and creates [moves](moves.md) that follow the move templates.
-[proposed] It also distributes base stats within the fixed stat budget (see
-[peerling-species](peerling-species.md#stats)). The LLM *proposes*; a
-deterministic **validator** on the server checks every rule and rejects (and
-re-prompts) or clamps anything out of bounds. The validator, not the LLM, is the
-authority on balance.
+### Stage 6 — Stats & moves
+[accepted] The LLM spreads the base stats to fit the concept, within the
+same fixed stat total for every species
+([peerling-species § Stats](peerling-species.md#stats)). It also creates
+[moves](moves.md) that follow the move templates and the move-set rules there.
+The LLM *proposes*; [proposed] a deterministic **validator** on the server
+checks every rule and rejects (and re-prompts) or clamps anything out of bounds.
+The validator, not the LLM, is the authority on balance.
 
 ### Stage 7 — Publish
-The species data and its assets are put on IPFS and the species is added to the
-[registry](../tech/orbitdb-registry.md). [proposed] Order:
-1. Add the image, model and thumbnail to IPFS → CIDs.
-2. Build the [species record](peerling-species.md#species-record) referencing
-   those CIDs; sign it ([attestation](../glossary.md#attestation)); add it to
-   IPFS → the species CID.
-3. Pin everything on the server.
-4. Append the registry entry ([D-0005](../decisions/D-0005-server-sole-registry-writer.md)).
-5. Return the species CID to the client.
+[accepted] The player's browser adds the Peerling to IPFS through its Helia
+node; the server pins it and writes the registry entry
+([D-0007](../decisions/D-0007-players-publish-assets.md),
+[D-0005](../decisions/D-0005-server-sole-registry-writer.md)).
 
-Who performs the IPFS add (server or client): [Q-003](../open-questions.md#q-003).
+[proposed] Handshake:
+
+| Step | Actor | Action |
+|------|-------|--------|
+| 7a | server | Sends the client the image, model and thumbnail files plus the [species record](peerling-species.md#species-record), with asset CIDs filled in and signed ([attestation](../glossary.md#attestation)). The server computes the asset CIDs using the [fixed import parameters](../tech/ipfs-helia.md#content-import-parameters). |
+| 7b | client | Adds the three asset files and the species record to its Helia node, using the same import parameters. The asset CIDs must equal those in the record. |
+| 7c | client | Reports the species CID to the server. The client keeps providing the content. |
+| 7d | server | Fetches the species record and every asset by CID from the network (in practice from the player's node), checks they are byte-identical to what it generated, and pins them. |
+| 7e | server | Appends the registry entry. |
+| 7f | server | Tells the client that publishing is done (job state `PUBLISHED`). |
+
+If the client disconnects during 7b–7d, the job waits in `PUBLISHING` until
+the client reconnects and resumes providing (CRE-014). The species becomes
+visible to other players only at 7e.
 
 ### Stage 8 — Starter
-The client fetches the species record by CID through its own Helia node,
-verifies it, and creates the player's starter [instance](../glossary.md#peerling-instance)
-in its save ([D-0006](../decisions/D-0006-species-vs-instance.md)).
+The client creates the player's starter
+[instance](../glossary.md#peerling-instance) in its save from the species CID
+([D-0006](../decisions/D-0006-species-vs-instance.md)).
 
 ## Job handling
 
@@ -161,7 +193,7 @@ machine; the client follows its progress.
 
 ```
 WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
-  → IMAGE_ACCEPTED → MODEL_READY → PROFILE_READY → PUBLISHED
+  → IMAGE_ACCEPTED → MODEL_READY → PROFILE_READY → PUBLISHING → PUBLISHED
 any state → REJECTED (moderation) | FAILED (error, retryable) | EXPIRED (abandoned)
 ```
 
@@ -171,7 +203,7 @@ creation runs while the 3D model generates) — see
 
 ## Requirements
 
-- **CRE-001** [accepted] Every Peerling species MUST be created through this pipeline; there are no hand-authored species.
+- **CRE-001** [accepted] Every Peerling species MUST be created through this pipeline; there are no hand-authored species. This includes the operator's seed species.
 - **CRE-002** [accepted] The player MUST describe the Peerling in free text; the concept MUST be generated from that description by the self-hosted LLM.
 - **CRE-003** [accepted] The image MUST be generated from the concept by the image generator, and the player MUST be able to accept it or request a regeneration.
 - **CRE-004** [accepted] The 3D model MUST be generated from the accepted image by the image-to-3D generator, and MUST be the asset used to show the Peerling in-game.
@@ -186,16 +218,18 @@ creation runs while the 3D model generates) — see
 - **CRE-013** [proposed] The 3D model MUST be post-processed to a normalized scale, orientation and ground position, and MUST fit the asset budget ([Q-016](../open-questions.md#q-016)).
 - **CRE-014** [proposed] The pipeline MUST run as a resumable server-side job; the client MUST show progress and MUST be able to reconnect to an in-progress job after a page reload.
 - **CRE-015** [proposed] A published species MUST be immutable; there is no edit operation.
+- **CRE-016** [accepted] The concept LLM MUST determine the type(s) in stage 2, from the player's description, before the image is generated; the image MUST reflect the type(s).
+- **CRE-017** [accepted] The 3D model MUST be static (unrigged); the pipeline MUST NOT depend on rigging or skeletal animation.
+- **CRE-018** [accepted] The player's browser MUST add the species record and its assets to IPFS through its own Helia node.
+- **CRE-019** [accepted] The server MUST pin the species record and all its assets before appending the registry entry.
+- **CRE-020** [proposed] Before pinning, the server MUST verify that the content fetched by CID is byte-identical to what it generated; on mismatch, the job MUST fail and nothing is listed.
 
 ## Open questions
 
 [Q-001](../open-questions.md#q-001) ·
-[Q-003](../open-questions.md#q-003) ·
-[Q-004](../open-questions.md#q-004) ·
 [Q-005](../open-questions.md#q-005) ·
 [Q-006](../open-questions.md#q-006) ·
 [Q-007](../open-questions.md#q-007) ·
-[Q-015](../open-questions.md#q-015) ·
 [Q-016](../open-questions.md#q-016) ·
 [Q-018](../open-questions.md#q-018)
 

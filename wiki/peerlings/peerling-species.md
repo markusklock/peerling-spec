@@ -6,12 +6,14 @@ req_prefix: SPC
 tags: [peerlings, data-model, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-03-answers-round-1.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
+  - wiki/gameplay/trading.md
 updated: 2026-10-03
 ---
 
@@ -27,9 +29,12 @@ The split between species and instance is proposed in
 ## Species record
 
 [accepted] The species data (description, type, attacks, …) and its 3D model
-are stored on IPFS. [proposed] The species record is a JSON document (encoded
-as DAG-JSON or DAG-CBOR so asset links are real IPLD links); its CID is the
-species' identity. Illustrative shape:
+are stored on IPFS. [proposed] The species record is encoded as **DAG-CBOR**,
+so the same data always produces the same bytes and therefore the same CID
+(the server and the player's browser must agree on the CID during
+[publishing](creation-pipeline.md#stage-7--publish)). Asset references are
+real IPLD links. Its CID is the species' identity. Illustrative shape, shown as
+JSON for readability:
 
 ```json
 {
@@ -38,9 +43,9 @@ species' identity. Illustrative shape:
   "summary": "A sleepy fox made of moss that carries a glowing lantern.",
   "lore": "…",
   "types": ["Grass"],
-  "baseStats": { "hp": 70, "attack": 45, "defense": 60, "speed": 50, "special": 75 },
+  "baseStats": { "hp": 80, "attack": 55, "defense": 70, "speed": 45 },
   "moves": [
-    { "template": "strike-basic", "name": "Moss Swipe", "type": "Grass", "description": "…" }
+    { "slot": "quick", "template": "quick-jab", "name": "Moss Swipe", "type": "Normal", "description": "…" }
   ],
   "assets": {
     "image":     { "/": "bafy…" },
@@ -60,20 +65,24 @@ species' identity. Illustrative shape:
 }
 ```
 
-Field details (lengths, allowed characters, exact encoding, signature scheme)
-are still to be specified.
+Field details (lengths, allowed characters, the exact bytes the attestation
+signs) are still to be specified. The move entries follow
+[moves § Move structure](moves.md#move-structure).
 
 ## Stats
 
-[proposed] Every species has five base stats: **HP**, **Attack**, **Defense**,
-**Special**, **Speed**. How stats are used in damage and turn order is defined
+[proposed] Every species has four base stats: **HP**, **Attack**, **Defense**,
+**Speed**. (An earlier draft had a fifth "Special" stat. It was dropped to keep
+battles simple and to avoid confusion with the *signature* (special) move slot
+in [moves](moves.md).) How stats are used in damage and turn order is defined
 in [battle](../gameplay/battle.md).
 
-[proposed] *Fair by construction* ([overview](../overview.md#design-pillars)):
-every species gets the **same base-stat total**, distributed by the LLM to fit
-the concept (a turtle gets Defense, a cheetah gets Speed) within per-stat
-minimum and maximum bounds. Budget and bounds: TBD, see
-[Q-009](../open-questions.md#q-009).
+[accepted] *Fair by construction* ([overview](../overview.md#design-pillars)):
+every species has the **same base-stat total**. [accepted] The LLM spreads
+that total across the stats to fit the concept: a turtle gets Defense, a
+cheetah gets Speed. [proposed] Each stat has a minimum and a maximum, so
+no species has a useless stat or an extreme one. The budget and the bounds
+are still open: [Q-023](../open-questions.md#q-023).
 
 ## Peerling instance
 
@@ -89,11 +98,13 @@ the player's save (not on the shared registry). Illustrative shape:
   "xp": 0,
   "currentHp": 22,
   "caughtAt": "2026-10-03T12:30:00Z",
-  "origin": "starter | wild"
+  "origin": "starter | wild | trade",
+  "originalOwner": "<player public key of whoever first obtained it>"
 }
 ```
 
 Progression (levels, XP, evolution): [Q-010](../open-questions.md#q-010).
+Instances can change owner through [trading](../gameplay/trading.md).
 
 ## Requirements
 
@@ -102,17 +113,18 @@ Progression (levels, XP, evolution): [Q-010](../open-questions.md#q-010).
 - **SPC-003** [proposed] A species record MUST reference its image, 3D model and thumbnail by CID.
 - **SPC-004** [proposed] A species record MUST carry a `schema` version string; clients MUST ignore records with unknown major versions rather than fail.
 - **SPC-005** [proposed] A species' types MUST satisfy TYP-001 and TYP-002 in [types](types.md#requirements).
-- **SPC-006** [proposed] A species MUST have exactly 4 moves ([moves](moves.md)).
-- **SPC-007** [proposed] Base stats MUST sum to the fixed stat budget and each stat MUST lie within its bounds.
+- **SPC-006** [proposed] A species' move set MUST satisfy the move-set rules in [moves](moves.md#requirements).
+- **SPC-007** [accepted] Every species MUST have the same base-stat total. [proposed] Each stat MUST lie within its bounds.
 - **SPC-008** [proposed] Clients MUST verify the attestation of a species record before using it.
 - **SPC-009** [proposed] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
+- **SPC-010** [proposed] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
 
 ## Open questions
 
-[Q-009](../open-questions.md#q-009) ·
 [Q-010](../open-questions.md#q-010) ·
 [Q-016](../open-questions.md#q-016) ·
-[Q-018](../open-questions.md#q-018)
+[Q-018](../open-questions.md#q-018) ·
+[Q-023](../open-questions.md#q-023)
 
 ## See also
 
