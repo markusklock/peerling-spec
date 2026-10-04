@@ -7,12 +7,13 @@ tags: [peerlings, battle, balance]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/battle.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Moves and Move Templates
@@ -31,18 +32,18 @@ mechanical value comes from a small, hand-balanced table.
 
 ## Move slots
 
-[proposed] This follows the designer's tentative suggestion of a quick attack,
-a strong attack and a special attack (to be confirmed:
-[Q-024](../open-questions.md#q-024)). Every species has exactly one move per
-slot, so every Peerling has a comparable toolkit. Identity comes from type, stat
+[accepted] Every species has exactly **three** moves, one per slot: a quick
+attack, a strong attack and a special (signature) attack. There is no fourth
+slot. [proposed] One move per slot gives every Peerling a comparable toolkit. Identity comes from type, stat
 spread and the signature move's flavour, not from having better moves.
+
+[proposed] Slot roles:
 
 | Slot | Role | Trade-off | Allowed move type |
 |------|------|-----------|-------------------|
 | **Quick** | Reliable, acts first | Low power | Normal or one of the species' types |
 | **Strong** | Big hit | Each template has a drawback (misses, recoil, charge turn) | Normal or one of the species' types |
 | **Signature** | The creature's special move, the one players remember | Medium power plus a secondary effect | The species' primary type |
-| *Support* (open, Q-024) | Buff, debuff or heal | No damage | Any of the species' types |
 
 "Signature" is the designer's "special attack". The word "special" is avoided as
 a slot name because Pokémon uses it for a damage category and a stat.
@@ -119,14 +120,14 @@ the damage formula ([battle](../gameplay/battle.md)).
 - ~~**MOV-003**~~ (removed 2026-10-03, replaced by the slot rules MOV-006 and MOV-008)
 - ~~**MOV-004**~~ (removed 2026-10-03, replaced by the per-slot type rule MOV-007)
 - **MOV-005** [proposed] Template IDs MUST be stable; changing a template's numbers is a balance change, recorded as a decision.
-- **MOV-006** [proposed] A species' move set MUST contain exactly one move for each slot: quick, strong, signature (plus support if [Q-024](../open-questions.md#q-024) adds it).
+- **MOV-006** [accepted] A species' move set MUST contain exactly three moves, one for each slot: quick, strong, signature.
 - **MOV-007** [proposed] Quick and strong moves MUST be Normal type or one of the species' types; the signature move MUST be the species' primary type.
 - **MOV-008** [proposed] A move's template MUST be one allowed for its slot.
 
 ## Open questions
 
 [Q-010](../open-questions.md#q-010) (do moves change when levelling?) ·
-[Q-024](../open-questions.md#q-024) (slot structure, move resources)
+[Q-024](../open-questions.md#q-024) (limits on move use)
 
 ## See also
 

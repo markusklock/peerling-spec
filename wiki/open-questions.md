@@ -3,7 +3,7 @@ title: Open Questions
 type: reference
 status: draft
 tags: [questions, backlog]
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Open Questions
@@ -49,7 +49,7 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Context: Players can describe anything: NSFW, hateful content, real people,
   copyrighted characters (e.g. existing Pokémon). IPFS content can't be deleted
   from the network, but the registry can stop listing it. With a shared world,
-  display names (and any chat) need moderation too.
+  display names need moderation too (there is no chat: MPL-007).
 - Proposal: moderate both the text wish and the generated image on the server;
   takedown = a tombstone entry in the registry, clients stop showing the species
   and the server unpins it.
@@ -68,17 +68,9 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Affects: [peerling-species](peerlings/peerling-species.md), [battle](gameplay/battle.md), [core-loop](gameplay/core-loop.md), [moves](peerlings/moves.md)
 - Context: Evolution would require generating additional forms (more GPU work,
   more design).
-- Proposal: levels and XP in v1, no evolution in v1.
-- Raised: 2026-10-03
-
-### Q-011
-**World size: finite or endless?**
-- Affects: [procedural-generation](world/procedural-generation.md), [exploration](gameplay/exploration.md)
-- Partly resolved 2026-10-03: one shared world for all players
-  ([D-0008](decisions/D-0008-shared-multiplayer-world.md)). Still open: its size.
-- Proposal: endless chunk-based world, with difficulty rising with distance from
-  the start. Alternatively, a large finite world, so players crowd together more
-  and meet each other more often.
+- Proposal: levels and XP in v1, no evolution in v1. The suggested damage
+  model ([battle](gameplay/battle.md#suggested-damage-model-proposed)) assumes
+  levels 1–50.
 - Raised: 2026-10-03
 
 ### Q-012
@@ -94,8 +86,10 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Affects: [player-character](gameplay/player-character.md), [ipfs-helia](tech/ipfs-helia.md)
 - Context: No accounts were mentioned. A keypair generated in the browser can
   identify the player, but it is lost if browser storage is cleared.
-- Proposal: keypair + save in browser storage; optional export/import of a
-  backup file; optional encrypted save backup on IPFS later.
+- Options analysed 2026-10-04 (browser only, IPFS + IPNS snapshots,
+  per-player OrbitDB log) in [player-data](tech/player-data.md).
+- Proposal: a per-player OrbitDB log replicated by the server, with key
+  recovery via a recovery phrase (see player-data). Awaiting decision.
 - Raised: 2026-10-03
 
 ### Q-016
@@ -149,21 +143,23 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 **Stat budget: what is the base-stat total, and what are the per-stat bounds?**
 - Affects: [peerling-species](peerlings/peerling-species.md#stats), [battle](gameplay/battle.md)
 - Context: Equal totals are decided. The numbers depend on the damage formula.
-- Proposal: decide together with the damage formula. For example, total 250
-  across 4 stats, each stat between 35 and 100.
+- Suggested 2026-10-04 at the designer's request: total **320**, each stat
+  **40–130**, steps of **5**, together with a damage model. See
+  [peerling-species § Suggested numbers](peerlings/peerling-species.md#suggested-numbers-proposed)
+  and [battle § Suggested damage model](gameplay/battle.md#suggested-damage-model-proposed).
+  Awaiting approval.
 - Raised: 2026-10-03
 
 ### Q-024
-**Move slots: confirm quick / strong / signature, and the details around them.**
-- Affects: [moves](peerlings/moves.md), [battle](gameplay/battle.md), [creation-pipeline](peerlings/creation-pipeline.md)
-- Context: The designer suggested "a quick attack, strong attack and a special
-  attack". The draft turns that into three slots with per-slot templates.
-- Sub-questions: (a) Is the three-slot structure right? (b) Add a fourth
-  *support* slot (buff/debuff/heal) for more tactics? (c) Are moves unlimited,
-  limited per battle (like PP), or paid from a resource (like Temtem's
-  stamina)? (d) Do Peerlings ever learn or change moves (ties to Q-010)?
-- Proposal: three slots plus a support slot; unlimited uses, with drawbacks
-  built into the strong templates; no move changes in v1.
+**How often can moves be used?**
+- Affects: [moves](peerlings/moves.md), [battle](gameplay/battle.md)
+- Partly resolved 2026-10-04: exactly three slots (quick, strong, signature),
+  with no support slot (MOV-006).
+- Still open: are moves unlimited, limited per battle (like PP), or paid from a
+  resource (like Temtem's stamina)? Do Peerlings ever learn or change moves
+  (ties to Q-010)?
+- Proposal: unlimited uses, with drawbacks built into the strong templates; no
+  move changes in v1.
 - Raised: 2026-10-03
 
 ### Q-025
@@ -172,8 +168,10 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Context: Saves live in the browser and can be edited. Species stats can be
   verified (CID + attestation), but levels and ownership can't, without a
   server.
-- Proposal: normalize all levels in PvP; don't verify ownership in v1; no
-  farmable PvP rewards. Revisit if ranked play is wanted.
+- Proposal: normalize all levels in PvP; no farmable PvP rewards.
+- Options analysed 2026-10-04 in [player-data](tech/player-data.md). The
+  recommendation adds server-signed catches (verified by replaying the battle),
+  so only verified Peerlings can be used in PvP. Awaiting decision.
 - Raised: 2026-10-03
 
 ### Q-026
@@ -185,24 +183,16 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Options: (a) accept it for a casual game; (b) the server notarizes ownership
   (signs instances when caught or traded), which needs the server for every
   catch and trade; (c) an OrbitDB ownership log that peers check.
-- Proposal: (a) for v1.
+- Options analysed 2026-10-04 in [player-data](tech/player-data.md). The
+  recommendation is (b) as a server-written OrbitDB ownership ledger; the
+  cheaper alternative is (a). Awaiting decision.
 - Raised: 2026-10-03
 
 ### Q-027
-**Multiplayer scale and social features.**
-- Affects: [multiplayer](gameplay/multiplayer.md), [realtime-networking](tech/realtime-networking.md), [player-character](gameplay/player-character.md)
-- Context: Region size, how many players are visible at once, chat or
-  emotes (chat needs moderation), friends list.
-- Proposal: regions of 64 × 64 m; show at most 30 nearby players; no free-text
-  chat in v1, only a small set of emotes.
-- Raised: 2026-10-03
-
-### Q-028
-**How are battles and trades started — only face to face, or also remotely?**
-- Affects: [multiplayer](gameplay/multiplayer.md), [pvp-battles](gameplay/pvp-battles.md), [trading](gameplay/trading.md)
-- Context: Face to face only makes the shared world matter. Remote play (via
-  friends list or invite code) is more convenient.
-- Proposal: face to face in v1 (within a short distance in the world).
+**Multiplayer scale: region size and how many players are visible at once.**
+- Affects: [multiplayer](gameplay/multiplayer.md), [realtime-networking](tech/realtime-networking.md)
+- Partly resolved 2026-10-04: no chat, only emotes (MPL-007).
+- Proposal: regions of 64 × 64 m; show at most 30 nearby players.
 - Raised: 2026-10-03
 
 ## Resolved
@@ -243,3 +233,14 @@ in the first version. Resolved 2026-10-03 →
 through the normal pipeline. Resolved 2026-10-03 →
 [D-0002](decisions/D-0002-all-peerlings-user-generated.md),
 [encounters § Cold start](gameplay/encounters.md#cold-start).
+
+### Q-011
+**World size.** Large but finite, with one shared world for all players.
+Resolved 2026-10-04 →
+[procedural-generation](world/procedural-generation.md) (WGN-005; the 4 km ×
+4 km size is still [proposed]).
+
+### Q-028
+**How are battles and trades started?** Only when the two players are next to
+each other in the world. Resolved 2026-10-04 →
+[multiplayer](gameplay/multiplayer.md) (MPL-006).

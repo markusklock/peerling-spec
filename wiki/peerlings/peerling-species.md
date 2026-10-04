@@ -7,6 +7,7 @@ tags: [peerlings, data-model, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -14,7 +15,7 @@ related:
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
   - wiki/gameplay/trading.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Peerling Species and Instances (Data Model)
@@ -81,8 +82,35 @@ in [battle](../gameplay/battle.md).
 every species has the **same base-stat total**. [accepted] The LLM spreads
 that total across the stats to fit the concept: a turtle gets Defense, a
 cheetah gets Speed. [proposed] Each stat has a minimum and a maximum, so
-no species has a useless stat or an extreme one. The budget and the bounds
-are still open: [Q-023](../open-questions.md#q-023).
+no species has a useless stat or an extreme one.
+
+### Suggested numbers [proposed]
+
+Suggested on 2026-10-04 at the designer's request; awaiting approval
+([Q-023](../open-questions.md#q-023)). They assume the damage model in
+[battle § Suggested damage model](../gameplay/battle.md#suggested-damage-model-proposed).
+
+| Rule | Value | Why |
+|------|-------|-----|
+| Base-stat total | **320** | Average 80 per stat, close to a typical fully grown Pokémon (≈ 500 over 6 stats), so the same formulas feel familiar |
+| Minimum per stat | **40** | Even a turtle's Speed or a glass cannon's Defense still matters |
+| Maximum per stat | **130** | Allows a clear specialty (a 130 stat is ~1.6× average) without making the other three stats useless |
+| Step | **5** | Readable numbers; fewer near-identical spreads |
+
+Example spreads (HP / Attack / Defense / Speed):
+
+| Archetype | HP | Atk | Def | Spd |
+|-----------|---:|----:|----:|----:|
+| Balanced | 80 | 80 | 80 | 80 |
+| Tank (turtle) | 100 | 60 | 120 | 40 |
+| Glass cannon (cheetah) | 60 | 110 | 40 | 110 |
+| Bruiser (bear) | 110 | 100 | 70 | 40 |
+| Sweeper (falcon) | 70 | 90 | 50 | 110 |
+| Wall (golem) | 130 | 50 | 100 | 40 |
+
+The LLM picks a spread that fits the concept; the validator
+([CRE-009](creation-pipeline.md#requirements)) enforces the total, bounds and
+step.
 
 ## Peerling instance
 

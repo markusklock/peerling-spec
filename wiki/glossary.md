@@ -6,7 +6,7 @@ tags: [reference, terminology]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Glossary
@@ -44,6 +44,11 @@ player wishes into concepts and later assigns types and moves.
 The player who designed a Peerling [species](#species). The creator is recorded
 in the species record and credited in-game.
 
+### Emote
+One of a fixed set of gestures or expressions a player can show to nearby
+players. Emotes are the only way players communicate; there is no chat. See
+[multiplayer](gameplay/multiplayer.md#communication).
+
 ### Encounter
 A meeting with a [wild Peerling](#wild-peerling) during exploration, which
 leads to a battle. See [encounters](gameplay/encounters.md).
@@ -66,8 +71,8 @@ An attack or action a Peerling can use in battle. Every move is an instance of a
 [move template](#move-template). See [moves](peerlings/moves.md).
 
 ### Move slot
-[proposed] One of the fixed roles in every species' move set: *quick*,
-*strong* and *signature* (possibly *support*). See [moves](peerlings/moves.md#move-slots).
+One of the three fixed roles in every species' move set: *quick*, *strong*
+and *signature*. See [moves](peerlings/moves.md#move-slots).
 
 ### Move template
 A predefined, balanced pattern (power range, accuracy, effects, …) that

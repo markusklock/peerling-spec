@@ -7,13 +7,14 @@ tags: [tech, architecture, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/generation-server.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/ipfs-showcase.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # System Architecture
@@ -62,7 +63,7 @@ flowchart LR
 | OrbitDB registry | Database of all Peerling species; only the server writes | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
 | Generation server | LLM, image gen, image-to-3D, pinning, registry writer | [generation-server](generation-server.md) | [accepted] |
 | Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [proposed]) |
-| Local storage | Player save, identity key, content cache | [player-character](../gameplay/player-character.md) | [proposed] |
+| Player data | Save, identity key and ownership: browser, IPFS or OrbitDB (undecided) | [player-data](player-data.md) | [proposed] |
 
 ## Key data flows
 
@@ -91,7 +92,8 @@ flowchart LR
   can affect other players, so interactions are designed to need as little
   trust as possible: verifiable species, normalized PvP levels, commit-reveal
   turns. The remaining gaps are tracked in [Q-025](../open-questions.md#q-025)
-  and [Q-026](../open-questions.md#q-026).
+  and [Q-026](../open-questions.md#q-026). Options for closing them (server-signed
+  catches and an ownership ledger) are in [player-data](player-data.md).
 
 ## Requirements
 

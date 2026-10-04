@@ -7,7 +7,7 @@ tags: [peerlings, safety, generation]
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Content Moderation
@@ -25,6 +25,7 @@ updated: 2026-10-03
 | Wish (stage 1) | Hateful, sexual, violent-extreme content; real people; obvious copyrighted characters |
 | Concept & names (stages 2, 6) | Same as above, applied to generated text and move names |
 | Image (stage 3) | NSFW / unsafe image classifier before the player sees it |
+| Display names | Same text checks as the wish. There is no player chat to moderate ([MPL-007](../gameplay/multiplayer.md#requirements)) |
 
 [proposed] Takedown: IPFS content cannot be deleted from the network, but the
 registry decides what the game shows. The server appends a **tombstone** entry

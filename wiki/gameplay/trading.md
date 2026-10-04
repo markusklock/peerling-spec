@@ -6,11 +6,12 @@ req_prefix: TRD
 tags: [gameplay, multiplayer, trading, libp2p]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Trading
@@ -27,7 +28,8 @@ over a direct libp2p stream between the two players
 
 ## Flow (proposed)
 
-1. A proposes a trade to B; B accepts the session (MPL-005).
+1. A proposes a trade to B while standing next to them (MPL-006); B accepts
+   the session (MPL-005).
 2. Both pick the instance(s) they offer. Both see the other's offer live, with
    the species fetched and verified by CID.
 3. Both confirm. Any change to an offer resets both confirmations.
@@ -42,7 +44,8 @@ over a direct libp2p stream between the two players
 
 Saves live in the browser, so a modified client could "trade" a Peerling and
 keep a copy. Whether that matters, and how to prevent it, is open:
-[Q-026](../open-questions.md#q-026).
+[Q-026](../open-questions.md#q-026). A server-written ownership ledger would
+prevent it; see the options in [player-data](../tech/player-data.md).
 
 ## Requirements
 
@@ -52,7 +55,7 @@ keep a copy. Whether that matters, and how to prevent it, is open:
 
 ## Open questions
 
-[Q-026](../open-questions.md#q-026) · [Q-028](../open-questions.md#q-028)
+[Q-026](../open-questions.md#q-026)
 
 ## See also
 

@@ -7,10 +7,11 @@ tags: [gameplay, player, identity]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Player Character and Identity
@@ -28,13 +29,14 @@ whether the avatar is also AI-generated: [Q-019](../open-questions.md#q-019).
 [proposed] No traditional accounts. On first launch the client generates a
 cryptographic keypair; its public key is the player's identity (used as the
 [creator](../glossary.md#creator) ID on species and for server rate limits).
-The keypair, the save (collection, team, position, progress) and settings are
-stored in browser storage. Backup/recovery: [Q-014](../open-questions.md#q-014).
+Where the save (collection, team, position, progress) is stored, and how the
+key is backed up, is canonical in [player-data](../tech/player-data.md) (still
+undecided: [Q-014](../open-questions.md#q-014)).
 
 [proposed] Because the world is shared ([multiplayer](multiplayer.md)), the
 identity also signs presence messages, PvP commitments and trade records. The
 display name and avatar are visible to other players, so the display name
-must be moderated.
+must be moderated. There is no chat to moderate ([MPL-007](multiplayer.md#requirements)).
 
 ## Requirements
 

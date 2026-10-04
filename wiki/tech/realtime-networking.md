@@ -6,13 +6,14 @@ req_prefix: NET
 tags: [tech, libp2p, multiplayer, pubsub]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Realtime Peer-to-Peer Networking
@@ -40,6 +41,11 @@ updated: 2026-10-03
   limited rate, at most a few per second while moving and a heartbeat every
   few seconds when idle. Contents: peer ID, player ID, display name, avatar
   reference, position, facing, timestamp, signature.
+- [accepted] There is no chat; [emotes](../glossary.md#emote) are the only
+  player-to-player messages. [proposed] An emote is sent as a presence message
+  with an `emote` field (an ID from the fixed set in
+  [multiplayer § Communication](../gameplay/multiplayer.md#communication)),
+  rate-limited like other presence messages. Receivers ignore unknown emote IDs.
 - A player not heard from for a timeout is removed from view.
 - [proposed] The operator server also joins the topics, to help gossip reach
   browsers that have few direct peers.
@@ -63,7 +69,7 @@ Message formats are still to be specified.
 
 ## Open questions
 
-[Q-027](../open-questions.md#q-027) · [Q-028](../open-questions.md#q-028)
+[Q-027](../open-questions.md#q-027)
 
 ## See also
 

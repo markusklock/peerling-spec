@@ -6,13 +6,14 @@ req_prefix: MPL
 tags: [gameplay, multiplayer, social]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Multiplayer — The Shared World
@@ -32,12 +33,37 @@ updated: 2026-10-03
 - [proposed] Nearby players are visible as their
   [player character](player-character.md), with a display name above them.
   Their position and movement update live.
-- [proposed] Interacting with another player's character opens a menu:
+- [accepted] Battles and trades can only be started when the two players are
+  **next to each other** in the world. [proposed] "Next to" means within 3
+  metres (about one character length apart).
+- [proposed] Interacting with an adjacent player's character opens a menu:
   *Challenge to battle*, *Propose trade*, *View profile* (their team, and the
-  species they created).
+  species they created). Once a battle or trade has started, it continues even
+  if a player moves away.
 - [proposed] Wild encounters are **per player**: each player meets their own
   wild Peerlings, even when standing next to someone else. This avoids
   competing for the same creature.
+
+## Communication
+
+[accepted] There is **no chat**. Players communicate only with
+[emotes](../glossary.md#emote). [proposed] A small fixed set, sent through the
+presence channel ([realtime-networking](../tech/realtime-networking.md#presence-proposed))
+and shown as a bubble or animation above the player's character:
+
+| Emote | Meaning |
+|-------|---------|
+| Wave | Hello / goodbye |
+| Heart | Like / thanks |
+| Laugh | Fun |
+| Wow | Surprise / admiration |
+| Thumbs up | OK / agree |
+| Thumbs down | No / disagree |
+| Challenge | "Want to battle?" |
+| Trade | "Want to trade?" |
+
+Why no chat: free text between strangers would need moderation, and emotes
+work in every language.
 
 ## Scale and visibility (proposed)
 
@@ -51,11 +77,13 @@ updated: 2026-10-03
 - **MPL-003** [proposed] A client MUST show other players who are near it in the world, with live movement.
 - **MPL-004** [proposed] Wild encounters MUST be local to each player; other players MUST NOT be able to interfere with them.
 - **MPL-005** [proposed] Battle and trade requests MUST require explicit acceptance by the receiving player, who MUST be able to block or ignore a player.
+- **MPL-006** [accepted] A battle or trade request MUST only be possible when the two players are next to each other in the world. [proposed] Next to each other means within 3 m.
+- **MPL-007** [accepted] There MUST NOT be free-text chat between players; players communicate only with emotes from a fixed set.
 
 ## Open questions
 
 [Q-025](../open-questions.md#q-025) · [Q-026](../open-questions.md#q-026) ·
-[Q-027](../open-questions.md#q-027) · [Q-028](../open-questions.md#q-028)
+[Q-027](../open-questions.md#q-027)
 
 ## See also
 

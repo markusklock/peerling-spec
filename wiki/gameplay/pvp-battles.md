@@ -6,11 +6,12 @@ req_prefix: PVP
 tags: [gameplay, multiplayer, battle, libp2p]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-2.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # PvP Battles
@@ -41,9 +42,14 @@ trust what a client claims. [proposed] Approach, still open in
   species. Since every species is balanced by construction, that gives little
   advantage.
 
+Moving saves to IPFS/OrbitDB and having the server sign catches would close the
+ownership gap. Options and a recommendation are in
+[player-data](../tech/player-data.md).
+
 ## Protocol (proposed)
 
-1. **Challenge.** A sends a challenge; B accepts or declines (MPL-005).
+1. **Challenge.** A sends a challenge to B while standing next to them
+   (MPL-006); B accepts or declines (MPL-005).
 2. **Team exchange.** Each side sends its team as a list of species CIDs, and
    each side fetches and verifies the other's species.
 3. **Shared randomness.** Both commit to a random value (send its hash), then
@@ -71,7 +77,7 @@ since results can't be verified by a third party.
 
 ## Open questions
 
-[Q-025](../open-questions.md#q-025) · [Q-028](../open-questions.md#q-028)
+[Q-025](../open-questions.md#q-025)
 
 ## See also
 

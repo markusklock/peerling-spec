@@ -34,3 +34,20 @@ List all entries with `grep "^## \[" wiki/log.md`.
   designer's tentative quick/strong/special idea (proposed, Q-024). Stats
   reduced from 5 to 4 (proposed) to avoid a clash with "special".
   Removed MOV-003 and MOV-004.
+
+## [2026-10-04] design | Answers round 2: move slots, proximity, emotes, world size, saves, stats
+- Source: raw/conversations/2026-10-04-answers-round-2.md
+- Changed: open-questions.md, index.md, glossary.md (Emote; Move slot),
+  peerlings/moves.md, peerlings/peerling-species.md, peerlings/moderation.md,
+  gameplay/battle.md, gameplay/multiplayer.md, gameplay/pvp-battles.md,
+  gameplay/trading.md, gameplay/exploration.md, gameplay/player-character.md,
+  world/procedural-generation.md, tech/realtime-networking.md,
+  tech/architecture.md, tech/player-data.md (new)
+- Notes: Resolved Q-011 (large, finite world) and Q-028 (face to face only);
+  narrowed Q-024 (3 slots accepted; move-use limits open) and Q-027 (no chat,
+  emotes only; scale open). The designer asked about alternatives to browser
+  saves: filed the options analysis as tech/player-data.md (status proposed;
+  recommends a per-player OrbitDB log plus server-signed catches and trades).
+  Suggested stat numbers (320 total, 40–130, step 5) and a damage model at the
+  designer's request (Q-023 stays open until approved). Added MPL-006,
+  MPL-007, WGN-005, SAVE-001…004.
