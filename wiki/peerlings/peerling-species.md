@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -81,14 +82,13 @@ in [battle](../gameplay/battle.md).
 [accepted] *Fair by construction* ([overview](../overview.md#design-pillars)):
 every species has the **same base-stat total**. [accepted] The LLM spreads
 that total across the stats to fit the concept: a turtle gets Defense, a
-cheetah gets Speed. [proposed] Each stat has a minimum and a maximum, so
+cheetah gets Speed. [accepted] Each stat has a minimum and a maximum, so
 no species has a useless stat or an extreme one.
 
-### Suggested numbers [proposed]
+### Stat numbers
 
-Suggested on 2026-10-04 at the designer's request; awaiting approval
-([Q-023](../open-questions.md#q-023)). They assume the damage model in
-[battle § Suggested damage model](../gameplay/battle.md#suggested-damage-model-proposed).
+[accepted] Approved 2026-10-04 together with the
+[damage model](../gameplay/battle.md#damage-model).
 
 | Rule | Value | Why |
 |------|-------|-----|
@@ -97,7 +97,8 @@ Suggested on 2026-10-04 at the designer's request; awaiting approval
 | Maximum per stat | **130** | Allows a clear specialty (a 130 stat is ~1.6× average) without making the other three stats useless |
 | Step | **5** | Readable numbers; fewer near-identical spreads |
 
-Example spreads (HP / Attack / Defense / Speed):
+[proposed] Example spreads (HP / Attack / Defense / Speed), as guidance for
+the LLM prompt:
 
 | Archetype | HP | Atk | Def | Spd |
 |-----------|---:|----:|----:|----:|
@@ -127,12 +128,16 @@ the player's save (not on the shared registry). Illustrative shape:
   "currentHp": 22,
   "caughtAt": "2026-10-03T12:30:00Z",
   "origin": "starter | wild | trade",
-  "originalOwner": "<player public key of whoever first obtained it>"
+  "originalOwner": "<player public key of whoever first obtained it>",
+  "verification": "unverified | verified | rejected",
+  "catchAttestation": "<server signature, once verified>"
 }
 ```
 
 Progression (levels, XP, evolution): [Q-010](../open-questions.md#q-010).
 Instances can change owner through [trading](../gameplay/trading.md).
+Instances are stored in the player's save, and their verification is
+described in [player-data](../tech/player-data.md#verification).
 
 ## Requirements
 
@@ -142,7 +147,7 @@ Instances can change owner through [trading](../gameplay/trading.md).
 - **SPC-004** [proposed] A species record MUST carry a `schema` version string; clients MUST ignore records with unknown major versions rather than fail.
 - **SPC-005** [proposed] A species' types MUST satisfy TYP-001 and TYP-002 in [types](types.md#requirements).
 - **SPC-006** [proposed] A species' move set MUST satisfy the move-set rules in [moves](moves.md#requirements).
-- **SPC-007** [accepted] Every species MUST have the same base-stat total. [proposed] Each stat MUST lie within its bounds.
+- **SPC-007** [accepted] Every species MUST have the same base-stat total (320), and each stat MUST lie within 40–130 in steps of 5.
 - **SPC-008** [proposed] Clients MUST verify the attestation of a species record before using it.
 - **SPC-009** [proposed] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
 - **SPC-010** [proposed] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
@@ -151,8 +156,7 @@ Instances can change owner through [trading](../gameplay/trading.md).
 
 [Q-010](../open-questions.md#q-010) ·
 [Q-016](../open-questions.md#q-016) ·
-[Q-018](../open-questions.md#q-018) ·
-[Q-023](../open-questions.md#q-023)
+[Q-018](../open-questions.md#q-018)
 
 ## See also
 

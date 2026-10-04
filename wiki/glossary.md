@@ -21,10 +21,20 @@ updated: 2026-10-04
 official pipeline and has not been altered. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
+### Beacon
+[proposed] A random value the server publishes and signs every few minutes.
+Encounter seeds include it, so players can't choose their encounters. See
+[player-data](tech/player-data.md#verification).
+
 ### Biome
 A region type of the procedural world (e.g. forest, desert) that influences
 which Peerlings are encountered there. See
 [procedural-generation](world/procedural-generation.md).
+
+### Catch attestation
+The server's signature confirming that a Peerling instance was caught
+legitimately. The server checks this by replaying the battle. See
+[player-data](tech/player-data.md#verification).
 
 ### CID
 Content Identifier — the IPFS address of a piece of content, derived from a hash
@@ -88,6 +98,11 @@ A peer-to-peer database built on IPFS and libp2p. The game's
 [registry](#registry) of all Peerling species is an OrbitDB database. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
+### Ownership ledger
+An OrbitDB database, written only by the server, that records who owns
+each verified Peerling instance and every trade. See
+[player-data](tech/player-data.md#ownership-ledger-and-trades-accepted-details-proposed).
+
 ### Peerling
 A creature in the game. The word is ambiguous between a *species* and an
 individual *instance*; when the distinction matters, the spec says
@@ -118,6 +133,10 @@ to nearby players over libp2p pubsub. See
 A battle between two players' Peerlings, played peer-to-peer. See
 [pvp-battles](gameplay/pvp-battles.md).
 
+### Recovery phrase
+A list of words shown to the player once, from which their identity key can
+be restored on another device. See [player-data](tech/player-data.md).
+
 ### Region
 [proposed] A square area of the world made of several chunks. It is the unit
 for presence topics in multiplayer. See
@@ -126,6 +145,10 @@ for presence topics in multiplayer. See
 ### Registry
 The OrbitDB database that lists every published Peerling species. See
 [orbitdb-registry](tech/orbitdb-registry.md).
+
+### Save log
+A player's save: a per-player OrbitDB event log, written only by that
+player and replicated by the server. See [player-data](tech/player-data.md#save-log).
 
 ### Seed species
 One of the handful of species the [operator](#operator) creates at launch,
@@ -157,6 +180,10 @@ See [trading](gameplay/trading.md).
 ### Type
 An elemental category from a predefined list that determines battle
 strengths and weaknesses. See [types](peerlings/types.md).
+
+### Verified Peerling
+A Peerling instance with a valid [catch attestation](#catch-attestation).
+Only verified Peerlings can be traded or used in PvP.
 
 ### Wild Peerling
 An unowned Peerling instance met during exploration, generated from a species

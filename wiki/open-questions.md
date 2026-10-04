@@ -64,32 +64,21 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Raised: 2026-10-03
 
 ### Q-010
-**Progression: levels, experience, evolution?**
+**Progression: how do XP and levelling work, is there evolution, and do moves change?**
 - Affects: [peerling-species](peerlings/peerling-species.md), [battle](gameplay/battle.md), [core-loop](gameplay/core-loop.md), [moves](peerlings/moves.md)
-- Context: Evolution would require generating additional forms (more GPU work,
-  more design).
-- Proposal: levels and XP in v1, no evolution in v1. The suggested damage
-  model ([battle](gameplay/battle.md#suggested-damage-model-proposed)) assumes
-  levels 1–50.
+- Partly resolved 2026-10-04: levels run from 1 to 50
+  ([battle § Damage model](gameplay/battle.md#damage-model)).
+- Still open: XP gained per battle and the XP needed per level; evolution
+  (which would need extra generated forms, so more GPU work and more design);
+  whether Peerlings ever learn or change moves.
+- Proposal: a simple XP curve; no evolution and no move changes in v1.
 - Raised: 2026-10-03
-
 ### Q-012
 **Presentation: camera and visual style of the world.**
 - Affects: [exploration](gameplay/exploration.md), [battle](gameplay/battle.md)
 - Context: Peerlings are static 3D models and battles use simple 3D graphics.
   The world view is still open: third-person, isometric/top-down 3D, or a 2D
   world with 3D battles.
-- Raised: 2026-10-03
-
-### Q-014
-**Player identity and saves: where does progress live, and how is it recovered?**
-- Affects: [player-character](gameplay/player-character.md), [ipfs-helia](tech/ipfs-helia.md)
-- Context: No accounts were mentioned. A keypair generated in the browser can
-  identify the player, but it is lost if browser storage is cleared.
-- Options analysed 2026-10-04 (browser only, IPFS + IPNS snapshots,
-  per-player OrbitDB log) in [player-data](tech/player-data.md).
-- Proposal: a per-player OrbitDB log replicated by the server, with key
-  recovery via a recovery phrase (see player-data). Awaiting decision.
 - Raised: 2026-10-03
 
 ### Q-016
@@ -139,61 +128,25 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
   working from peers and local cache as far as connectivity allows.
 - Raised: 2026-10-03
 
-### Q-023
-**Stat budget: what is the base-stat total, and what are the per-stat bounds?**
-- Affects: [peerling-species](peerlings/peerling-species.md#stats), [battle](gameplay/battle.md)
-- Context: Equal totals are decided. The numbers depend on the damage formula.
-- Suggested 2026-10-04 at the designer's request: total **320**, each stat
-  **40–130**, steps of **5**, together with a damage model. See
-  [peerling-species § Suggested numbers](peerlings/peerling-species.md#suggested-numbers-proposed)
-  and [battle § Suggested damage model](gameplay/battle.md#suggested-damage-model-proposed).
-  Awaiting approval.
-- Raised: 2026-10-03
-
-### Q-024
-**How often can moves be used?**
-- Affects: [moves](peerlings/moves.md), [battle](gameplay/battle.md)
-- Partly resolved 2026-10-04: exactly three slots (quick, strong, signature),
-  with no support slot (MOV-006).
-- Still open: are moves unlimited, limited per battle (like PP), or paid from a
-  resource (like Temtem's stamina)? Do Peerlings ever learn or change moves
-  (ties to Q-010)?
-- Proposal: unlimited uses, with drawbacks built into the strong templates; no
-  move changes in v1.
-- Raised: 2026-10-03
-
-### Q-025
-**PvP fairness: how much cheating protection is needed?**
-- Affects: [pvp-battles](gameplay/pvp-battles.md), [architecture](tech/architecture.md#trust-model)
-- Context: Saves live in the browser and can be edited. Species stats can be
-  verified (CID + attestation), but levels and ownership can't, without a
-  server.
-- Proposal: normalize all levels in PvP; no farmable PvP rewards.
-- Options analysed 2026-10-04 in [player-data](tech/player-data.md). The
-  recommendation adds server-signed catches (verified by replaying the battle),
-  so only verified Peerlings can be used in PvP. Awaiting decision.
-- Raised: 2026-10-03
-
-### Q-026
-**Trade integrity: is duplication by modified clients acceptable?**
-- Affects: [trading](gameplay/trading.md), [peerling-species](peerlings/peerling-species.md#peerling-instance)
-- Context: Without a central authority, a modified client can trade a Peerling
-  away and keep a copy. Species aren't scarce (anyone can catch them), so the
-  harm is limited.
-- Options: (a) accept it for a casual game; (b) the server notarizes ownership
-  (signs instances when caught or traded), which needs the server for every
-  catch and trade; (c) an OrbitDB ownership log that peers check.
-- Options analysed 2026-10-04 in [player-data](tech/player-data.md). The
-  recommendation is (b) as a server-written OrbitDB ownership ledger; the
-  cheaper alternative is (a). Awaiting decision.
-- Raised: 2026-10-03
-
 ### Q-027
 **Multiplayer scale: region size and how many players are visible at once.**
 - Affects: [multiplayer](gameplay/multiplayer.md), [realtime-networking](tech/realtime-networking.md)
 - Partly resolved 2026-10-04: no chat, only emotes (MPL-007).
 - Proposal: regions of 64 × 64 m; show at most 30 nearby players.
 - Raised: 2026-10-03
+
+### Q-029
+**Encounter seeds: how exactly does the server beacon work?**
+- Affects: [player-data](tech/player-data.md#verification), [encounters](gameplay/encounters.md), [generation-server](tech/generation-server.md)
+- Context: Catch verification needs encounter seeds that players can't choose
+  (otherwise they could re-roll until they get a rare Peerling). Proposed:
+  `seed = hash(beacon, playerId, encounterCounter)`, with a beacon value the
+  server signs every 5 minutes.
+- Sub-questions: how the beacon is distributed (pubsub topic, OrbitDB, IPNS);
+  how the species is chosen from the seed deterministically, including what
+  happens while the registry is still syncing; how old a beacon can be when
+  playing offline.
+- Raised: 2026-10-04
 
 ## Resolved
 
@@ -244,3 +197,33 @@ Resolved 2026-10-04 →
 **How are battles and trades started?** Only when the two players are next to
 each other in the world. Resolved 2026-10-04 →
 [multiplayer](gameplay/multiplayer.md) (MPL-006).
+
+### Q-014
+**Player identity and saves.** A per-player OrbitDB save log replicated by the
+server; the key can be restored with a recovery phrase. Resolved 2026-10-04 →
+[D-0009](decisions/D-0009-player-data-on-orbitdb.md),
+[player-data](tech/player-data.md).
+
+### Q-023
+**Stat budget.** Total 320, each stat 40–130 in steps of 5, with the approved
+damage model. Resolved 2026-10-04 →
+[peerling-species § Stat numbers](peerlings/peerling-species.md#stat-numbers),
+[battle § Damage model](gameplay/battle.md#damage-model).
+
+### Q-024
+**Move slots and move use.** Three slots (quick, strong, signature); moves
+can be used without limit. Resolved 2026-10-04 →
+[moves](peerlings/moves.md) (MOV-006, MOV-009). Whether moves change when
+levelling moved to [Q-010](#q-010).
+
+### Q-025
+**PvP fairness.** Level 50 for everyone, and only Peerlings with a server catch
+attestation. Resolved 2026-10-04 →
+[D-0009](decisions/D-0009-player-data-on-orbitdb.md),
+[pvp-battles](gameplay/pvp-battles.md#fairness).
+
+### Q-026
+**Trade integrity.** Trades complete only when the server's ownership ledger
+records them. Resolved 2026-10-04 →
+[D-0009](decisions/D-0009-player-data-on-orbitdb.md),
+[trading](gameplay/trading.md#integrity).

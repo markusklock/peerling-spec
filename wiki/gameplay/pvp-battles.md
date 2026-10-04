@@ -7,6 +7,7 @@ tags: [gameplay, multiplayer, battle, libp2p]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -27,31 +28,28 @@ directly between the two players' browsers over a libp2p stream
 ([realtime-networking](../tech/realtime-networking.md)). Both clients run the
 same deterministic battle engine (BTL-002) and must agree on every turn.
 
-## Fairness (proposed)
+## Fairness
 
-Player saves live in the browser and can be edited, so the protocol must not
-trust what a client claims. [proposed] Approach, still open in
-[Q-025](../open-questions.md#q-025):
+A modified client could lie about its Peerlings, so the protocol checks
+everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitdb.md):
 
-- **Species are verifiable.** Each Peerling's species record is fetched by CID
-  and its attestation checked, so stats, types and moves can't be faked.
-- **Levels are normalized.** All Peerlings fight at the same fixed level in
-  PvP (as in Pokémon's competitive formats). Levels can't be verified, so
-  edited levels then give no advantage.
-- **Ownership is not verified** in v1: a modified client could field any
-  species. Since every species is balanced by construction, that gives little
-  advantage.
-
-Moving saves to IPFS/OrbitDB and having the server sign catches would close the
-ownership gap. Options and a recommendation are in
-[player-data](../tech/player-data.md).
+- [proposed] **Species are verifiable.** Each Peerling's species record is
+  fetched by CID and its attestation checked, so stats, types and moves can't
+  be faked.
+- [accepted] **Levels are normalized.** All Peerlings fight at level 50 (as in
+  Pokémon's competitive formats), so edited levels give no advantage.
+- [accepted] **Only verified Peerlings.** Every Peerling in a PvP team must
+  carry a valid server catch attestation
+  ([player-data § Verification](../tech/player-data.md#verification)), so faked
+  Peerlings can't be used.
 
 ## Protocol (proposed)
 
 1. **Challenge.** A sends a challenge to B while standing next to them
    (MPL-006); B accepts or declines (MPL-005).
-2. **Team exchange.** Each side sends its team as a list of species CIDs, and
-   each side fetches and verifies the other's species.
+2. **Team exchange.** Each side sends its team: for each Peerling, the
+   species CID, instance ID and catch attestation. Each side fetches and
+   verifies the other's species and checks the attestations.
 3. **Shared randomness.** Both commit to a random value (send its hash), then
    reveal it. The battle RNG seed is derived from both values, so neither side
    controls the random rolls.
@@ -74,10 +72,12 @@ since results can't be verified by a third party.
 - **PVP-004** [proposed] The battle RNG seed MUST be derived from values committed and revealed by both players.
 - **PVP-005** [proposed] Turn actions MUST use commit-reveal, so neither player sees the other's choice before committing.
 - **PVP-006** [proposed] Clients MUST compare battle-state hashes after each turn and void the battle on mismatch.
+- **PVP-007** [accepted] All Peerlings MUST fight at level 50 in PvP.
+- **PVP-008** [accepted] Each client MUST reject an opposing Peerling without a valid catch attestation ([SAVE-003](../tech/player-data.md#requirements)).
 
 ## Open questions
 
-[Q-025](../open-questions.md#q-025)
+_None at the moment._
 
 ## See also
 

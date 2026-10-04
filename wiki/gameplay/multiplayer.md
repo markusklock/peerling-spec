@@ -7,6 +7,7 @@ tags: [gameplay, multiplayer, social]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -34,8 +35,7 @@ updated: 2026-10-04
   [player character](player-character.md), with a display name above them.
   Their position and movement update live.
 - [accepted] Battles and trades can only be started when the two players are
-  **next to each other** in the world. [proposed] "Next to" means within 3
-  metres (about one character length apart).
+  **next to each other** in the world, meaning within 3 metres.
 - [proposed] Interacting with an adjacent player's character opens a menu:
   *Challenge to battle*, *Propose trade*, *View profile* (their team, and the
   species they created). Once a battle or trade has started, it continues even
@@ -47,7 +47,7 @@ updated: 2026-10-04
 ## Communication
 
 [accepted] There is **no chat**. Players communicate only with
-[emotes](../glossary.md#emote). [proposed] A small fixed set, sent through the
+[emotes](../glossary.md#emote). [accepted] The fixed set below, sent through the
 presence channel ([realtime-networking](../tech/realtime-networking.md#presence-proposed))
 and shown as a bubble or animation above the player's character:
 
@@ -77,12 +77,11 @@ work in every language.
 - **MPL-003** [proposed] A client MUST show other players who are near it in the world, with live movement.
 - **MPL-004** [proposed] Wild encounters MUST be local to each player; other players MUST NOT be able to interfere with them.
 - **MPL-005** [proposed] Battle and trade requests MUST require explicit acceptance by the receiving player, who MUST be able to block or ignore a player.
-- **MPL-006** [accepted] A battle or trade request MUST only be possible when the two players are next to each other in the world. [proposed] Next to each other means within 3 m.
+- **MPL-006** [accepted] A battle or trade request MUST only be possible when the two players are within 3 m of each other in the world.
 - **MPL-007** [accepted] There MUST NOT be free-text chat between players; players communicate only with emotes from a fixed set.
 
 ## Open questions
 
-[Q-025](../open-questions.md#q-025) · [Q-026](../open-questions.md#q-026) ·
 [Q-027](../open-questions.md#q-027)
 
 ## See also

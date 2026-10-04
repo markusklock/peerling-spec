@@ -7,10 +7,11 @@ tags: [gameplay, catching, collection]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Catching
@@ -31,9 +32,14 @@ in the player's save, referencing its species by CID
 retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).
 Caught Peerlings can later be [traded](trading.md).
 
+[accepted] The server verifies each catch afterwards by replaying the battle;
+until then the Peerling is *unverified* and can't be traded or used in PvP. See
+[player-data § Verification](../tech/player-data.md#verification).
+
 ## Requirements
 
 - **CAT-001** [accepted] The player MUST be able to catch wild Peerlings.
+- **CAT-002** [accepted] A catch MUST record the catch evidence needed for server verification ([SAVE-006](../tech/player-data.md#requirements)).
 
 ## Open questions
 

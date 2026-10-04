@@ -7,13 +7,14 @@ tags: [tech, ipfs, helia, libp2p]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
   - wiki/tech/architecture.md
   - wiki/tech/generation-server.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Browser IPFS Node (Helia)
@@ -30,6 +31,8 @@ to/from the IPFS network ([D-0003](../decisions/D-0003-browser-client-is-ipfs-no
 [accepted] The player's node publishes the player's newly created Peerling
 ([D-0007](../decisions/D-0007-players-publish-assets.md)). [proposed] The same
 libp2p node carries [realtime multiplayer traffic](realtime-networking.md).
+[accepted] It also hosts the player's OrbitDB save log
+([player-data](player-data.md)).
 
 ## Connectivity
 
@@ -96,7 +99,7 @@ library defaults:
 
 ## Open questions
 
-[Q-014](../open-questions.md#q-014) · [Q-016](../open-questions.md#q-016)
+[Q-016](../open-questions.md#q-016)
 
 ## See also
 

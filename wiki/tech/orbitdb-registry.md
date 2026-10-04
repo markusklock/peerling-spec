@@ -7,12 +7,13 @@ tags: [tech, orbitdb, ipfs, data]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/encounters.md
   - wiki/peerlings/moderation.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Peerling Registry (OrbitDB)
@@ -57,6 +58,13 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 - **Scale:** entries are small (a few hundred bytes), so even tens of thousands
   of species replicate quickly; heavy assets are fetched by CID only when
   needed.
+
+## Other OrbitDB databases
+
+The registry is one of three kinds of OrbitDB database in the game; the other
+two are canonical in [player-data](player-data.md):
+- one **save log** per player, written by that player;
+- the **ownership ledger**, written only by the server.
 
 ## Requirements
 

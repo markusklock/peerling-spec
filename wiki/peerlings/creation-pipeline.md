@@ -7,6 +7,7 @@ tags: [peerlings, generation, ai, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -17,7 +18,7 @@ related:
   - wiki/tech/ipfs-helia.md
   - wiki/gameplay/onboarding.md
   - wiki/decisions/D-0007-players-publish-assets.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Peerling Creation Pipeline
@@ -94,7 +95,7 @@ sequenceDiagram
 The player describes the Peerling they want in free text (e.g. *"a small
 sleepy fox made of moss that carries a lantern"*). [proposed] The client shows
 a few example wishes and a character limit. [proposed] The wish is sent with the
-player's identity ([Q-014](../open-questions.md#q-014)) so the server can apply
+player's identity ([player-character](../gameplay/player-character.md)) so the server can apply
 rate limits.
 
 ### Stage 2 — Concept

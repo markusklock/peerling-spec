@@ -11,7 +11,7 @@ related:
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # D-0008: One shared world with PvP battles and trading
@@ -40,7 +40,8 @@ that all players share one world and can interact.
 - Player saves now affect other players (PvP, trades), so the trust model
   changes ([architecture § Trust model](../tech/architecture.md#trust-model)).
   Cheating and duplication need answers ([Q-025](../open-questions.md#q-025),
-  [Q-026](../open-questions.md#q-026)).
+  [Q-026](../open-questions.md#q-026)); answered by
+  [D-0009](D-0009-player-data-on-orbitdb.md).
 - The battle engine must be deterministic so two peers can run the same battle
   and agree on the result ([battle](../gameplay/battle.md)).
 - Multiplayer becomes a strong libp2p showcase (seeing players found and

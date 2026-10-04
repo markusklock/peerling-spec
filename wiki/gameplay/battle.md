@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -31,21 +32,18 @@ updated: 2026-10-04
 side, the player can switch Peerlings, use an item, try to catch (wild battles
 only), or flee (wild battles only).
 
-To be specified (a first suggestion for turn order and damage is below): turn
-order (Speed, move priority), damage formula (stats, move
-power, [type effectiveness](../peerlings/types.md), a same-type bonus for moves
-matching the user's type, randomness), stat stages, fainting, experience and
+Decided: the damage model and turn order below. To be specified: stat stages,
+fainting, experience and
 rewards ([Q-010](../open-questions.md#q-010)).
 
-### Suggested damage model [proposed]
+### Damage model
 
-Suggested on 2026-10-04 together with the stat numbers
-([peerling-species § Suggested numbers](../peerlings/peerling-species.md#suggested-numbers-proposed),
-[Q-023](../open-questions.md#q-023)). It is a simplified version of the
-well-known Pokémon formula, adapted to four stats.
+[accepted] Approved 2026-10-04 together with the
+[stat numbers](../peerlings/peerling-species.md#stat-numbers). It is a
+simplified version of the well-known Pokémon formula, adapted to four stats.
 
 - **Levels** run from 1 to 50. PvP uses level 50 for everyone (see
-  [pvp-battles](pvp-battles.md)). Levelling itself is still open:
+  [pvp-battles](pvp-battles.md)). How XP and levelling work is still open:
   [Q-010](../open-questions.md#q-010).
 - **Stats at level L** (all rounded down):
   - HP = 2 × base × L / 100 + L + 10
@@ -73,10 +71,12 @@ lasts about 3–6 turns:
 | Strong, power 100 | ~69 | ~2–3 |
 | Strong, power 100, super effective (2×) | ~138 | ~1–2 |
 
-[proposed] The battle engine is **deterministic**: given the starting state,
+[accepted] The battle engine is **deterministic**: given the starting state,
 both sides' actions and the RNG seed, it always gives the same result. PvP
 needs this so both players' clients can agree on every turn
-([pvp-battles](pvp-battles.md)).
+([pvp-battles](pvp-battles.md)). The server needs it to verify catches by
+replaying the battle ([player-data](../tech/player-data.md#verification),
+[D-0009](../decisions/D-0009-player-data-on-orbitdb.md)).
 
 ## Presentation
 
@@ -101,15 +101,15 @@ from the move's type and template, not authored per move.
 ## Requirements
 
 - **BTL-001** [accepted] The player MUST be able to battle wild Peerlings they encounter.
-- **BTL-002** [proposed] The battle engine MUST be deterministic given the initial state, the actions taken and the RNG seed.
+- **BTL-002** [accepted] The battle engine MUST be deterministic given the initial state, the actions taken and the RNG seed, on every browser and on the server.
+- **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
 - **BTL-003** [accepted] Battle animation MUST work with static, unrigged models using whole-model transforms only.
 - **BTL-004** [proposed] Move visual effects MUST be derived from the move's type and template, so every generated move has an effect without per-move assets.
 
 ## Open questions
 
 [Q-008](../open-questions.md#q-008) · [Q-010](../open-questions.md#q-010) ·
-[Q-012](../open-questions.md#q-012) · [Q-023](../open-questions.md#q-023) ·
-[Q-024](../open-questions.md#q-024)
+[Q-012](../open-questions.md#q-012)
 
 ## See also
 

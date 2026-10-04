@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
@@ -59,6 +60,10 @@ a slot name because Pokémon uses it for a damage category and a stat.
 | `name` | LLM (moderated, max length TBD) |
 | `description` | LLM (one sentence of flavour text) |
 | `type` | LLM, constrained by the slot (table above) |
+
+[accepted] Moves can be used **without limit**: there are no per-battle uses
+(PP) and no stamina. Balance comes from the trade-offs built into each
+template (low power, misses, recoil, charge turns).
 
 All mechanical properties (power, accuracy, priority, effect) are looked up
 from the template by the client. They are *not* copied into the species record,
@@ -123,11 +128,11 @@ the damage formula ([battle](../gameplay/battle.md)).
 - **MOV-006** [accepted] A species' move set MUST contain exactly three moves, one for each slot: quick, strong, signature.
 - **MOV-007** [proposed] Quick and strong moves MUST be Normal type or one of the species' types; the signature move MUST be the species' primary type.
 - **MOV-008** [proposed] A move's template MUST be one allowed for its slot.
+- **MOV-009** [accepted] Moves MUST be usable without limit; there MUST NOT be per-battle use counts or a move resource.
 
 ## Open questions
 
-[Q-010](../open-questions.md#q-010) (do moves change when levelling?) ·
-[Q-024](../open-questions.md#q-024) (limits on move use)
+[Q-010](../open-questions.md#q-010) (do moves change when levelling?)
 
 ## See also
 

@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -63,7 +64,7 @@ flowchart LR
 | OrbitDB registry | Database of all Peerling species; only the server writes | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
 | Generation server | LLM, image gen, image-to-3D, pinning, registry writer | [generation-server](generation-server.md) | [accepted] |
 | Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [proposed]) |
-| Player data | Save, identity key and ownership: browser, IPFS or OrbitDB (undecided) | [player-data](player-data.md) | [proposed] |
+| Player data | Per-player OrbitDB save log, identity key recovery, ownership ledger | [player-data](player-data.md) | [accepted] |
 
 ## Key data flows
 
@@ -91,9 +92,11 @@ flowchart LR
   ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)), a player's save
   can affect other players, so interactions are designed to need as little
   trust as possible: verifiable species, normalized PvP levels, commit-reveal
-  turns. The remaining gaps are tracked in [Q-025](../open-questions.md#q-025)
-  and [Q-026](../open-questions.md#q-026). Options for closing them (server-signed
-  catches and an ownership ledger) are in [player-data](player-data.md).
+  turns.
+- [accepted] The server is trusted to vouch for *catches and ownership*: it
+  verifies catches by replay and keeps the ownership ledger, so peers can trust
+  Peerlings in trades and PvP ([D-0009](../decisions/D-0009-player-data-on-orbitdb.md),
+  [player-data](player-data.md)).
 
 ## Requirements
 
@@ -106,8 +109,7 @@ flowchart LR
 
 ## Open questions
 
-[Q-022](../open-questions.md#q-022) · [Q-025](../open-questions.md#q-025) ·
-[Q-026](../open-questions.md#q-026)
+[Q-022](../open-questions.md#q-022)
 
 ## See also
 

@@ -51,3 +51,19 @@ List all entries with `grep "^## \[" wiki/log.md`.
   Suggested stat numbers (320 total, 40–130, step 5) and a damage model at the
   designer's request (Q-023 stays open until approved). Added MPL-006,
   MPL-007, WGN-005, SAVE-001…004.
+
+## [2026-10-04] design | Answers round 3: player data, stats approved, unlimited moves
+- Source: raw/conversations/2026-10-04-answers-round-3.md
+- Changed: decisions/D-0009 (new), decisions/D-0008, tech/player-data.md
+  (rewritten as the canonical design, with save contents), glossary.md,
+  open-questions.md, index.md, peerlings/peerling-species.md,
+  peerlings/moves.md, peerlings/creation-pipeline.md, gameplay/battle.md,
+  gameplay/catching.md, gameplay/trading.md, gameplay/pvp-battles.md,
+  gameplay/multiplayer.md, gameplay/player-character.md,
+  world/procedural-generation.md, tech/architecture.md,
+  tech/generation-server.md, tech/orbitdb-registry.md, tech/ipfs-helia.md
+- Notes: Resolved Q-014, Q-023, Q-024, Q-025, Q-026; narrowed Q-010 (levels
+  1–50 decided); opened Q-029 (encounter beacon). Answered the designer's
+  question on save contents in player-data § Save contents. Added SAVE-005…009,
+  BTL-005, MOV-009, PVP-007/008, CAT-002. Corrected WGN-005: the natural
+  border had been marked accepted by mistake; it is a proposal.

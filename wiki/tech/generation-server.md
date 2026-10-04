@@ -7,6 +7,7 @@ tags: [tech, server, ai, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -14,7 +15,7 @@ related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Generation Server
@@ -33,6 +34,10 @@ updated: 2026-10-03
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Only writer of the OrbitDB registry | [accepted] ([D-0005](../decisions/D-0005-server-sole-registry-writer.md)) |
 | Sign species records (attestation) | [proposed] |
+| Replicate and pin every player's save log | [accepted] ([player-data](player-data.md)) |
+| Verify catches by replaying battles; sign catch attestations | [accepted] ([player-data](player-data.md#verification)) |
+| Only writer of the ownership ledger; record trades | [accepted] ([player-data](player-data.md#ownership-ledger-and-trades-accepted-details-proposed)) |
+| Publish the signed random beacon for encounter seeds | [proposed] ([Q-029](../open-questions.md#q-029)) |
 | Expose a creation API with a job queue | [proposed] |
 | Validate generated battle data and moderate content | [proposed] |
 | Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [proposed] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |

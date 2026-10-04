@@ -1,15 +1,19 @@
 ---
 title: "Player Data: Saves, Identity and Ownership"
-type: concept
-status: proposed
+type: system
+status: draft
 req_prefix: SAVE
 tags: [tech, saves, identity, orbitdb, ipns, security]
 sources:
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-3.md
 related:
+  - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/gameplay/player-character.md
+  - wiki/gameplay/catching.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
+  - wiki/peerlings/peerling-species.md
   - wiki/tech/architecture.md
   - wiki/tech/orbitdb-registry.md
 updated: 2026-10-04
@@ -17,100 +21,157 @@ updated: 2026-10-04
 
 # Player Data: Saves, Identity and Ownership
 
-> Canonical home for where a player's save lives and how others can trust what
-> it says. This page compares the options, including OrbitDB- and IPFS-based
-> ones, and gives a recommendation. Nothing here is decided yet: it answers the
-> designer's question from 2026-10-04 and feeds [Q-014](../open-questions.md#q-014),
-> [Q-025](../open-questions.md#q-025) and [Q-026](../open-questions.md#q-026).
+> Canonical home for what a player's save contains, where it is stored (a
+> per-player OrbitDB log), how the identity key is recovered, and how catches
+> and trades are verified by the server so other players can trust them.
+> Decided in [D-0009](../decisions/D-0009-player-data-on-orbitdb.md).
 
-## Two separate problems
+## Chosen design
 
-Keeping saves in the browser causes two different problems, and each needs its
-own solution:
+[accepted] ([D-0009](../decisions/D-0009-player-data-on-orbitdb.md))
 
-| Problem | Question | Example |
-|---------|----------|---------|
-| **Durability and portability** | *Where* is the data stored? | Clearing browser data deletes everything; a save can't move to another device. |
-| **Integrity** | *Who* can vouch for the data? | A player edits their save to own a Peerling they never caught, or trades one away and keeps a copy. |
+| Concern | Solution |
+|---------|----------|
+| Where the save lives | A per-player OrbitDB **save log** (an append-only event log) that only the player's identity can write. The server replicates and pins it. |
+| Recovery | The identity key can be restored with a **recovery phrase** |
+| Faked Peerlings | The server verifies each catch by **replaying the battle** and signs it |
+| Duplication via trades | Trades complete only when recorded in the server's **ownership ledger** |
+| Edited levels in PvP | PvP uses **level 50** for everyone |
+| What can be traded or used in PvP | Only **verified** Peerlings |
 
-**Key point:** moving the save to OrbitDB or IPFS solves the first problem,
-not the second. Whoever holds the write key (the player) can still write
-anything into their own OrbitDB database or IPNS record. Signatures only prove
-*who* wrote something, not that it is *true*. Integrity needs someone other
-than the player to vouch for the important events. In practice that is the
-operator server, which is already trusted for the registry
-([D-0005](../decisions/D-0005-server-sole-registry-writer.md)), or
-re-verification by replaying deterministic game logic.
+## Save contents
 
-## Storage options
+The save holds everything about the player's progress. Species data (art, 3D
+model, stats, moves) is **not** in the save; it lives on IPFS and the save
+refers to it by CID.
+
+| Part | Contents | Provenance |
+|------|----------|------------|
+| Collection | Every Peerling the player owns, each with its **current level**, XP, current HP, nickname, origin and verification. Format: [Peerling instance](../peerlings/peerling-species.md#peerling-instance) | [accepted] |
+| Team | Ordered list of the instance IDs in the active team (size: [catching](../gameplay/catching.md)) | [proposed] |
+| Profile | Player ID (public key), display name, character appearance | [proposed] |
+| Created species | CID(s) of the species this player created | [proposed] |
+| Peerdex | Species seen and species caught (CIDs) | [proposed] |
+| Position | Last position and facing in the world | [proposed] |
+| Inventory | Items (e.g. catching items; to be specified in [catching](../gameplay/catching.md)) | [proposed] |
+
+Not in the save: the identity **private key** (stays on the device; restored
+with the recovery phrase), and the authoritative owner of each Peerling (that is
+the ownership ledger).
+
+## Save log
+
+[proposed] The save is stored as *events*, not as one file that gets
+overwritten. The current save is what you get by applying all events in
+order. OrbitDB *events* databases are append-only and every entry is signed by
+the writer, so the log is also a tamper-evident history.
+
+| Event | Written when | Payload |
+|-------|-------------|---------|
+| `profile` | Onboarding; profile changes | display name, appearance |
+| `species-created` | Creation pipeline finished | species CID |
+| `catch` | A wild Peerling is caught | the new instance + **catch evidence** (see below) |
+| `catch-verified` | The server's verification arrives | instance ID, catch attestation |
+| `battle-result` | After a wild battle | for each participating instance: XP gained, new level, HP |
+| `team` | Team changed | ordered instance IDs |
+| `nickname` | Peerling renamed | instance ID, nickname |
+| `trade` | The ownership ledger recorded a trade | ledger entry reference; instances out; full data of instances in |
+| `seen` | First sighting of a species | species CID |
+| `position` | Every 30 s while moving, and on exit | position, facing |
+| `snapshot` | Every 50 events, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
+
+Loading a save means reading the latest `snapshot` and applying the events
+after it. The server replicates every player's log and pins the snapshots.
+
+## Verification
+
+### Catches [accepted, details proposed]
+
+1. When a player catches a Peerling, the client appends a `catch` event with
+   the **catch evidence**: the encounter seed, the battle's starting state, and
+   every action taken. The Peerling can be used straight away in
+   exploration and wild battles. It is *unverified* until step 3.
+2. The server sees the event (it replicates the save log), replays the battle
+   with the deterministic engine ([BTL-002](../gameplay/battle.md#requirements)),
+   and checks the encounter seed (see below).
+3. If valid, the server signs a **catch attestation** (instance ID, species CID,
+   owner, encounter seed) and records the instance in the ownership ledger. The
+   client appends `catch-verified`. If invalid, the instance is permanently
+   *unverified*: it stays in the collection but can never be traded or used in
+   PvP.
+
+**Encounter seed.** [proposed] To stop players re-rolling encounters until they
+get a good one, the seed is derived from a random value the player can't
+choose: `seed = hash(beacon, playerId, encounterCounter)`. The **beacon** is a
+random value the server publishes and signs every 5 minutes. Details:
+[Q-029](../open-questions.md#q-029).
+
+### Ownership ledger and trades [accepted, details proposed]
+
+[proposed] The **ownership ledger** is an OrbitDB keyvalue database, keyed by
+instance ID, that only the server can write (like the
+[registry](orbitdb-registry.md)). Each entry: species CID, current owner,
+catch attestation, trade history. A trade ([trading](../gameplay/trading.md)):
+
+1. Both players sign the trade record and send it to the server.
+2. The server checks that each offered instance is verified and currently owned
+   by the player offering it.
+3. The server updates the ledger, then both clients append a `trade` event.
+
+So a modified client that "keeps a copy" can never trade that copy again: the
+ledger says someone else owns it.
+
+### PvP
+
+[accepted] PvP uses level 50 and only verified Peerlings. [proposed] The
+opponent checks each catch attestation's signature, which needs no server
+during the battle. It does not check the ledger, so a player who traded a
+Peerling away could still battle with a stale copy. This is an accepted gap,
+since that Peerling was legitimately caught and gives no advantage.
+
+## Known gaps (accepted risks)
+
+[proposed]
+- **Levels outside PvP aren't verified.** XP from wild battles isn't replayed.
+  An edited level only matters in the player's own wild battles, and in a
+  Peerling they trade away. The receiving player gets the level shown.
+- **Stale copies in PvP** (above).
+
+## Storage options considered
+
+Background for D-0009. Moving the save to OrbitDB or IPFS fixes *durability*,
+not *integrity*: whoever holds the write key can write anything. Integrity comes
+from server signatures.
 
 | Option | How it works | Durable / cross-device | IPFS showcase | Cost / risk |
 |--------|--------------|------------------------|---------------|-------------|
-| **S1. Browser only** | IndexedDB in the browser, with optional export to a file | No (unless the player exports) | None | Simplest |
-| **S2. IPFS snapshots + IPNS** | Each save is a DAG on IPFS; the latest root CID is published under the player's IPNS name (derived from their identity key). Each snapshot links to the previous one, so history forms a hash-linked chain. The server pins the latest snapshot. | Yes: any device with the key can resolve the IPNS name and load the save | Good (IPNS + content addressing) | Light. IPNS publishing from the browser goes through delegated routing |
-| **S3. Per-player OrbitDB log** | Each player has their own OrbitDB *events* database, writable only by their identity. Every state change is a signed log entry. The server replicates and pins every player's database. | Yes: open the same database address with the key on any device | Very good: OrbitDB used for player data, not just the registry | Heavier: the server keeps one database open per player. Scale needs testing |
+| S1. Browser only | IndexedDB, with optional export to a file | No | None | Simplest |
+| S2. IPFS snapshots + IPNS | Save snapshots on IPFS; the latest one is published under the player's IPNS name | Yes | Good | Light. **Fallback** if S3 doesn't scale |
+| **S3. Per-player OrbitDB log** (chosen) | Player-signed event log, replicated and pinned by the server | Yes | Very good | The server keeps one database open per player |
 
-All three need the **identity key** to be recoverable, because losing it means
-losing the save. Options: a recovery phrase (a list of words shown once and
-written down by the player), a backup file, or a passkey (WebAuthn) that
-derives the key. The key itself is never sent to the server.
-
-## Integrity options
-
-| Option | How it works | Stops edited levels | Stops fake ownership | Stops trade duplication | Needs server |
-|--------|--------------|:---:|:---:|:---:|---|
-| **I1. Trust** | Accept whatever a client says | ✗ | ✗ | ✗ | No |
-| **I2. Neutralize** | PvP normalizes levels; ownership isn't checked; duplication is accepted. Species are balanced, so faking gains little. | ✓ (in PvP) | ✗ | ✗ | No |
-| **I3. Server-attested events** | The server co-signs the events that create scarcity. *Catch:* the client sends the encounter seed and its battle actions; the server replays the deterministic battle (BTL-002) and, if valid, signs the new instance. *Trade:* both players sign the trade, and the server records the change of owner in an **ownership ledger** (an OrbitDB database only the server can write, like the registry) and signs it. | ✓ (in PvP, with I2) | ✓ | ✓ | Only for catches (can happen later) and trades |
-| **I4. Server-authoritative game** | The server runs all game logic | ✓ | ✓ | ✓ | Always: against pillar 5, rejected |
-
-Replaying a battle is cheap CPU work (no GPU), so I3 adds little server load.
-Catch attestation can be **asynchronous**: a caught Peerling is usable at once
-in exploration and wild battles, and becomes *verified* when the server has
-signed it. Only verified instances can be traded or used in PvP.
-
-One detail I3 still needs: to stop players re-rolling encounters until they
-get one they like, the encounter seed must include randomness the player can't
-choose, e.g. a value the server publishes and signs every few minutes. This is
-to be specified if I3 is chosen.
-
-## Recommendation [proposed]
-
-**S3 + I2 + I3:**
-
-1. **Storage (S3):** the save is a player-signed OrbitDB event log, replicated
-   and pinned by the server, with periodic snapshots for fast loading. Recovery
-   uses a recovery phrase. This makes OrbitDB central to *both* the registry and
-   every player's progress, which is the strongest IPFS showcase. If per-player
-   databases don't scale on the server, fall back to S2 (IPNS snapshots); the
-   integrity design is the same either way.
-2. **Integrity (I2 + I3):** PvP uses normalized levels. Catches are verified by
-   server replay, and trades go through the server's ownership ledger. Only
-   verified instances can be traded or used in PvP. That stops faked Peerlings
-   and duplication without a game server: the server signs results, but play
-   itself stays peer-to-peer and client-side.
-3. **Verification by peers:** an opponent or trade partner checks a Peerling's
-   server signatures (catch, and the latest ledger entry) themselves. The
-   server doesn't need to be online during the battle.
-
-Cheaper alternative: **S2 + I2**. Saves are portable and survive cleared
-browsers, but cheating and duplication are accepted as harmless in a casual
-game.
+| Integrity option | Result |
+|------------------|--------|
+| I1. Trust clients | Nothing prevented |
+| **I2. Neutralize** (chosen, for PvP levels) | Edited levels give no PvP advantage |
+| **I3. Server-attested events** (chosen) | Faked catches and trade duplication prevented |
+| I4. Server-authoritative game | Rejected: against pillar 5 |
 
 ## Requirements
 
-All [proposed]; they apply only if the recommendation is accepted.
-
-- **SAVE-001** [proposed] A player's save MUST be stored on IPFS (per-player OrbitDB log, or IPNS-addressed snapshots) and pinned or replicated by the server, so it survives cleared browser storage and can be loaded on another device.
-- **SAVE-002** [proposed] The client MUST let the player back up their identity key (recovery phrase and/or file) and restore it on another device.
-- **SAVE-003** [proposed] Only server-verified Peerling instances MUST be usable in trades and PvP battles.
-- **SAVE-004** [proposed] Instance ownership MUST be recorded in a server-written ownership ledger; a trade MUST NOT complete until the ledger records it.
+- **SAVE-001** [accepted] A player's save MUST be stored as a per-player OrbitDB log, writable only by the player's identity and replicated and pinned by the server, so it survives cleared browser storage and can be loaded on another device.
+- **SAVE-002** [accepted] The client MUST let the player back up their identity key with a recovery phrase and restore it on another device. The private key MUST NOT leave the device in any other form.
+- **SAVE-003** [accepted] Only verified Peerling instances MUST be usable in trades and PvP battles.
+- **SAVE-004** [accepted] Instance ownership MUST be recorded in a server-written ownership ledger; a trade MUST NOT complete until the ledger records it.
+- **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP. [proposed] It MUST also contain the parts listed in [Save contents](#save-contents).
+- **SAVE-006** [accepted] The server MUST verify a catch by replaying the battle from the catch evidence before signing a catch attestation.
+- **SAVE-007** [proposed] The save log MUST be event-based as listed in [Save log](#save-log), with periodic snapshots so loading doesn't replay the full history.
+- **SAVE-008** [proposed] Encounter seeds MUST include a server-published random beacon value, so players can't choose their encounters.
+- **SAVE-009** [proposed] Catches MUST be playable while unverified; verification MAY happen later (e.g. when the server is reachable again).
 
 ## Open questions
 
-[Q-014](../open-questions.md#q-014) · [Q-025](../open-questions.md#q-025) ·
-[Q-026](../open-questions.md#q-026)
+[Q-029](../open-questions.md#q-029)
 
 ## See also
 
-- [Architecture § Trust model](architecture.md#trust-model) · [PvP battles](../gameplay/pvp-battles.md) · [Trading](../gameplay/trading.md)
+- [Architecture § Trust model](architecture.md#trust-model) · [Catching](../gameplay/catching.md) · [Trading](../gameplay/trading.md) · [PvP battles](../gameplay/pvp-battles.md)
