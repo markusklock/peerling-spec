@@ -26,10 +26,10 @@ One of the 12 region types of the world, one per Peerling type (e.g. Forest
 for Grass). Peerlings of a biome's type are more likely to be encountered
 there. See [procedural-generation](world/procedural-generation.md#biomes).
 
-### Catch attestation
-The server's signature confirming that a Peerling instance was caught
-legitimately. The server checks this by replaying the battle. See
-[player-data](tech/player-data.md#verification).
+### Catch evidence
+The record of a catch in the catcher's save log (encounter number, epoch
+record, position, candidate, battle actions). Anyone can replay it to verify
+the catch. See [player-data](tech/player-data.md#catches-accepted-details-proposed).
 
 ### CID
 Content Identifier — the IPFS address of a piece of content, derived from a hash
@@ -117,10 +117,10 @@ A peer-to-peer database built on IPFS and libp2p. The game's
 [registry](#registry) of all Peerling species is an OrbitDB database. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
-### Ownership ledger
-An OrbitDB database, written only by the server, that records who owns
-each verified Peerling instance and every trade. See
-[player-data](tech/player-data.md#ownership-ledger-and-trades-accepted-details-proposed).
+### Origin attestation
+The server's signature on a starter or a Creation Shrine Peerling, proving
+where it came from (these don't come from a catch, so there's nothing to
+replay). See [player-data](tech/player-data.md#starters-and-shrine-creations).
 
 ### Peerling
 A creature in the game. The word is ambiguous between a *species* and an
@@ -206,13 +206,20 @@ The Peerlings a player brings into battles: up to 4. See
 An exchange of [Peerling instances](#peerling-instance) between two players.
 See [trading](gameplay/trading.md).
 
+### Transfer log
+The open OrbitDB log of signed ownership transfers. Following a Peerling's
+chain of transfers gives its current owner; conflicting transfers expose a
+cheater. See [player-data](tech/player-data.md#transfer-log-and-trades).
+
 ### Type
 An elemental category from a predefined list that determines battle
 strengths and weaknesses. See [types](peerlings/types.md).
 
 ### Verified Peerling
-A Peerling instance with a valid [catch attestation](#catch-attestation).
-Only verified Peerlings can be traded or used in PvP.
+A Peerling whose origin is genuine (its catch replays correctly, or it has a
+valid [origin attestation](#origin-attestation)) and whose ownership chain in
+the [transfer log](#transfer-log) is valid. Only verified Peerlings can be
+traded or used in PvP. Any player can check this.
 
 ### WebRTC
 A browser technology for direct, UDP-based connections between two browsers.

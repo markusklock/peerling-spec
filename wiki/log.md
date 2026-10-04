@@ -153,3 +153,20 @@ List all entries with `grep "^## \[" wiki/log.md`.
   tech/realtime-networking.md, open-questions.md, index.md
 - Notes: Resolved Q-019, Q-027, Q-035, Q-036. Q-022 stays open while the
   designer explores decentralizing registry writes and trades.
+
+## [2026-10-04] design | Level 3 decentralization: peer-verified registry, catches and trades
+- Source: raw/conversations/2026-10-04-decentralize-level-3.md
+- Changed: decisions/D-0013 (new), D-0005 (→ superseded), D-0009 (partly
+  superseded), tech/player-data.md, tech/orbitdb-registry.md,
+  tech/generation-server.md, tech/architecture.md, tech/resilience.md,
+  peerlings/creation-pipeline.md, peerlings/peerling-species.md,
+  gameplay/trading.md, gameplay/pvp-battles.md, gameplay/catching.md,
+  gameplay/creation-shrine.md, gameplay/creator-feedback.md, glossary.md,
+  open-questions.md, index.md
+- Notes: Players append registry entries carrying a server listing signature;
+  anyone verifies catches by replay; ownership is a signed transfer chain in an
+  open OrbitDB transfer log, with double trades detected (lower CID wins) and
+  the cheater flagged. The ownership ledger and server catch attestations are
+  gone. Resolved Q-022; opened Q-037 (individual variation). Removed REG-003,
+  CRE-019, SAVE-004, SAVE-006, PVP-008; added REG-009, CRE-024,
+  SAVE-014…017, PVP-009, TRD-004.

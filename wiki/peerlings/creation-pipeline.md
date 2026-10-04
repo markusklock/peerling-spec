@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -71,7 +72,7 @@ updated: 2026-10-04
 | 4 | Review | client | image | accept / regenerate | [accepted] |
 | 5 | 3D model | server: image-to-3D | accepted image | static 3D model (GLB) | [accepted] |
 | 6 | Stats & moves | server: concept LLM + validator | concept | base stats, moves | [accepted] |
-| 7 | Publish | client adds to IPFS; server verifies, pins, lists | everything above | species on IPFS + registry entry | [accepted] (handshake details: [proposed]) |
+| 7 | Publish | client adds to IPFS; server verifies, pins, signs the listing; client appends it | everything above | species on IPFS + registry entry | [accepted] (handshake details: [proposed]) |
 | 8 | Starter | client | published species CID | [starter](../glossary.md#starter) instance in the player's save | [accepted] |
 
 ```mermaid
@@ -92,8 +93,8 @@ sequenceDiagram
   P->>P: 7b. add all to own Helia node → CIDs
   P->>S: 7c. report CIDs
   S->>P: 7d. fetch by CID over IPFS, verify, pin
-  S->>R: 7e. append registry entry
-  S-->>P: 7f. published
+  S-->>P: 7e. signed registry listing
+  P->>R: 7f. append registry entry
   P->>P: 8. create starter instance
 ```
 
@@ -187,9 +188,9 @@ CID is its identity.
 
 ### Stage 7 — Publish
 [accepted] The player's browser adds the Peerling to IPFS through its Helia
-node; the server pins it and writes the registry entry
-([D-0007](../decisions/D-0007-players-publish-assets.md),
-[D-0005](../decisions/D-0005-server-sole-registry-writer.md)).
+node; the server pins it and signs its registry listing; the player's browser
+appends the registry entry ([D-0007](../decisions/D-0007-players-publish-assets.md),
+[D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)).
 
 [proposed] Handshake:
 
@@ -199,12 +200,12 @@ node; the server pins it and writes the registry entry
 | 7b | client | Adds the three asset files and the species record to its Helia node, using the same import parameters. The asset CIDs must equal those in the record. |
 | 7c | client | Reports the species CID to the server. The client keeps providing the content. |
 | 7d | server | Fetches the species record and every asset by CID from the network (in practice from the player's node), checks they are byte-identical to what it generated, and pins them. |
-| 7e | server | Appends the registry entry. |
-| 7f | server | Tells the client that publishing is done (job state `PUBLISHED`). |
+| 7e | server | Assigns the next registry `seq` and signs the registry listing ([orbitdb-registry](../tech/orbitdb-registry.md#design)); sends it to the client. |
+| 7f | client | Appends the signed entry to the registry. If it doesn't appear within a minute (e.g. the client disconnected), the server appends the same entry itself. Job state `PUBLISHED`. |
 
 If the client disconnects during 7b–7d, the job waits in `PUBLISHING` until
 the client reconnects and resumes providing (CRE-014). The species becomes
-visible to other players only at 7e.
+visible to other players at 7f.
 
 ### Stage 8 — Starter
 The client creates the player's starter
@@ -249,11 +250,12 @@ creation runs while the 3D model generates) — see
 - **CRE-016** [accepted] The concept LLM MUST determine the type(s) in stage 2, from the player's description, before the image is generated; the image MUST reflect the type(s).
 - **CRE-017** [accepted] The 3D model MUST be static (unrigged); the pipeline MUST NOT depend on rigging or skeletal animation.
 - **CRE-018** [accepted] The player's browser MUST add the species record and its assets to IPFS through its own Helia node.
-- **CRE-019** [accepted] The server MUST pin the species record and all its assets before appending the registry entry.
+- ~~**CRE-019**~~ (removed 2026-10-04, replaced by CRE-024; see D-0013)
 - **CRE-020** [proposed] Before pinning, the server MUST verify that the content fetched by CID is byte-identical to what it generated; on mismatch, the job MUST fail and nothing is listed.
 - **CRE-021** [accepted] Image generation MUST have no count limit, but MUST enforce a per-player cooldown between generations.
 - **CRE-022** [accepted] Before publishing, the player MUST see the final Peerling and MUST be able to restart from image generation instead of publishing.
 - **CRE-023** [accepted] The player MUST choose the name of every Peerling they create.
+- **CRE-024** [accepted] The server MUST pin the species record and all its assets before signing the registry listing.
 
 ## Open questions
 

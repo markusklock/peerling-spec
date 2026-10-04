@@ -1,7 +1,7 @@
 ---
 title: "D-0005: The generation server is the only registry writer"
 type: decision
-status: accepted
+status: superseded by D-0013
 tags: [tech, orbitdb, security]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
@@ -14,7 +14,10 @@ updated: 2026-10-04
 
 # D-0005: The generation server is the only registry writer
 
-**Status:** accepted (2026-10-03, resolves [Q-002](../open-questions.md#q-002)).
+**Status:** superseded by [D-0013](D-0013-peer-verified-registry-catches-trades.md)
+(2026-10-04): players now append registry entries, which are valid only with a
+server signature. Originally accepted 2026-10-03, resolving
+[Q-002](../open-questions.md#q-002).
 The attestation (signature) part below is still [proposed].
 
 ## Context

@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -38,18 +39,19 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
   be faked.
 - [accepted] **Levels are normalized.** All Peerlings fight at level 50 (as in
   Pokémon's competitive formats), so edited levels give no advantage.
-- [accepted] **Only verified Peerlings.** Every Peerling in a PvP team must
-  carry a valid server catch attestation
-  ([player-data § Verification](../tech/player-data.md#verification)), so faked
-  Peerlings can't be used.
+- [accepted] **Only verified Peerlings.** Every Peerling in a PvP team must be
+  verified: genuine origin and a valid ownership chain ending at its player
+  ([player-data § Verified Peerlings](../tech/player-data.md#verified-peerlings)).
+  Each side checks the other itself, so faked or traded-away Peerlings can't be
+  used and no server is needed.
 
 ## Protocol (proposed)
 
 1. **Challenge.** A sends a challenge to B while standing next to them
    (MPL-006); B accepts or declines (MPL-005).
-2. **Team exchange.** Each side sends its team: for each Peerling, the
-   species CID, instance ID and catch attestation. Each side fetches and
-   verifies the other's species and checks the attestations.
+2. **Team exchange.** Each side sends its team: for each Peerling, the species
+   CID and instance ID. Each side fetches and verifies the other's species and
+   verifies each Peerling (cached results are reused).
 3. **Shared randomness.** Both commit to a random value (send its hash), then
    reveal it. The battle RNG seed is derived from both values, so neither side
    controls the random rolls.
@@ -73,7 +75,8 @@ since results can't be verified by a third party.
 - **PVP-005** [proposed] Turn actions MUST use commit-reveal, so neither player sees the other's choice before committing.
 - **PVP-006** [proposed] Clients MUST compare battle-state hashes after each turn and void the battle on mismatch.
 - **PVP-007** [accepted] All Peerlings MUST fight at level 50 in PvP.
-- **PVP-008** [accepted] Each client MUST reject an opposing Peerling without a valid catch attestation ([SAVE-003](../tech/player-data.md#requirements)).
+- ~~**PVP-008**~~ (removed 2026-10-04, replaced by PVP-009; see D-0013)
+- **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)).
 
 ## Open questions
 

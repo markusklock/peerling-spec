@@ -73,4 +73,4 @@ choose can still create Peerlings later at the
 
 ## Open questions
 
-[Q-022](../open-questions.md#q-022)
+_None at the moment._

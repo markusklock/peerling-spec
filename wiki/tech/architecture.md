@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -46,7 +47,7 @@ flowchart LR
     IMG[Image generator]
     T3D[Image-to-3D]
     SN[Server IPFS node<br/>pins everything,<br/>bootstrap + relay]
-    SO[OrbitDB registry<br/>sole writer + replica]
+    SO[OrbitDB registry<br/>listing signer + replica]
     API --> LLM & IMG & T3D
     API --> SN
     API --> SO
@@ -66,7 +67,7 @@ flowchart LR
 | OrbitDB registry | Database of all Peerling species; only the server writes | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
 | Generation server | LLM, image gen, image-to-3D, pinning, registry writer | [generation-server](generation-server.md) | [accepted] |
 | Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [proposed]) |
-| Player data | Per-player OrbitDB save log, identity key recovery, ownership ledger | [player-data](player-data.md) | [accepted] |
+| Player data | Per-player OrbitDB save log, identity key recovery, transfer log, peer verification | [player-data](player-data.md) | [accepted] |
 | Platform technologies | WebTransport, WebRTC, IPv6, WebGPU, OPFS, … | [tech-stack](tech-stack.md) | [accepted] principle ([D-0011](../decisions/D-0011-modern-web-platform-first.md)) |
 
 ## Key data flows
@@ -85,21 +86,20 @@ flowchart LR
 
 ## Trust model
 
-- [accepted] The server is trusted for *what is a valid species*. It is the
-  only registry writer ([D-0005](../decisions/D-0005-server-sole-registry-writer.md)).
-  [proposed] It also signs species records.
+- [accepted] The server is trusted for *what is a valid species*: it signs
+  every registry listing and every species record, and only signed entries are
+  accepted ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)). It is also trusted for the origin of starters and
+  Creation Shrine Peerlings, and for epoch records (with a drand-based fallback).
 - [proposed] Peers are untrusted for *content*. Everything fetched from peers is
-  verified by CID, and species records by attestation.
-- [proposed] Peers are untrusted for *claims about their own state* (levels,
-  ownership, positions). With a shared world, PvP and trading
-  ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)), a player's save
-  can affect other players, so interactions are designed to need as little
-  trust as possible: verifiable species, normalized PvP levels, commit-reveal
-  turns.
-- [accepted] The server is trusted to vouch for *catches and ownership*: it
-  verifies catches by replay and keeps the ownership ledger, so peers can trust
-  Peerlings in trades and PvP ([D-0009](../decisions/D-0009-player-data-on-orbitdb.md),
-  [player-data](player-data.md)).
+  verified by CID, and species records by the server's signature.
+- [accepted] Peers are untrusted for *claims about their own Peerlings*. Any
+  player can check another's Peerling themselves: catches by replaying them,
+  ownership by following the signed transfer chain
+  ([player-data § Verification](player-data.md#verification)). No server is
+  needed for this, so trades and PvP work while the server is offline.
+- [proposed] What can't be prevented without global agreement is detected
+  instead: a player who gives the same Peerling to two others is exposed by
+  their own two signatures and flagged.
 
 ## Requirements
 
@@ -112,7 +112,7 @@ flowchart LR
 
 ## Open questions
 
-[Q-022](../open-questions.md#q-022)
+_None at the moment._
 
 ## See also
 

@@ -6,6 +6,7 @@ req_prefix: CFB
 tags: [gameplay, social, orbitdb, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
@@ -23,16 +24,17 @@ updated: 2026-10-04
 ## Is it possible with IPFS?
 
 Yes, and fairly easily. The server already sees the events that matter, and it
-has already checked them:
-- Every **catch** is verified by the server and recorded in the ownership
-  ledger ([player-data § Verification](../tech/player-data.md#verification)).
+can check them:
+- Every **catch** is in the catcher's save log, which the server replicates
+  and can verify by replay ([player-data § Verification](../tech/player-data.md#verification)).
 - Every **encounter** is logged in the player's save log, which the server
   replicates.
-- Every **trade** goes through the ownership ledger.
+- Every **trade** is in the open transfer log.
 
 So the server can keep trustworthy counters per species and publish them with
 OrbitDB and pubsub. Counters can't be inflated by fake clients, because only
-verified events count. That answers the spam worry raised in Q-021.
+events that pass verification count. That answers the spam worry raised in
+Q-021.
 
 [accepted] The feature is wanted (2026-10-04). The design below is [proposed].
 
@@ -74,7 +76,7 @@ Mossnap was met 120 times and caught 42 times. It now lives on 37 nodes."*
 ## Requirements
 
 - **CFB-001** [accepted] Creators MUST be able to see how their species are doing in the world.
-- **CFB-002** [proposed] Species statistics MUST be published in a server-written OrbitDB database and MUST only count server-verified events.
+- **CFB-002** [proposed] Species statistics MUST be published in a server-written OrbitDB database and MUST only count events that pass verification.
 - **CFB-003** [proposed] The server MUST notify online creators via a per-creator pubsub topic when their species is caught or traded.
 - **CFB-004** [proposed] The client MUST show creators a summary of changes since their last session.
 

@@ -131,8 +131,7 @@ registry). [proposed] Illustrative shape:
   "caughtAt": "2026-10-03T12:30:00Z",
   "origin": "starter | wild | trade",
   "originalOwner": "<player public key of whoever first obtained it>",
-  "verification": "unverified | verified | rejected",
-  "catchAttestation": "<server signature, once verified>"
+  "originProof": "<CID of the catch event in the catcher's save log, or the server's origin attestation>"
 }
 ```
 

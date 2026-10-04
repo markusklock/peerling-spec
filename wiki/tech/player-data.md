@@ -10,8 +10,10 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
+  - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
   - wiki/gameplay/player-character.md
   - wiki/gameplay/catching.md
   - wiki/gameplay/pvp-battles.md
@@ -25,20 +27,22 @@ updated: 2026-10-04
 # Player Data: Saves, Identity and Ownership
 
 > Canonical home for what a player's save contains, where it is stored (a
-> per-player OrbitDB log), how the identity key is recovered, and how catches
-> and trades are verified by the server so other players can trust them.
-> Decided in [D-0009](../decisions/D-0009-player-data-on-orbitdb.md).
+> per-player OrbitDB log), how the identity key is recovered, and how any player
+> can verify another player's Peerlings and trades without a central server.
+> Decided in [D-0009](../decisions/D-0009-player-data-on-orbitdb.md) and
+> [D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md).
 
 ## Chosen design
 
-[accepted] ([D-0009](../decisions/D-0009-player-data-on-orbitdb.md))
+[accepted] ([D-0009](../decisions/D-0009-player-data-on-orbitdb.md),
+[D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md))
 
 | Concern | Solution |
 |---------|----------|
-| Where the save lives | A per-player OrbitDB **save log** (an append-only event log) that only the player's identity can write. The server replicates and pins it. |
+| Where the save lives | A per-player OrbitDB **save log** (an append-only event log) that only the player's identity can write. The server and other players replicate it. |
 | Recovery | The identity key can be restored with a **recovery phrase** |
-| Faked Peerlings | The server verifies each catch by **replaying the battle** and signs it |
-| Duplication via trades | Trades complete only when recorded in the server's **ownership ledger** |
+| Faked Peerlings | Anyone verifies a catch by **replaying the battle** from the public catch evidence |
+| Duplication via trades | Ownership is a signed **transfer chain** in an open OrbitDB **transfer log**; double trades are detected and the cheater is flagged |
 | Edited levels in PvP | PvP uses **level 50** for everyone |
 | What can be traded or used in PvP | Only **verified** Peerlings |
 
@@ -60,7 +64,7 @@ refers to it by CID.
 
 Not in the save: the identity **private key** (stays on the device; restored
 with the recovery phrase), and the authoritative owner of each Peerling (that is
-the ownership ledger).
+the [transfer log](#transfer-log-and-trades)).
 
 ## Save log
 
@@ -73,23 +77,39 @@ the writer, so the log is also a tamper-evident history.
 |-------|-------------|---------|
 | `profile` | Onboarding; profile changes | display name, appearance |
 | `species-created` | Creation pipeline finished | species CID |
-| `starter` | Onboarding finished | the starter instance + the server's attestation |
-| `release` | Peerlings offered at the [Creation Shrine](../gameplay/creation-shrine.md) | instance IDs, ledger entry reference |
-| `created` | A shrine creation was published | the new instance + the server's attestation |
+| `starter` | Onboarding finished | the starter instance + the server's origin attestation |
+| `release` | Peerlings offered at the [Creation Shrine](../gameplay/creation-shrine.md) | instance IDs, transfer-log entry reference |
+| `created` | A shrine creation was published | the new instance + the server's origin attestation |
 | `catch` | A wild Peerling is caught | the new instance + **catch evidence** (see below) |
-| `catch-verified` | The server's verification arrives | instance ID, catch attestation |
 | `battle-result` | After a wild battle | for each participating instance: XP gained, new level, HP |
 | `team` | Team changed | ordered instance IDs |
 | `nickname` | Peerling renamed | instance ID, nickname |
-| `trade` | The ownership ledger recorded a trade | ledger entry reference; instances out; full data of instances in |
+| `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
 | `seen` | First sighting of a species | species CID |
 | `position` | Every 30 s while moving, and on exit | position, facing |
 | `snapshot` | Every 50 events, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
 
 Loading a save means reading the latest `snapshot` and applying the events
 after it. The server replicates every player's log and pins the snapshots.
+Other players fetch a save log when they need to verify one of its catches.
 
 ## Verification
+
+### Verified Peerlings
+
+[accepted] A Peerling is **verified** when anyone can check two things
+([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)):
+1. **Its origin is genuine:** a catch that replays correctly, or a starter or
+   shrine creation with a valid server origin attestation (below).
+2. **Its ownership chain is valid:** every transfer since its origin is
+   signed by the owner at the time, and it ends at the player who holds it
+   ([Transfer log and trades](#transfer-log-and-trades)).
+
+Who checks: [proposed] a trade partner before trading, a PvP opponent before
+battling, and the Creation Shrine before accepting an offering. The client
+caches results per Peerling and checks only the new part of an ownership chain
+later. The server also verifies catches it sees, for the species stats
+([creator-feedback](../gameplay/creator-feedback.md)), but nothing depends on it.
 
 ### Catches [accepted, details proposed]
 
@@ -97,16 +117,16 @@ after it. The server replicates every player's log and pins the snapshots.
    the **catch evidence**: the encounter number, the epoch record used, the
    position, which of the encounter's candidates was met
    ([encounters § Candidates](../gameplay/encounters.md#candidates)), the
-   battle's starting state, and every action taken. The Peerling can be used straight away in
-   exploration and wild battles. It is *unverified* until step 3.
-2. The server sees the event (it replicates the save log), replays the battle
-   with the deterministic engine ([BTL-002](../gameplay/battle.md#requirements)),
-   and runs the checks in [Encounter seeds](#encounter-seeds).
-3. If valid, the server signs a **catch attestation** (instance ID, species CID,
-   owner, encounter seed) and records the instance in the ownership ledger. The
-   client appends `catch-verified`. If invalid, the instance is permanently
-   *unverified*: it stays in the collection but can never be traded or used in
-   PvP.
+   battle's starting state, and every action taken. The Peerling can be used
+   straight away in exploration and wild battles.
+2. [proposed] The instance ID of a caught Peerling is
+   SHA-256(player ID ‖ encounter number), so it is unique automatically and
+   can't be reused.
+3. Any verifier fetches the catcher's save log, replays the battle with the
+   deterministic engine ([BTL-002](../gameplay/battle.md#requirements)), and runs
+   the checks in [Encounter seeds](#encounter-seeds). The result is the same
+   for every verifier. A catch that fails is invalid forever: the Peerling stays
+   in its owner's collection but can never be traded or used in PvP.
 
 ### Encounter seeds
 
@@ -191,58 +211,79 @@ records itself:
   (only the server writes it), so nothing is missed.
 - The record is marked as client-derived and has no server signature.
 
-This keeps wild encounters working with nothing from the operator server. When
-the server is back, it accepts client-derived records whose drand value is
-genuine and whose height matches the client's latest signed record. Because
+This keeps wild encounters working with nothing from the operator server.
+Verifiers accept client-derived records whose drand value is genuine and whose
+height matches the client's latest signed record. Because
 the randomness still comes from drand, a client-derived record gives the player
 no extra choice. See [resilience](resilience.md).
 
 **Offline play.** Without network access, the client keeps using the last epoch
 record it has. That gives no extra choice (same epoch and same n give the same
 encounter), so offline play needs no time limit. Catches made offline are
-verified when the server next sees the save log.
+verified like any other: by whoever needs to check them, from the save log.
 
-**What the server checks when verifying a catch.**
+**What a verifier checks for a catch.**
 1. The epoch record is genuine: drand signature, plus either the server's
    signature or the client-derived rules above.
-2. Encounter numbers run from 0 with no gaps; epochs never decrease.
+2. Encounter numbers run from 0 with no gaps and appear only once; epochs never
+   decrease. (A save log with two conflicting branches shows up as duplicate
+   encounter numbers, so every catch after the fork fails.)
 3. The species is the logged candidate from the deterministic candidate list,
    and the wild level matches, for (seed, position, registry height, save log).
 4. Replaying the battle with the logged actions ends in this catch.
-5. The instance ID isn't already in the ownership ledger.
+5. The instance ID is SHA-256(player ID ‖ encounter number).
 
 ### Starters and shrine creations
 
 [proposed] Starters ([onboarding](../gameplay/onboarding.md)) and Peerlings
 created at the [Creation Shrine](../gameplay/creation-shrine.md) don't come from a
-catch, so there's no battle to replay. Instead the server creates them: it signs
-an attestation of the same form as a catch attestation (with origin `starter` or
-`created` instead of an encounter seed) and records the instance in the
-ownership ledger. These Peerlings are verified from the start.
+catch, so there's no battle to replay. Instead the server, which is involved
+in both anyway, signs an **origin attestation**: instance ID, species CID, first
+owner, origin (`starter` or `created`) and level. These Peerlings are verified
+from the start.
 
-### Ownership ledger and trades [accepted, details proposed]
+### Transfer log and trades
 
-[proposed] The **ownership ledger** is an OrbitDB keyvalue database, keyed by
-instance ID, that only the server can write (like the
-[registry](orbitdb-registry.md)). Each entry: species CID, current owner,
-attestation, trade history, and a `released` flag for Peerlings given up at the
-[Creation Shrine](../gameplay/creation-shrine.md). A trade ([trading](../gameplay/trading.md)):
+[accepted] Ownership is a chain of signed transfers in an open OrbitDB
+**transfer log** ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)).
+[proposed] Details:
 
-1. Both players sign the trade record and send it to the server.
-2. The server checks that each offered instance is verified and currently owned
-   by the player offering it.
-3. The server updates the ledger, then both clients append a `trade` event.
+- **The log:** an OrbitDB *events* database that any player may append to.
+  Its access controller accepts an entry only if every transfer in it is
+  signed by the `from` player.
+- **A transfer:** `{ instanceId, from, to, prev, signature }`. `prev` is the CID
+  of the previous transfer of this Peerling, or `origin` for its first
+  transfer. `to` is a player ID, or `released` for Peerlings given up at the
+  [Creation Shrine](../gameplay/creation-shrine.md).
+- **A trade** is a single log entry holding both players' transfers and both
+  signatures, so either both sides happen or neither does
+  ([trading](../gameplay/trading.md)).
+- **Current owner:** follow the Peerling's chain from its origin; the last `to`
+  is the owner. A Peerling with no transfers belongs to its first owner.
+- **Before trading,** each side syncs the transfer log and checks that the
+  other player is the current owner of what they offer and isn't flagged.
 
-So a modified client that "keeps a copy" can never trade that copy again: the
-ledger says someone else owns it.
+**Double trades.** Without a central authority, two conflicting transfers
+can't be prevented: a cheater could give the same Peerling to two players at
+once, e.g. while they are not connected to each other. They are detected
+instead:
+- Two transfers with the same `prev` are a **double trade**. Both are signed
+  by the same player, so the pair is cryptographic proof of cheating.
+- **Resolution:** the transfer whose log-entry CID sorts lower is the valid one;
+  the other is void. Every node reaches the same result from the same data.
+- **Flagging:** the cheating player ID is flagged. Clients refuse trades and
+  PvP battles with flagged players.
+- The player who received the void transfer loses that Peerling. This is
+  acceptable: nothing in the game is scarce, every species can be caught again,
+  and the cheater is exposed. (See
+  [Q-037](../open-questions.md#q-037): individual variation would make this
+  more painful.)
 
 ### PvP
 
-[accepted] PvP uses level 50 and only verified Peerlings. [proposed] The
-opponent checks each catch attestation's signature, which needs no server
-during the battle. It does not check the ledger, so a player who traded a
-Peerling away could still battle with a stale copy. This is an accepted gap,
-since that Peerling was legitimately caught and gives no advantage.
+[accepted] PvP uses level 50 and only verified Peerlings. [proposed] Before
+the battle, each side verifies the other's team (origin and ownership chain),
+using cached results where possible. No server is needed.
 
 ## Known gaps (accepted risks)
 
@@ -256,7 +297,7 @@ since that Peerling was legitimately caught and gives no advantage.
 - **Levels outside PvP aren't verified.** XP from wild battles isn't replayed.
   An edited level only matters in the player's own wild battles, and in a
   Peerling they trade away. The receiving player gets the level shown.
-- **Stale copies in PvP** (above).
+- **Double trades** are detected, not prevented ([Transfer log and trades](#transfer-log-and-trades)).
 - **Choice among encounter candidates.** A modified client could claim the first
   candidates failed to download and pick a later one: at most a choice of 1 in
   5. All species are equally strong, so this only lets a player favour a species
@@ -266,7 +307,8 @@ since that Peerling was legitimately caught and gives no advantage.
 
 Background for D-0009. Moving the save to OrbitDB or IPFS fixes *durability*,
 not *integrity*: whoever holds the write key can write anything. Integrity comes
-from server signatures.
+from replayable evidence and signatures (originally server signatures; since
+D-0013, mostly checks any player can run).
 
 | Option | How it works | Durable / cross-device | IPFS showcase | Cost / risk |
 |--------|--------------|------------------------|---------------|-------------|
@@ -278,24 +320,29 @@ from server signatures.
 |------------------|--------|
 | I1. Trust clients | Nothing prevented |
 | **I2. Neutralize** (chosen, for PvP levels) | Edited levels give no PvP advantage |
-| **I3. Server-attested events** (chosen) | Faked catches and trade duplication prevented |
+| I3. Server-attested events (chosen in D-0009, replaced by D-0013) | Faked catches and trade duplication prevented, but needs the server |
+| **I5. Peer-verified events** (chosen in D-0013) | Faked catches prevented by replay; double trades detected and flagged |
 | I4. Server-authoritative game | Rejected: against pillar 5 |
 
 ## Requirements
 
 - **SAVE-001** [accepted] A player's save MUST be stored as a per-player OrbitDB log, writable only by the player's identity and replicated and pinned by the server, so it survives cleared browser storage and can be loaded on another device.
 - **SAVE-002** [accepted] The client MUST let the player back up their identity key with a recovery phrase and restore it on another device. The private key MUST NOT leave the device in any other form.
-- **SAVE-003** [accepted] Only verified Peerling instances MUST be usable in trades and PvP battles.
-- **SAVE-004** [accepted] Instance ownership MUST be recorded in a server-written ownership ledger; a trade MUST NOT complete until the ledger records it.
+- **SAVE-003** [accepted] Only verified Peerling instances MUST be usable in trades and PvP battles; verification follows [Verified Peerlings](#verified-peerlings).
+- ~~**SAVE-004**~~ (removed 2026-10-04, replaced by SAVE-014 and SAVE-015; see D-0013)
 - **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP. [proposed] It MUST also contain the parts listed in [Save contents](#save-contents).
-- **SAVE-006** [accepted] The server MUST verify a catch by replaying the battle from the catch evidence before signing a catch attestation.
+- ~~**SAVE-006**~~ (removed 2026-10-04, replaced by SAVE-016; see D-0013)
 - **SAVE-007** [proposed] The save log MUST be event-based as listed in [Save log](#save-log), with periodic snapshots so loading doesn't replay the full history.
 - **SAVE-008** [accepted] Encounter seeds MUST be derived as in [Encounter seeds](#encounter-seeds): from the epoch record's randomness, the player ID and a gap-free encounter number.
 - **SAVE-009** [proposed] Catches MUST be playable while unverified; verification MAY happen later (e.g. when the server is reachable again).
 - **SAVE-010** [accepted] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
 - **SAVE-011** [accepted] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
-- **SAVE-012** [proposed] Starters and shrine-created Peerlings MUST receive a server attestation and a ledger entry when they are created.
-- **SAVE-013** [proposed] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand and their latest signed registry height, and the server MUST accept such records when verifying.
+- **SAVE-012** [proposed] Starters and shrine-created Peerlings MUST receive a server origin attestation when they are created.
+- **SAVE-013** [proposed] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand and their latest signed registry height, and verifiers MUST accept such records.
+- **SAVE-014** [accepted] Ownership MUST be a chain of transfers signed by the current owner and stored in an open OrbitDB transfer log; a trade MUST be a single entry holding both players' signed transfers.
+- **SAVE-015** [accepted] Conflicting transfers of the same Peerling MUST be detected; [proposed] the transfer with the lower log-entry CID wins, and the signer MUST be flagged and refused for trades and PvP.
+- **SAVE-016** [accepted] Any client MUST be able to verify a catch by replaying it from the catcher's save log; no server signature is required.
+- **SAVE-017** [proposed] A caught Peerling's instance ID MUST be SHA-256(player ID ‖ encounter number).
 
 ## Open questions
 

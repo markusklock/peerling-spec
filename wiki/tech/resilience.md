@@ -6,6 +6,7 @@ req_prefix: RES
 tags: [tech, resilience, ipfs, libp2p, decentralization]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
@@ -39,10 +40,10 @@ doesn't block the game ([encounters § Candidates](../gameplay/encounters.md#can
 | Loading the game | Yes | Installed PWA cache; the game app itself is also published on IPFS (see below) |
 | Exploring, presence, emotes | Yes, if peers can connect | Pubsub between players; connections via public relays and peers already connected |
 | Wild encounters and battles | Yes | Client-derived epoch records ([player-data § Encounter seeds](player-data.md#encounter-seeds)); species fetched from other players' nodes; 5 candidates per encounter |
-| Catching | Yes, verified later | Catches are logged and verified when the server is back (SAVE-009) |
-| PvP battles | Yes | Peer-to-peer; catch attestations are checked offline |
-| Registry updates | No new species (only the server writes) | The existing registry replicates between players |
-| Trades | No | The ownership ledger needs the server (SAVE-004) |
+| Catching | Yes | Anyone can verify a catch by replaying it (SAVE-016) |
+| PvP battles | Yes | Peer-to-peer; each side verifies the other's Peerlings itself |
+| Registry updates | No new species (creation needs the server) | The existing registry replicates between players; entries are signed, so any player can serve them |
+| Trades | Yes | Signed transfer chains in the open transfer log ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Creation, Creation Shrine, new players | No | GPU models and attestations live on the server |
 | Creator stats | Frozen | Resume when the server is back |
 
@@ -88,20 +89,22 @@ pinset (every CID the registry references) as an IPFS Cluster that others can
 follow with `ipfs-cluster-follow`, or as a simple list volunteers can pin. Each
 mirror is another always-on node with every Peerling.
 
-### 6. Catching up
-When the server is back, it replicates the save logs, verifies the catches made
-in the meantime, and accepts client-derived epoch records (SAVE-013).
+### 6. No catching up needed
+Catches, trades and ownership are checked by players themselves
+([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)), so
+nothing waits for the server. When it is back, it simply resumes signing new
+species, publishing epoch records and updating creator stats.
 
 ## Requirements
 
-- **RES-001** [accepted] The game MUST keep working, as far as possible, while the operator server is offline: exploration, wild encounters, battles, catching (verified later) and PvP MUST NOT require it.
+- **RES-001** [accepted] The game MUST keep working, as far as possible, while the operator server is offline: exploration, wild encounters, battles, catching, catch verification, PvP and trades MUST NOT require it.
 - **RES-002** [proposed] Clients MUST persist known peers and use public bootstrap nodes, relays and delegated routing in addition to the operator server.
 - **RES-003** [proposed] The game client MUST be published on IPFS (with DNSLink) and installable as a PWA, so it loads without the operator's web server.
 - **RES-004** [proposed] The operator SHOULD publish the full pinset so others can run mirror nodes (e.g. IPFS Cluster followers).
 
 ## Open questions
 
-[Q-022](../open-questions.md#q-022)
+_None at the moment._
 
 ## See also
 

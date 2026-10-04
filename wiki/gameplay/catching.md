@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
@@ -89,14 +90,15 @@ Creators are notified when their species is caught
 ([creator-feedback](creator-feedback.md)). Still to be specified: the Peerdex
 screen.
 
-[accepted] The server verifies each catch afterwards by replaying the battle;
-until then the Peerling is *unverified* and can't be traded or used in PvP. See
+[accepted] Any player can verify a catch by replaying the battle from the
+catcher's save log ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)). A catch that fails verification can never
+be traded or used in PvP. See
 [player-data § Verification](../tech/player-data.md#verification).
 
 ## Requirements
 
 - **CAT-001** [accepted] The player MUST be able to catch wild Peerlings.
-- **CAT-002** [accepted] A catch MUST record the catch evidence needed for server verification ([SAVE-006](../tech/player-data.md#requirements)).
+- **CAT-002** [accepted] A catch MUST record the catch evidence needed to verify it by replay ([SAVE-016](../tech/player-data.md#requirements)).
 - **CAT-003** [accepted] There MUST NOT be items in battles in the first version.
 - **CAT-004** [accepted] Catching MUST be a battle action that uses the player's turn, available only in wild battles, with unlimited attempts.
 - **CAT-005** [accepted] The catch chance MUST follow [Catch chance](#catch-chance).

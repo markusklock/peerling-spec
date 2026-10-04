@@ -55,10 +55,10 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 |------|--------|-----------|---------|
 | [architecture](tech/architecture.md) | draft | ARC | Components, data flows, trust model |
 | [ipfs-helia](tech/ipfs-helia.md) | draft | NODE | Browser IPFS node: connectivity, publishing, CID import parameters, caching |
-| [orbitdb-registry](tech/orbitdb-registry.md) | draft | REG | OrbitDB database of all species (plus an overview of the game's other OrbitDB databases) |
+| [orbitdb-registry](tech/orbitdb-registry.md) | draft | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
-| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, key recovery, catch verification, encounter seeds (epoch records, drand), ownership ledger |
+| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, key recovery, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats |
 | [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
@@ -71,20 +71,21 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0002](decisions/D-0002-all-peerlings-user-generated.md) | accepted | All Peerlings are user-generated |
 | [D-0003](decisions/D-0003-browser-client-is-ipfs-node.md) | accepted | Every browser client is a Helia IPFS node |
 | [D-0004](decisions/D-0004-single-operator-server.md) | accepted | One operator server for generation and pinning |
-| [D-0005](decisions/D-0005-server-sole-registry-writer.md) | accepted | The generation server is the only registry writer |
+| [D-0005](decisions/D-0005-server-sole-registry-writer.md) | superseded by D-0013 | The generation server is the only registry writer |
 | [D-0006](decisions/D-0006-species-vs-instance.md) | accepted | Separate immutable species from owned instances |
 | [D-0007](decisions/D-0007-players-publish-assets.md) | accepted | The player's browser publishes their Peerling to IPFS |
 | [D-0008](decisions/D-0008-shared-multiplayer-world.md) | accepted | One shared world with PvP battles and trading |
-| [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted | Player saves on OrbitDB, with server-verified catches and trades |
+| [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted (partly superseded by D-0013) | Player saves on OrbitDB, with server-verified catches and trades |
 | [D-0010](decisions/D-0010-no-content-moderation.md) | accepted | No content moderation |
 | [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first (WebTransport, IPv6) |
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
+| [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
 
 ## Registered requirement prefixes
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
 RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0013. Next free question ID: Q-037.
+D-0014. Next free question ID: Q-038.
 
 ## Sources
 
@@ -100,3 +101,4 @@ D-0013. Next free question ID: Q-037.
 | [2026-10-04-tech-stack-2](../raw/conversations/2026-10-04-tech-stack-2.md) | 2026-10-04 | Desktop only; WebGPU + WebGL2 fallback; WebRTC-direct fallback; rest of the stack approved |
 | [2026-10-04-answers-round-7](../raw/conversations/2026-10-04-answers-round-7.md) | 2026-10-04 | Extra creations and starter choice; unlimited images with cooldown; restart from images; players name Peerlings; creator feedback wanted; server-offline resilience with 5 encounter candidates |
 | [2026-10-04-answers-round-8](../raw/conversations/2026-10-04-answers-round-8.md) | 2026-10-04 | Shrine, character creation, multiplayer scale, encounter candidates approved; brainstorm on decentralizing registry writes and trades |
+| [2026-10-04-decentralize-level-3](../raw/conversations/2026-10-04-decentralize-level-3.md) | 2026-10-04 | Level 3 decentralization accepted (D-0013); question about individual variation of wild Peerlings |

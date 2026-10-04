@@ -7,6 +7,7 @@ tags: [gameplay, creation, progression]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
@@ -35,19 +36,20 @@ the possibility to create a new one
 |------|-------|-----|
 | Location | One shrine, at the spawn in the world centre | Everyone knows where it is; returning to the busy centre is social |
 | Offering | 3 **verified** Peerlings of **3 different primary types**, each **level 20 or higher** | Takes real play: levelling or exploring to about 750 m out, and catching across different biomes. Turns creation into a mid-game goal rather than a quick repeat |
-| What happens to the offering | The 3 Peerlings are **released**: removed from the player's collection and marked released in the [ownership ledger](../glossary.md#ownership-ledger) | Makes it a real sacrifice, and stops the same Peerlings from being offered twice |
+| What happens to the offering | The 3 Peerlings are **released**: removed from the player's collection by a signed transfer to `released` in the [transfer log](../glossary.md#transfer-log) | Makes it a real sacrifice, and stops the same Peerlings from being offered twice |
 | Reward | One run of the [creation pipeline](../peerlings/creation-pipeline.md); the new Peerling joins the player's collection | |
 | Level of the new Peerling | The average level of the 3 offered Peerlings, rounded down | Sacrificing three level-30s shouldn't hand back a level-5 |
 | Limit | One shrine creation per player per 7 days | Caps GPU load and registry growth at about one species per active player per week |
 
 [accepted] Flow:
 1. The player walks to the shrine and chooses 3 Peerlings to offer.
-2. The client sends the offer to the server, which checks the ledger: each
-   Peerling is verified, owned by the player, and the rules above are met.
-3. The server marks the 3 Peerlings as released in the ledger and starts a
+2. The client signs a transfer to `released` for each of the 3 Peerlings and
+   sends them to the server. The server verifies each Peerling (origin,
+   ownership chain, not already released) and checks the rules above.
+3. The server appends the release transfers to the transfer log and starts a
    creation job. The client appends a `release` event to its save log.
 4. The creation pipeline runs as usual, including the final review and naming.
-5. On publishing, the server signs an attestation for the new Peerling
+5. On publishing, the server signs an origin attestation for the new Peerling
    ([player-data § Verification](../tech/player-data.md#verification)), and the
    client appends a `created` event.
 
@@ -59,7 +61,7 @@ The server must be online to use the shrine.
 ## Requirements
 
 - **SHR-001** [accepted] There MUST be a place in the world where a player can give up Peerlings in exchange for creating a new species.
-- **SHR-002** [accepted] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (recorded in the ownership ledger) when the creation starts.
+- **SHR-002** [accepted] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (signed transfers to `released` in the transfer log) when the creation starts.
 - **SHR-003** [accepted] A player MUST be limited to one shrine creation per 7 days.
 - **SHR-004** [accepted] The new Peerling MUST start at the average level of the offered Peerlings, rounded down.
 

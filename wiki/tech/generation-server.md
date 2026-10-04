@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-decentralize-level-3.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -26,7 +27,7 @@ updated: 2026-10-04
 
 > The single operator-hosted server. It runs the self-hosted AI models of the
 > [creation pipeline](../peerlings/creation-pipeline.md), pins all game content
-> on IPFS, is the only writer of the registry, and helps browser nodes connect.
+> on IPFS, signs registry listings and Peerling origins, and helps browser nodes connect.
 
 ## Responsibilities
 
@@ -36,14 +37,13 @@ updated: 2026-10-04
 | Run an image generator with structured (JSON) prompting, e.g. FLUX.2 | [accepted] (model choice open) |
 | Run an image-to-3D generator, e.g. TRELLIS.2 | [accepted] (model choice open) |
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
-| Only writer of the OrbitDB registry | [accepted] ([D-0005](../decisions/D-0005-server-sole-registry-writer.md)) |
+| Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Sign species records (attestation) | [proposed] |
 | Replicate and pin every player's save log | [accepted] ([player-data](player-data.md)) |
-| Verify catches by replaying battles; sign catch attestations | [accepted] ([player-data](player-data.md#verification)) |
-| Only writer of the ownership ledger; record trades | [accepted] ([player-data](player-data.md#ownership-ledger-and-trades-accepted-details-proposed)) |
+| Replicate save logs and replay catches for the species stats (optional; anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
 | Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [accepted] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Expose a creation API with a job queue | [proposed] |
-| Sign attestations for starters and Creation Shrine Peerlings; check shrine offerings | [proposed] ([player-data](player-data.md#starters-and-shrine-creations)) |
+| Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [proposed] ([player-data](player-data.md#starters-and-shrine-creations)) |
 | Maintain species stats and send creator notifications | [proposed] ([creator-feedback](../gameplay/creator-feedback.md)) |
 | Validate generated battle data | [proposed] |
 | Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [proposed] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
@@ -79,7 +79,7 @@ it generated, is canonical in
 
 ## Open questions
 
-[Q-022](../open-questions.md#q-022)
+_None at the moment._
 
 ## See also
 
