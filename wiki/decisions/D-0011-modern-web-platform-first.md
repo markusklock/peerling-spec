@@ -5,6 +5,7 @@ status: accepted
 tags: [tech, platform, networking]
 sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-tech-stack-2.md
 related:
   - wiki/tech/tech-stack.md
   - wiki/tech/ipfs-helia.md
@@ -28,6 +29,9 @@ connectivity, and better shows what the modern web can do.
   operator server over WebTransport (HTTP/3 over QUIC), as IPFS browser nodes
   do. WebSockets are not used.
 - [accepted] **IPv6 wherever possible**, to improve peer-to-peer connectivity.
+- [accepted] (2026-10-04, second round) Desktop browsers only for now; WebGPU
+  with a WebGL2 fallback; WebRTC-direct as the fallback browser → server
+  transport. The full list is in [tech-stack](../tech/tech-stack.md).
 - Clarification recorded with the decision: a browser can only open (dial) a
   WebTransport connection to a server; it can't accept one. Browser-to-browser
   connections therefore use WebRTC, the standard way libp2p connects two

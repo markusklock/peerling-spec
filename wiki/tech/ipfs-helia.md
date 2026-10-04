@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-tech-stack-2.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
@@ -46,8 +47,8 @@ server. Technology choices follow
 [tech-stack § Networking](tech-stack.md#networking).
 
 - **Transports:** [accepted] WebTransport for browser → server; no WebSockets.
-  [proposed] WebRTC-direct as a second browser → server transport; WebRTC for
-  browser ↔ browser.
+  [accepted] WebRTC-direct as the fallback browser → server transport.
+  [proposed] WebRTC for browser ↔ browser.
 - **IPv6:** [accepted] preferred wherever available; see
   [tech-stack § IPv6](tech-stack.md#ipv6).
 - **Bootstrap:** [proposed] the operator server's node is the bootstrap peer,

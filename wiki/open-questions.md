@@ -89,18 +89,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Proposal: regions of 64 × 64 m; show at most 30 nearby players.
 - Raised: 2026-10-03
 
-### Q-034
-**Tech stack: approve the proposals in tech-stack?**
-- Affects: [tech-stack](tech/tech-stack.md), [ipfs-helia](tech/ipfs-helia.md), [generation-server](tech/generation-server.md)
-- Context: The principle (modern web first), WebTransport and IPv6 are
-  decided (D-0011). The rest of the stack is proposed.
-- Sub-questions: (a) browser target: current Chrome/Edge, Firefox, Safari,
-  desktop and mobile? (b) WebGPU with WebGL2 fallback, or WebGPU only (which
-  drops Firefox on Linux and Android)? (c) WebRTC-direct as a second
-  browser → server transport? (d) Web Worker + OPFS + Ed25519 WebCrypto + PWA?
-  (e) glTF with meshopt and KTX2, and AVIF images?
-- Raised: 2026-10-04
-
 ## Resolved
 
 ### Q-002
@@ -230,3 +218,9 @@ returns to the last rest point, fully healed. Resolved 2026-10-04 →
 ### Q-033
 **Biome names, looks and layout.** Approved as proposed. Resolved 2026-10-04 →
 [procedural-generation § Biomes](world/procedural-generation.md#biomes).
+
+### Q-034
+**Tech stack proposals.** Desktop browsers only; WebGPU with WebGL2 fallback;
+WebRTC-direct as fallback transport; Web Worker, OPFS, Ed25519 WebCrypto, PWA,
+glTF meshopt + KTX2, AVIF and TypeScript approved. Resolved 2026-10-04 →
+[tech-stack](tech/tech-stack.md).

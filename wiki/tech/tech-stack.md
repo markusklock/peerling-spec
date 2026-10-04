@@ -6,6 +6,7 @@ req_prefix: STK
 tags: [tech, platform, networking, rendering]
 sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-tech-stack-2.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
@@ -24,17 +25,21 @@ updated: 2026-10-04
 
 ## Browser target
 
-[proposed] Current versions of Chrome/Edge, Firefox and Safari, on desktop and
-mobile. No polyfills or workarounds for older browsers. As of 2026, WebTransport
-works in all of these. WebGPU works in all of them except Firefox on Linux and
-Android, which is why WebGL2 is kept as a fallback (see *Rendering*).
+[accepted] **Desktop only** for now: current versions of Chrome/Edge, Firefox
+and Safari on desktop operating systems. Mobile is not a focus; the game may
+happen to run there, but it isn't designed, tested or controlled for touch.
+[proposed] No polyfills or workarounds for older browsers.
+
+As of 2026, WebTransport works in all of these browsers. WebGPU works in all of
+them except Firefox on Linux, which is why WebGL2 is kept as a fallback (see
+*Rendering*).
 
 ## Networking
 
 | Link | Technology | Status |
 |------|------------|--------|
 | Browser → operator server | **WebTransport** (HTTP/3 over QUIC) | [accepted] |
-| Browser → operator server, second option | **WebRTC-direct** (libp2p's WebRTC browser-to-server transport). Also UDP-based, needs no TLS certificate, and covers browsers whose WebTransport implementation misbehaves | [proposed] |
+| Browser → operator server, fallback | **WebRTC-direct** (libp2p's WebRTC browser-to-server transport), used when WebTransport fails. Also UDP-based, needs no TLS certificate | [accepted] |
 | Browser ↔ browser | **WebRTC**, set up through the server's circuit relay, then direct | [proposed] (the only option; browsers can't accept WebTransport) |
 | WebSockets | Not used | [accepted] |
 | IP version | **IPv6 preferred**, IPv4 kept for players without IPv6 | [accepted] |
@@ -79,15 +84,14 @@ services (OrbitDB) is an acceptable setup.
 
 ## Rendering
 
-[proposed]
-- **WebGPU** as the primary graphics API, with automatic **WebGL2 fallback**
-  where WebGPU isn't available (mainly Firefox on Linux and Android). Modern
-  engines provide the fallback almost for free.
+- [accepted] **WebGPU** as the primary graphics API, with a **WebGL2
+  fallback** where WebGPU isn't available (mainly Firefox on Linux).
+  [proposed] Modern engines provide the fallback almost for free.
 - The engine itself (e.g. three.js, Babylon.js) is the implementer's choice.
 
 ## Client runtime
 
-[proposed]
+[accepted] Approved 2026-10-04.
 
 | Area | Choice | Why |
 |------|--------|-----|
@@ -95,12 +99,12 @@ services (OrbitDB) is an acceptable setup.
 | One node per player | The **Web Locks API** ensures only one open tab runs the player's node | Two tabs with the same identity would fight over the save log |
 | Storage | **OPFS** (Origin Private File System) for the IPFS blockstore and OrbitDB data | Much faster binary reads and writes than IndexedDB, especially from a worker |
 | Crypto | **Ed25519 via WebCrypto** for player identities and signatures | Built into all major browsers; no JavaScript crypto library on the hot path |
-| Installable app | **PWA** with a service worker caching the app itself | The game loads offline, which fits offline play ([player-data](player-data.md#encounter-seeds)) |
+| Installable app | **PWA** (installable desktop web app) with a service worker caching the app itself | The game loads offline, which fits offline play ([player-data](player-data.md#encounter-seeds)) |
 | Language | **TypeScript** | Helia, libp2p and OrbitDB are TypeScript/JavaScript |
 
 ## Asset formats
 
-[proposed]
+[accepted] Approved 2026-10-04. Size budgets are still open.
 - **3D models:** binary glTF 2.0 (`.glb`) with meshopt geometry compression
   (`EXT_meshopt_compression`) and KTX2/Basis Universal textures
   (`KHR_texture_basisu`). The files are smaller to share peer-to-peer, and the
@@ -111,17 +115,19 @@ services (OrbitDB) is an acceptable setup.
 
 - **STK-001** [accepted] Browser ↔ server connections MUST use WebTransport; WebSockets MUST NOT be used.
 - **STK-002** [accepted] The game MUST use IPv6 wherever available: the server MUST be dual-stack, and clients MUST NOT suppress IPv6 connection candidates.
-- **STK-003** [proposed] The server MUST also accept WebRTC-direct connections from browsers.
+- **STK-003** [accepted] The server MUST also accept WebRTC-direct connections from browsers, and clients MUST fall back to WebRTC-direct when WebTransport fails.
 - **STK-004** [proposed] Clients MUST discover the server's current multiaddrs (including WebTransport certificate hashes) at startup instead of hardcoding them.
-- **STK-005** [proposed] Rendering MUST use WebGPU where available and fall back to WebGL2.
-- **STK-006** [proposed] The IPFS node, libp2p and OrbitDB MUST run off the main thread, and only one tab per player MUST run the node.
-- **STK-007** [proposed] The client blockstore and OrbitDB storage MUST use OPFS.
-- **STK-008** [proposed] Player identity keys and signatures MUST use Ed25519 via WebCrypto.
-- **STK-009** [proposed] 3D models MUST be glTF 2.0 binary with meshopt compression and KTX2 textures; 2D images MUST be AVIF.
+- **STK-005** [accepted] Rendering MUST use WebGPU where available and fall back to WebGL2.
+- **STK-006** [accepted] The IPFS node, libp2p and OrbitDB MUST run off the main thread, and only one tab per player MUST run the node.
+- **STK-007** [accepted] The client blockstore and OrbitDB storage MUST use OPFS.
+- **STK-008** [accepted] Player identity keys and signatures MUST use Ed25519 via WebCrypto.
+- **STK-009** [accepted] 3D models MUST be glTF 2.0 binary with meshopt compression and KTX2 textures; 2D images MUST be AVIF.
+- **STK-010** [accepted] The game MUST target current desktop versions of Chrome/Edge, Firefox and Safari; mobile is not a target.
+- **STK-011** [accepted] The client MUST be written in TypeScript and be installable as a PWA.
 
 ## Open questions
 
-[Q-016](../open-questions.md#q-016) · [Q-034](../open-questions.md#q-034)
+[Q-016](../open-questions.md#q-016)
 
 ## See also
 

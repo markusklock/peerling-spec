@@ -118,3 +118,12 @@ List all entries with `grep "^## \[" wiki/log.md`.
   WebRTC. Proposed the rest of the stack (WebRTC-direct, WebGPU + WebGL2
   fallback, Web Worker, OPFS, Ed25519 WebCrypto, PWA, meshopt/KTX2, AVIF) as
   Q-034. Added EXP-002/003, WGN-009, STK-001…009.
+
+## [2026-10-04] design | Tech stack round 2: desktop only, WebGPU fallback, stack approved
+- Source: raw/conversations/2026-10-04-tech-stack-2.md
+- Changed: tech/tech-stack.md, tech/ipfs-helia.md,
+  decisions/D-0011-modern-web-platform-first.md, open-questions.md, index.md
+- Notes: Resolved Q-034. Desktop browsers only (mobile not a target); WebGPU
+  with WebGL2 fallback; WebRTC-direct as the fallback browser → server
+  transport. Worker, OPFS, Ed25519, PWA, asset formats and TypeScript accepted.
+  Added STK-010, STK-011. Asset size budgets remain open (Q-016).

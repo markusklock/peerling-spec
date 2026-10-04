@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-tech-stack-2.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -40,7 +41,11 @@ battles and is restored at **rest points**:
 - If the player's whole team faints, the player returns to their last rest
   point with the team fully healed. Nothing is lost.
 
-To be specified: controls, movement, what triggers encounters (e.g. tall grass,
+[accepted] The game targets desktop browsers only
+([STK-010](../tech/tech-stack.md#requirements)), so controls are designed for
+keyboard and mouse.
+
+To be specified: the exact controls, movement, what triggers encounters (e.g. tall grass,
 visible roaming Peerlings), points of interest, and the look of rest points.
 
 ## Requirements
