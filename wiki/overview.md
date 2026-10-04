@@ -6,11 +6,12 @@ tags: [vision, pillars]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/gameplay/core-loop.md
   - wiki/tech/architecture.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Overview — Vision, Goals and Design Pillars
@@ -65,8 +66,7 @@ The first playable version (v1) contains:
 - [accepted] PvP battles and trading between players.
 - [proposed] A team/collection of caught Peerlings.
 
-[proposed] Not in v1 unless the designer decides otherwise: evolution
-([Q-010](open-questions.md#q-010)).
+[accepted] Not in v1: evolution, and Peerlings learning new moves.
 
 ## See also
 

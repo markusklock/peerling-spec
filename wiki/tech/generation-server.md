@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -37,7 +38,7 @@ updated: 2026-10-04
 | Replicate and pin every player's save log | [accepted] ([player-data](player-data.md)) |
 | Verify catches by replaying battles; sign catch attestations | [accepted] ([player-data](player-data.md#verification)) |
 | Only writer of the ownership ledger; record trades | [accepted] ([player-data](player-data.md#ownership-ledger-and-trades-accepted-details-proposed)) |
-| Publish the signed random beacon for encounter seeds | [proposed] ([Q-029](../open-questions.md#q-029)) |
+| Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [proposed] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Expose a creation API with a job queue | [proposed] |
 | Validate generated battle data and moderate content | [proposed] |
 | Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [proposed] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |

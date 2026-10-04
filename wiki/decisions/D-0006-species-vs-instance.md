@@ -1,22 +1,24 @@
 ---
 title: "D-0006: Separate immutable species from owned instances"
 type: decision
-status: proposed
+status: accepted
 tags: [peerlings, data-model]
+sources:
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # D-0006: Separate immutable species from owned instances
 
-**Status:** proposed (awaiting designer review)
+**Status:** accepted (2026-10-04)
 
 ## Context
 A player's creation must appear in many players' worlds, be caught many times,
 and level up independently in each owner's team.
 
-## Decision (proposed)
+## Decision
 - A **[species](../glossary.md#species)** is the immutable design, stored on IPFS
   as a [species record](../glossary.md#species-record); its CID is its identity.
 - A **[Peerling instance](../glossary.md#peerling-instance)** is one individual

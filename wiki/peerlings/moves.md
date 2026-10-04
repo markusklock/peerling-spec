@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
@@ -60,6 +61,9 @@ a slot name because Pokémon uses it for a damage category and a stat.
 | `name` | LLM (moderated, max length TBD) |
 | `description` | LLM (one sentence of flavour text) |
 | `type` | LLM, constrained by the slot (table above) |
+
+[accepted] A Peerling's moves are fixed when its species is created and
+**never change**: no learning new moves on level-up, no move tutors.
 
 [accepted] Moves can be used **without limit**: there are no per-battle uses
 (PP) and no stamina. Balance comes from the trade-offs built into each
@@ -129,10 +133,11 @@ the damage formula ([battle](../gameplay/battle.md)).
 - **MOV-007** [proposed] Quick and strong moves MUST be Normal type or one of the species' types; the signature move MUST be the species' primary type.
 - **MOV-008** [proposed] A move's template MUST be one allowed for its slot.
 - **MOV-009** [accepted] Moves MUST be usable without limit; there MUST NOT be per-battle use counts or a move resource.
+- **MOV-010** [accepted] A Peerling's move set MUST NOT change after its species is published.
 
 ## Open questions
 
-[Q-010](../open-questions.md#q-010) (do moves change when levelling?)
+_None at the moment._
 
 ## See also
 

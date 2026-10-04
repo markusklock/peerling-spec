@@ -7,12 +7,13 @@ tags: [gameplay, encounters, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/battle.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Wild Encounters
@@ -34,14 +35,31 @@ Candidate factors:
   current biome are more likely.
 - **Novelty** — species the player hasn't seen yet get a boost, so discovery
   stays fresh.
-- **Availability** — prefer species whose assets are already cached or
-  prefetched, so the encounter starts instantly.
-- **Level** — the wild instance's level depends on the region, not the species.
+- **Level** — the wild instance's level depends on where it is met (see
+  [Wild level](#wild-level)), not on the species.
+
+[proposed] Selection must be a deterministic function of the encounter seed and
+data the server can also see, so the server can check it when verifying a catch
+([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)). For
+that reason "prefer species that are already downloaded" can't be a selection
+factor: what a browser has cached is not visible to the server.
 
 The player's own species MAY appear in the wild (others certainly meet it).
 
 [proposed] Each player meets their own wild Peerlings, even in the shared
 world ([MPL-004](multiplayer.md#requirements)).
+
+## Wild level
+
+[proposed] Drafted 2026-10-04 with the XP curve
+([Q-030](../open-questions.md#q-030)). With d = distance in metres from the
+world centre (the spawn; the world is 4 km × 4 km, so d is at most about
+2,830 m at the corners):
+
+- base level = round(2 + 48 × min(d, 2000) ÷ 2000), i.e. 2 at the spawn and 50
+  from 2 km out;
+- wild level = base level + a random offset from −2 to +2 (from the encounter
+  seed), clamped to 1–50.
 
 ## Cold start
 
@@ -53,18 +71,22 @@ different levels.
 
 ## Latency
 
-[proposed] An encounter must never stall on the network. The client keeps a
-small **ready pool** of species per nearby biome with assets already fetched
-and verified, refilled in the background. If the pool is empty, a cached
-species is used.
+[proposed] An encounter must never stall on the network. Because encounters
+are determined by the encounter seed, the client can work out in advance which
+species its next few encounters would be in the current and neighbouring
+biomes, as soon as a new epoch record arrives. It fetches and verifies those species
+in the background. If an encounter's species still isn't available when the
+encounter triggers, the encounter is delayed (the player keeps walking) until it
+is, rather than being replaced by a different species.
 
 ## Requirements
 
 - **ENC-001** [accepted] Wild Peerlings MUST be chosen from the species in the registry.
 - **ENC-002** [accepted] The chosen species' data and model MUST be retrieved via IPFS.
-- **ENC-003** [proposed] The client MUST maintain a prefetched pool so an encounter can start without waiting for network retrieval.
+- **ENC-003** [proposed] The client MUST prefetch the species of its upcoming encounters so an encounter normally starts without waiting for network retrieval.
 - **ENC-004** [proposed] Removed (tombstoned) species MUST NOT be chosen ([REG-005](../tech/orbitdb-registry.md#requirements)).
+- **ENC-005** [proposed] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
 
 ## Open questions
 
-[Q-017](../open-questions.md#q-017)
+[Q-017](../open-questions.md#q-017) · [Q-029](../open-questions.md#q-029) · [Q-030](../open-questions.md#q-030)

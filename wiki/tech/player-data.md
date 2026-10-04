@@ -7,6 +7,7 @@ tags: [tech, saves, identity, orbitdb, ipns, security]
 sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/gameplay/player-character.md
@@ -88,23 +89,103 @@ after it. The server replicates every player's log and pins the snapshots.
 ### Catches [accepted, details proposed]
 
 1. When a player catches a Peerling, the client appends a `catch` event with
-   the **catch evidence**: the encounter seed, the battle's starting state, and
-   every action taken. The Peerling can be used straight away in
+   the **catch evidence**: the encounter number, the epoch used, the position,
+   the battle's starting state, and every action taken. The Peerling can be used straight away in
    exploration and wild battles. It is *unverified* until step 3.
 2. The server sees the event (it replicates the save log), replays the battle
    with the deterministic engine ([BTL-002](../gameplay/battle.md#requirements)),
-   and checks the encounter seed (see below).
+   and runs the checks in [Encounter seeds](#encounter-seeds).
 3. If valid, the server signs a **catch attestation** (instance ID, species CID,
    owner, encounter seed) and records the instance in the ownership ledger. The
    client appends `catch-verified`. If invalid, the instance is permanently
    *unverified*: it stays in the collection but can never be traded or used in
    PvP.
 
-**Encounter seed.** [proposed] To stop players re-rolling encounters until they
-get a good one, the seed is derived from a random value the player can't
-choose: `seed = hash(beacon, playerId, encounterCounter)`. The **beacon** is a
-random value the server publishes and signs every 5 minutes. Details:
-[Q-029](../open-questions.md#q-029).
+### Encounter seeds
+
+**Status: [proposed] draft for review**, written 2026-10-04 at the designer's
+request ([Q-029](../open-questions.md#q-029)).
+
+Goal: players can't choose or re-roll their wild encounters, play keeps working
+without the server, and the server can check everything afterwards.
+
+**Epochs and the epoch record.**
+- Time is divided into 5-minute **epochs**: epoch number E = floor(Unix time in
+  seconds ÷ 300).
+- At the start of each epoch the server publishes a signed
+  [epoch record](../glossary.md#epoch-record):
+
+  ```json
+  {
+    "epoch": 5873210,
+    "drandRound": 1234567,
+    "randomness": "<32 bytes, hex>",
+    "drandSignature": "<hex>",
+    "registryHeight": 1842,
+    "serverSignature": "<hex>"
+  }
+  ```
+
+- `randomness` is taken from **[drand](../glossary.md#drand)**, the public
+  randomness beacon run by the League of Entropy (Protocol Labs, the company
+  behind IPFS, is one of its main contributors). It is the value of the drand round that
+  starts at or just after the epoch's start time. drand values can be verified
+  with drand's public key, so clients don't have to trust the server not to
+  bias the randomness. Clients get drand values through the server's epoch
+  record and verify the drand signature locally, so they never contact drand
+  directly. Fallback if drand is unavailable or not wanted: the server
+  generates the value itself, and players trust it like they trust the
+  registry.
+- `registryHeight` fixes which species are eligible during that epoch (see
+  *Registry state* below).
+- Distribution: live on the pubsub topic `peerlings/v1/epoch`
+  ([realtime-networking](realtime-networking.md)), and in an OrbitDB
+  **epoch log** (events database, written only by the server) for clients that
+  were offline and for the server's own verification. That is 288 small entries
+  per day.
+
+**Seeds.**
+- Every encounter has an **encounter number** n: 0 for the player's first
+  encounter, increasing by exactly 1 for each encounter. *Every* encounter is
+  logged in the save log, including ones the player flees from or loses
+  (`battle-result` carries n).
+- encounter seed = SHA-256("peerlings/encounter/v1" ‖ epoch randomness ‖ player
+  ID ‖ n).
+- The seed drives the [random number generator](../gameplay/battle.md#random-number-generator)
+  for the species choice, the wild level and the whole battle
+  ([encounters](../gameplay/encounters.md)).
+- An encounter uses the latest epoch record the client has when the encounter
+  starts. Epoch numbers must never decrease from one encounter to the next.
+
+**Why this stops re-rolling.**
+- Same epoch + same n → same encounter, so reloading the page gives exactly the
+  same encounter.
+- Fleeing is a logged encounter, so n can't be skipped. A gap in the encounter
+  numbers makes every later catch fail verification.
+- The only way to get a different encounter for the same n is to wait for a new
+  epoch before triggering it, which costs up to 5 minutes. See *Known gaps*.
+
+**Registry state.**
+- The server gives each registry entry a sequence number `seq` (1, 2, 3, …)
+  when adding it; a takedown records `removedAtSeq`
+  ([orbitdb-registry](orbitdb-registry.md)).
+- During epoch E, the eligible species are the entries with
+  seq ≤ registryHeight(E), minus those with removedAtSeq ≤ registryHeight(E).
+- A client that hasn't yet synced the registry up to that height doesn't start
+  encounters until it has. Registry entries are small, so this is brief.
+
+**Offline play.** Without network access, the client keeps using the last epoch
+record it has. That gives no extra choice (same epoch and same n give the same
+encounter), so offline play needs no time limit. Catches made offline are
+verified when the server next sees the save log.
+
+**What the server checks when verifying a catch.**
+1. The epoch record is genuine (server signature and drand signature).
+2. Encounter numbers run from 0 with no gaps; epochs never decrease.
+3. The species and wild level match the deterministic selection for (seed,
+   position, registry height, save log).
+4. Replaying the battle with the logged actions ends in this catch.
+5. The instance ID isn't already in the ownership ledger.
 
 ### Ownership ledger and trades [accepted, details proposed]
 
@@ -132,6 +213,12 @@ since that Peerling was legitimately caught and gives no advantage.
 ## Known gaps (accepted risks)
 
 [proposed]
+- **Positions aren't verified.** A modified client could claim a different
+  position to target a biome or wild level. Possible mitigation: the server
+  checks that consecutive `position` events are reachable at walking speed.
+- **Small choice among recent epochs.** A player who knows the upcoming
+  encounter (the client computes it in advance for prefetching) can stall until
+  a new epoch. That is at most one re-roll per 5 minutes, which seems acceptable.
 - **Levels outside PvP aren't verified.** XP from wild battles isn't replayed.
   An edited level only matters in the player's own wild battles, and in a
   Peerling they trade away. The receiving player gets the level shown.
@@ -165,8 +252,10 @@ from server signatures.
 - **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP. [proposed] It MUST also contain the parts listed in [Save contents](#save-contents).
 - **SAVE-006** [accepted] The server MUST verify a catch by replaying the battle from the catch evidence before signing a catch attestation.
 - **SAVE-007** [proposed] The save log MUST be event-based as listed in [Save log](#save-log), with periodic snapshots so loading doesn't replay the full history.
-- **SAVE-008** [proposed] Encounter seeds MUST include a server-published random beacon value, so players can't choose their encounters.
+- **SAVE-008** [proposed] Encounter seeds MUST be derived as in [Encounter seeds](#encounter-seeds): from the epoch record's randomness, the player ID and a gap-free encounter number.
 - **SAVE-009** [proposed] Catches MUST be playable while unverified; verification MAY happen later (e.g. when the server is reachable again).
+- **SAVE-010** [proposed] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
+- **SAVE-011** [proposed] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
 
 ## Open questions
 

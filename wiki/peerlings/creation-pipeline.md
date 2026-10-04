@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -218,7 +219,7 @@ creation runs while the 3D model generates) — see
 - **CRE-012** [proposed] Every species record MUST include provenance: wish text, concept, image prompt, seeds, and model names/versions used at each stage.
 - **CRE-013** [proposed] The 3D model MUST be post-processed to a normalized scale, orientation and ground position, and MUST fit the asset budget ([Q-016](../open-questions.md#q-016)).
 - **CRE-014** [proposed] The pipeline MUST run as a resumable server-side job; the client MUST show progress and MUST be able to reconnect to an in-progress job after a page reload.
-- **CRE-015** [proposed] A published species MUST be immutable; there is no edit operation.
+- **CRE-015** [accepted] A published species MUST be immutable; there is no edit operation ([D-0006](../decisions/D-0006-species-vs-instance.md)).
 - **CRE-016** [accepted] The concept LLM MUST determine the type(s) in stage 2, from the player's description, before the image is generated; the image MUST reflect the type(s).
 - **CRE-017** [accepted] The 3D model MUST be static (unrigged); the pipeline MUST NOT depend on rigging or skeletal animation.
 - **CRE-018** [accepted] The player's browser MUST add the species record and its assets to IPFS through its own Helia node.

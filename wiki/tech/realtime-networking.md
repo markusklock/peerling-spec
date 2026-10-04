@@ -7,6 +7,7 @@ tags: [tech, libp2p, multiplayer, pubsub]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -28,6 +29,7 @@ updated: 2026-10-04
 |------|-----------|
 | Know who is nearby | libp2p **pubsub (gossipsub)** topic per world [region](../glossary.md#region) |
 | Battle, trade, profile | Direct libp2p **streams** with custom protocol IDs |
+| Epoch records | Pubsub topic `peerlings/v1/epoch`, published by the server ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Reaching other browsers | Circuit relay via the operator server, upgraded to direct **WebRTC** connections when possible ([ipfs-helia § Connectivity](ipfs-helia.md#connectivity)) |
 
 ## Presence (proposed)

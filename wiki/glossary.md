@@ -21,11 +21,6 @@ updated: 2026-10-04
 official pipeline and has not been altered. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
-### Beacon
-[proposed] A random value the server publishes and signs every few minutes.
-Encounter seeds include it, so players can't choose their encounters. See
-[player-data](tech/player-data.md#verification).
-
 ### Biome
 A region type of the procedural world (e.g. forest, desert) that influences
 which Peerlings are encountered there. See
@@ -54,6 +49,11 @@ player wishes into concepts and later assigns types and moves.
 The player who designed a Peerling [species](#species). The creator is recorded
 in the species record and credited in-game.
 
+### drand
+A public, verifiable randomness beacon run by the League of Entropy. The
+[epoch record](#epoch-record) takes its randomness from drand. See
+[player-data](tech/player-data.md#encounter-seeds).
+
 ### Emote
 One of a fixed set of gestures or expressions a player can show to nearby
 players. Emotes are the only way players communicate; there is no chat. See
@@ -62,6 +62,12 @@ players. Emotes are the only way players communicate; there is no chat. See
 ### Encounter
 A meeting with a [wild Peerling](#wild-peerling) during exploration, which
 leads to a battle. See [encounters](gameplay/encounters.md).
+
+### Epoch record
+[proposed] A record the server signs and publishes every 5 minutes (one
+*epoch*). It holds a drand random value and the current registry height, and
+encounter seeds are derived from it, so players can't choose their encounters.
+See [player-data](tech/player-data.md#encounter-seeds).
 
 ### Generation server
 The single operator-hosted server that runs the concept LLM, the image
@@ -110,7 +116,7 @@ individual *instance*; when the distinction matters, the spec says
 Plural: Peerlings. The game itself is also called *Peerlings*.
 
 ### Peerling instance
-[proposed] One individual Peerling owned by a player (e.g. the starter, or a
+One individual Peerling owned by a player (e.g. the starter, or a
 caught wild Peerling), with its own level, experience, current HP, etc. Many
 instances can exist of the same species. See
 [peerling-species](peerlings/peerling-species.md).
@@ -160,13 +166,13 @@ meet. See [D-0002](decisions/D-0002-all-peerlings-user-generated.md).
 attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
 
 ### Species
-[proposed] A Peerling design: the immutable, content-addressed definition (name,
+A Peerling design: the immutable, content-addressed definition (name,
 description, types, base stats, moves, image, 3D model) created once by its
 creator through the creation pipeline. See
 [peerling-species](peerlings/peerling-species.md).
 
 ### Species record
-[proposed] The JSON document stored on IPFS that defines a species. Its CID is
+The document stored on IPFS that defines a species. Its CID is
 the species' identity. See [peerling-species](peerlings/peerling-species.md).
 
 ### Starter

@@ -61,18 +61,11 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Partly resolved 2026-10-03: the type list is the 12 classic elements
   ([types](peerlings/types.md#the-type-list)). Still open: which type is strong
   or weak against which.
+- Draft chart written 2026-10-04 at the designer's request:
+  [types § Effectiveness chart](peerlings/types.md#effectiveness-chart).
+  Awaiting approval.
 - Raised: 2026-10-03
 
-### Q-010
-**Progression: how do XP and levelling work, is there evolution, and do moves change?**
-- Affects: [peerling-species](peerlings/peerling-species.md), [battle](gameplay/battle.md), [core-loop](gameplay/core-loop.md), [moves](peerlings/moves.md)
-- Partly resolved 2026-10-04: levels run from 1 to 50
-  ([battle § Damage model](gameplay/battle.md#damage-model)).
-- Still open: XP gained per battle and the XP needed per level; evolution
-  (which would need extra generated forms, so more GPU work and more design);
-  whether Peerlings ever learn or change moves.
-- Proposal: a simple XP curve; no evolution and no move changes in v1.
-- Raised: 2026-10-03
 ### Q-012
 **Presentation: camera and visual style of the world.**
 - Affects: [exploration](gameplay/exploration.md), [battle](gameplay/battle.md)
@@ -136,16 +129,24 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Raised: 2026-10-03
 
 ### Q-029
-**Encounter seeds: how exactly does the server beacon work?**
-- Affects: [player-data](tech/player-data.md#verification), [encounters](gameplay/encounters.md), [generation-server](tech/generation-server.md)
-- Context: Catch verification needs encounter seeds that players can't choose
-  (otherwise they could re-roll until they get a rare Peerling). Proposed:
-  `seed = hash(beacon, playerId, encounterCounter)`, with a beacon value the
-  server signs every 5 minutes.
-- Sub-questions: how the beacon is distributed (pubsub topic, OrbitDB, IPNS);
-  how the species is chosen from the seed deterministically, including what
-  happens while the registry is still syncing; how old a beacon can be when
-  playing offline.
+**Encounter seeds: approve the epoch-record design?**
+- Affects: [player-data](tech/player-data.md#encounter-seeds), [encounters](gameplay/encounters.md), [generation-server](tech/generation-server.md), [orbitdb-registry](tech/orbitdb-registry.md)
+- Context: Catch verification needs encounter seeds that players can't choose.
+- Draft written 2026-10-04 at the designer's request:
+  [player-data § Encounter seeds](tech/player-data.md#encounter-seeds). Every
+  5 minutes the server publishes a signed epoch record with drand randomness and
+  the registry height; seeds use a gap-free encounter number; the server
+  re-checks everything when verifying a catch. Awaiting approval, including
+  whether to use drand or the server's own random value.
+- Raised: 2026-10-04
+### Q-030
+**Approve the XP curve and wild-level numbers?**
+- Affects: [battle § Experience and levelling](gameplay/battle.md#experience-and-levelling), [encounters § Wild level](gameplay/encounters.md#wild-level)
+- Context: A simple XP curve was accepted (Q-010); these are the concrete
+  numbers.
+- Draft 2026-10-04: XP to next level 5 × L²; 10 × wild level XP per defeat or
+  catch; starter at level 5; wild level rises from 2 at the spawn to 50 at 2 km
+  out (±2). About 600 wild battles from level 5 to 50.
 - Raised: 2026-10-04
 
 ## Resolved
@@ -227,3 +228,11 @@ attestation. Resolved 2026-10-04 →
 records them. Resolved 2026-10-04 →
 [D-0009](decisions/D-0009-player-data-on-orbitdb.md),
 [trading](gameplay/trading.md#integrity).
+
+### Q-010
+**Progression.** A simple XP curve; levels 1–50; no evolution; Peerlings never
+learn or change moves. Resolved 2026-10-04 →
+[battle § Experience and levelling](gameplay/battle.md#experience-and-levelling),
+[SPC-011](peerlings/peerling-species.md#requirements),
+[MOV-010](peerlings/moves.md#requirements). The concrete numbers are in
+[Q-030](#q-030).

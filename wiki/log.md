@@ -67,3 +67,20 @@ List all entries with `grep "^## \[" wiki/log.md`.
   question on save contents in player-data § Save contents. Added SAVE-005…009,
   BTL-005, MOV-009, PVP-007/008, CAT-002. Corrected WGN-005: the natural
   border had been marked accepted by mistake; it is a proposal.
+
+## [2026-10-04] design | Answers round 4: species/instance, progression, type chart and encounter-seed drafts
+- Source: raw/conversations/2026-10-04-answers-round-4.md
+- Changed: decisions/D-0006 (→ accepted), glossary.md (drand, Epoch record;
+  Beacon removed), open-questions.md, index.md, overview.md,
+  peerlings/types.md, peerlings/peerling-species.md, peerlings/moves.md,
+  peerlings/creation-pipeline.md, gameplay/battle.md, gameplay/encounters.md,
+  gameplay/core-loop.md, gameplay/catching.md, tech/player-data.md,
+  tech/orbitdb-registry.md, tech/generation-server.md,
+  tech/realtime-networking.md
+- Notes: Resolved Q-010 (simple XP curve, no evolution, fixed moves). Drafted
+  the 12-type effectiveness chart (Q-008), the encounter-seed / epoch-record
+  design using drand (Q-029), and the XP and wild-level numbers (new Q-030),
+  all awaiting approval. Defined a deterministic SHA-256-based RNG (BTL-007).
+  Encounter selection is now deterministic, so "prefer cached species" was
+  dropped and prefetching now uses precomputed upcoming encounters. Added
+  SPC-011, MOV-010, BTL-006/007, ENC-005, REG-007, SAVE-010/011.

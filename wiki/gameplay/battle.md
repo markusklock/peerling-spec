@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -32,9 +33,8 @@ updated: 2026-10-04
 side, the player can switch Peerlings, use an item, try to catch (wild battles
 only), or flee (wild battles only).
 
-Decided: the damage model and turn order below. To be specified: stat stages,
-fainting, experience and
-rewards ([Q-010](../open-questions.md#q-010)).
+Decided: the damage model, turn order and experience below. To be specified:
+stat stages, fainting, and rewards other than XP.
 
 ### Damage model
 
@@ -43,8 +43,8 @@ rewards ([Q-010](../open-questions.md#q-010)).
 simplified version of the well-known Pokémon formula, adapted to four stats.
 
 - **Levels** run from 1 to 50. PvP uses level 50 for everyone (see
-  [pvp-battles](pvp-battles.md)). How XP and levelling work is still open:
-  [Q-010](../open-questions.md#q-010).
+  [pvp-battles](pvp-battles.md)). Levelling: see
+  [Experience and levelling](#experience-and-levelling).
 - **Stats at level L** (all rounded down):
   - HP = 2 × base × L / 100 + L + 10
   - other stats = 2 × base × L / 100 + 5
@@ -78,6 +78,49 @@ needs this so both players' clients can agree on every turn
 replaying the battle ([player-data](../tech/player-data.md#verification),
 [D-0009](../decisions/D-0009-player-data-on-orbitdb.md)).
 
+### Experience and levelling
+
+[accepted] A simple XP curve; no evolution
+([SPC-011](../peerlings/peerling-species.md#requirements)); moves never change
+([MOV-010](../peerlings/moves.md#requirements)).
+
+[proposed] Numbers (drafted 2026-10-04, awaiting approval:
+[Q-030](../open-questions.md#q-030)):
+
+| Rule | Value |
+|------|-------|
+| XP needed to go from level L to L + 1 | 5 × L² |
+| XP gained for each wild Peerling defeated **or caught** | 10 × the wild Peerling's level |
+| Who gets the XP | Every one of the player's Peerlings that took part in the battle and didn't faint, each gets the full amount |
+| XP from PvP | None ([pvp-battles § Rewards](pvp-battles.md#rewards)) |
+| Starter level | 5 |
+| Maximum level | 50; XP stops accumulating there |
+| On level-up | Stats are recomputed with the stat formula above; current HP rises by the same amount as max HP |
+
+Pacing: fighting wild Peerlings of about its own level, a Peerling needs about
+L ÷ 2 battles per level. Going from level 5 to 50 takes about 600 wild battles
+(roughly 10 hours at a minute per battle). Wild levels come from the distance to
+the world centre ([encounters § Wild level](encounters.md#wild-level)), so
+players level up by exploring further out.
+
+### Random number generator
+
+[proposed] Every random roll in a battle (accuracy, damage roll, secondary
+effects, catch chance, speed ties) and in encounter selection comes from one
+deterministic generator, so a battle can be replayed exactly on any browser and
+on the server ([BTL-002](#requirements)):
+
+- Input: a 32-byte seed.
+- Output block *i* (i = 0, 1, 2, …) = SHA-256(seed ‖ i as 8-byte big-endian).
+- Each block yields eight unsigned 32-bit integers (big-endian), consumed in
+  order. A uniform value in [0, 1) is the next integer ÷ 2³².
+- An integer in [0, n) is drawn by rejection sampling (discard values ≥ the
+  largest multiple of n below 2³²), so there is no bias.
+- Rolls are drawn in a fixed order that the battle rules define.
+
+Seeds: wild battles use the [encounter seed](../tech/player-data.md#encounter-seeds);
+PvP battles use the commit-reveal seed ([pvp-battles](pvp-battles.md)).
+
 ## Presentation
 
 [accepted] Peerlings are static 3D models ([CRE-017](../peerlings/creation-pipeline.md#requirements)),
@@ -103,12 +146,14 @@ from the move's type and template, not authored per move.
 - **BTL-001** [accepted] The player MUST be able to battle wild Peerlings they encounter.
 - **BTL-002** [accepted] The battle engine MUST be deterministic given the initial state, the actions taken and the RNG seed, on every browser and on the server.
 - **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
+- **BTL-006** [accepted] Levels MUST run from 1 to 50. [proposed] XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
+- **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
 - **BTL-003** [accepted] Battle animation MUST work with static, unrigged models using whole-model transforms only.
 - **BTL-004** [proposed] Move visual effects MUST be derived from the move's type and template, so every generated move has an effect without per-move assets.
 
 ## Open questions
 
-[Q-008](../open-questions.md#q-008) · [Q-010](../open-questions.md#q-010) ·
+[Q-008](../open-questions.md#q-008) · [Q-030](../open-questions.md#q-030) ·
 [Q-012](../open-questions.md#q-012)
 
 ## See also

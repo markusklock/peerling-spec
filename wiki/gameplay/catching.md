@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
@@ -43,4 +44,4 @@ until then the Peerling is *unverified* and can't be traded or used in PvP. See
 
 ## Open questions
 
-[Q-010](../open-questions.md#q-010) · [Q-021](../open-questions.md#q-021)
+[Q-021](../open-questions.md#q-021)

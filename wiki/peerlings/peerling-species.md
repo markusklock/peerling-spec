@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -25,7 +26,7 @@ updated: 2026-10-04
 > **species record** stored on IPFS, the base **stats**, and the per-player
 > **instance** stored in a save.
 
-The split between species and instance is proposed in
+[accepted] The split between species and instance is decided in
 [D-0006](../decisions/D-0006-species-vs-instance.md).
 
 ## Species record
@@ -115,8 +116,9 @@ step.
 
 ## Peerling instance
 
-[proposed] An instance is one individual Peerling owned by a player, stored in
-the player's save (not on the shared registry). Illustrative shape:
+[accepted] An instance is one individual Peerling owned by a player, stored
+in the player's [save](../tech/player-data.md#save-contents) (not on the shared
+registry). [proposed] Illustrative shape:
 
 ```json
 {
@@ -134,7 +136,9 @@ the player's save (not on the shared registry). Illustrative shape:
 }
 ```
 
-Progression (levels, XP, evolution): [Q-010](../open-questions.md#q-010).
+[accepted] There is **no evolution** in v1: a species never changes into
+another species. Levels and XP are specified in
+[battle § Experience and levelling](../gameplay/battle.md#experience-and-levelling).
 Instances can change owner through [trading](../gameplay/trading.md).
 Instances are stored in the player's save, and their verification is
 described in [player-data](../tech/player-data.md#verification).
@@ -142,19 +146,19 @@ described in [player-data](../tech/player-data.md#verification).
 ## Requirements
 
 - **SPC-001** [accepted] A species' description, type, attacks and 3D model MUST be stored on IPFS.
-- **SPC-002** [proposed] A species MUST be identified by the CID of its species record.
+- **SPC-002** [accepted] A species MUST be identified by the CID of its species record.
 - **SPC-003** [proposed] A species record MUST reference its image, 3D model and thumbnail by CID.
 - **SPC-004** [proposed] A species record MUST carry a `schema` version string; clients MUST ignore records with unknown major versions rather than fail.
 - **SPC-005** [proposed] A species' types MUST satisfy TYP-001 and TYP-002 in [types](types.md#requirements).
 - **SPC-006** [proposed] A species' move set MUST satisfy the move-set rules in [moves](moves.md#requirements).
 - **SPC-007** [accepted] Every species MUST have the same base-stat total (320), and each stat MUST lie within 40–130 in steps of 5.
 - **SPC-008** [proposed] Clients MUST verify the attestation of a species record before using it.
-- **SPC-009** [proposed] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
+- **SPC-009** [accepted] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
 - **SPC-010** [proposed] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
+- **SPC-011** [accepted] There MUST NOT be evolution in v1.
 
 ## Open questions
 
-[Q-010](../open-questions.md#q-010) ·
 [Q-016](../open-questions.md#q-016) ·
 [Q-018](../open-questions.md#q-018)
 

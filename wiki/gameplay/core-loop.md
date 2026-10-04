@@ -6,13 +6,14 @@ tags: [gameplay, loop]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/battle.md
   - wiki/gameplay/catching.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # Core Gameplay Loop
@@ -70,4 +71,4 @@ Around the core loop, players meet each other, [battle](pvp-battles.md) and
 
 ## Open questions
 
-[Q-010](../open-questions.md#q-010)
+[Q-030](../open-questions.md#q-030)
