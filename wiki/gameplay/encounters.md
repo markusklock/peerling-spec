@@ -10,11 +10,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/battle.md
+  - wiki/tech/resilience.md
 updated: 2026-10-04
 ---
 
@@ -42,15 +44,45 @@ Every eligible species starts with weight 1, then:
 | **Biome affinity:** the species has the biome's type (primary or secondary) | × 6 | If roughly 1 in 12 species has a given type, about a third of a biome's encounters are its type: clearly themed, with plenty of variety |
 | **Novelty:** the player has never seen this species (per the Peerdex in the save) | × 2 | Discovery stays fresh as the registry grows |
 
-The species is drawn with these weights using the encounter seed. The wild
-level depends on where it is met ([Wild level](#wild-level)), not on the
-species.
+The candidates (below) are drawn with these weights using the encounter
+seed. The wild level depends on where it is met ([Wild level](#wild-level)),
+not on the species.
 
-[proposed] Selection must be a deterministic function of the encounter seed and
+[accepted] Selection must be a deterministic function of the encounter seed and
 data the server can also see, so the server can check it when verifying a catch
-([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)). For
-that reason "prefer species that are already downloaded" can't be a selection
-factor: what a browser has cached is not visible to the server.
+([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
+
+## Candidates
+
+[accepted] Each encounter has **5 candidate** Peerlings rather than one. The
+game tries to fetch them via IPFS and the encounter uses one that arrives. This
+makes encounters faster and keeps them working when some species can't be
+downloaded, e.g. while the operator server (the only node pinning everything)
+is offline ([resilience](../tech/resilience.md)).
+
+[proposed] To keep catches verifiable, the candidates and the choice between
+them follow fixed rules:
+1. **An ordered list.** The encounter seed draws 5 different species, one after
+   another, using the selection weights (weighted draws without replacement).
+   If fewer than 5 species are eligible, all of them are candidates.
+2. **Prefetching.** The client works out its upcoming encounters' candidate
+   lists in advance and fetches them, in list order, in the background.
+3. **Choice.** When the encounter triggers, it uses the candidate **earliest
+   in the list** that has already been fetched and verified. If none has arrived
+   yet, it uses the first one that does arrive, as in the designer's original
+   idea.
+4. **Nothing arrives.** If no candidate arrives within 10 seconds, no encounter
+   happens and the encounter number isn't used up. The next encounter trigger
+   tries the same 5 candidates again.
+5. **Logging.** The save log records which candidate (1–5) was met; the server
+   checks it is on the list.
+
+[proposed] ([Q-036](../open-questions.md#q-036)) Why "earliest in the list" instead of always "first to download": with
+prefetching, several candidates are usually already downloaded, so "first to
+download" is unclear. Earliest in the list keeps the outcome stable and the
+server can check it. A modified client could still pick any of the 5; that
+known gap is listed in
+[player-data § Known gaps](../tech/player-data.md#known-gaps-accepted-risks).
 
 The player's own species MAY appear in the wild (others certainly meet it).
 
@@ -78,13 +110,11 @@ different levels.
 
 ## Latency
 
-[proposed] An encounter must never stall on the network. Because encounters
-are determined by the encounter seed, the client can work out in advance which
-species its next few encounters would be in the current and neighbouring
-biomes, as soon as a new epoch record arrives. It fetches and verifies those species
-in the background. If an encounter's species still isn't available when the
-encounter triggers, the encounter is delayed (the player keeps walking) until it
-is, rather than being replaced by a different species.
+[proposed] An encounter must never stall on the network. As soon as a new
+epoch record arrives, the client works out the candidate lists of its next few
+encounters in the current and neighbouring biomes and fetches them in the
+background ([Candidates](#candidates)). With 5 candidates prefetched, at least
+one is almost always ready when an encounter triggers.
 
 ## Requirements
 
@@ -93,7 +123,9 @@ is, rather than being replaced by a different species.
 - **ENC-003** [proposed] The client MUST prefetch the species of its upcoming encounters so an encounter normally starts without waiting for network retrieval.
 - **ENC-004** [proposed] Removed (tombstoned) species MUST NOT be chosen ([REG-005](../tech/orbitdb-registry.md#requirements)).
 - **ENC-005** [accepted] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
+- **ENC-006** [accepted] Each encounter MUST have up to 5 candidate species, and the encounter MUST use a candidate that was successfully fetched via IPFS.
+- **ENC-007** [proposed] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
 
 ## Open questions
 
-_None at the moment._
+[Q-036](../open-questions.md#q-036)

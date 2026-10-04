@@ -20,21 +20,23 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
 | [core-loop](gameplay/core-loop.md) | draft | — | Explore → encounter → battle → catch; player motivations |
-| [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates character + starter Peerling |
-| [player-character](gameplay/player-character.md) | stub | PLR | Avatar, identity keypair (save details: player-data) |
+| [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates a character and creates or chooses a starter Peerling |
+| [player-character](gameplay/player-character.md) | stub | PLR | Avatar options (recommended: parts-based customizer), identity keypair |
 | [exploration](gameplay/exploration.md) | stub | EXP | Moving through the world; rest points and healing |
-| [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings deterministically (biome and novelty weights); wild levels; prefetching |
+| [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings: weights, 5 ordered candidates, wild levels, prefetching |
 | [battle](gameplay/battle.md) | stub | BTL | Battle rules: damage model, XP and levelling, deterministic RNG; procedural animation of static models |
 | [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
 | [multiplayer](gameplay/multiplayer.md) | draft | MPL | Shared world: seeing other players, face-to-face interaction, emotes (no chat) |
 | [pvp-battles](gameplay/pvp-battles.md) | draft | PVP | Peer-to-peer battles: fairness, commit-reveal protocol |
 | [trading](gameplay/trading.md) | draft | TRD | Peer-to-peer trades of Peerling instances |
+| [creation-shrine](gameplay/creation-shrine.md) | draft | SHR | Giving up 3 Peerlings to create a new species |
+| [creator-feedback](gameplay/creator-feedback.md) | draft | CFB | Species stats in OrbitDB, live creator notifications |
 
 ## Peerlings
 
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
-| [creation-pipeline](peerlings/creation-pipeline.md) | draft | CRE | Wish → concept (+type) → image → review → 3D → stats & moves → player publishes, server pins → starter |
+| [creation-pipeline](peerlings/creation-pipeline.md) | draft | CRE | Wish → concept (+type) → image (no limit, cooldown) → 3D → stats & moves → final review and naming → player publishes, server pins |
 | [peerling-species](peerlings/peerling-species.md) | draft | SPC | Species record (DAG-CBOR on IPFS), stats (total 320, 40–130), Peerling instance data model |
 | [types](peerlings/types.md) | draft | TYP | The 12 types, primary/secondary type, effectiveness chart |
 | [moves](peerlings/moves.md) | draft | MOV | Three move slots (quick/strong/signature), unlimited use, templates, how Pokémon-like games do it |
@@ -58,6 +60,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, key recovery, catch verification, encounter seeds (epoch records, drand), ownership ledger |
 | [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats |
+| [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
 
 ## Decisions
@@ -75,12 +78,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted | Player saves on OrbitDB, with server-verified catches and trades |
 | [D-0010](decisions/D-0010-no-content-moderation.md) | accepted | No content moderation |
 | [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first (WebTransport, IPv6) |
+| [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
 
 ## Registered requirement prefixes
 
-ARC, BTL, CAT, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
-SAVE, SHOW, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID: D-0012. Next
-free question ID: Q-035.
+ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
+RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
+D-0013. Next free question ID: Q-037.
 
 ## Sources
 
@@ -94,3 +98,4 @@ free question ID: Q-035.
 | [2026-10-04-answers-round-5](../raw/conversations/2026-10-04-answers-round-5.md) | 2026-10-04 | Chart, XP and encounter seeds approved; no battle items; 12 biomes; top-down colorful 3D; no content moderation |
 | [2026-10-04-tech-stack-1](../raw/conversations/2026-10-04-tech-stack-1.md) | 2026-10-04 | Catching, healing, biomes, weights, delisting approved; tech-stack principle, WebTransport instead of WebSockets, IPv6 |
 | [2026-10-04-tech-stack-2](../raw/conversations/2026-10-04-tech-stack-2.md) | 2026-10-04 | Desktop only; WebGPU + WebGL2 fallback; WebRTC-direct fallback; rest of the stack approved |
+| [2026-10-04-answers-round-7](../raw/conversations/2026-10-04-answers-round-7.md) | 2026-10-04 | Extra creations and starter choice; unlimited images with cooldown; restart from images; players name Peerlings; creator feedback wanted; server-offline resilience with 5 encounter candidates |

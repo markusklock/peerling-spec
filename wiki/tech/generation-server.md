@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -42,6 +43,8 @@ updated: 2026-10-04
 | Only writer of the ownership ledger; record trades | [accepted] ([player-data](player-data.md#ownership-ledger-and-trades-accepted-details-proposed)) |
 | Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [accepted] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Expose a creation API with a job queue | [proposed] |
+| Sign attestations for starters and Creation Shrine Peerlings; check shrine offerings | [proposed] ([player-data](player-data.md#starters-and-shrine-creations)) |
+| Maintain species stats and send creator notifications | [proposed] ([creator-feedback](../gameplay/creator-feedback.md)) |
 | Validate generated battle data | [proposed] |
 | Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [proposed] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
 
@@ -60,8 +63,9 @@ it generated, is canonical in
 
 [proposed] GPU time is the scarce resource. The creation API:
 - runs GPU jobs through a queue and reports queue position to the client;
-- rate-limits per player identity (creations and regenerations, see
-  [Q-001](../open-questions.md#q-001) and [Q-005](../open-questions.md#q-005));
+- rate-limits per player identity: the image-generation cooldown
+  ([CRE-021](../peerlings/creation-pipeline.md#requirements)) and the Creation
+  Shrine limit ([SHR-003](../gameplay/creation-shrine.md#requirements));
 - expires abandoned jobs.
 
 ## Requirements
@@ -75,7 +79,6 @@ it generated, is canonical in
 
 ## Open questions
 
-[Q-001](../open-questions.md#q-001) · [Q-005](../open-questions.md#q-005) ·
 [Q-022](../open-questions.md#q-022)
 
 ## See also

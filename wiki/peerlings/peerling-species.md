@@ -159,8 +159,7 @@ described in [player-data](../tech/player-data.md#verification).
 
 ## Open questions
 
-[Q-016](../open-questions.md#q-016) ·
-[Q-018](../open-questions.md#q-018)
+[Q-016](../open-questions.md#q-016)
 
 ## See also
 

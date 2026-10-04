@@ -17,32 +17,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-001
-**Can a player create more than one Peerling species?**
-- Affects: [onboarding](gameplay/onboarding.md), [creation-pipeline](peerlings/creation-pipeline.md), [generation-server](tech/generation-server.md)
-- Context: The brief says every new player creates a starter. Unclear whether
-  more creations are possible later (e.g. as a reward), which matters for GPU
-  cost, registry growth and progression design.
-- Proposal: one species per player at onboarding in v1; additional creations as
-  a later, earned reward.
-- Raised: 2026-10-03
-
-### Q-005
-**Regeneration rules: how many image regenerations, and can the player edit their description in between?**
-- Affects: [creation-pipeline](peerlings/creation-pipeline.md), [generation-server](tech/generation-server.md)
-- Proposal: up to 5 image generations per creation; the player may tweak the
-  description between attempts.
-- Raised: 2026-10-03
-
-### Q-006
-**Does the player see and approve the 3D model, or only the image?**
-- Affects: [creation-pipeline](peerlings/creation-pipeline.md)
-- Context: Image-to-3D can fail in ways the 2D image doesn't show (missing back
-  side, broken geometry).
-- Proposal: show a rotatable preview; allow one 3D retry; if it still fails,
-  return to image selection.
-- Raised: 2026-10-03
-
 ### Q-016
 **Asset budgets: maximum model size, texture resolution, image size.**
 - Affects: [creation-pipeline](peerlings/creation-pipeline.md), [peerling-species](peerlings/peerling-species.md), [ipfs-helia](tech/ipfs-helia.md)
@@ -52,42 +26,52 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
   thumbnail for lists.
 - Raised: 2026-10-03
 
-### Q-018
-**Who names the Peerling, and must names be unique?**
-- Affects: [creation-pipeline](peerlings/creation-pipeline.md), [peerling-species](peerlings/peerling-species.md)
-- Proposal: the LLM suggests names, the player picks or types one;
-  names need not be unique since the CID is the identity.
-- Raised: 2026-10-03
-
+- 2026-10-04: deferred by the designer ("TBD").
 ### Q-019
-**Player character creation: how much customization? Is the avatar AI-generated too?**
+**Player character creation: which option?**
 - Affects: [player-character](gameplay/player-character.md), [onboarding](gameplay/onboarding.md)
-- Context: Avatars are now seen by other players in the shared world.
+- Options and a recommendation written 2026-10-04 at the designer's request:
+  [player-character § Options considered](gameplay/player-character.md#options-considered).
+  Recommended: a parts-based customizer with game-made, rigged bodies (option
+  A). Awaiting decision.
 - Raised: 2026-10-03
-
-### Q-021
-**Do creators get feedback when others meet or catch their Peerling?**
-- Affects: [orbitdb-registry](tech/orbitdb-registry.md), [ipfs-showcase](tech/ipfs-showcase.md)
-- Context: "Your Peerling has been caught 42 times" is a strong social hook and
-  could use an OrbitDB event log, but needs anti-spam thought.
-- Raised: 2026-10-03
-
 ### Q-022
-**What happens when the generation server is down?**
-- Affects: [architecture](tech/architecture.md), [onboarding](gameplay/onboarding.md)
-- Context: Creation needs the server. Play could continue from peers and cached
-  data, which is a good demonstration of decentralization. The server is
-  also the main relay between browsers, so multiplayer would degrade.
-- Proposal: creation unavailable (queue/waitlist message); everything else keeps
-  working from peers and local cache as far as connectivity allows.
+**Server offline: approve the resilience design?**
+- Affects: [resilience](tech/resilience.md), [architecture](tech/architecture.md), [player-data](tech/player-data.md), [ipfs-helia](tech/ipfs-helia.md)
+- Partly resolved 2026-10-04: the game should keep working as far as possible
+  without the server, using as much distributed technology as possible, with 5
+  encounter candidates (RES-001, ENC-006).
+- Proposal: [resilience](tech/resilience.md): public bootstrap nodes, relays
+  and routing; client-derived epoch records from drand; the game app published
+  on IPFS; optional community mirror nodes.
 - Raised: 2026-10-03
-
 ### Q-027
-**Multiplayer scale: region size and how many players are visible at once.**
+**Multiplayer scale: approve the recommendations?**
 - Affects: [multiplayer](gameplay/multiplayer.md), [realtime-networking](tech/realtime-networking.md)
 - Partly resolved 2026-10-04: no chat, only emotes (MPL-007).
-- Proposal: regions of 64 × 64 m; show at most 30 nearby players.
+- Recommended 2026-10-04 at the designer's request: 64 m regions (subscribe to
+  a 3 × 3 block), the 30 nearest players drawn, 4 presence updates per second
+  while moving, a heartbeat every 5 s, 15 s timeout.
 - Raised: 2026-10-03
+### Q-035
+**Creation Shrine: approve the cost and limits?**
+- Affects: [creation-shrine](gameplay/creation-shrine.md), [player-data](tech/player-data.md)
+- Context: The designer wants additional creations limited by giving something
+  up at a place on the map, and asked for a balancing proposal.
+- Proposal: one shrine at the spawn; offer 3 verified Peerlings of 3 different
+  primary types, each level 20+; they are released; the new Peerling starts at
+  their average level; one shrine creation per 7 days.
+- Raised: 2026-10-04
+
+### Q-036
+**Encounter candidates: "earliest in the list" instead of "first to download"?**
+- Affects: [encounters § Candidates](gameplay/encounters.md#candidates), [player-data](tech/player-data.md#verification)
+- Context: The designer suggested using the first of 5 candidates to finish
+  downloading. With prefetching, several candidates are usually already
+  downloaded, and the server has to be able to check the choice.
+- Proposal: candidates form an ordered list; use the earliest already-fetched
+  one, or else the first to arrive; nothing within 10 s → no encounter.
+- Raised: 2026-10-04
 
 ## Resolved
 
@@ -224,3 +208,29 @@ returns to the last rest point, fully healed. Resolved 2026-10-04 →
 WebRTC-direct as fallback transport; Web Worker, OPFS, Ed25519 WebCrypto, PWA,
 glTF meshopt + KTX2, AVIF and TypeScript approved. Resolved 2026-10-04 →
 [tech-stack](tech/tech-stack.md).
+
+### Q-001
+**More than one species per player?** Yes: additional creations at a place on
+the map where players give something up; new players may also choose an
+existing species as their starter. Resolved 2026-10-04 →
+[D-0012](decisions/D-0012-starter-choice-and-extra-creations.md). Balancing:
+[Q-035](#q-035).
+
+### Q-005
+**Regeneration rules.** No limit on image generations; a cooldown prevents
+spam. Resolved 2026-10-04 →
+[creation-pipeline § Stage 4](peerlings/creation-pipeline.md#stage-4--review) (CRE-021).
+
+### Q-006
+**3D model approval.** No separate approval or retry; the player can restart
+from image generation in the final review. Resolved 2026-10-04 →
+[creation-pipeline § Final review](peerlings/creation-pipeline.md#final-review) (CRE-022).
+
+### Q-018
+**Naming.** The player names the Peerlings they create. Resolved 2026-10-04 →
+[creation-pipeline § Final review](peerlings/creation-pipeline.md#final-review) (CRE-023).
+
+### Q-021
+**Creator feedback.** Yes: server-verified species stats in OrbitDB, live pubsub
+notifications, and a "since you were last here" summary. Resolved 2026-10-04 →
+[creator-feedback](gameplay/creator-feedback.md) (design details proposed).

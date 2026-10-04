@@ -7,6 +7,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/peerlings/creation-pipeline.md
 updated: 2026-10-04
@@ -23,7 +24,9 @@ wants the roster to be the players' collective creation, distributed via IPFS.
 ## Decision
 No Peerling species exist when the game launches. Every species is created by a
 player through the [creation pipeline](../peerlings/creation-pipeline.md), and
-each new player creates one as their starter.
+each new player creates one as their starter. (Updated by
+[D-0012](D-0012-starter-choice-and-extra-creations.md): new players may instead
+choose an existing species, and players can create more later.)
 
 ## Consequences
 - The roster grows with the player base; the world feels different over time.

@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -19,6 +20,7 @@ related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/gameplay/onboarding.md
+  - wiki/gameplay/creation-shrine.md
   - wiki/decisions/D-0007-players-publish-assets.md
 updated: 2026-10-04
 ---
@@ -50,11 +52,14 @@ updated: 2026-10-04
 
 ## Who uses the pipeline
 
-- [accepted] Every new player, during [onboarding](../gameplay/onboarding.md).
+- [accepted] New players who choose to create their starter during
+  [onboarding](../gameplay/onboarding.md). (They may instead pick one of a few
+  existing species; [D-0012](../decisions/D-0012-starter-choice-and-extra-creations.md).)
+- [accepted] Players who earn an additional creation at a
+  [Creation Shrine](../gameplay/creation-shrine.md).
 - [accepted] The operator, who creates a handful of
   [seed species](../glossary.md#seed-species) at launch through this same
   pipeline ([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)).
-- Whether players can create more species later: [Q-001](../open-questions.md#q-001).
 
 ## Stages
 
@@ -76,7 +81,7 @@ sequenceDiagram
   participant R as OrbitDB registry
   P->>S: 1. wish text
   S->>S: 2. concept LLM → concept JSON (incl. types)
-  loop until accepted (limit: Q-005)
+  loop until accepted (no limit; cooldown CRE-021)
     S->>S: 3. image prompt JSON → image generator
     S-->>P: image + concept summary
     P->>S: 4. accept / regenerate
@@ -107,7 +112,7 @@ fields ([proposed] except `types`):
 
 | Field | Description |
 |-------|-------------|
-| `nameSuggestions` | 3 short candidate names ([Q-018](../open-questions.md#q-018)) |
+| `nameSuggestions` | 3 short name ideas, offered to the player as inspiration. The player chooses the final name ([Final review](#final-review)) |
 | `summary` | One sentence describing the creature |
 | `lore` | 2–4 sentences of flavor text shown in-game |
 | `types` | [accepted] Type(s) from the type list, chosen to fit the description (count: [TYP-002](types.md#requirements)) |
@@ -135,7 +140,12 @@ The seed and the full prompt are recorded for provenance.
 ### Stage 4 — Review
 The player sees the image and either **accepts** it or **regenerates**.
 [proposed] Regenerate uses a new seed; the player may adjust their wish before
-regenerating. Limits: [Q-005](../open-questions.md#q-005).
+regenerating.
+
+[accepted] There is **no limit** on the number of image generations. A
+**cooldown** between generations prevents spam. [proposed] The cooldown is 30
+seconds per player, counted from when the previous image was delivered, and
+the server's job queue keeps GPU time fair between players.
 
 ### Stage 5 — 3D model
 The accepted image goes to the self-hosted image-to-3D generator (the brief
@@ -151,7 +161,9 @@ procedural animation ([battle § Presentation](../gameplay/battle.md#presentatio
    glTF (`.glb`).
 4. Render a small thumbnail of the model for lists and menus.
 
-Whether the player reviews the 3D model: [Q-006](../open-questions.md#q-006).
+[accepted] There is no separate approval or retry of the 3D model: the
+image-to-3D generator gives essentially the same result every time for the same
+image. The player judges the model in the [final review](#final-review).
 
 ### Stage 6 — Stats & moves
 [accepted] The LLM spreads the base stats to fit the concept, within the
@@ -161,6 +173,17 @@ same fixed stat total for every species
 The LLM *proposes*; [proposed] a deterministic **validator** on the server
 checks every rule and rejects (and re-prompts) or clamps anything out of bounds.
 The validator, not the LLM, is the authority on balance.
+
+### Final review
+
+[accepted] Before publishing, the player sees the finished Peerling: the
+rotatable 3D model, types, stats and moves. The player **names** it here: the
+LLM's name suggestions are shown, but the name is the player's choice.
+[accepted] If the player dislikes the 3D model, they can **restart from the
+image generation stage** (stage 3) instead of publishing.
+
+[proposed] Names are 1–20 characters long and need not be unique; the species
+CID is its identity.
 
 ### Stage 7 — Publish
 [accepted] The player's browser adds the Peerling to IPFS through its Helia
@@ -196,7 +219,9 @@ machine; the client follows its progress.
 
 ```
 WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
-  → IMAGE_ACCEPTED → MODEL_READY → PROFILE_READY → PUBLISHING → PUBLISHED
+  → IMAGE_ACCEPTED → MODEL_READY → PROFILE_READY (final review)
+  → PUBLISHING → PUBLISHED
+PROFILE_READY → IMAGE_READY (player restarts from image generation)
 any state → FAILED (error, retryable) | EXPIRED (abandoned)
 ```
 
@@ -226,14 +251,13 @@ creation runs while the 3D model generates) — see
 - **CRE-018** [accepted] The player's browser MUST add the species record and its assets to IPFS through its own Helia node.
 - **CRE-019** [accepted] The server MUST pin the species record and all its assets before appending the registry entry.
 - **CRE-020** [proposed] Before pinning, the server MUST verify that the content fetched by CID is byte-identical to what it generated; on mismatch, the job MUST fail and nothing is listed.
+- **CRE-021** [accepted] Image generation MUST have no count limit, but MUST enforce a per-player cooldown between generations.
+- **CRE-022** [accepted] Before publishing, the player MUST see the final Peerling and MUST be able to restart from image generation instead of publishing.
+- **CRE-023** [accepted] The player MUST choose the name of every Peerling they create.
 
 ## Open questions
 
-[Q-001](../open-questions.md#q-001) ·
-[Q-005](../open-questions.md#q-005) ·
-[Q-006](../open-questions.md#q-006) ·
-[Q-016](../open-questions.md#q-016) ·
-[Q-018](../open-questions.md#q-018)
+[Q-016](../open-questions.md#q-016)
 
 ## See also
 

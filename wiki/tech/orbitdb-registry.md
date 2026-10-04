@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
@@ -72,11 +73,12 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 
 ## Other OrbitDB databases
 
-The registry is one of four kinds of OrbitDB database in the game; the
-others are canonical in [player-data](player-data.md):
-- one **save log** per player, written by that player;
-- the **ownership ledger**, written only by the server;
-- the **epoch log**, written only by the server.
+The registry is one of five kinds of OrbitDB database in the game:
+- one **save log** per player, written by that player ([player-data](player-data.md));
+- the **ownership ledger**, written only by the server ([player-data](player-data.md));
+- the **epoch log**, written only by the server ([player-data](player-data.md));
+- the **species stats** database, written only by the server
+  ([creator-feedback](../gameplay/creator-feedback.md)).
 
 ## Requirements
 
@@ -91,7 +93,7 @@ others are canonical in [player-data](player-data.md):
 
 ## Open questions
 
-[Q-021](../open-questions.md#q-021)
+_None at the moment._
 
 ## See also
 

@@ -49,6 +49,10 @@ lore, etc. See [creation-pipeline](peerlings/creation-pipeline.md).
 The small, self-hosted language model on the generation server that turns
 player wishes into concepts and later assigns types and moves.
 
+### Creation Shrine
+A place at the world's spawn where a player gives up 3 Peerlings in exchange
+for creating a new species. See [creation-shrine](gameplay/creation-shrine.md).
+
 ### Creator
 The player who designed a Peerling [species](#species). The creator is recorded
 in the species record and credited in-game.
@@ -66,6 +70,11 @@ players. Emotes are the only way players communicate; there is no chat. See
 ### Encounter
 A meeting with a [wild Peerling](#wild-peerling) during exploration, which
 leads to a battle. See [encounters](gameplay/encounters.md).
+
+### Encounter candidates
+The ordered list of up to 5 species drawn for one wild encounter; the
+encounter uses the first one that could be fetched. See
+[encounters § Candidates](gameplay/encounters.md#candidates).
 
 ### Epoch record
 [proposed] A record the server signs and publishes every 5 minutes (one
@@ -179,9 +188,15 @@ creator through the creation pipeline. See
 The document stored on IPFS that defines a species. Its CID is
 the species' identity. See [peerling-species](peerlings/peerling-species.md).
 
+### Species stats
+Per-species counters (encounters, catches, owners, trades, providers) that the
+server publishes in an OrbitDB database for creators and species cards. See
+[creator-feedback](gameplay/creator-feedback.md).
+
 ### Starter
-The first Peerling a player owns: an instance of the species the player created
-during onboarding. See [onboarding](gameplay/onboarding.md).
+The first Peerling a player owns: an instance of a species the player created
+during onboarding, or of an existing species they chose instead. See
+[onboarding](gameplay/onboarding.md).
 
 ### Team
 The Peerlings a player brings into battles: up to 4. See

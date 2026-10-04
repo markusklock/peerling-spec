@@ -67,7 +67,7 @@ Around the core loop, players meet each other, [battle](pvp-battles.md) and
 - **Exchange** — trade to get species you can't find yourself, or to spread
   your own creation.
 - **Pride** — see how your own creation spreads through the world
-  ([Q-021](../open-questions.md#q-021)).
+  ([creator-feedback](creator-feedback.md)).
 
 ## Open questions
 

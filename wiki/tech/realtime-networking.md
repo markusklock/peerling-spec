@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -35,21 +36,24 @@ updated: 2026-10-04
 
 ## Presence (proposed)
 
-- The world is divided into square regions, e.g. one region per world chunk
-  group. Exact size: [Q-027](../open-questions.md#q-027).
+- The world is divided into square regions of **64 m × 64 m**
+  (recommended 2026-10-04, [Q-027](../open-questions.md#q-027)). The 4 km world
+  then has about 63 × 63 regions.
 - A client subscribes to the presence topic of its current region and its 8
-  neighbours (`peerlings/v1/presence/<rx>_<ry>`), and changes subscriptions when
-  it crosses a region border.
-- A client publishes a **presence message** to its current region topic at a
-  limited rate, at most a few per second while moving and a heartbeat every
-  few seconds when idle. Contents: peer ID, player ID, display name, avatar
+  neighbours (`peerlings/v1/presence/<rx>_<ry>`). It changes subscriptions only
+  once it is 8 m past a region border, so walking along a border doesn't cause
+  constant resubscribing.
+- A client publishes a **presence message** to its current region topic **4
+  times per second while moving**, and a heartbeat **every 5 s when idle**. Contents: peer ID, player ID, display name, avatar
   reference, position, facing, timestamp, signature.
 - [accepted] There is no chat; [emotes](../glossary.md#emote) are the only
   player-to-player messages. [proposed] An emote is sent as a presence message
   with an `emote` field (an ID from the fixed set in
   [multiplayer § Communication](../gameplay/multiplayer.md#communication)),
   rate-limited like other presence messages. Receivers ignore unknown emote IDs.
-- A player not heard from for a timeout is removed from view.
+- A player not heard from for **15 s** is removed from view.
+- Budget: a message is about 200 bytes, so 30 visible moving players cost about
+  30 × 4 × 200 B ≈ 24 KB/s of download, which is fine on desktop.
 - [proposed] The operator server also joins the topics, to help gossip reach
   browsers that have few direct peers.
 

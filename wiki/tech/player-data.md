@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/gameplay/player-character.md
@@ -72,6 +73,9 @@ the writer, so the log is also a tamper-evident history.
 |-------|-------------|---------|
 | `profile` | Onboarding; profile changes | display name, appearance |
 | `species-created` | Creation pipeline finished | species CID |
+| `starter` | Onboarding finished | the starter instance + the server's attestation |
+| `release` | Peerlings offered at the [Creation Shrine](../gameplay/creation-shrine.md) | instance IDs, ledger entry reference |
+| `created` | A shrine creation was published | the new instance + the server's attestation |
 | `catch` | A wild Peerling is caught | the new instance + **catch evidence** (see below) |
 | `catch-verified` | The server's verification arrives | instance ID, catch attestation |
 | `battle-result` | After a wild battle | for each participating instance: XP gained, new level, HP |
@@ -90,8 +94,10 @@ after it. The server replicates every player's log and pins the snapshots.
 ### Catches [accepted, details proposed]
 
 1. When a player catches a Peerling, the client appends a `catch` event with
-   the **catch evidence**: the encounter number, the epoch used, the position,
-   the battle's starting state, and every action taken. The Peerling can be used straight away in
+   the **catch evidence**: the encounter number, the epoch record used, the
+   position, which of the encounter's candidates was met
+   ([encounters § Candidates](../gameplay/encounters.md#candidates)), the
+   battle's starting state, and every action taken. The Peerling can be used straight away in
    exploration and wild battles. It is *unverified* until step 3.
 2. The server sees the event (it replicates the save log), replays the battle
    with the deterministic engine ([BTL-002](../gameplay/battle.md#requirements)),
@@ -174,25 +180,53 @@ without the server, and the server can check everything afterwards.
 - A client that hasn't yet synced the registry up to that height doesn't start
   encounters until it has. Registry entries are small, so this is brief.
 
+**When the server is offline.** [proposed] If no new server-signed epoch
+record has arrived for 10 minutes (two epochs), the client derives epoch
+records itself:
+- `randomness` is the drand value for the epoch, fetched directly from public
+  drand endpoints (run by League of Entropy members) and checked against
+  drand's public key as usual.
+- `registryHeight` is the height from the latest server-signed epoch record the
+  client has. While the server is down nothing can be added to the registry
+  (only the server writes it), so nothing is missed.
+- The record is marked as client-derived and has no server signature.
+
+This keeps wild encounters working with nothing from the operator server. When
+the server is back, it accepts client-derived records whose drand value is
+genuine and whose height matches the client's latest signed record. Because
+the randomness still comes from drand, a client-derived record gives the player
+no extra choice. See [resilience](resilience.md).
+
 **Offline play.** Without network access, the client keeps using the last epoch
 record it has. That gives no extra choice (same epoch and same n give the same
 encounter), so offline play needs no time limit. Catches made offline are
 verified when the server next sees the save log.
 
 **What the server checks when verifying a catch.**
-1. The epoch record is genuine (server signature and drand signature).
+1. The epoch record is genuine: drand signature, plus either the server's
+   signature or the client-derived rules above.
 2. Encounter numbers run from 0 with no gaps; epochs never decrease.
-3. The species and wild level match the deterministic selection for (seed,
-   position, registry height, save log).
+3. The species is the logged candidate from the deterministic candidate list,
+   and the wild level matches, for (seed, position, registry height, save log).
 4. Replaying the battle with the logged actions ends in this catch.
 5. The instance ID isn't already in the ownership ledger.
+
+### Starters and shrine creations
+
+[proposed] Starters ([onboarding](../gameplay/onboarding.md)) and Peerlings
+created at the [Creation Shrine](../gameplay/creation-shrine.md) don't come from a
+catch, so there's no battle to replay. Instead the server creates them: it signs
+an attestation of the same form as a catch attestation (with origin `starter` or
+`created` instead of an encounter seed) and records the instance in the
+ownership ledger. These Peerlings are verified from the start.
 
 ### Ownership ledger and trades [accepted, details proposed]
 
 [proposed] The **ownership ledger** is an OrbitDB keyvalue database, keyed by
 instance ID, that only the server can write (like the
 [registry](orbitdb-registry.md)). Each entry: species CID, current owner,
-catch attestation, trade history. A trade ([trading](../gameplay/trading.md)):
+attestation, trade history, and a `released` flag for Peerlings given up at the
+[Creation Shrine](../gameplay/creation-shrine.md). A trade ([trading](../gameplay/trading.md)):
 
 1. Both players sign the trade record and send it to the server.
 2. The server checks that each offered instance is verified and currently owned
@@ -223,6 +257,10 @@ since that Peerling was legitimately caught and gives no advantage.
   An edited level only matters in the player's own wild battles, and in a
   Peerling they trade away. The receiving player gets the level shown.
 - **Stale copies in PvP** (above).
+- **Choice among encounter candidates.** A modified client could claim the first
+  candidates failed to download and pick a later one: at most a choice of 1 in
+  5. All species are equally strong, so this only lets a player favour a species
+  they like.
 
 ## Storage options considered
 
@@ -256,6 +294,8 @@ from server signatures.
 - **SAVE-009** [proposed] Catches MUST be playable while unverified; verification MAY happen later (e.g. when the server is reachable again).
 - **SAVE-010** [accepted] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
 - **SAVE-011** [accepted] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
+- **SAVE-012** [proposed] Starters and shrine-created Peerlings MUST receive a server attestation and a ledger entry when they are created.
+- **SAVE-013** [proposed] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand and their latest signed registry height, and the server MUST accept such records when verifying.
 
 ## Open questions
 

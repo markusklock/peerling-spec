@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -105,7 +106,7 @@ flowchart LR
 - **ARC-001** [accepted] The game MUST run in a web browser without installation.
 - **ARC-002** [accepted] Each client MUST run a Helia IPFS node ([D-0003](../decisions/D-0003-browser-client-is-ipfs-node.md)).
 - **ARC-003** [accepted] A single operator server MUST host the generation models and pin all game content ([D-0004](../decisions/D-0004-single-operator-server.md)).
-- **ARC-004** [proposed] Apart from creation, the game MUST remain playable using peers and local cache when the server is unreachable, as far as content and connectivity allow ([Q-022](../open-questions.md#q-022)).
+- **ARC-004** [accepted] Apart from creation, the game MUST remain playable using peers and local cache when the server is unreachable, as far as content and connectivity allow ([resilience](resilience.md)).
 - **ARC-005** [proposed] The client MUST NOT depend on any centralized service other than the operator server (and optionally public IPFS infrastructure such as bootstrap nodes or trustless gateways).
 - **ARC-006** [proposed] A client MUST NOT trust another client's claims without verification; data received from peers MUST be verified by CID, signature or protocol design (see trust model).
 

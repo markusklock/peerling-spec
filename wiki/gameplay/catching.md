@@ -85,8 +85,9 @@ in the player's save, referencing its species by CID
 retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).
 Caught Peerlings can later be [traded](trading.md).
 
-Still to be specified: the Peerdex screen, and whether creators are credited or
-notified when their species is caught ([Q-021](../open-questions.md#q-021)).
+Creators are notified when their species is caught
+([creator-feedback](creator-feedback.md)). Still to be specified: the Peerdex
+screen.
 
 [accepted] The server verifies each catch afterwards by replaying the battle;
 until then the Peerling is *unverified* and can't be traded or used in PvP. See
@@ -104,4 +105,4 @@ until then the Peerling is *unverified* and can't be traded or used in PvP. See
 
 ## Open questions
 
-[Q-021](../open-questions.md#q-021)
+_None at the moment._

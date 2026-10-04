@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -68,8 +69,19 @@ and they work in every language.
 
 ## Scale and visibility (proposed)
 
-[proposed] Each client shows only players in its own and the neighbouring
-[regions](../glossary.md#region), up to a cap. Exact numbers: [Q-027](../open-questions.md#q-027).
+[proposed] Recommended 2026-10-04 at the designer's request
+([Q-027](../open-questions.md#q-027)):
+- A client shows players in its own and the 8 neighbouring
+  [regions](../glossary.md#region): a 192 m × 192 m area, well beyond the
+  camera's 30–40 m view ([visual-style](../world/visual-style.md#camera)), so
+  players appear before they come on screen.
+- At most the **30 nearest** players are drawn. If there are more, a small
+  indicator shows "+N players nearby". This matters mostly at the busy spawn.
+- Other players' movement is smoothed (interpolated) between presence
+  updates and drawn about 150 ms behind real time.
+
+Network rates and region size are in
+[realtime-networking § Presence](../tech/realtime-networking.md#presence-proposed).
 
 ## Requirements
 

@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-tech-stack-2.md
+  - raw/conversations/2026-10-04-answers-round-7.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
@@ -55,7 +56,9 @@ server. Technology choices follow
   reachable over WebTransport and WebRTC-direct. The client looks up the
   server's current multiaddrs at startup
   ([tech-stack § WebTransport certificates](tech-stack.md#webtransport-certificates)).
-  Public IPFS bootstrap nodes that support browser transports may be added.
+  Public IPFS bootstrap nodes that support browser transports, and peers the
+  client has met before, are also used so the game works when the server is
+  offline ([resilience](resilience.md)).
 - **Relay:** [proposed] the server acts as a libp2p circuit relay, so browsers can reach
   each other and upgrade to direct WebRTC connections.
 - **Content routing:** [proposed] browsers use delegated routing (the HTTP routing API) to

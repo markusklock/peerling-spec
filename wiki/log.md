@@ -127,3 +127,21 @@ List all entries with `grep "^## \[" wiki/log.md`.
   with WebGL2 fallback; WebRTC-direct as the fallback browser → server
   transport. Worker, OPFS, Ed25519, PWA, asset formats and TypeScript accepted.
   Added STK-010, STK-011. Asset size budgets remain open (Q-016).
+
+## [2026-10-04] design | Answers round 7: creations, naming, creator feedback, resilience
+- Source: raw/conversations/2026-10-04-answers-round-7.md
+- Changed: decisions/D-0012 (new), D-0002, gameplay/creation-shrine.md (new),
+  gameplay/creator-feedback.md (new), tech/resilience.md (new),
+  peerlings/creation-pipeline.md, peerlings/peerling-species.md,
+  gameplay/onboarding.md, gameplay/encounters.md, gameplay/catching.md,
+  gameplay/core-loop.md, gameplay/player-character.md, gameplay/multiplayer.md,
+  tech/player-data.md, tech/realtime-networking.md, tech/orbitdb-registry.md,
+  tech/generation-server.md, tech/ipfs-showcase.md, tech/architecture.md,
+  tech/ipfs-helia.md, glossary.md, open-questions.md, index.md
+- Notes: Resolved Q-001 (D-0012), Q-005, Q-006, Q-018, Q-021. Q-016 deferred
+  by the designer. Wrote the requested suggestions: character creation (Q-019),
+  multiplayer scale (Q-027), Creation Shrine balancing (new Q-035), resilience
+  design (Q-022). Adapted the designer's 5-candidate encounter idea into a
+  verifiable ordered list (new Q-036). Removed ONB-001/002 (replaced by
+  ONB-005/006). Added CRE-021…023, ONB-005…007, SHR-001…004, CFB-001…004,
+  RES-001…004, ENC-006/007, SAVE-012/013, PLR-004.
