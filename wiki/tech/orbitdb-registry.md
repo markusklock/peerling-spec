@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
@@ -86,11 +87,11 @@ others are canonical in [player-data](player-data.md):
 - **REG-005** [proposed] Clients MUST exclude entries whose status is `removed`.
 - **REG-006** [proposed] The client MUST start with its locally persisted copy of the registry and sync in the background, so the game is usable before sync completes.
 - **REG-007** [accepted] Each registry entry MUST carry a unique, gap-free sequence number `seq` assigned by the server; takedowns MUST record `removedAtSeq`.
-- **REG-008** [proposed] The operator MUST be able to delist a species with a tombstone entry, and clients MUST honor it (REG-005).
+- **REG-008** [accepted] The operator MUST be able to delist a species with a tombstone entry, and clients MUST honor it (REG-005).
 
 ## Open questions
 
-[Q-017](../open-questions.md#q-017) · [Q-021](../open-questions.md#q-021)
+[Q-021](../open-questions.md#q-021)
 
 ## See also
 

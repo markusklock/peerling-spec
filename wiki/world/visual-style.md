@@ -6,6 +6,7 @@ req_prefix: VIS
 tags: [world, presentation, camera, art]
 sources:
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
@@ -61,7 +62,7 @@ updated: 2026-10-04
 - **VIS-002** [accepted] The visual style MUST be colorful.
 - **VIS-003** [proposed] The exploration camera MUST be tilted (about 55° below the horizon), fixed north-up, and follow the player.
 - **VIS-004** [proposed] The image prompt's house style MUST match the world's colorful, stylized look.
-- **VIS-005** [proposed] Each biome MUST have a visually distinct dominant color palette.
+- **VIS-005** [accepted] Each biome MUST have a visually distinct dominant color palette.
 
 ## See also
 

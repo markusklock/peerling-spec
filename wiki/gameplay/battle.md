@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -40,8 +41,8 @@ member (team size: [catching](catching.md#team-and-collection)), tries to
 battles only).
 
 Decided: the damage model, turn order and experience below. To be specified:
-stat stages, fainting, healing between battles
-([Q-032](../open-questions.md#q-032)), and rewards other than XP.
+stat stages and rewards other than XP. Healing between battles happens at
+rest points ([exploration § Healing and rest points](exploration.md#healing-and-rest-points)).
 
 ### Damage model
 
@@ -163,7 +164,7 @@ from the move's type and template, not authored per move.
 
 ## Open questions
 
-[Q-032](../open-questions.md#q-032)
+_None at the moment._
 
 ## See also
 

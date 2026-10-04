@@ -102,3 +102,19 @@ List all entries with `grep "^## \[" wiki/log.md`.
   and Q-033 (biome details); narrowed Q-017 to approving weights. Removed
   CRE-011, PLR-003, MOD-001/002, TYP-004; added CAT-003…007, WGN-006…008,
   VIS-001…005, REG-008 (emergency delisting, proposed).
+
+## [2026-10-04] design | Approvals round 6 and tech stack (WebTransport, IPv6)
+- Source: raw/conversations/2026-10-04-tech-stack-1.md
+- Changed: decisions/D-0010, D-0011 (new), tech/tech-stack.md (new),
+  tech/ipfs-helia.md, tech/generation-server.md, tech/architecture.md,
+  tech/realtime-networking.md, tech/orbitdb-registry.md, gameplay/catching.md,
+  gameplay/exploration.md, gameplay/battle.md, gameplay/encounters.md,
+  world/procedural-generation.md, world/visual-style.md, glossary.md,
+  open-questions.md, index.md
+- Notes: Resolved Q-017, Q-031, Q-032, Q-033; emergency delisting kept
+  (REG-008 accepted). New principle D-0011: modern web platform first;
+  WebTransport replaces WebSockets for browser → server; IPv6 preferred.
+  Recorded that browsers can't accept WebTransport, so browser ↔ browser stays
+  WebRTC. Proposed the rest of the stack (WebRTC-direct, WebGPU + WebGL2
+  fallback, Web Worker, OPFS, Ed25519 WebCrypto, PWA, meshopt/KTX2, AVIF) as
+  Q-034. Added EXP-002/003, WGN-009, STK-001…009.

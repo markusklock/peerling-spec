@@ -184,7 +184,7 @@ The first Peerling a player owns: an instance of the species the player created
 during onboarding. See [onboarding](gameplay/onboarding.md).
 
 ### Team
-The Peerlings a player brings into battles: [proposed] up to 4. See
+The Peerlings a player brings into battles: up to 4. See
 [catching](gameplay/catching.md#team-and-collection).
 
 ### Trade
@@ -198,6 +198,16 @@ strengths and weaknesses. See [types](peerlings/types.md).
 ### Verified Peerling
 A Peerling instance with a valid [catch attestation](#catch-attestation).
 Only verified Peerlings can be traded or used in PvP.
+
+### WebRTC
+A browser technology for direct, UDP-based connections between two browsers.
+libp2p uses it to connect players' browsers directly. See
+[tech-stack](tech/tech-stack.md#networking).
+
+### WebTransport
+A modern browser API for connecting to a server over HTTP/3 (QUIC, which runs
+on UDP). Browsers use it to connect to the operator server; it replaces
+WebSockets. See [tech-stack](tech/tech-stack.md#networking).
 
 ### Wild Peerling
 An unowned Peerling instance met during exploration, generated from a species

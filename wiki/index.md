@@ -22,7 +22,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [core-loop](gameplay/core-loop.md) | draft | — | Explore → encounter → battle → catch; player motivations |
 | [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates character + starter Peerling |
 | [player-character](gameplay/player-character.md) | stub | PLR | Avatar, identity keypair (save details: player-data) |
-| [exploration](gameplay/exploration.md) | stub | EXP | Moving through the world |
+| [exploration](gameplay/exploration.md) | stub | EXP | Moving through the world; rest points and healing |
 | [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings deterministically (biome and novelty weights); wild levels; prefetching |
 | [battle](gameplay/battle.md) | stub | BTL | Battle rules: damage model, XP and levelling, deterministic RNG; procedural animation of static models |
 | [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
@@ -57,6 +57,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, key recovery, catch verification, encounter seeds (epoch records, drand), ownership ledger |
+| [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
 
 ## Decisions
@@ -73,12 +74,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0008](decisions/D-0008-shared-multiplayer-world.md) | accepted | One shared world with PvP battles and trading |
 | [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted | Player saves on OrbitDB, with server-verified catches and trades |
 | [D-0010](decisions/D-0010-no-content-moderation.md) | accepted | No content moderation |
+| [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first (WebTransport, IPv6) |
 
 ## Registered requirement prefixes
 
 ARC, BTL, CAT, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
-SAVE, SHOW, SPC, SRV, TRD, TYP, VIS, WGN. Next free decision ID: D-0011. Next free
-question ID: Q-034.
+SAVE, SHOW, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID: D-0012. Next
+free question ID: Q-035.
 
 ## Sources
 
@@ -90,3 +92,4 @@ question ID: Q-034.
 | [2026-10-04-answers-round-3](../raw/conversations/2026-10-04-answers-round-3.md) | 2026-10-04 | Saves on OrbitDB + server-verified catches/trades accepted; stats and damage model approved; unlimited moves; 3 m, emotes, 4 × 4 km accepted |
 | [2026-10-04-answers-round-4](../raw/conversations/2026-10-04-answers-round-4.md) | 2026-10-04 | D-0006 accepted; simple XP curve, no evolution, fixed moves; requests to draft the type chart and the encounter-seed design |
 | [2026-10-04-answers-round-5](../raw/conversations/2026-10-04-answers-round-5.md) | 2026-10-04 | Chart, XP and encounter seeds approved; no battle items; 12 biomes; top-down colorful 3D; no content moderation |
+| [2026-10-04-tech-stack-1](../raw/conversations/2026-10-04-tech-stack-1.md) | 2026-10-04 | Catching, healing, biomes, weights, delisting approved; tech-stack principle, WebTransport instead of WebSockets, IPv6 |

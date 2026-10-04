@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -56,7 +57,7 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
 likely to appear (the weighting is in
 [encounters § Selection](../gameplay/encounters.md#selection)).
 
-[proposed] Names and looks (each biome's dominant colors make it recognizable at
+[accepted] Names and looks (approved 2026-10-04; each biome's dominant colors make it recognizable at
 a glance; [visual-style](visual-style.md)):
 
 | Biome | Type | Look |
@@ -76,7 +77,7 @@ a glance; [visual-style](visual-style.md)):
 
 ### Layout
 
-[proposed]
+[accepted] (approved 2026-10-04)
 - The world is split into biome **areas** about 300–500 m across (e.g. Voronoi
   cells around points scattered by the seed), giving roughly 80–150 areas.
 - **Every biome appears at every distance from the centre.** The world is
@@ -87,9 +88,10 @@ a glance; [visual-style](visual-style.md)):
 - The spawn area (about 150 m around the centre) is Plains.
 - Borders between areas blend over a short distance, so biomes flow into each
   other rather than switching abruptly.
+- Every biome area contains one **rest point**
+  ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
 
-To be specified: terrain shapes and props per biome, landmarks, rest/heal
-points ([Q-032](../open-questions.md#q-032)), and how a generator change is
+To be specified: terrain shapes and props per biome, landmarks, and how a generator change is
 rolled out without splitting players into different worlds.
 
 ## Requirements
@@ -100,9 +102,10 @@ rolled out without splitting players into different worlds.
 - **WGN-004** [proposed] Clients with different world-generator versions MUST NOT show each other's presence, so players never see someone walking through terrain that doesn't exist for them.
 - **WGN-005** [accepted] The world MUST be finite, 4 km × 4 km. [proposed] It MUST be bounded by a natural border (no invisible walls).
 - **WGN-006** [accepted] There MUST be 12 biomes, one for each type, and each biome MUST raise the chance of encountering Peerlings of its type.
-- **WGN-007** [proposed] Every biome MUST occur in every distance ring, so every type can be met at every level range.
-- **WGN-008** [proposed] The spawn area MUST be Plains.
+- **WGN-007** [accepted] Every biome MUST occur in every distance ring, so every type can be met at every level range.
+- **WGN-008** [accepted] The spawn area MUST be Plains.
+- **WGN-009** [accepted] Every biome area MUST contain one rest point.
 
 ## Open questions
 
-[Q-032](../open-questions.md#q-032) · [Q-033](../open-questions.md#q-033)
+_None at the moment._

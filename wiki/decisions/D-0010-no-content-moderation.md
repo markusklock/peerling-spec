@@ -5,6 +5,7 @@ status: accepted
 tags: [peerlings, generation, policy]
 sources:
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/peerlings/moderation.md
   - wiki/peerlings/creation-pipeline.md
@@ -28,7 +29,7 @@ backlash, and unusual or meme Peerlings may even help the game's popularity.
   filtered or reviewed.
 - [accepted] If inappropriate content becomes a real problem, the operator will
   most likely shut the game down rather than moderate.
-- [proposed] The operator keeps one **emergency delisting tool**: the server can
+- [accepted] The operator keeps one **emergency delisting tool**: the server can
   mark a registry entry as removed (a tombstone, REG-008), and clients stop
   showing that species. This is not moderation; it is a cheap lever that could
   avoid shutting down the whole game over a single species, e.g. if the operator

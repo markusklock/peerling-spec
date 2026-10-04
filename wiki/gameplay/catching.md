@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
@@ -26,14 +27,14 @@ updated: 2026-10-04
 ## Catching without items
 
 [accepted] There are **no items in battles** in the first version, so there are
-no catching balls. [proposed] Catching is a battle action instead: in a wild
+no catching balls. Catching is a battle action instead: in a wild
 battle the player can choose **Catch** instead of a move. It uses the player's
 turn, and the wild Peerling then acts as normal. Attempts are unlimited.
+[accepted] (approved 2026-10-04)
 
 ## Catch chance
 
-[proposed] Suggested 2026-10-04 at the designer's request
-([Q-031](../open-questions.md#q-031)):
+[accepted] Approved 2026-10-04:
 
   chance = 0.6 × (3 × maxHP − 2 × currentHP) ÷ (3 × maxHP) × level factor
 
@@ -64,8 +65,7 @@ A fainted wild Peerling can't be caught; it gives XP
 
 ## Team and collection
 
-[proposed] Suggested 2026-10-04 at the designer's request
-([Q-031](../open-questions.md#q-031)):
+[accepted] Approved 2026-10-04:
 
 - **Team size: 4.** Why 4 rather than Pokémon's 6:
   - With 12 types, 4 Peerlings can cover several matchups but not all of them,
@@ -97,11 +97,11 @@ until then the Peerling is *unverified* and can't be traded or used in PvP. See
 - **CAT-001** [accepted] The player MUST be able to catch wild Peerlings.
 - **CAT-002** [accepted] A catch MUST record the catch evidence needed for server verification ([SAVE-006](../tech/player-data.md#requirements)).
 - **CAT-003** [accepted] There MUST NOT be items in battles in the first version.
-- **CAT-004** [proposed] Catching MUST be a battle action that uses the player's turn, available only in wild battles, with unlimited attempts.
-- **CAT-005** [proposed] The catch chance MUST follow [Catch chance](#catch-chance).
-- **CAT-006** [proposed] A team MUST hold at most 4 Peerlings; all other owned Peerlings are in the collection, which has no size limit.
-- **CAT-007** [proposed] The player MUST be able to swap Peerlings between team and collection at any time outside battle.
+- **CAT-004** [accepted] Catching MUST be a battle action that uses the player's turn, available only in wild battles, with unlimited attempts.
+- **CAT-005** [accepted] The catch chance MUST follow [Catch chance](#catch-chance).
+- **CAT-006** [accepted] A team MUST hold at most 4 Peerlings; all other owned Peerlings are in the collection, which has no size limit.
+- **CAT-007** [accepted] The player MUST be able to swap Peerlings between team and collection at any time outside battle.
 
 ## Open questions
 
-[Q-021](../open-questions.md#q-021) · [Q-031](../open-questions.md#q-031)
+[Q-021](../open-questions.md#q-021)

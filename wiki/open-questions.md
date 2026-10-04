@@ -52,14 +52,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
   thumbnail for lists.
 - Raised: 2026-10-03
 
-### Q-017
-**Encounter selection weights: approve the numbers?**
-- Affects: [encounters](gameplay/encounters.md#selection), [orbitdb-registry](tech/orbitdb-registry.md)
-- Partly resolved 2026-10-04: each biome raises the chance of its own type
-  (WGN-006); selection is deterministic from the encounter seed (ENC-005).
-- Proposal: biome-type match × 6, never-seen species × 2
-  ([encounters § Selection](gameplay/encounters.md#selection)).
-- Raised: 2026-10-03
 ### Q-018
 **Who names the Peerling, and must names be unique?**
 - Affects: [creation-pipeline](peerlings/creation-pipeline.md), [peerling-species](peerlings/peerling-species.md)
@@ -97,36 +89,16 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Proposal: regions of 64 × 64 m; show at most 30 nearby players.
 - Raised: 2026-10-03
 
-### Q-031
-**Approve the catch chance and team size?**
-- Affects: [catching](gameplay/catching.md), [battle](gameplay/battle.md), [pvp-battles](gameplay/pvp-battles.md)
-- Context: The designer asked for suggestions (2026-10-04).
-- Proposal: catching is a battle action with unlimited attempts; chance =
-  0.6 × (3 × maxHP − 2 × currentHP) ÷ (3 × maxHP), lower against higher-level
-  Peerlings (20% at full HP, about 60% when almost fainted); team of 4,
-  unlimited collection, swap any time outside battle.
-- Raised: 2026-10-04
-
-### Q-032
-**How do Peerlings heal between battles, without items?**
-- Affects: [battle](gameplay/battle.md), [exploration](gameplay/exploration.md), [procedural-generation](world/procedural-generation.md)
-- Context: HP carries over between battles (`currentHp` in the save), and there
-  are no healing items.
-- Options: (a) full heal after every battle (simplest); (b) rest points in the
-  world that heal the whole team, like Pokémon Centers; (c) slow regeneration
-  while walking. Also: what happens when the whole team faints?
-- Proposal: (b) rest points in every biome area, plus: if the whole team
-  faints, the player returns to the last rest point they visited with the team
-  fully healed. Nothing is lost.
-- Raised: 2026-10-04
-
-### Q-033
-**Approve the biome names, looks and layout?**
-- Affects: [procedural-generation § Biomes](world/procedural-generation.md#biomes), [visual-style](world/visual-style.md)
-- Context: 12 biomes, one per type, are decided. The names, looks and layout
-  rules are LLM proposals.
-- Proposal: the table in procedural-generation; areas 300–500 m across;
-  every biome in every distance ring; Plains at the spawn.
+### Q-034
+**Tech stack: approve the proposals in tech-stack?**
+- Affects: [tech-stack](tech/tech-stack.md), [ipfs-helia](tech/ipfs-helia.md), [generation-server](tech/generation-server.md)
+- Context: The principle (modern web first), WebTransport and IPv6 are
+  decided (D-0011). The rest of the stack is proposed.
+- Sub-questions: (a) browser target: current Chrome/Edge, Firefox, Safari,
+  desktop and mobile? (b) WebGPU with WebGL2 fallback, or WebGPU only (which
+  drops Firefox on Linux and Android)? (c) WebRTC-direct as a second
+  browser → server transport? (d) Web Worker + OPFS + Ed25519 WebCrypto + PWA?
+  (e) glTF with meshopt and KTX2, and AVIF images?
 - Raised: 2026-10-04
 
 ## Resolved
@@ -240,3 +212,21 @@ Resolved 2026-10-04 →
 2026-10-04 →
 [battle § Experience and levelling](gameplay/battle.md#experience-and-levelling),
 [encounters § Wild level](gameplay/encounters.md#wild-level).
+
+### Q-017
+**Encounter selection weights.** Biome-type match × 6, never-seen species × 2.
+Resolved 2026-10-04 → [encounters § Selection](gameplay/encounters.md#selection).
+
+### Q-031
+**Catch chance and team size.** Catch as a battle action, chance
+0.6 × (3 × maxHP − 2 × currentHP) ÷ (3 × maxHP) × level factor, team of 4,
+unlimited collection. Resolved 2026-10-04 → [catching](gameplay/catching.md).
+
+### Q-032
+**Healing without items.** Rest points in every biome area; a fainted team
+returns to the last rest point, fully healed. Resolved 2026-10-04 →
+[exploration § Healing and rest points](gameplay/exploration.md#healing-and-rest-points).
+
+### Q-033
+**Biome names, looks and layout.** Approved as proposed. Resolved 2026-10-04 →
+[procedural-generation § Biomes](world/procedural-generation.md#biomes).

@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -33,7 +34,7 @@ via IPFS.
 [accepted] In each [biome](../world/procedural-generation.md#biomes), Peerlings
 of that biome's type are more likely to appear.
 
-[proposed] Selection weights (numbers: [Q-017](../open-questions.md#q-017)).
+[accepted] Selection weights (approved 2026-10-04).
 Every eligible species starts with weight 1, then:
 
 | Factor | Multiplier | Why |
@@ -95,4 +96,4 @@ is, rather than being replaced by a different species.
 
 ## Open questions
 
-[Q-017](../open-questions.md#q-017)
+_None at the moment._

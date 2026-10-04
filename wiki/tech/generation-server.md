@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -70,7 +71,7 @@ it generated, is canonical in
 - **SRV-003** [proposed] Each AI model MUST be behind a stage interface so it can be swapped without changing the species record format.
 - **SRV-004** [proposed] GPU work MUST go through a job queue; the client MUST be able to see job status and queue position.
 - **SRV-005** [proposed] The server MUST rate-limit creation requests per player identity.
-- **SRV-006** [proposed] The server MUST run a libp2p node reachable from browsers (secure WebSockets and/or WebTransport) acting as bootstrap peer and circuit relay.
+- **SRV-006** [proposed] The server MUST run a dual-stack (IPv6 + IPv4) libp2p node reachable from browsers over WebTransport and WebRTC-direct ([tech-stack](tech-stack.md#networking)), acting as bootstrap peer and circuit relay.
 
 ## Open questions
 

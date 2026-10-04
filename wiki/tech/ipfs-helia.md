@@ -8,12 +8,15 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-tech-stack-1.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
   - wiki/tech/architecture.md
   - wiki/tech/generation-server.md
   - wiki/tech/realtime-networking.md
+  - wiki/tech/tech-stack.md
+  - wiki/decisions/D-0011-modern-web-platform-first.md
 updated: 2026-10-04
 ---
 
@@ -36,19 +39,27 @@ libp2p node carries [realtime multiplayer traffic](realtime-networking.md).
 
 ## Connectivity
 
-Browsers cannot accept inbound TCP connections or dial plain TCP, so a browser
-node needs browser-compatible transports and some help. [proposed]
+Browsers can't accept inbound connections or dial plain TCP or UDP, so a
+browser node needs browser-compatible transports and some help from the
+server. Technology choices follow
+[D-0011](../decisions/D-0011-modern-web-platform-first.md) and
+[tech-stack § Networking](tech-stack.md#networking).
 
-- **Transports:** WebRTC (browser ↔ browser), WebTransport and secure
-  WebSockets (browser ↔ server/public nodes).
-- **Bootstrap:** the operator server's node is a bootstrap peer reachable over
-  secure WebSockets and/or WebTransport, alongside optional public bootstrap
-  nodes.
-- **Relay:** the server acts as a libp2p circuit relay, so browsers can reach
+- **Transports:** [accepted] WebTransport for browser → server; no WebSockets.
+  [proposed] WebRTC-direct as a second browser → server transport; WebRTC for
+  browser ↔ browser.
+- **IPv6:** [accepted] preferred wherever available; see
+  [tech-stack § IPv6](tech-stack.md#ipv6).
+- **Bootstrap:** [proposed] the operator server's node is the bootstrap peer,
+  reachable over WebTransport and WebRTC-direct. The client looks up the
+  server's current multiaddrs at startup
+  ([tech-stack § WebTransport certificates](tech-stack.md#webtransport-certificates)).
+  Public IPFS bootstrap nodes that support browser transports may be added.
+- **Relay:** [proposed] the server acts as a libp2p circuit relay, so browsers can reach
   each other and upgrade to direct WebRTC connections.
-- **Content routing:** browsers use delegated routing (the HTTP routing API) to
+- **Content routing:** [proposed] browsers use delegated routing (the HTTP routing API) to
   find providers, since running a full DHT client in the browser is heavy.
-- **Fallback:** if no peer delivers a block in time, the client MAY fetch from
+- **Fallback:** [proposed] if no peer delivers a block in time, the client MAY fetch from
   trustless HTTP gateways (including one run by the operator). Content is still
   verified by CID, so the trust model doesn't change.
 
@@ -77,7 +88,7 @@ library defaults:
 - **Verification:** all content is fetched by CID and verified locally before
   use.
 - **Serving:** fetched blocks are stored in a persistent browser blockstore
-  (IndexedDB) and provided to other peers, so popular Peerlings spread across
+  (OPFS, [tech-stack](tech-stack.md#client-runtime)) and provided to other peers, so popular Peerlings spread across
   player nodes.
 - **Prefetching:** the client fetches assets it will likely need soon (e.g.
   species likely to appear in nearby biomes) ahead of time, so encounters don't
@@ -92,7 +103,7 @@ library defaults:
 - **NODE-002** [proposed] All content fetched from the network MUST be verified against its CID before use.
 - **NODE-003** [proposed] The client MUST persist fetched blocks across sessions and keep serving them to peers while the game is open.
 - **NODE-004** [proposed] The client MUST always retain (never evict) the records and assets of its own created species and of species in its collection.
-- **NODE-005** [proposed] The client MUST connect to the operator server's node as a bootstrap/relay peer and SHOULD connect directly to other players via WebRTC when possible.
+- **NODE-005** [proposed] The client MUST connect to the operator server's node as a bootstrap/relay peer (over WebTransport or WebRTC-direct) and SHOULD connect directly to other players via WebRTC when possible.
 - **NODE-006** [proposed] The client MAY fall back to trustless HTTP gateways when peer retrieval times out.
 - **NODE-007** [accepted] The client MUST add its newly created species record and assets to IPFS through its own node. [proposed] It MUST provide them at least until the server confirms pinning.
 - **NODE-008** [proposed] Server and client MUST import game content with the fixed parameters in [Content import parameters](#content-import-parameters).
