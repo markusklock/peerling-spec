@@ -99,3 +99,4 @@ D-0013. Next free question ID: Q-037.
 | [2026-10-04-tech-stack-1](../raw/conversations/2026-10-04-tech-stack-1.md) | 2026-10-04 | Catching, healing, biomes, weights, delisting approved; tech-stack principle, WebTransport instead of WebSockets, IPv6 |
 | [2026-10-04-tech-stack-2](../raw/conversations/2026-10-04-tech-stack-2.md) | 2026-10-04 | Desktop only; WebGPU + WebGL2 fallback; WebRTC-direct fallback; rest of the stack approved |
 | [2026-10-04-answers-round-7](../raw/conversations/2026-10-04-answers-round-7.md) | 2026-10-04 | Extra creations and starter choice; unlimited images with cooldown; restart from images; players name Peerlings; creator feedback wanted; server-offline resilience with 5 encounter candidates |
+| [2026-10-04-answers-round-8](../raw/conversations/2026-10-04-answers-round-8.md) | 2026-10-04 | Shrine, character creation, multiplayer scale, encounter candidates approved; brainstorm on decentralizing registry writes and trades |

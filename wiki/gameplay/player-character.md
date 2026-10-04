@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-answers-round-8.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/tech/ipfs-helia.md
@@ -28,7 +29,7 @@ updated: 2026-10-04
 
 ### Options considered
 
-Suggested 2026-10-04 at the designer's request ([Q-019](../open-questions.md#q-019)):
+Suggested 2026-10-04 at the designer's request:
 
 | Option | How | Pros | Cons |
 |--------|-----|------|------|
@@ -36,9 +37,10 @@ Suggested 2026-10-04 at the designer's request ([Q-019](../open-questions.md#q-0
 | B. AI-generated avatar | The player describes their character; the Peerling pipeline makes a 3D model | Fits the "everything is generated" theme | Generated models are static and unrigged, so walking looks like a sliding statue; every nearby player downloads 1–2 MB per avatar; extra GPU load |
 | C. Hybrid | A + an AI-generated 2D portrait for the profile card (image generation only, no 3D) | A personal touch at low cost | Another generation step during onboarding |
 
-### Recommendation [proposed]
+### Decision
 
-Option **A** for the first version, optionally with **C**'s portrait later.
+[accepted] Approved 2026-10-04: option **A** for the first version, optionally
+with **C**'s portrait later.
 The character's appearance is a small JSON document (body, colors, hairstyle,
 accessories) stored in the `profile` event of the save log
 ([player-data](../tech/player-data.md#save-log)). Presence messages carry a
@@ -64,9 +66,9 @@ are not moderated ([D-0010](../decisions/D-0010-no-content-moderation.md)).
 
 - **PLR-001** [accepted] Each player MUST have a player character created during onboarding.
 - **PLR-002** [proposed] Each player MUST have a stable cryptographic identity generated client-side.
-- **PLR-004** [proposed] The player character MUST be built from game-made, rigged parts (body, colors, hairstyle, accessories) described by a small JSON document.
+- **PLR-004** [accepted] The player character MUST be built from game-made, rigged parts (body, colors, hairstyle, accessories) described by a small JSON document.
 - ~~**PLR-003**~~ (removed 2026-10-04: no content moderation, see [D-0010](../decisions/D-0010-no-content-moderation.md))
 
 ## Open questions
 
-[Q-019](../open-questions.md#q-019) · [Q-027](../open-questions.md#q-027)
+_None at the moment._

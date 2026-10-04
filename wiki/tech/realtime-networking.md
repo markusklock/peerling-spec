@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-answers-round-8.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -36,8 +37,9 @@ updated: 2026-10-04
 
 ## Presence (proposed)
 
-- The world is divided into square regions of **64 m × 64 m**
-  (recommended 2026-10-04, [Q-027](../open-questions.md#q-027)). The 4 km world
+[accepted] The region size, rates and timeout below were approved 2026-10-04.
+
+- The world is divided into square regions of **64 m × 64 m**. The 4 km world
   then has about 63 × 63 regions.
 - A client subscribes to the presence topic of its current region and its 8
   neighbours (`peerlings/v1/presence/<rx>_<ry>`). It changes subscriptions only
@@ -76,7 +78,7 @@ Message formats are still to be specified.
 
 ## Open questions
 
-[Q-027](../open-questions.md#q-027)
+_None at the moment._
 
 ## See also
 

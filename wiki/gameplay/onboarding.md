@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-answers-round-8.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
@@ -72,4 +73,4 @@ choose can still create Peerlings later at the
 
 ## Open questions
 
-[Q-019](../open-questions.md#q-019) · [Q-022](../open-questions.md#q-022)
+[Q-022](../open-questions.md#q-022)

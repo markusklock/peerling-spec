@@ -6,6 +6,7 @@ req_prefix: SHR
 tags: [gameplay, creation, progression]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-answers-round-8.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
@@ -26,10 +27,9 @@ a place on the map they give something up, e.g. 3 different Peerlings, for
 the possibility to create a new one
 ([D-0012](../decisions/D-0012-starter-choice-and-extra-creations.md)).
 
-## Proposed rules
+## Rules
 
-[proposed] Drafted 2026-10-04 at the designer's request
-([Q-035](../open-questions.md#q-035)):
+[accepted] Approved 2026-10-04:
 
 | Rule | Value | Why |
 |------|-------|-----|
@@ -40,7 +40,7 @@ the possibility to create a new one
 | Level of the new Peerling | The average level of the 3 offered Peerlings, rounded down | Sacrificing three level-30s shouldn't hand back a level-5 |
 | Limit | One shrine creation per player per 7 days | Caps GPU load and registry growth at about one species per active player per week |
 
-[proposed] Flow:
+[accepted] Flow:
 1. The player walks to the shrine and chooses 3 Peerlings to offer.
 2. The client sends the offer to the server, which checks the ledger: each
    Peerling is verified, owned by the player, and the rules above are met.
@@ -59,10 +59,10 @@ The server must be online to use the shrine.
 ## Requirements
 
 - **SHR-001** [accepted] There MUST be a place in the world where a player can give up Peerlings in exchange for creating a new species.
-- **SHR-002** [proposed] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (recorded in the ownership ledger) when the creation starts.
-- **SHR-003** [proposed] A player MUST be limited to one shrine creation per 7 days.
-- **SHR-004** [proposed] The new Peerling MUST start at the average level of the offered Peerlings, rounded down.
+- **SHR-002** [accepted] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (recorded in the ownership ledger) when the creation starts.
+- **SHR-003** [accepted] A player MUST be limited to one shrine creation per 7 days.
+- **SHR-004** [accepted] The new Peerling MUST start at the average level of the offered Peerlings, rounded down.
 
 ## Open questions
 
-[Q-035](../open-questions.md#q-035)
+_None at the moment._

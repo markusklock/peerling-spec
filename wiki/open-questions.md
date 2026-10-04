@@ -27,14 +27,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Raised: 2026-10-03
 
 - 2026-10-04: deferred by the designer ("TBD").
-### Q-019
-**Player character creation: which option?**
-- Affects: [player-character](gameplay/player-character.md), [onboarding](gameplay/onboarding.md)
-- Options and a recommendation written 2026-10-04 at the designer's request:
-  [player-character § Options considered](gameplay/player-character.md#options-considered).
-  Recommended: a parts-based customizer with game-made, rigged bodies (option
-  A). Awaiting decision.
-- Raised: 2026-10-03
 ### Q-022
 **Server offline: approve the resilience design?**
 - Affects: [resilience](tech/resilience.md), [architecture](tech/architecture.md), [player-data](tech/player-data.md), [ipfs-helia](tech/ipfs-helia.md)
@@ -44,35 +36,9 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Proposal: [resilience](tech/resilience.md): public bootstrap nodes, relays
   and routing; client-derived epoch records from drand; the game app published
   on IPFS; optional community mirror nodes.
+- 2026-10-04: the designer asked whether registry writes and trades could also
+  work without the central server; brainstorm in progress.
 - Raised: 2026-10-03
-### Q-027
-**Multiplayer scale: approve the recommendations?**
-- Affects: [multiplayer](gameplay/multiplayer.md), [realtime-networking](tech/realtime-networking.md)
-- Partly resolved 2026-10-04: no chat, only emotes (MPL-007).
-- Recommended 2026-10-04 at the designer's request: 64 m regions (subscribe to
-  a 3 × 3 block), the 30 nearest players drawn, 4 presence updates per second
-  while moving, a heartbeat every 5 s, 15 s timeout.
-- Raised: 2026-10-03
-### Q-035
-**Creation Shrine: approve the cost and limits?**
-- Affects: [creation-shrine](gameplay/creation-shrine.md), [player-data](tech/player-data.md)
-- Context: The designer wants additional creations limited by giving something
-  up at a place on the map, and asked for a balancing proposal.
-- Proposal: one shrine at the spawn; offer 3 verified Peerlings of 3 different
-  primary types, each level 20+; they are released; the new Peerling starts at
-  their average level; one shrine creation per 7 days.
-- Raised: 2026-10-04
-
-### Q-036
-**Encounter candidates: "earliest in the list" instead of "first to download"?**
-- Affects: [encounters § Candidates](gameplay/encounters.md#candidates), [player-data](tech/player-data.md#verification)
-- Context: The designer suggested using the first of 5 candidates to finish
-  downloading. With prefetching, several candidates are usually already
-  downloaded, and the server has to be able to check the choice.
-- Proposal: candidates form an ordered list; use the earliest already-fetched
-  one, or else the first to arrive; nothing within 10 s → no encounter.
-- Raised: 2026-10-04
-
 ## Resolved
 
 ### Q-002
@@ -234,3 +200,23 @@ from image generation in the final review. Resolved 2026-10-04 →
 **Creator feedback.** Yes: server-verified species stats in OrbitDB, live pubsub
 notifications, and a "since you were last here" summary. Resolved 2026-10-04 →
 [creator-feedback](gameplay/creator-feedback.md) (design details proposed).
+
+### Q-019
+**Player character creation.** Parts-based customizer with game-made, rigged
+bodies (option A); an AI-generated 2D portrait may come later. Resolved
+2026-10-04 → [player-character](gameplay/player-character.md#decision).
+
+### Q-027
+**Multiplayer scale.** 64 m regions (3 × 3 subscribed), 30 nearest players
+drawn, 4 updates/s moving, 5 s heartbeat, 15 s timeout. Resolved 2026-10-04 →
+[realtime-networking § Presence](tech/realtime-networking.md#presence-proposed),
+[multiplayer](gameplay/multiplayer.md#scale-and-visibility-proposed).
+
+### Q-035
+**Creation Shrine cost and limits.** Approved as proposed. Resolved 2026-10-04 →
+[creation-shrine](gameplay/creation-shrine.md#rules).
+
+### Q-036
+**Encounter candidate order.** Ordered list; earliest already-fetched
+candidate, else first to arrive. Resolved 2026-10-04 →
+[encounters § Candidates](gameplay/encounters.md#candidates).

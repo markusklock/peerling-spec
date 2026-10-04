@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-04-answers-round-8.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -60,7 +61,7 @@ makes encounters faster and keeps them working when some species can't be
 downloaded, e.g. while the operator server (the only node pinning everything)
 is offline ([resilience](../tech/resilience.md)).
 
-[proposed] To keep catches verifiable, the candidates and the choice between
+[accepted] To keep catches verifiable, the candidates and the choice between
 them follow fixed rules:
 1. **An ordered list.** The encounter seed draws 5 different species, one after
    another, using the selection weights (weighted draws without replacement).
@@ -77,7 +78,7 @@ them follow fixed rules:
 5. **Logging.** The save log records which candidate (1–5) was met; the server
    checks it is on the list.
 
-[proposed] ([Q-036](../open-questions.md#q-036)) Why "earliest in the list" instead of always "first to download": with
+Why "earliest in the list" instead of always "first to download": with
 prefetching, several candidates are usually already downloaded, so "first to
 download" is unclear. Earliest in the list keeps the outcome stable and the
 server can check it. A modified client could still pick any of the 5; that
@@ -124,8 +125,8 @@ one is almost always ready when an encounter triggers.
 - **ENC-004** [proposed] Removed (tombstoned) species MUST NOT be chosen ([REG-005](../tech/orbitdb-registry.md#requirements)).
 - **ENC-005** [accepted] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
 - **ENC-006** [accepted] Each encounter MUST have up to 5 candidate species, and the encounter MUST use a candidate that was successfully fetched via IPFS.
-- **ENC-007** [proposed] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
+- **ENC-007** [accepted] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
 
 ## Open questions
 
-[Q-036](../open-questions.md#q-036)
+_None at the moment._

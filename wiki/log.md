@@ -145,3 +145,11 @@ List all entries with `grep "^## \[" wiki/log.md`.
   verifiable ordered list (new Q-036). Removed ONB-001/002 (replaced by
   ONB-005/006). Added CRE-021…023, ONB-005…007, SHR-001…004, CFB-001…004,
   RES-001…004, ENC-006/007, SAVE-012/013, PLR-004.
+
+## [2026-10-04] design | Answers round 8: approvals; decentralization brainstorm opened
+- Source: raw/conversations/2026-10-04-answers-round-8.md
+- Changed: gameplay/creation-shrine.md, gameplay/player-character.md,
+  gameplay/onboarding.md, gameplay/multiplayer.md, gameplay/encounters.md,
+  tech/realtime-networking.md, open-questions.md, index.md
+- Notes: Resolved Q-019, Q-027, Q-035, Q-036. Q-022 stays open while the
+  designer explores decentralizing registry writes and trades.
