@@ -6,9 +6,10 @@ tags: [peerlings, content]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # D-0002: All Peerlings are user-generated
@@ -28,7 +29,8 @@ each new player creates one as their starter.
 - The roster grows with the player base; the world feels different over time.
 - Balance must come from constraints (types, move templates, stat budgets), not
   hand-tuning — see pillar 4 in the [overview](../overview.md).
-- Content moderation is required ([Q-007](../open-questions.md#q-007)).
+- Content moderation was expected to be required ([Q-007](../open-questions.md#q-007)).
+  Later decided otherwise: no moderation ([D-0010](D-0010-no-content-moderation.md)).
 - Cold start: [accepted] the operator creates a handful of
   [seed species](../glossary.md#seed-species) at launch through the same
   pipeline, so the world isn't empty for the first players (resolves

@@ -1,7 +1,7 @@
 ---
 title: Catching
 type: system
-status: stub
+status: draft
 req_prefix: CAT
 tags: [gameplay, catching, collection]
 sources:
@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
@@ -17,21 +18,75 @@ updated: 2026-10-04
 
 # Catching
 
-> How a player catches a wild Peerling and what happens to it afterwards.
-> Status: stub.
+> How a player catches a wild Peerling, the catch chance, team size, and what
+> happens to a caught Peerling afterwards.
 
 [accepted] Players can catch the Peerlings they encounter.
 
-To be specified: catch chance (HP remaining, status, item used), catching
-items and how they are obtained, team size and storage of the rest of the
-collection, the collection index ("Peerdex"), and whether creators are credited
-or notified ([Q-021](../open-questions.md#q-021)).
+## Catching without items
+
+[accepted] There are **no items in battles** in the first version, so there are
+no catching balls. [proposed] Catching is a battle action instead: in a wild
+battle the player can choose **Catch** instead of a move. It uses the player's
+turn, and the wild Peerling then acts as normal. Attempts are unlimited.
+
+## Catch chance
+
+[proposed] Suggested 2026-10-04 at the designer's request
+([Q-031](../open-questions.md#q-031)):
+
+  chance = 0.6 × (3 × maxHP − 2 × currentHP) ÷ (3 × maxHP) × level factor
+
+- level factor = 1 if the wild Peerling's level is at most the level of the
+  player's active Peerling; otherwise max(0.5, 1 − 0.05 × the level difference).
+- The roll uses the battle's [random number generator](battle.md#random-number-generator),
+  so the server can replay it when verifying the catch.
+
+| Wild Peerling's HP | Chance (same level) |
+|--------------------|--------------------:|
+| Full | 20% |
+| Half | 40% |
+| Almost fainted | ≈ 60% |
+
+Why these numbers:
+- Since there are no items, the player's only lever is weakening the target, so
+  HP matters a lot (3× difference between full and almost fainted).
+- It's never a sure thing (max 60%), so attempts stay tense. With unlimited
+  attempts, a weakened Peerling still takes about 2 tries on average.
+- A failed attempt costs a turn while the wild Peerling keeps attacking, so
+  catching is a risk/reward choice.
+- It rewards the **quick** move slot ([moves](../peerlings/moves.md#move-slots)):
+  its low power is ideal for wearing a Peerling down without knocking it out.
+- Catching a Peerling above your level is harder, but never impossible.
+
+A fainted wild Peerling can't be caught; it gives XP
+([battle § Experience and levelling](battle.md#experience-and-levelling)).
+
+## Team and collection
+
+[proposed] Suggested 2026-10-04 at the designer's request
+([Q-031](../open-questions.md#q-031)):
+
+- **Team size: 4.** Why 4 rather than Pokémon's 6:
+  - With 12 types, 4 Peerlings can cover several matchups but not all of them,
+    so choosing a team is a real decision.
+  - Battles have only 3 moves per Peerling; 4 Peerlings keep PvP battles short
+    and readable.
+  - In PvP each player downloads the opponent's team models, so fewer is faster.
+- **Collection:** every Peerling not in the team. There is no size limit. The
+  player can swap Peerlings between team and collection at any time outside
+  battle.
+- A Peerling caught while the team is full goes to the collection.
+- The team is stored in the [save](../tech/player-data.md#save-contents).
 
 [proposed] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)
 in the player's save, referencing its species by CID
 ([D-0006](../decisions/D-0006-species-vs-instance.md)); its assets are then
 retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).
 Caught Peerlings can later be [traded](trading.md).
+
+Still to be specified: the Peerdex screen, and whether creators are credited or
+notified when their species is caught ([Q-021](../open-questions.md#q-021)).
 
 [accepted] The server verifies each catch afterwards by replaying the battle;
 until then the Peerling is *unverified* and can't be traded or used in PvP. See
@@ -41,7 +96,12 @@ until then the Peerling is *unverified* and can't be traded or used in PvP. See
 
 - **CAT-001** [accepted] The player MUST be able to catch wild Peerlings.
 - **CAT-002** [accepted] A catch MUST record the catch evidence needed for server verification ([SAVE-006](../tech/player-data.md#requirements)).
+- **CAT-003** [accepted] There MUST NOT be items in battles in the first version.
+- **CAT-004** [proposed] Catching MUST be a battle action that uses the player's turn, available only in wild battles, with unlimited attempts.
+- **CAT-005** [proposed] The catch chance MUST follow [Catch chance](#catch-chance).
+- **CAT-006** [proposed] A team MUST hold at most 4 Peerlings; all other owned Peerlings are in the collection, which has no size limit.
+- **CAT-007** [proposed] The player MUST be able to swap Peerlings between team and collection at any time outside battle.
 
 ## Open questions
 
-[Q-021](../open-questions.md#q-021)
+[Q-021](../open-questions.md#q-021) · [Q-031](../open-questions.md#q-031)

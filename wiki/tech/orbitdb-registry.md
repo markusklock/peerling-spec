@@ -9,11 +9,12 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/encounters.md
-  - wiki/peerlings/moderation.md
+  - wiki/decisions/D-0010-no-content-moderation.md
 updated: 2026-10-04
 ---
 
@@ -55,9 +56,11 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 }
 ```
 
-- **Takedown:** an update setting `"status": "removed"` acts as a tombstone
-  ([moderation](../peerlings/moderation.md)). It also records `removedAtSeq`,
-  the registry height at which the species was removed.
+- **Emergency delisting:** there is no content moderation
+  ([D-0010](../decisions/D-0010-no-content-moderation.md)), but the operator
+  can delist a species by updating its entry to `"status": "removed"` (a
+  tombstone). The update also records `removedAtSeq`, the registry height at
+  which the species was removed. The server then unpins the species' content.
 - **Sequence numbers:** the server gives each new entry the next `seq` (1, 2,
   3, …). Together with `removedAtSeq`, this lets every client and the server
   agree exactly on which species were eligible at a given registry height
@@ -82,11 +85,11 @@ others are canonical in [player-data](player-data.md):
 - **REG-004** [proposed] Registry entries MUST contain enough summary data (types, name, thumbnail CID, status) to select encounters without fetching the full species record.
 - **REG-005** [proposed] Clients MUST exclude entries whose status is `removed`.
 - **REG-006** [proposed] The client MUST start with its locally persisted copy of the registry and sync in the background, so the game is usable before sync completes.
-- **REG-007** [proposed] Each registry entry MUST carry a unique, gap-free sequence number `seq` assigned by the server; takedowns MUST record `removedAtSeq`.
+- **REG-007** [accepted] Each registry entry MUST carry a unique, gap-free sequence number `seq` assigned by the server; takedowns MUST record `removedAtSeq`.
+- **REG-008** [proposed] The operator MUST be able to delist a species with a tombstone entry, and clients MUST honor it (REG-005).
 
 ## Open questions
 
-[Q-007](../open-questions.md#q-007) ·
 [Q-017](../open-questions.md#q-017) · [Q-021](../open-questions.md#q-021)
 
 ## See also

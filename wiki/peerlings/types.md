@@ -8,6 +8,8 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/peerlings/moves.md
   - wiki/peerlings/creation-pipeline.md
@@ -29,23 +31,25 @@ cannot invent new types. [accepted] The concept LLM picks a species' type(s) at
 the concept stage, based on the player's description
 ([creation-pipeline § Stage 2](creation-pipeline.md#stage-2--concept)).
 
-[accepted] The list has 12 classic elements. The themes and biomes are still
-[proposed]:
+[accepted] The list has 12 classic elements. [accepted] Each type has exactly
+one home biome, where it appears more often; the biome list is canonical in
+[procedural-generation § Biomes](../world/procedural-generation.md#biomes).
+Themes are [proposed]:
 
-| Type | Theme | Typical biomes [proposed] |
-|------|-------|----------------|
-| Normal | ordinary animals, everyday things | plains, towns |
-| Fire | flame, heat | volcanic, desert |
-| Water | sea, rivers, rain | coast, lakes |
-| Grass | plants, moss, fungi | forest, meadow |
-| Electric | lightning, sparks | plains, storm peaks |
-| Earth | stone, sand, ground | mountains, canyons |
-| Air | wind, birds, clouds | cliffs, high plateaus |
-| Ice | snow, frost | tundra, glaciers |
-| Metal | iron, machines | ruins, caves |
-| Light | radiance, holiness | open skies, temples |
-| Shadow | darkness, stealth | caves, deep forest |
-| Spirit | ghosts, dreams, mind | ruins, night |
+| Type | Theme |
+|------|-------|
+| Normal | ordinary animals, everyday things |
+| Fire | flame, heat |
+| Water | sea, rivers, rain |
+| Grass | plants, moss, fungi |
+| Electric | lightning, sparks |
+| Earth | stone, sand, ground |
+| Air | wind, birds, clouds |
+| Ice | snow, frost |
+| Metal | iron, machines |
+| Light | radiance, holiness |
+| Shadow | darkness, stealth |
+| Spirit | ghosts, dreams, mind |
 
 ## Primary and secondary type
 
@@ -55,8 +59,7 @@ the primary type ([moves](moves.md#move-slots)).
 
 ## Effectiveness chart
 
-**Status: [proposed] draft for review**, written 2026-10-04 at the designer's
-request ([Q-008](../open-questions.md#q-008)).
+[accepted] Approved 2026-10-04.
 
 Rules:
 - Multipliers are 2× (super effective), 1× (neutral, shown as ·) and ½× (not
@@ -124,12 +127,12 @@ Derived from the chart above (the chart is canonical if they ever differ).
 
 - **TYP-001** [accepted] There MUST be one predefined list of types (the 12 above); generated species MUST only use types from it.
 - **TYP-002** [proposed] Each species MUST have 1 or 2 types; with 2, the order defines primary and secondary.
-- **TYP-003** [proposed] The effectiveness chart MUST define a multiplier for every attacker/defender pair, from {2, 1, ½}; the draft chart above is that definition.
-- **TYP-004** [proposed] Each type MUST list the biomes it is associated with, for encounter weighting.
+- **TYP-003** [accepted] Type effectiveness MUST follow the chart above: a multiplier from {2, 1, ½} for every attacker/defender pair, multiplied together against dual-typed defenders.
+- ~~**TYP-004**~~ (removed 2026-10-04, replaced by WGN-006 in [procedural-generation](../world/procedural-generation.md#requirements))
 
 ## Open questions
 
-[Q-008](../open-questions.md#q-008)
+_None at the moment._
 
 ## See also
 

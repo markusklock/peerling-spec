@@ -1,43 +1,31 @@
 ---
 title: Content Moderation
 type: system
-status: stub
+status: deprecated
 req_prefix: MOD
-tags: [peerlings, safety, generation]
+tags: [peerlings, policy]
+sources:
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
-  - wiki/peerlings/creation-pipeline.md
+  - wiki/decisions/D-0010-no-content-moderation.md
   - wiki/tech/orbitdb-registry.md
 updated: 2026-10-04
 ---
 
 # Content Moderation
 
-> How user-generated Peerlings are kept appropriate for a broad audience, and
-> how a published species can be taken down even though IPFS content is
-> permanent. Status: stub — policy pending [Q-007](../open-questions.md#q-007).
+> **Deprecated.** The game has no content moderation
+> ([D-0010](../decisions/D-0010-no-content-moderation.md)). This page is kept
+> for history only.
 
-## Scope (proposed)
+The earlier proposal (not adopted) was to check the wish, the generated
+concept and names, the generated image, and player display names, and to take
+species down via registry tombstones.
 
-[proposed] Moderation checkpoints in the [creation pipeline](creation-pipeline.md):
-
-| Checkpoint | What is checked |
-|------------|-----------------|
-| Wish (stage 1) | Hateful, sexual, violent-extreme content; real people; obvious copyrighted characters |
-| Concept & names (stages 2, 6) | Same as above, applied to generated text and move names |
-| Image (stage 3) | NSFW / unsafe image classifier before the player sees it |
-| Display names | Same text checks as the wish. There is no player chat to moderate ([MPL-007](../gameplay/multiplayer.md#requirements)) |
-
-[proposed] Takedown: IPFS content cannot be deleted from the network, but the
-registry decides what the game shows. The server appends a **tombstone** entry
-for the species to the [registry](../tech/orbitdb-registry.md); clients stop
-offering it in encounters and hide it in collections; the server unpins its
-assets.
+What remains: the operator's emergency delisting tool, which is canonical in
+[orbitdb-registry § Design](../tech/orbitdb-registry.md#design) (REG-008).
 
 ## Requirements
 
-- **MOD-001** [proposed] Content MUST be moderated before it is shown to other players.
-- **MOD-002** [proposed] The operator MUST be able to take down a published species via a registry tombstone, and clients MUST honor tombstones.
-
-## Open questions
-
-[Q-007](../open-questions.md#q-007)
+- ~~**MOD-001**~~ (removed 2026-10-04, see D-0010)
+- ~~**MOD-002**~~ (removed 2026-10-04, replaced by REG-008 in [orbitdb-registry](../tech/orbitdb-registry.md#requirements))

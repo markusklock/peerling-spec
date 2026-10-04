@@ -23,9 +23,9 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates character + starter Peerling |
 | [player-character](gameplay/player-character.md) | stub | PLR | Avatar, identity keypair (save details: player-data) |
 | [exploration](gameplay/exploration.md) | stub | EXP | Moving through the world |
-| [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings deterministically from the registry; wild levels; prefetching |
+| [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings deterministically (biome and novelty weights); wild levels; prefetching |
 | [battle](gameplay/battle.md) | stub | BTL | Battle rules: damage model, XP and levelling, deterministic RNG; procedural animation of static models |
-| [catching](gameplay/catching.md) | stub | CAT | Catching wild Peerlings; collection |
+| [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
 | [multiplayer](gameplay/multiplayer.md) | draft | MPL | Shared world: seeing other players, face-to-face interaction, emotes (no chat) |
 | [pvp-battles](gameplay/pvp-battles.md) | draft | PVP | Peer-to-peer battles: fairness, commit-reveal protocol |
 | [trading](gameplay/trading.md) | draft | TRD | Peer-to-peer trades of Peerling instances |
@@ -36,15 +36,16 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 |------|--------|-----------|---------|
 | [creation-pipeline](peerlings/creation-pipeline.md) | draft | CRE | Wish → concept (+type) → image → review → 3D → stats & moves → player publishes, server pins → starter |
 | [peerling-species](peerlings/peerling-species.md) | draft | SPC | Species record (DAG-CBOR on IPFS), stats (total 320, 40–130), Peerling instance data model |
-| [types](peerlings/types.md) | draft | TYP | The 12 types, primary/secondary type, effectiveness chart (draft) |
+| [types](peerlings/types.md) | draft | TYP | The 12 types, primary/secondary type, effectiveness chart |
 | [moves](peerlings/moves.md) | draft | MOV | Three move slots (quick/strong/signature), unlimited use, templates, how Pokémon-like games do it |
-| [moderation](peerlings/moderation.md) | stub | MOD | Content checks and takedown via registry tombstones |
+| [moderation](peerlings/moderation.md) | deprecated | MOD | No content moderation (D-0010); kept for history |
 
 ## World
 
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
-| [procedural-generation](world/procedural-generation.md) | stub | WGN | One shared, large but finite, seeded, chunked world; regions; biomes |
+| [procedural-generation](world/procedural-generation.md) | draft | WGN | One shared 4 × 4 km seeded world; 12 biomes (one per type) and their layout |
+| [visual-style](world/visual-style.md) | draft | VIS | Top-down tilted camera, battle camera, colorful stylized look |
 
 ## Tech
 
@@ -71,12 +72,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0007](decisions/D-0007-players-publish-assets.md) | accepted | The player's browser publishes their Peerling to IPFS |
 | [D-0008](decisions/D-0008-shared-multiplayer-world.md) | accepted | One shared world with PvP battles and trading |
 | [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted | Player saves on OrbitDB, with server-verified catches and trades |
+| [D-0010](decisions/D-0010-no-content-moderation.md) | accepted | No content moderation |
 
 ## Registered requirement prefixes
 
 ARC, BTL, CAT, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
-SAVE, SHOW, SPC, SRV, TRD, TYP, WGN. Next free decision ID: D-0010. Next free question
-ID: Q-031.
+SAVE, SHOW, SPC, SRV, TRD, TYP, VIS, WGN. Next free decision ID: D-0011. Next free
+question ID: Q-034.
 
 ## Sources
 
@@ -87,3 +89,4 @@ ID: Q-031.
 | [2026-10-04-answers-round-2](../raw/conversations/2026-10-04-answers-round-2.md) | 2026-10-04 | 3 move slots, face-to-face battles/trades, emotes only, large finite world; designer asked for save-storage options and stat suggestions |
 | [2026-10-04-answers-round-3](../raw/conversations/2026-10-04-answers-round-3.md) | 2026-10-04 | Saves on OrbitDB + server-verified catches/trades accepted; stats and damage model approved; unlimited moves; 3 m, emotes, 4 × 4 km accepted |
 | [2026-10-04-answers-round-4](../raw/conversations/2026-10-04-answers-round-4.md) | 2026-10-04 | D-0006 accepted; simple XP curve, no evolution, fixed moves; requests to draft the type chart and the encounter-seed design |
+| [2026-10-04-answers-round-5](../raw/conversations/2026-10-04-answers-round-5.md) | 2026-10-04 | Chart, XP and encounter seeds approved; no battle items; 12 biomes; top-down colorful 3D; no content moderation |

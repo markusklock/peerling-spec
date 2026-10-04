@@ -71,4 +71,4 @@ Around the core loop, players meet each other, [battle](pvp-battles.md) and
 
 ## Open questions
 
-[Q-030](../open-questions.md#q-030)
+_None at the moment._

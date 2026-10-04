@@ -10,6 +10,8 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -29,12 +31,17 @@ updated: 2026-10-04
 
 ## Rules
 
-[proposed] Starting assumptions to confirm: turn-based, one active Peerling per
-side, the player can switch Peerlings, use an item, try to catch (wild battles
-only), or flee (wild battles only).
+[accepted] There are no items in battles in the first version.
+
+[proposed] Turn-based, one active Peerling per side. Each turn the player
+either uses one of the active Peerling's three moves, switches to another team
+member (team size: [catching](catching.md#team-and-collection)), tries to
+[catch](catching.md#catching-without-items) (wild battles only), or flees (wild
+battles only).
 
 Decided: the damage model, turn order and experience below. To be specified:
-stat stages, fainting, and rewards other than XP.
+stat stages, fainting, healing between battles
+([Q-032](../open-questions.md#q-032)), and rewards other than XP.
 
 ### Damage model
 
@@ -84,8 +91,7 @@ replaying the battle ([player-data](../tech/player-data.md#verification),
 ([SPC-011](../peerlings/peerling-species.md#requirements)); moves never change
 ([MOV-010](../peerlings/moves.md#requirements)).
 
-[proposed] Numbers (drafted 2026-10-04, awaiting approval:
-[Q-030](../open-questions.md#q-030)):
+[accepted] Numbers (approved 2026-10-04):
 
 | Rule | Value |
 |------|-------|
@@ -123,6 +129,10 @@ PvP battles use the commit-reveal seed ([pvp-battles](pvp-battles.md)).
 
 ## Presentation
 
+[accepted] The visual style is colorful ([visual-style](../world/visual-style.md)).
+[proposed] Battles take place on the spot in the 3D world; the battle camera is
+defined in [visual-style § Camera](../world/visual-style.md#camera).
+
 [accepted] Peerlings are static 3D models ([CRE-017](../peerlings/creation-pipeline.md#requirements)),
 and battles use simple 3D graphics.
 
@@ -145,16 +155,15 @@ from the move's type and template, not authored per move.
 
 - **BTL-001** [accepted] The player MUST be able to battle wild Peerlings they encounter.
 - **BTL-002** [accepted] The battle engine MUST be deterministic given the initial state, the actions taken and the RNG seed, on every browser and on the server.
-- **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
-- **BTL-006** [accepted] Levels MUST run from 1 to 50. [proposed] XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
-- **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
 - **BTL-003** [accepted] Battle animation MUST work with static, unrigged models using whole-model transforms only.
 - **BTL-004** [proposed] Move visual effects MUST be derived from the move's type and template, so every generated move has an effect without per-move assets.
+- **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
+- **BTL-006** [accepted] Levels MUST run from 1 to 50, and XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
+- **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
 
 ## Open questions
 
-[Q-008](../open-questions.md#q-008) · [Q-030](../open-questions.md#q-030) ·
-[Q-012](../open-questions.md#q-012)
+[Q-032](../open-questions.md#q-032)
 
 ## See also
 

@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -27,16 +28,22 @@ updated: 2026-10-04
 species**, read from the [registry](../tech/orbitdb-registry.md) and downloaded
 via IPFS.
 
-## Selection (proposed)
+## Selection
 
-[proposed] Selection weights to be decided ([Q-017](../open-questions.md#q-017)).
-Candidate factors:
-- **Biome affinity** — species whose [types](../peerlings/types.md) match the
-  current biome are more likely.
-- **Novelty** — species the player hasn't seen yet get a boost, so discovery
-  stays fresh.
-- **Level** — the wild instance's level depends on where it is met (see
-  [Wild level](#wild-level)), not on the species.
+[accepted] In each [biome](../world/procedural-generation.md#biomes), Peerlings
+of that biome's type are more likely to appear.
+
+[proposed] Selection weights (numbers: [Q-017](../open-questions.md#q-017)).
+Every eligible species starts with weight 1, then:
+
+| Factor | Multiplier | Why |
+|--------|-----------:|-----|
+| **Biome affinity:** the species has the biome's type (primary or secondary) | × 6 | If roughly 1 in 12 species has a given type, about a third of a biome's encounters are its type: clearly themed, with plenty of variety |
+| **Novelty:** the player has never seen this species (per the Peerdex in the save) | × 2 | Discovery stays fresh as the registry grows |
+
+The species is drawn with these weights using the encounter seed. The wild
+level depends on where it is met ([Wild level](#wild-level)), not on the
+species.
 
 [proposed] Selection must be a deterministic function of the encounter seed and
 data the server can also see, so the server can check it when verifying a catch
@@ -51,8 +58,7 @@ world ([MPL-004](multiplayer.md#requirements)).
 
 ## Wild level
 
-[proposed] Drafted 2026-10-04 with the XP curve
-([Q-030](../open-questions.md#q-030)). With d = distance in metres from the
+[accepted] Approved 2026-10-04 together with the XP curve. With d = distance in metres from the
 world centre (the spawn; the world is 4 km × 4 km, so d is at most about
 2,830 m at the corners):
 
@@ -85,8 +91,8 @@ is, rather than being replaced by a different species.
 - **ENC-002** [accepted] The chosen species' data and model MUST be retrieved via IPFS.
 - **ENC-003** [proposed] The client MUST prefetch the species of its upcoming encounters so an encounter normally starts without waiting for network retrieval.
 - **ENC-004** [proposed] Removed (tombstoned) species MUST NOT be chosen ([REG-005](../tech/orbitdb-registry.md#requirements)).
-- **ENC-005** [proposed] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
+- **ENC-005** [accepted] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
 
 ## Open questions
 
-[Q-017](../open-questions.md#q-017) · [Q-029](../open-questions.md#q-029) · [Q-030](../open-questions.md#q-030)
+[Q-017](../open-questions.md#q-017)

@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -62,8 +63,8 @@ and shown as a bubble or animation above the player's character:
 | Challenge | "Want to battle?" |
 | Trade | "Want to trade?" |
 
-Why no chat: free text between strangers would need moderation, and emotes
-work in every language.
+Why no chat: emotes keep interactions light and friendly between strangers,
+and they work in every language.
 
 ## Scale and visibility (proposed)
 

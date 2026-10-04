@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/gameplay/player-character.md
@@ -54,7 +55,7 @@ refers to it by CID.
 | Created species | CID(s) of the species this player created | [proposed] |
 | Peerdex | Species seen and species caught (CIDs) | [proposed] |
 | Position | Last position and facing in the world | [proposed] |
-| Inventory | Items (e.g. catching items; to be specified in [catching](../gameplay/catching.md)) | [proposed] |
+| Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [proposed] No inventory at all in the first version, so this part is empty | [proposed] |
 
 Not in the save: the identity **private key** (stays on the device; restored
 with the recovery phrase), and the authoritative owner of each Peerling (that is
@@ -103,8 +104,7 @@ after it. The server replicates every player's log and pins the snapshots.
 
 ### Encounter seeds
 
-**Status: [proposed] draft for review**, written 2026-10-04 at the designer's
-request ([Q-029](../open-questions.md#q-029)).
+[accepted] Approved 2026-10-04, including drand as the randomness source.
 
 Goal: players can't choose or re-roll their wild encounters, play keeps working
 without the server, and the server can check everything afterwards.
@@ -252,14 +252,14 @@ from server signatures.
 - **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP. [proposed] It MUST also contain the parts listed in [Save contents](#save-contents).
 - **SAVE-006** [accepted] The server MUST verify a catch by replaying the battle from the catch evidence before signing a catch attestation.
 - **SAVE-007** [proposed] The save log MUST be event-based as listed in [Save log](#save-log), with periodic snapshots so loading doesn't replay the full history.
-- **SAVE-008** [proposed] Encounter seeds MUST be derived as in [Encounter seeds](#encounter-seeds): from the epoch record's randomness, the player ID and a gap-free encounter number.
+- **SAVE-008** [accepted] Encounter seeds MUST be derived as in [Encounter seeds](#encounter-seeds): from the epoch record's randomness, the player ID and a gap-free encounter number.
 - **SAVE-009** [proposed] Catches MUST be playable while unverified; verification MAY happen later (e.g. when the server is reachable again).
-- **SAVE-010** [proposed] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
-- **SAVE-011** [proposed] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
+- **SAVE-010** [accepted] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
+- **SAVE-011** [accepted] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
 
 ## Open questions
 
-[Q-029](../open-questions.md#q-029)
+_None at the moment._
 
 ## See also
 

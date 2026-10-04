@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/tech/ipfs-helia.md
@@ -36,14 +37,14 @@ verified, is canonical in [player-data](../tech/player-data.md).
 
 [proposed] Because the world is shared ([multiplayer](multiplayer.md)), the
 identity also signs presence messages, PvP commitments and trade records. The
-display name and avatar are visible to other players, so the display name
-must be moderated. There is no chat to moderate ([MPL-007](multiplayer.md#requirements)).
+display name and avatar are visible to other players. [accepted] Display names
+are not moderated ([D-0010](../decisions/D-0010-no-content-moderation.md)).
 
 ## Requirements
 
 - **PLR-001** [accepted] Each player MUST have a player character created during onboarding.
 - **PLR-002** [proposed] Each player MUST have a stable cryptographic identity generated client-side.
-- **PLR-003** [proposed] The player's display name MUST be moderated before other players can see it.
+- ~~**PLR-003**~~ (removed 2026-10-04: no content moderation, see [D-0010](../decisions/D-0010-no-content-moderation.md))
 
 ## Open questions
 

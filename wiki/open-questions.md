@@ -43,37 +43,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
   return to image selection.
 - Raised: 2026-10-03
 
-### Q-007
-**Content moderation policy and takedowns.**
-- Affects: [moderation](peerlings/moderation.md), [orbitdb-registry](tech/orbitdb-registry.md), [player-character](gameplay/player-character.md)
-- Context: Players can describe anything: NSFW, hateful content, real people,
-  copyrighted characters (e.g. existing Pokémon). IPFS content can't be deleted
-  from the network, but the registry can stop listing it. With a shared world,
-  display names need moderation too (there is no chat: MPL-007).
-- Proposal: moderate both the text wish and the generated image on the server;
-  takedown = a tombstone entry in the registry, clients stop showing the species
-  and the server unpins it.
-- Raised: 2026-10-03
-
-### Q-008
-**The type effectiveness chart.**
-- Affects: [types](peerlings/types.md), [battle](gameplay/battle.md)
-- Partly resolved 2026-10-03: the type list is the 12 classic elements
-  ([types](peerlings/types.md#the-type-list)). Still open: which type is strong
-  or weak against which.
-- Draft chart written 2026-10-04 at the designer's request:
-  [types § Effectiveness chart](peerlings/types.md#effectiveness-chart).
-  Awaiting approval.
-- Raised: 2026-10-03
-
-### Q-012
-**Presentation: camera and visual style of the world.**
-- Affects: [exploration](gameplay/exploration.md), [battle](gameplay/battle.md)
-- Context: Peerlings are static 3D models and battles use simple 3D graphics.
-  The world view is still open: third-person, isometric/top-down 3D, or a 2D
-  world with 3D battles.
-- Raised: 2026-10-03
-
 ### Q-016
 **Asset budgets: maximum model size, texture resolution, image size.**
 - Affects: [creation-pipeline](peerlings/creation-pipeline.md), [peerling-species](peerlings/peerling-species.md), [ipfs-helia](tech/ipfs-helia.md)
@@ -84,17 +53,17 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Raised: 2026-10-03
 
 ### Q-017
-**How are wild Peerlings chosen from the registry?**
-- Affects: [encounters](gameplay/encounters.md), [orbitdb-registry](tech/orbitdb-registry.md)
-- Context: Uniform random, weighted by biome/type, favor new or rarely-seen
-  species, rarity tiers? Also: with thousands of species, the client must not
-  download every model up front.
+**Encounter selection weights: approve the numbers?**
+- Affects: [encounters](gameplay/encounters.md#selection), [orbitdb-registry](tech/orbitdb-registry.md)
+- Partly resolved 2026-10-04: each biome raises the chance of its own type
+  (WGN-006); selection is deterministic from the encounter seed (ENC-005).
+- Proposal: biome-type match × 6, never-seen species × 2
+  ([encounters § Selection](gameplay/encounters.md#selection)).
 - Raised: 2026-10-03
-
 ### Q-018
 **Who names the Peerling, and must names be unique?**
 - Affects: [creation-pipeline](peerlings/creation-pipeline.md), [peerling-species](peerlings/peerling-species.md)
-- Proposal: the LLM suggests names, the player picks or types one (moderated);
+- Proposal: the LLM suggests names, the player picks or types one;
   names need not be unique since the CID is the identity.
 - Raised: 2026-10-03
 
@@ -128,25 +97,36 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Proposal: regions of 64 × 64 m; show at most 30 nearby players.
 - Raised: 2026-10-03
 
-### Q-029
-**Encounter seeds: approve the epoch-record design?**
-- Affects: [player-data](tech/player-data.md#encounter-seeds), [encounters](gameplay/encounters.md), [generation-server](tech/generation-server.md), [orbitdb-registry](tech/orbitdb-registry.md)
-- Context: Catch verification needs encounter seeds that players can't choose.
-- Draft written 2026-10-04 at the designer's request:
-  [player-data § Encounter seeds](tech/player-data.md#encounter-seeds). Every
-  5 minutes the server publishes a signed epoch record with drand randomness and
-  the registry height; seeds use a gap-free encounter number; the server
-  re-checks everything when verifying a catch. Awaiting approval, including
-  whether to use drand or the server's own random value.
+### Q-031
+**Approve the catch chance and team size?**
+- Affects: [catching](gameplay/catching.md), [battle](gameplay/battle.md), [pvp-battles](gameplay/pvp-battles.md)
+- Context: The designer asked for suggestions (2026-10-04).
+- Proposal: catching is a battle action with unlimited attempts; chance =
+  0.6 × (3 × maxHP − 2 × currentHP) ÷ (3 × maxHP), lower against higher-level
+  Peerlings (20% at full HP, about 60% when almost fainted); team of 4,
+  unlimited collection, swap any time outside battle.
 - Raised: 2026-10-04
-### Q-030
-**Approve the XP curve and wild-level numbers?**
-- Affects: [battle § Experience and levelling](gameplay/battle.md#experience-and-levelling), [encounters § Wild level](gameplay/encounters.md#wild-level)
-- Context: A simple XP curve was accepted (Q-010); these are the concrete
-  numbers.
-- Draft 2026-10-04: XP to next level 5 × L²; 10 × wild level XP per defeat or
-  catch; starter at level 5; wild level rises from 2 at the spawn to 50 at 2 km
-  out (±2). About 600 wild battles from level 5 to 50.
+
+### Q-032
+**How do Peerlings heal between battles, without items?**
+- Affects: [battle](gameplay/battle.md), [exploration](gameplay/exploration.md), [procedural-generation](world/procedural-generation.md)
+- Context: HP carries over between battles (`currentHp` in the save), and there
+  are no healing items.
+- Options: (a) full heal after every battle (simplest); (b) rest points in the
+  world that heal the whole team, like Pokémon Centers; (c) slow regeneration
+  while walking. Also: what happens when the whole team faints?
+- Proposal: (b) rest points in every biome area, plus: if the whole team
+  faints, the player returns to the last rest point they visited with the team
+  fully healed. Nothing is lost.
+- Raised: 2026-10-04
+
+### Q-033
+**Approve the biome names, looks and layout?**
+- Affects: [procedural-generation § Biomes](world/procedural-generation.md#biomes), [visual-style](world/visual-style.md)
+- Context: 12 biomes, one per type, are decided. The names, looks and layout
+  rules are LLM proposals.
+- Proposal: the table in procedural-generation; areas 300–500 m across;
+  every biome in every distance ring; Plains at the spawn.
 - Raised: 2026-10-04
 
 ## Resolved
@@ -236,3 +216,27 @@ learn or change moves. Resolved 2026-10-04 →
 [SPC-011](peerlings/peerling-species.md#requirements),
 [MOV-010](peerlings/moves.md#requirements). The concrete numbers are in
 [Q-030](#q-030).
+
+### Q-007
+**Content moderation.** None. The game is a free hobby project; if
+inappropriate content becomes a real problem, the operator will shut the game
+down. Resolved 2026-10-04 → [D-0010](decisions/D-0010-no-content-moderation.md).
+
+### Q-008
+**Type effectiveness chart.** The draft chart was approved. Resolved 2026-10-04 →
+[types § Effectiveness chart](peerlings/types.md#effectiveness-chart).
+
+### Q-012
+**Camera and visual style.** Top-down camera over a 3D world, colorful style.
+Resolved 2026-10-04 → [visual-style](world/visual-style.md).
+
+### Q-029
+**Encounter seeds.** The epoch-record design with drand randomness was approved.
+Resolved 2026-10-04 →
+[player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
+
+### Q-030
+**XP curve and wild levels.** The draft numbers were approved. Resolved
+2026-10-04 →
+[battle § Experience and levelling](gameplay/battle.md#experience-and-levelling),
+[encounters § Wild level](gameplay/encounters.md#wild-level).

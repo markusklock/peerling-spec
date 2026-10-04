@@ -5,10 +5,11 @@ status: accepted
 tags: [tech, orbitdb, security]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-03
+updated: 2026-10-04
 ---
 
 # D-0005: The generation server is the only registry writer
@@ -31,8 +32,8 @@ client-written entry could contain arbitrary stats, moves or unmoderated assets.
   [PvP battle](../gameplay/pvp-battles.md) or [trade](../gameplay/trading.md).
 
 ## Consequences
-- Only content that went through the pipeline, validation and moderation can
-  appear in the game.
+- Only content that went through the pipeline and validation can appear in
+  the game. (There is no moderation stage: [D-0010](D-0010-no-content-moderation.md).)
 - Takedowns are possible by the server appending a tombstone entry.
 - The registry is still fully peer-to-peer for *reading* and replication.
 - Players still publish the *content* to IPFS themselves

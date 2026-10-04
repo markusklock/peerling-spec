@@ -22,9 +22,9 @@ official pipeline and has not been altered. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
 ### Biome
-A region type of the procedural world (e.g. forest, desert) that influences
-which Peerlings are encountered there. See
-[procedural-generation](world/procedural-generation.md).
+One of the 12 region types of the world, one per Peerling type (e.g. Forest
+for Grass). Peerlings of a biome's type are more likely to be encountered
+there. See [procedural-generation](world/procedural-generation.md#biomes).
 
 ### Catch attestation
 The server's signature confirming that a Peerling instance was caught
@@ -35,6 +35,10 @@ legitimately. The server checks this by replaying the battle. See
 Content Identifier — the IPFS address of a piece of content, derived from a hash
 of the content itself. The same bytes always have the same CID, so content can be
 fetched from any peer and verified locally.
+
+### Collection
+All the Peerlings a player owns that are not in their [team](#team). It has no
+size limit. See [catching](gameplay/catching.md#team-and-collection).
 
 ### Concept
 The structured description of a new Peerling produced by the
@@ -178,6 +182,10 @@ the species' identity. See [peerling-species](peerlings/peerling-species.md).
 ### Starter
 The first Peerling a player owns: an instance of the species the player created
 during onboarding. See [onboarding](gameplay/onboarding.md).
+
+### Team
+The Peerlings a player brings into battles: [proposed] up to 4. See
+[catching](gameplay/catching.md#team-and-collection).
 
 ### Trade
 An exchange of [Peerling instances](#peerling-instance) between two players.

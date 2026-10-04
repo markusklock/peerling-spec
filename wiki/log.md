@@ -84,3 +84,21 @@ List all entries with `grep "^## \[" wiki/log.md`.
   Encounter selection is now deterministic, so "prefer cached species" was
   dropped and prefetching now uses precomputed upcoming encounters. Added
   SPC-011, MOV-010, BTL-006/007, ENC-005, REG-007, SAVE-010/011.
+
+## [2026-10-04] design | Answers round 5: approvals, no items, biomes, camera, no moderation
+- Source: raw/conversations/2026-10-04-answers-round-5.md
+- Changed: decisions/D-0010 (new), D-0002, D-0005, peerlings/moderation.md
+  (→ deprecated), world/visual-style.md (new), world/procedural-generation.md,
+  peerlings/types.md, peerlings/moves.md, peerlings/creation-pipeline.md,
+  gameplay/catching.md, gameplay/battle.md, gameplay/encounters.md,
+  gameplay/exploration.md, gameplay/core-loop.md, gameplay/player-character.md,
+  gameplay/multiplayer.md, tech/player-data.md, tech/orbitdb-registry.md,
+  tech/generation-server.md, overview.md, glossary.md, open-questions.md,
+  index.md
+- Notes: Resolved Q-007 (no moderation → D-0010), Q-008 (chart), Q-012
+  (top-down, colorful), Q-029 (encounter seeds), Q-030 (XP numbers). No
+  battle items. 12 biomes, one per type. Suggested catch chance and team size
+  of 4 at the designer's request (Q-031). Opened Q-032 (healing without items)
+  and Q-033 (biome details); narrowed Q-017 to approving weights. Removed
+  CRE-011, PLR-003, MOD-001/002, TYP-004; added CAT-003…007, WGN-006…008,
+  VIS-001…005, REG-008 (emergency delisting, proposed).

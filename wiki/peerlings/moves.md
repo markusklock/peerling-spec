@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
@@ -58,7 +59,7 @@ a slot name because Pokémon uses it for a damage category and a stat.
 |-------|------|
 | `slot` | Fixed by the slot being filled |
 | `template` | LLM chooses a template ID allowed for that slot |
-| `name` | LLM (moderated, max length TBD) |
+| `name` | LLM (max length TBD) |
 | `description` | LLM (one sentence of flavour text) |
 | `type` | LLM, constrained by the slot (table above) |
 

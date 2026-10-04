@@ -9,11 +9,12 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-04-answers-round-5.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
-  - wiki/peerlings/moderation.md
+  - wiki/decisions/D-0010-no-content-moderation.md
   - wiki/tech/generation-server.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -74,7 +75,6 @@ sequenceDiagram
   participant S as Generation server
   participant R as OrbitDB registry
   P->>S: 1. wish text
-  S->>S: moderate wish
   S->>S: 2. concept LLM → concept JSON (incl. types)
   loop until accepted (limit: Q-005)
     S->>S: 3. image prompt JSON → image generator
@@ -123,7 +123,8 @@ The concept's `appearance` is converted to a structured (JSON) prompt for the
 image generator (the brief names FLUX.2 or similar models that accept JSON
 prompts for precise control). [proposed] The prompt has two parts:
 
-- **House-style block (fixed by the system):** art style, lighting, camera,
+- **House-style block (fixed by the system):** art style matching the game's
+  colorful, stylized world ([visual-style](../world/visual-style.md#visual-style)), lighting, camera,
   and constraints that make the image a good input for image-to-3D: exactly one
   creature, full body visible, centered, three-quarter front view, plain
   neutral background, no text, no ground shadows or props cut by the frame.
@@ -196,7 +197,7 @@ machine; the client follows its progress.
 ```
 WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
   → IMAGE_ACCEPTED → MODEL_READY → PROFILE_READY → PUBLISHING → PUBLISHED
-any state → REJECTED (moderation) | FAILED (error, retryable) | EXPIRED (abandoned)
+any state → FAILED (error, retryable) | EXPIRED (abandoned)
 ```
 
 [proposed] Onboarding overlaps waiting time with other activity (e.g. character
@@ -215,7 +216,7 @@ creation runs while the 3D model generates) — see
 - **CRE-008** [proposed] All LLM outputs MUST be requested as JSON and validated against a schema; invalid output MUST be retried, never passed on.
 - **CRE-009** [proposed] A deterministic server-side validator MUST check types, stats and moves against the rules before publishing; LLM output alone MUST NOT be trusted for balance.
 - **CRE-010** [proposed] The image prompt MUST include the fixed house-style block so all Peerlings share one art style and produce clean image-to-3D input.
-- **CRE-011** [proposed] Wish text, chosen name and generated image MUST pass [moderation](moderation.md) before the species is published.
+- ~~**CRE-011**~~ (removed 2026-10-04: no content moderation, see [D-0010](../decisions/D-0010-no-content-moderation.md))
 - **CRE-012** [proposed] Every species record MUST include provenance: wish text, concept, image prompt, seeds, and model names/versions used at each stage.
 - **CRE-013** [proposed] The 3D model MUST be post-processed to a normalized scale, orientation and ground position, and MUST fit the asset budget ([Q-016](../open-questions.md#q-016)).
 - **CRE-014** [proposed] The pipeline MUST run as a resumable server-side job; the client MUST show progress and MUST be able to reconnect to an in-progress job after a page reload.
@@ -231,7 +232,6 @@ creation runs while the 3D model generates) — see
 [Q-001](../open-questions.md#q-001) ·
 [Q-005](../open-questions.md#q-005) ·
 [Q-006](../open-questions.md#q-006) ·
-[Q-007](../open-questions.md#q-007) ·
 [Q-016](../open-questions.md#q-016) ·
 [Q-018](../open-questions.md#q-018)
 
