@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-approvals-q016-q038.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -40,7 +41,7 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
   be faked.
 - [accepted] **Levels are normalized.** All Peerlings fight at level 50 (as in
   Pokémon's competitive formats), so edited levels give no advantage.
-  [proposed] Individual stat traits still apply
+  [accepted] Individual stat traits still apply
   ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation));
   they are part of the verified Peerling, so they can't be faked.
 - [accepted] **Only verified Peerlings.** Every Peerling in a PvP team must be

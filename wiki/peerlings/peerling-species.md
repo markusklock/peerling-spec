@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-approvals-q016-q038.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -153,7 +154,7 @@ ways ([D-0014](../decisions/D-0014-individual-variation.md)).
 ### Stat traits
 
 [accepted] Each individual has a random **trait** for each of its four stats,
-worth up to ±10%. [proposed] Details:
+worth up to ±10%. [accepted] Details (approved 2026-10-05):
 - A trait is a whole number from −10 to +10 (percent), drawn uniformly and
   independently for HP, Attack, Defense and Speed.
 - The trait multiplies the stat calculated at the Peerling's level
@@ -171,8 +172,8 @@ worth up to ±10%. [proposed] Details:
 
 ### Shimmer variants
 
-[accepted] A rare, purely cosmetic color variant: a **shimmer**. [proposed]
-Details:
+[accepted] A rare, purely cosmetic color variant: a **shimmer**. Details
+(approved 2026-10-05):
 - Chance: **1 in 500** per Peerling.
 - Look: the model's colors are hue-shifted by an angle derived from the species
   CID (between 90° and 270°), so every shimmer of the same species looks the
@@ -203,13 +204,13 @@ Peerlings, the server draws them and includes them in the origin attestation
 - **SPC-009** [accepted] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
 - **SPC-010** [proposed] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
 - **SPC-011** [accepted] There MUST NOT be evolution in v1.
-- **SPC-012** [accepted] Every Peerling instance MUST have a fixed trait from −10% to +10% for each of its four stats. [proposed] Traits are whole percents drawn uniformly, visible to players, and applied in PvP.
-- **SPC-013** [accepted] Peerlings MUST have a rare cosmetic shimmer variant. [proposed] The chance is 1 in 500; the look is a species-specific hue shift plus a sparkle effect.
+- **SPC-012** [accepted] Every Peerling instance MUST have a fixed trait from −10% to +10% for each of its four stats; traits are whole percents drawn uniformly, visible to players, and applied in PvP.
+- **SPC-013** [accepted] Peerlings MUST have a rare cosmetic shimmer variant with a chance of 1 in 500; the look is a species-specific hue shift plus a sparkle effect.
 - **SPC-014** [proposed] Traits and the shimmer roll MUST come from verifiable randomness: the encounter seed for wild Peerlings, the server's origin attestation for starters and shrine creations.
 
 ## Open questions
 
-[Q-016](../open-questions.md#q-016) · [Q-038](../open-questions.md#q-038)
+_None at the moment._
 
 ## See also
 

@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-tech-stack-2.md
   - raw/conversations/2026-10-05-asset-budgets-request.md
+  - raw/conversations/2026-10-05-approvals-q016-q038.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
@@ -114,8 +115,7 @@ services (OrbitDB) is an acceptable setup.
 
 ## Asset budgets
 
-[proposed] Suggested 2026-10-05 at the designer's request
-([Q-016](../open-questions.md#q-016)).
+[accepted] Approved 2026-10-05.
 
 **What drives the numbers:**
 - Every wild encounter prefetches up to 5 candidate species, and a PvP battle
@@ -142,7 +142,7 @@ What that means in practice:
 - An encounter whose 5 candidates are all uncached costs about 3 MB at
   worst; most species near the spawn will already be cached.
 - A PvP battle against an unknown team costs about 2.5 MB at worst.
-- **Client cache:** [proposed] the browser keeps up to **1 GB** of game content
+- **Client cache:** the browser keeps up to **1 GB** of game content
   (roughly 1,500 species at typical size) and evicts the least recently used
   beyond that, except the player's own creations and collection
   ([NODE-004](ipfs-helia.md#requirements)).
@@ -166,12 +166,12 @@ oversized files.
 - **STK-009** [accepted] 3D models MUST be glTF 2.0 binary with meshopt compression and KTX2 textures; 2D images MUST be AVIF.
 - **STK-010** [accepted] The game MUST target current desktop versions of Chrome/Edge, Firefox and Safari; mobile is not a target.
 - **STK-011** [accepted] The client MUST be written in TypeScript and be installable as a PWA.
-- **STK-012** [proposed] Every species asset MUST fit the [asset budgets](#asset-budgets); clients MUST refuse content that exceeds them.
-- **STK-013** [proposed] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations and collection.
+- **STK-012** [accepted] Every species asset MUST fit the [asset budgets](#asset-budgets); clients MUST refuse content that exceeds them.
+- **STK-013** [accepted] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations and collection.
 
 ## Open questions
 
-[Q-016](../open-questions.md#q-016)
+_None at the moment._
 
 ## See also
 

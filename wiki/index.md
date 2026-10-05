@@ -105,3 +105,4 @@ D-0015. Next free question ID: Q-039.
 | [2026-10-04-decentralize-level-3](../raw/conversations/2026-10-04-decentralize-level-3.md) | 2026-10-04 | Level 3 decentralization accepted (D-0013); question about individual variation of wild Peerlings |
 | [2026-10-05-individual-variation](../raw/conversations/2026-10-05-individual-variation.md) | 2026-10-05 | Individual variation: ±10% stat traits and rare color variants (options b and d) |
 | [2026-10-05-asset-budgets-request](../raw/conversations/2026-10-05-asset-budgets-request.md) | 2026-10-05 | Designer asked for asset budget suggestions (Q-016) and for Q-038 to be explained |
+| [2026-10-05-approvals-q016-q038](../raw/conversations/2026-10-05-approvals-q016-q038.md) | 2026-10-05 | Asset budgets and individual-variation details approved |

@@ -17,26 +17,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-016
-**Asset budgets: approve the suggested sizes?**
-- Affects: [tech-stack § Asset budgets](tech/tech-stack.md#asset-budgets), [creation-pipeline](peerlings/creation-pipeline.md), [ipfs-helia](tech/ipfs-helia.md)
-- Context: Every encounter prefetches up to 5 candidate models peer-to-peer;
-  size drives load time and how widely species spread.
-- 2026-10-04: deferred by the designer ("TBD").
-- 2026-10-05: suggested at the designer's request: model ≤ 1 MB (≤ 20,000
-  triangles, one 1024 px base-color texture), card image ≤ 150 KB, thumbnail
-  ≤ 15 KB, whole species ≤ 1.2 MB (typically ~0.6 MB), client cache 1 GB.
-- Raised: 2026-10-03
-### Q-038
-**Individual variation details: approve?**
-- Affects: [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation), [pvp-battles](gameplay/pvp-battles.md), [trading](gameplay/trading.md)
-- Context: Stat traits (±10%) and shimmer variants are decided (D-0014). The
-  details are LLM proposals.
-- Proposal: traits are whole percents −10…+10, drawn uniformly per stat; they
-  are visible on the Peerling card with an overall rating; they apply in PvP.
-  Shimmer chance 1 in 500; a species-specific hue shift plus a sparkle effect.
-- Raised: 2026-10-05
-
 ## Resolved
 
 ### Q-002
@@ -234,3 +214,13 @@ the server; only creation needs it. Resolved 2026-10-04 →
 **Individual variation.** Stat traits of up to ±10% per stat, and rare
 cosmetic shimmer variants. Resolved 2026-10-05 →
 [D-0014](decisions/D-0014-individual-variation.md). Details: [Q-038](#q-038).
+
+### Q-016
+**Asset budgets.** Model ≤ 1 MB (≤ 20,000 triangles, one 1024 px texture),
+card image ≤ 150 KB, thumbnail ≤ 15 KB, whole species ≤ 1.2 MB, 1 GB client
+cache. Resolved 2026-10-05 → [tech-stack § Asset budgets](tech/tech-stack.md#asset-budgets).
+
+### Q-038
+**Individual variation details.** Shimmer 1 in 500; traits visible with an
+overall rating; traits apply in PvP; species-specific shimmer look. Resolved
+2026-10-05 → [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).

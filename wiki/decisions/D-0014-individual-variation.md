@@ -5,6 +5,7 @@ status: accepted
 tags: [peerlings, gameplay, balance, collecting]
 sources:
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-approvals-q016-q038.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/battle.md
@@ -16,7 +17,7 @@ updated: 2026-10-05
 # D-0014: Individual variation: stat traits and shimmer variants
 
 **Status:** accepted (2026-10-05, resolves [Q-037](../open-questions.md#q-037));
-details [proposed]
+details approved the same day ([Q-038](../open-questions.md#q-038))
 
 ## Context
 All species have the same base-stat total, and wild Peerlings differ only by
@@ -27,7 +28,7 @@ leaving little reason to hunt for a particular individual or to trade.
 - [accepted] **Stat traits:** every individual Peerling gets a random
   modifier of up to ±10% on each of its four stats.
 - [accepted] **Shimmer variants:** a rare, purely cosmetic color variant.
-- [proposed] Rarity 1 in 500; traits are visible to players and count in PvP;
+- [accepted] Rarity 1 in 500; traits are visible to players and count in PvP;
   everything is drawn from verifiable randomness. Details in
   [peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation).
 

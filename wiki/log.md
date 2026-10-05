@@ -191,3 +191,9 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Notes: Suggested budgets at the designer's request (model ≤ 1 MB, ≤ 20k
   triangles, 1024 px texture; species ≤ 1.2 MB; 1 GB client cache). Q-016 stays
   open until approved. Added STK-012, STK-013 (proposed).
+
+## [2026-10-05] design | Asset budgets and individual-variation details approved
+- Source: raw/conversations/2026-10-05-approvals-q016-q038.md
+- Changed: tech/tech-stack.md, peerlings/peerling-species.md,
+  gameplay/pvp-battles.md, decisions/D-0014, open-questions.md, index.md
+- Notes: Resolved Q-016 and Q-038. No open questions remain.
