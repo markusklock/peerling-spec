@@ -34,7 +34,7 @@ the possibility to create a new one
 
 | Rule | Value | Why |
 |------|-------|-----|
-| Location | One shrine, at the spawn in the world centre | Everyone knows where it is; returning to the busy centre is social |
+| Location | One shrine, a glowing stone circle in the [spawn hub](../world/procedural-generation.md#spawn-hub) | Everyone knows where it is; returning to the busy centre is social |
 | Offering | 3 **verified** Peerlings of **3 different primary types**, each **level 20 or higher** | Takes real play: levelling or exploring to about 750 m out, and catching across different biomes. Turns creation into a mid-game goal rather than a quick repeat |
 | What happens to the offering | The 3 Peerlings are **released**: removed from the player's collection by a signed transfer to `released` in the [transfer log](../glossary.md#transfer-log) | Makes it a real sacrifice, and stops the same Peerlings from being offered twice |
 | Reward | One run of the [creation pipeline](../peerlings/creation-pipeline.md); the new Peerling joins the player's collection | |

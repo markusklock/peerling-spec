@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-05-world-details.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
@@ -58,6 +59,20 @@ updated: 2026-10-05
   match the world instead of looking pasted in.
 - Player characters use the same stylized look.
 
+## Environment art
+
+[accepted] Trees, rocks, buildings, ruins, beacons and other world props are a
+**hand-made low-poly kit** shipped with the game app, one set per biome, in the
+same colorful, stylized look ([D-0017](../decisions/D-0017-world-features.md)). Only the Peerlings are
+AI-generated.
+
+## Day, night and weather
+
+[accepted] The shared day/night cycle and per-biome weather
+([procedural-generation § Day and night](procedural-generation.md#day-and-night))
+are shown with lighting, sky color, fog and particle effects (rain, snow, ash,
+sparkles). At night, rest points, landmarks and glowing foliage light up.
+
 ## Requirements
 
 - **VIS-001** [accepted] The world MUST be rendered in 3D and viewed from a top-down camera.
@@ -65,6 +80,7 @@ updated: 2026-10-05
 - **VIS-003** [accepted] The exploration camera MUST be tilted (about 55° below the horizon), fixed north-up, and follow the player.
 - **VIS-004** [accepted] The image prompt's house style MUST match the world's colorful, stylized look.
 - **VIS-005** [accepted] Each biome MUST have a visually distinct dominant color palette.
+- **VIS-006** [accepted] World props MUST come from a hand-made low-poly kit per biome, shipped with the game app.
 
 ## See also
 

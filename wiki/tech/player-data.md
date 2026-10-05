@@ -21,6 +21,7 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-05-phone-backup-approved.md
+  - raw/conversations/2026-10-05-world-details.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -70,6 +71,7 @@ refers to it by CID.
 | Created species | CID(s) of the species this player created | [accepted] |
 | Peerdex | Species seen and species caught (CIDs) | [accepted] |
 | Position | Last position and facing in the world | [accepted] |
+| Map | Chunks the player has explored, as a bit set ([exploration § Map](../gameplay/exploration.md#map)) | [proposed] |
 | Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [accepted] No inventory at all in the first version, so this part is empty | [accepted] |
 
 Not in the save: the identity **private key** (stays on the device; restored
@@ -290,6 +292,7 @@ without the server, and the server can check everything afterwards.
     "randomness": "<32 bytes, hex>",
     "drandSignature": "<hex>",
     "registryHeight": 1842,
+    "generator": { "version": 2, "fromEpoch": 5873400 },
     "serverSignature": "<hex>"
   }
   ```
@@ -304,6 +307,8 @@ without the server, and the server can check everything afterwards.
   directly. Fallback if drand is unavailable or not wanted: the server
   generates the value itself, and players trust it like they trust the
   registry.
+- `generator` announces the current world-generator version and the epoch it
+  takes effect ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)).
 - `registryHeight` fixes which species are eligible during that epoch (see
   *Registry state* below).
 - Distribution: live on the pubsub topic `peerlings/v1/epoch`

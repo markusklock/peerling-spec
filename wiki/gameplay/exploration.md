@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-2.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
+  - raw/conversations/2026-10-05-world-details.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -79,6 +80,18 @@ never does. Each biome's foliage is listed in
 - Foliage rustles visibly when the player walks through it, so players learn
   that grass means Peerlings.
 
+## Map
+
+[accepted] A **minimap** and a full **world map** that fill in as the player
+explores ([D-0017](../decisions/D-0017-world-features.md)). Discovered rest points and landmarks are marked
+by name.
+
+[proposed] The minimap sits in a screen corner; the full map opens with the
+**M** key. Exploration is tracked per chunk (32 × 32 tiles): a chunk is
+revealed once the player has been in it, and the set of revealed chunks is
+stored in the save ([player-data § Save contents](../tech/player-data.md#save-contents)).
+The spawn hub and the paths leading out of it are revealed from the start.
+
 ## Healing and rest points
 
 [accepted] There are no healing items. A Peerling's HP carries over between
@@ -94,7 +107,8 @@ battles and is restored at **rest points**:
 ([STK-010](../tech/tech-stack.md#requirements)), so controls are designed for
 keyboard and mouse.
 
-To be specified: points of interest, and the look of rest points.
+Points of interest, landmarks, paths and the spawn hub are defined in
+[procedural-generation](../world/procedural-generation.md#points-of-interest).
 
 ## Requirements
 
@@ -104,7 +118,9 @@ To be specified: points of interest, and the look of rest points.
 - **EXP-004** [accepted] The player MUST move on an invisible grid, one tile at a time.
 - **EXP-005** [accepted] Wild encounters MUST only be triggered by walking through biome-specific encounter foliage.
 - **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle.
+- **EXP-007** [accepted] The game MUST have a minimap and a world map that reveal explored areas and mark discovered rest points and landmarks.
 
 ## Open questions
 
-_None at the moment._
+[Q-046](../open-questions.md#q-046)
+

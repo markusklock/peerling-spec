@@ -22,7 +22,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [core-loop](gameplay/core-loop.md) | draft | — | Explore → encounter → battle → catch; player motivations |
 | [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates a character and creates or chooses a starter Peerling |
 | [player-character](gameplay/player-character.md) | stub | PLR | Avatar options (recommended: parts-based customizer), identity keypair |
-| [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, encounters in foliage, rest points and healing |
+| [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, map, encounters in foliage, rest points and healing |
 | [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings: weights, 5 ordered candidates, wild levels, prefetching |
 | [battle](gameplay/battle.md) | draft | BTL | Turns, action order, move mechanics, stat stages, damage model, XP, RNG, battle screen |
 | [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
@@ -49,8 +49,8 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
-| [procedural-generation](world/procedural-generation.md) | draft | WGN | One shared 4 × 4 km seeded world on a tile grid; 12 biomes with their foliage and layout |
-| [visual-style](world/visual-style.md) | draft | VIS | Top-down tilted camera, battle camera, colorful stylized look |
+| [procedural-generation](world/procedural-generation.md) | draft | WGN | Shared 4 × 4 km world: tiles, 12 biomes, terrain, spawn hub, landmarks, paths, day/night, weather, generator updates |
+| [visual-style](world/visual-style.md) | draft | VIS | Top-down tilted camera, battle camera, colorful stylized look, environment art kit |
 
 ## Tech
 
@@ -85,13 +85,14 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
 | [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
 | [D-0015](decisions/D-0015-pvp-level-modes.md) | accepted | PvP level modes: Fair or Real levels |
-| [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, device linking and a world feed |
+| [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, phone backup and a world feed |
+| [D-0017](decisions/D-0017-world-features.md) | accepted | World features: spawn hub, landmarks, map, day/night, weather |
 
 ## Registered requirement prefixes
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, FED, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0017. Next free question ID: Q-046.
+D-0018. Next free question ID: Q-047.
 
 ## Sources
 
@@ -121,3 +122,4 @@ D-0017. Next free question ID: Q-046.
 | [2026-10-05-showcase-features](../raw/conversations/2026-10-05-showcase-features.md) | 2026-10-05 | Adopted spectating, shareable links, device linking and a world feed |
 | [2026-10-05-phone-backup](../raw/conversations/2026-10-05-phone-backup.md) | 2026-10-05 | Spectating, sharing and world feed details approved; device linking replaced by phone backup via QR |
 | [2026-10-05-phone-backup-approved](../raw/conversations/2026-10-05-phone-backup-approved.md) | 2026-10-05 | Phone backup and one-computer-at-a-time rule approved |
+| [2026-10-05-world-details](../raw/conversations/2026-10-05-world-details.md) | 2026-10-05 | Spawn hub, landmarks, paths, map, hand-made art kit, day/night, weather, generator updates |

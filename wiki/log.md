@@ -295,3 +295,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Changed: tech/player-data.md, tech/tech-stack.md, decisions/D-0016,
   open-questions.md, index.md
 - Notes: Resolved Q-045 (SAVE-023, SAVE-024 accepted). No open questions remain.
+
+## [2026-10-05] design | World details: hub, landmarks, map, day/night, weather
+- Source: raw/conversations/2026-10-05-world-details.md
+- Changed: decisions/D-0017 (new), D-0016 (title), world/procedural-generation.md,
+  world/visual-style.md, gameplay/exploration.md, gameplay/creation-shrine.md,
+  tech/player-data.md, glossary.md, open-questions.md, index.md
+- Notes: Accepted the spawn hub (gallery, network monument), rest-point beacons,
+  named landmarks, paths and signposts, map, hand-made environment art kit,
+  shared day/night and weather, and the generator-update plan (D-0017). Epoch
+  records gain a `generator` field. Smaller numbers proposed (Q-046). Added
+  WGN-012…016, EXP-007, VIS-006.

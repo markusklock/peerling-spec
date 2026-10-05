@@ -17,6 +17,20 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
+### Q-046
+**World details: approve the smaller numbers?**
+- Affects: [procedural-generation](world/procedural-generation.md), [exploration § Map](gameplay/exploration.md#map), [player-data § Save contents](tech/player-data.md#save-contents)
+- Context: The world features were accepted (D-0017); a few details were filled
+  in by the LLM.
+- Proposal: 12 gallery pedestals; the network monument's branches = connected
+  peers, leaves = stored Peerlings; a 30 × 30-tile paved hub; landmark names
+  from per-biome word lists, unique in the world; paths as a minimum spanning
+  tree plus extra links; a 2-hour day; weather changing every 15 minutes with
+  the weather states listed per biome; day/night and weather purely visual;
+  minimap in a corner, full map on M, exploration tracked per chunk in the
+  save.
+- Raised: 2026-10-05
+
 ## Resolved
 
 ### Q-002

@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-05-world-details.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -27,7 +28,8 @@ updated: 2026-10-05
 # Procedural World Generation
 
 > How the world the player explores is generated: one shared, finite world
-> built from a global seed, divided into 12 biomes, one per type.
+> built from a global seed, divided into 12 biomes, one per type, with a spawn
+> hub, landmarks, paths, a shared day/night cycle and weather.
 
 [accepted] The world is procedurally generated. [accepted] There is one shared
 world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)).
@@ -119,8 +121,118 @@ a glance; [visual-style](visual-style.md)):
 - Every biome area contains one **rest point**
   ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
 
-To be specified: terrain shapes and props per biome, landmarks, and how a generator change is
-rolled out without splitting players into different worlds.
+## Terrain and props
+
+[accepted] ([D-0017](../decisions/D-0017-world-features.md))
+- **Height** comes from noise with a different character per biome: gentle
+  rolling ground in Plains and Crystal Meadows, mesas and canyons in the
+  Badlands, steep cliffs and ridges in the Windy Peaks, low wetlands in
+  Lakeland and the Haunted Marsh, a cone with lava channels in Volcano areas.
+  Heights are whole levels per tile, with cliffs between tiles
+  ([Tiles](#tiles)).
+- **Border:** the world is surrounded by an ocean ring, with mountains in
+  places.
+- **Props** (trees, rocks, ruins, crystals, scrap) come from a per-biome kit
+  and are placed deterministically from the world seed. The art is a
+  hand-made low-poly kit shipped with the game app
+  ([visual-style](visual-style.md#environment-art)).
+
+## Spawn hub
+
+[accepted] The centre of the world, where everyone starts, is the game's social
+and showcase heart ([D-0017](../decisions/D-0017-world-features.md)):
+- **Creation Shrine:** a glowing stone circle ([creation-shrine](../gameplay/creation-shrine.md)).
+- **Rest point.**
+- **New Peerlings gallery:** pedestals showing the most recently published
+  Peerlings as 3D models, loaded live from IPFS and updated as new ones appear.
+  Clicking one opens its card ([sharing](../gameplay/sharing.md)).
+  [proposed] 12 pedestals, newest first.
+- **Network monument:** a crystal tree whose glowing branches show live network
+  activity. [proposed] Each glowing branch is a peer the player is connected
+  to; the number of leaves follows how many Peerlings this computer is storing
+  and serving; it pulses when content is served to someone.
+
+[proposed] The hub is about 30 × 30 tiles of paved ground with no foliage, so
+nobody meets wild Peerlings in the crowd.
+
+## Points of interest
+
+[accepted] ([D-0017](../decisions/D-0017-world-features.md))
+- **Rest points:** one per biome area ([WGN-009](#requirements)), all with the
+  same recognisable silhouette, a glowing lantern beacon, dressed for their
+  biome (snow-covered in the Tundra, vine-wrapped in the Forest, rusted in
+  Scrapyard Ruins…). They heal the team and set the respawn point
+  ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
+- **Landmarks:** one large, unique landmark per biome area (a crater, giant
+  waterfall, ancient crystal, wrecked machine, haunted tower…), built from the
+  biome's kit and placed by the seed. Each has a **generated name** (e.g.
+  "Ember Crater", "Whispering Falls") so players can say where to meet.
+  [proposed] Names are built deterministically from per-biome word lists (an
+  adjective-like part and a feature noun, e.g. *Whispering* + *Falls*), and are
+  unique within the world.
+- **Paths and bridges:** paths connect the rest points and the spawn hub, with
+  bridges where they cross rivers. They mostly avoid foliage, so players can
+  travel without constant encounters. [proposed] The path network links each
+  rest point to its nearest neighbours (a minimum spanning tree plus a few
+  extra links so there are loops), and paths may cross foliage only where no
+  other route exists.
+- **Signposts:** at path junctions and area borders, showing the area's landmark
+  name, biome and level range (e.g. *"Gloomwood: wild Peerlings level 22–26"*).
+
+## Day and night
+
+[accepted] A shared day/night cycle driven by the epoch clock, so every player
+sees the same time of day ([D-0017](../decisions/D-0017-world-features.md)).
+
+[proposed] One in-game day lasts 24 epochs (2 hours). The time of day is
+computed from Unix time, so it is smooth and identical everywhere without any
+messages. Night darkens the scene and lights up rest points, landmarks and
+glowing foliage. It is purely visual in v1 (no effect on encounters).
+
+## Weather
+
+[accepted] Weather per biome, the same for every player ([D-0017](../decisions/D-0017-world-features.md)).
+
+[proposed] Each biome's weather changes every 3 epochs (15 minutes). The next
+state is chosen from the epoch record's randomness (drand) and the biome, so
+all clients agree, including while the server is offline (client-derived epoch
+records, [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
+Purely visual in v1.
+
+| Biome | Weather states [proposed] |
+|-------|----------------|
+| Plains | Clear, cloudy, light rain |
+| Volcano | Clear, ash fall, ember storm |
+| Lakeland | Clear, rain, morning fog |
+| Forest | Clear, rain, mist |
+| Storm Highlands | Clear, thunderstorm |
+| Badlands | Clear, heat haze, sandstorm |
+| Windy Peaks | Clear, strong wind, low clouds |
+| Tundra | Clear, snowfall, blizzard |
+| Scrapyard Ruins | Overcast, rust-colored rain |
+| Crystal Meadows | Clear, sparkle shower, aurora (night only) |
+| Gloomwood | Mist, thick fog |
+| Haunted Marsh | Fog, will-o'-wisp swarms |
+
+## Generator updates
+
+[accepted] How the world generator is updated without splitting players into
+different worlds ([D-0017](../decisions/D-0017-world-features.md)):
+- **Versions.** Each world-generator version has a version number. Players on
+  different versions don't see each other (WGN-004).
+- **A shared switch time.** An update is announced in the epoch records as
+  "from epoch X, the world uses generator version N"
+  ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
+  Every client switches at that epoch; a client without the new version asks
+  the player to reload, and the installed app updates itself.
+- **Old versions are kept.** Verifying a catch needs the world as it was at
+  the catch's epoch (was that tile foliage?), so the game app contains every
+  past generator version, and verifiers use the one that was active.
+- **Nobody gets stuck.** A player standing on a tile that became blocked is
+  moved to the nearest walkable tile. A last rest point that no longer exists
+  becomes the nearest one.
+- **Prefer additive changes:** new outer rings and new landmarks rather than
+  reshaping existing land, so players' knowledge of the world stays valid.
 
 ## Requirements
 
@@ -135,7 +247,13 @@ rolled out without splitting players into different worlds.
 - **WGN-009** [accepted] Every biome area MUST contain one rest point.
 - **WGN-010** [accepted] The world MUST be a grid of tiles, and each biome MUST have its own encounter foliage on which wild encounters happen.
 - **WGN-011** [accepted] Tiles MUST be 2 m × 2 m and of one kind (ground, foliage, water, blocked) with a height level; a chunk MUST be 32 × 32 tiles.
+- **WGN-012** [accepted] The world MUST have a spawn hub with the Creation Shrine, a rest point, a New Peerlings gallery loaded live from IPFS, and a network monument showing live network activity.
+- **WGN-013** [accepted] Every biome area MUST have one landmark with a generated name; rest points MUST share one silhouette dressed per biome.
+- **WGN-014** [accepted] Paths MUST connect rest points and the spawn hub, with bridges over water and signposts showing area name, biome and level range.
+- **WGN-015** [accepted] The day/night cycle and per-biome weather MUST be the same for all players, derived from time and the epoch records. [proposed] A day lasts 24 epochs; weather changes every 3 epochs; both are purely visual in v1.
+- **WGN-016** [accepted] Generator updates MUST switch at an epoch announced in the epoch records, and clients MUST keep all past generator versions for verification.
 
 ## Open questions
 
-_None at the moment._
+[Q-046](../open-questions.md#q-046)
+

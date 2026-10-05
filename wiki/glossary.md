@@ -106,6 +106,11 @@ The InterPlanetary Name System: a fixed name, derived from a key, that points to
 changing IPFS content through signed records. Player profiles use it. See
 [sharing](gameplay/sharing.md).
 
+### Landmark
+A large, unique feature with a generated name in each biome area (e.g.
+"Whispering Falls"), used for orientation. See
+[procedural-generation § Points of interest](world/procedural-generation.md#points-of-interest).
+
 ### Move
 An attack or action a Peerling can use in battle. Every move is an instance of a
 [move template](#move-template). See [moves](peerlings/moves.md).
@@ -185,6 +190,11 @@ for presence topics in multiplayer. See
 The OrbitDB database that lists every published Peerling species. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
+### Rest point
+A beacon in every biome area that fully heals the player's team and becomes
+their respawn point. See
+[exploration § Healing and rest points](gameplay/exploration.md#healing-and-rest-points).
+
 ### Save log
 A player's save: a per-player OrbitDB event log, written only by that
 player and replicated by the server. See [player-data](tech/player-data.md#save-log).
@@ -201,6 +211,11 @@ A rare (1 in 500), purely cosmetic color variant of an individual Peerling. See
 ### Signature move
 [accepted] The move in a species' *signature* slot: its characteristic special
 attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
+
+### Spawn hub
+The centre of the world, where every player starts: Creation Shrine, rest
+point, New Peerlings gallery and network monument. See
+[procedural-generation § Spawn hub](world/procedural-generation.md#spawn-hub).
 
 ### Species
 A Peerling design: the immutable, content-addressed definition (name,

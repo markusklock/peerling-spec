@@ -1,5 +1,5 @@
 ---
-title: "D-0016: Spectating, shareable links, device linking and a world feed"
+title: "D-0016: Spectating, shareable links, phone backup and a world feed"
 type: decision
 status: accepted
 tags: [showcase, libp2p, ipns, pubsub, social]
@@ -16,7 +16,7 @@ related:
 updated: 2026-10-05
 ---
 
-# D-0016: Spectating, shareable links, device linking and a world feed
+# D-0016: Spectating, shareable links, phone backup and a world feed
 
 **Status:** accepted (2026-10-05); details of 1, 2 and 4 approved the same day
 ([Q-044](../open-questions.md#q-044)); phone backup details approved the same day
