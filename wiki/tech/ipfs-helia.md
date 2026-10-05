@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-tech-stack-2.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-05-asset-budgets-request.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
@@ -19,7 +20,7 @@ related:
   - wiki/tech/realtime-networking.md
   - wiki/tech/tech-stack.md
   - wiki/decisions/D-0011-modern-web-platform-first.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Browser IPFS Node (Helia)
@@ -97,7 +98,7 @@ library defaults:
 - **Prefetching:** the client fetches assets it will likely need soon (e.g.
   species likely to appear in nearby biomes) ahead of time, so encounters don't
   wait on the network. See [encounters](../gameplay/encounters.md).
-- **Eviction:** cache size is bounded; least-recently-used content is evicted,
+- **Eviction:** cache size is bounded ([tech-stack § Asset budgets](tech-stack.md#asset-budgets)); least-recently-used content is evicted,
   except the player's own species and the species of Peerlings in their
   collection.
 

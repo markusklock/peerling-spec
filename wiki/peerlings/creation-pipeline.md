@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-asset-budgets-request.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -23,7 +24,7 @@ related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
   - wiki/decisions/D-0007-players-publish-assets.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Peerling Creation Pipeline
@@ -158,7 +159,7 @@ procedural animation ([battle § Presentation](../gameplay/battle.md#presentatio
 2. Image-to-3D generation → textured mesh.
 3. Post-processing: normalize scale (fits a unit bounding box), orientation
    (faces +Z, up is +Y), place the lowest point at y = 0, decimate and compress
-   to the asset budget ([Q-016](../open-questions.md#q-016)), export as binary
+   to the [asset budget](../tech/tech-stack.md#asset-budgets), export as binary
    glTF (`.glb`).
 4. Render a small thumbnail of the model for lists and menus.
 

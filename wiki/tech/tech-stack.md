@@ -7,13 +7,14 @@ tags: [tech, platform, networking, rendering]
 sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-tech-stack-2.md
+  - raw/conversations/2026-10-05-asset-budgets-request.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/generation-server.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Tech Stack
@@ -108,8 +109,49 @@ services (OrbitDB) is an acceptable setup.
 - **3D models:** binary glTF 2.0 (`.glb`) with meshopt geometry compression
   (`EXT_meshopt_compression`) and KTX2/Basis Universal textures
   (`KHR_texture_basisu`). The files are smaller to share peer-to-peer, and the
-  textures stay compressed on the GPU. Budgets: [Q-016](../open-questions.md#q-016).
+  textures stay compressed on the GPU. Budgets: [Asset budgets](#asset-budgets).
 - **2D images and thumbnails:** AVIF.
+
+## Asset budgets
+
+[proposed] Suggested 2026-10-05 at the designer's request
+([Q-016](../open-questions.md#q-016)).
+
+**What drives the numbers:**
+- Every wild encounter prefetches up to 5 candidate species, and a PvP battle
+  downloads the opponent's team of 4, all peer-to-peer. Small files mean
+  encounters start instantly and more players can serve each species.
+- On screen, Peerlings are small: about 30–40 m of world is visible while
+  exploring, and even the closer battle camera shows a Peerling at roughly
+  300–400 px tall on a 1080p screen ([visual-style](../world/visual-style.md#camera)).
+- The style is colorful and stylized, not photorealistic, so fine surface
+  detail (normal maps, high-res textures) adds little.
+
+| Asset | Budget | Typical | Notes |
+|-------|--------|---------|-------|
+| 3D model (`.glb`) | **≤ 1 MB** | ~500 KB | Meshopt-compressed geometry, KTX2 texture |
+| Triangles | **≤ 20,000** | 10,000–15,000 | Image-to-3D output is decimated to fit ([CRE-013](../peerlings/creation-pipeline.md#requirements)) |
+| Materials and textures | **1 material, 1 base-color texture, 1024 × 1024** | | No normal or roughness maps; the stylized shading doesn't need them. Power-of-two size, mipmapped |
+| 2D image (species card) | **≤ 150 KB**, 1024 × 1024 AVIF | ~80 KB | The image the player accepted in creation |
+| Thumbnail | **≤ 15 KB**, 256 × 256 AVIF | ~8 KB | Rendered from the 3D model; used in lists and the registry |
+| Species record (DAG-CBOR) | **≤ 16 KB** | ~4 KB | Lore and descriptions have length limits |
+| Registry entry | **≤ 1 KB** | ~400 B | |
+| **Whole species** | **≤ 1.2 MB** | **~0.6 MB** | |
+
+What that means in practice:
+- An encounter whose 5 candidates are all uncached costs about 3 MB at
+  worst; most species near the spawn will already be cached.
+- A PvP battle against an unknown team costs about 2.5 MB at worst.
+- **Client cache:** [proposed] the browser keeps up to **1 GB** of game content
+  (roughly 1,500 species at typical size) and evicts the least recently used
+  beyond that, except the player's own creations and collection
+  ([NODE-004](ipfs-helia.md#requirements)).
+- **Server storage:** about 0.6 MB per species, so even 100,000 species are
+  about 60 GB pinned.
+
+**Enforcement:** the server makes every asset fit before publishing. Clients
+refuse to download anything above the budget, which also protects players from
+oversized files.
 
 ## Requirements
 
@@ -124,6 +166,8 @@ services (OrbitDB) is an acceptable setup.
 - **STK-009** [accepted] 3D models MUST be glTF 2.0 binary with meshopt compression and KTX2 textures; 2D images MUST be AVIF.
 - **STK-010** [accepted] The game MUST target current desktop versions of Chrome/Edge, Firefox and Safari; mobile is not a target.
 - **STK-011** [accepted] The client MUST be written in TypeScript and be installable as a PWA.
+- **STK-012** [proposed] Every species asset MUST fit the [asset budgets](#asset-budgets); clients MUST refuse content that exceeds them.
+- **STK-013** [proposed] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations and collection.
 
 ## Open questions
 

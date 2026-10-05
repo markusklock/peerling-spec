@@ -18,15 +18,15 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 ## Open
 
 ### Q-016
-**Asset budgets: maximum model size, texture resolution, image size.**
-- Affects: [creation-pipeline](peerlings/creation-pipeline.md), [peerling-species](peerlings/peerling-species.md), [ipfs-helia](tech/ipfs-helia.md)
-- Context: Every encounter downloads a model peer-to-peer; size drives load
-  time.
-- Proposal: GLB ≤ 2 MB with mesh compression, textures ≤ 1024 px, a small
-  thumbnail for lists.
-- Raised: 2026-10-03
-
+**Asset budgets: approve the suggested sizes?**
+- Affects: [tech-stack § Asset budgets](tech/tech-stack.md#asset-budgets), [creation-pipeline](peerlings/creation-pipeline.md), [ipfs-helia](tech/ipfs-helia.md)
+- Context: Every encounter prefetches up to 5 candidate models peer-to-peer;
+  size drives load time and how widely species spread.
 - 2026-10-04: deferred by the designer ("TBD").
+- 2026-10-05: suggested at the designer's request: model ≤ 1 MB (≤ 20,000
+  triangles, one 1024 px base-color texture), card image ≤ 150 KB, thumbnail
+  ≤ 15 KB, whole species ≤ 1.2 MB (typically ~0.6 MB), client cache 1 GB.
+- Raised: 2026-10-03
 ### Q-038
 **Individual variation details: approve?**
 - Affects: [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation), [pvp-battles](gameplay/pvp-battles.md), [trading](gameplay/trading.md)

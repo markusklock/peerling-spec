@@ -183,3 +183,11 @@ List all entries with `grep "^## \[" wiki/log.md`.
   level, traits and shimmer belong to the encounter, not the candidate, so
   candidate choice can't be used to chase them. Opened Q-038 (rarity 1 in 500,
   visible traits, traits in PvP). Added SPC-012…014, BTL-008, ENC-008.
+
+## [2026-10-05] design | Asset budget suggestions (Q-016)
+- Source: raw/conversations/2026-10-05-asset-budgets-request.md
+- Changed: tech/tech-stack.md (new Asset budgets section), peerlings/creation-pipeline.md,
+  tech/ipfs-helia.md, open-questions.md, index.md
+- Notes: Suggested budgets at the designer's request (model ≤ 1 MB, ≤ 20k
+  triangles, 1024 px texture; species ≤ 1.2 MB; 1 GB client cache). Q-016 stays
+  open until approved. Added STK-012, STK-013 (proposed).

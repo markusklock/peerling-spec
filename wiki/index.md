@@ -59,7 +59,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, key recovery, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
-| [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats |
+| [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
 
@@ -104,3 +104,4 @@ D-0015. Next free question ID: Q-039.
 | [2026-10-04-answers-round-8](../raw/conversations/2026-10-04-answers-round-8.md) | 2026-10-04 | Shrine, character creation, multiplayer scale, encounter candidates approved; brainstorm on decentralizing registry writes and trades |
 | [2026-10-04-decentralize-level-3](../raw/conversations/2026-10-04-decentralize-level-3.md) | 2026-10-04 | Level 3 decentralization accepted (D-0013); question about individual variation of wild Peerlings |
 | [2026-10-05-individual-variation](../raw/conversations/2026-10-05-individual-variation.md) | 2026-10-05 | Individual variation: ±10% stat traits and rare color variants (options b and d) |
+| [2026-10-05-asset-budgets-request](../raw/conversations/2026-10-05-asset-budgets-request.md) | 2026-10-05 | Designer asked for asset budget suggestions (Q-016) and for Q-038 to be explained |
