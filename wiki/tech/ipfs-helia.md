@@ -116,7 +116,7 @@ library defaults:
 
 ## Open questions
 
-[Q-016](../open-questions.md#q-016)
+_None at the moment._
 
 ## See also
 
