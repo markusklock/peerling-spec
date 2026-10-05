@@ -261,3 +261,9 @@ List all entries with `grep "^## \[" wiki/log.md`.
   served back via a `save-wanted` pubsub request; plus the save snapshot in the
   backup file (Q-043, SAVE-020/021). Answered storage persistence; proposed
   requesting persistent storage (STK-014).
+
+## [2026-10-05] design | Peer save backups approved
+- Source: raw/conversations/2026-10-05-peer-save-backups-approved.md
+- Changed: tech/player-data.md, tech/tech-stack.md, open-questions.md, index.md
+- Notes: Resolved Q-043 (SAVE-020, SAVE-021, STK-014 accepted). No open
+  questions remain.
