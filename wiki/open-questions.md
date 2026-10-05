@@ -17,6 +17,17 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
+### Q-041
+**Unique Peerling names: approve the design?**
+- Affects: [creation-pipeline § Final review](peerlings/creation-pipeline.md#final-review), [orbitdb-registry](tech/orbitdb-registry.md)
+- Context: The designer wants names to be unique, to avoid confusion (e.g. 50
+  Peerlings called "Pikachu").
+- Proposal: the server enforces uniqueness on a normalized form (case,
+  accents, spaces, punctuation and look-alike letters ignored), with a live
+  availability check, a 30-minute reservation, and names staying taken even
+  after delisting. Near-identical names ("Pikachu2") stay allowed.
+- Raised: 2026-10-05
+
 ## Resolved
 
 ### Q-002

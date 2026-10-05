@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -20,7 +21,7 @@ related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Generation Server
@@ -38,15 +39,15 @@ updated: 2026-10-04
 | Run an image-to-3D generator, e.g. TRELLIS.2 | [accepted] (model choice open) |
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
-| Sign species records (attestation) | [proposed] |
+| Sign species records (attestation) | [accepted] |
 | Replicate and pin every player's save log | [accepted] ([player-data](player-data.md)) |
 | Replicate save logs and replay catches for the species stats (optional; anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
 | Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [accepted] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
-| Expose a creation API with a job queue | [proposed] |
-| Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [proposed] ([player-data](player-data.md#starters-and-shrine-creations)) |
+| Expose a creation API with a job queue | [accepted] |
+| Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [accepted] ([player-data](player-data.md#starters-and-shrine-creations)) |
 | Maintain species stats and send creator notifications | [proposed] ([creator-feedback](../gameplay/creator-feedback.md)) |
-| Validate generated battle data | [proposed] |
-| Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [proposed] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
+| Validate generated battle data | [accepted] |
+| Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [accepted] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
 
 The specific model names are examples from the designer's brief. The spec
 treats each model as a replaceable component behind a stage interface.
@@ -61,7 +62,7 @@ it generated, is canonical in
 
 ## Capacity and fairness
 
-[proposed] GPU time is the scarce resource. The creation API:
+[accepted] GPU time is the scarce resource. The creation API:
 - runs GPU jobs through a queue and reports queue position to the client;
 - rate-limits per player identity: the image-generation cooldown
   ([CRE-021](../peerlings/creation-pipeline.md#requirements)) and the Creation
@@ -72,10 +73,10 @@ it generated, is canonical in
 
 - **SRV-001** [accepted] The server MUST host the concept LLM, image generator and image-to-3D generator itself.
 - **SRV-002** [accepted] The server MUST pin every game asset and species record so each CID is always available from at least one node.
-- **SRV-003** [proposed] Each AI model MUST be behind a stage interface so it can be swapped without changing the species record format.
-- **SRV-004** [proposed] GPU work MUST go through a job queue; the client MUST be able to see job status and queue position.
-- **SRV-005** [proposed] The server MUST rate-limit creation requests per player identity.
-- **SRV-006** [proposed] The server MUST run a dual-stack (IPv6 + IPv4) libp2p node reachable from browsers over WebTransport and WebRTC-direct ([tech-stack](tech-stack.md#networking)), acting as bootstrap peer and circuit relay.
+- **SRV-003** [accepted] Each AI model MUST be behind a stage interface so it can be swapped without changing the species record format.
+- **SRV-004** [accepted] GPU work MUST go through a job queue; the client MUST be able to see job status and queue position.
+- **SRV-005** [accepted] The server MUST rate-limit creation requests per player identity.
+- **SRV-006** [accepted] The server MUST run a dual-stack (IPv6 + IPv4) libp2p node reachable from browsers over WebTransport and WebRTC-direct ([tech-stack](tech-stack.md#networking)), acting as bootstrap peer and circuit relay.
 
 ## Open questions
 

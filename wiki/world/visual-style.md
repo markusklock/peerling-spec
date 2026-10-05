@@ -7,12 +7,13 @@ tags: [world, presentation, camera, art]
 sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/battle.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Camera and Visual Style
@@ -61,7 +62,7 @@ updated: 2026-10-04
 - **VIS-001** [accepted] The world MUST be rendered in 3D and viewed from a top-down camera.
 - **VIS-002** [accepted] The visual style MUST be colorful.
 - **VIS-003** [proposed] The exploration camera MUST be tilted (about 55° below the horizon), fixed north-up, and follow the player.
-- **VIS-004** [proposed] The image prompt's house style MUST match the world's colorful, stylized look.
+- **VIS-004** [accepted] The image prompt's house style MUST match the world's colorful, stylized look.
 - **VIS-005** [accepted] Each biome MUST have a visually distinct dominant color palette.
 
 ## See also

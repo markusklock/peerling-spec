@@ -218,3 +218,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Notes: Resolved Q-039 and Q-040. PvP challenges now choose Fair (level 50,
   default) or Real levels (unverified, opt-in). Removed PVP-007; added PVP-010.
   No open questions remain.
+
+## [2026-10-05] design | Proposal review part 1; unique names proposed
+- Source: raw/conversations/2026-10-05-proposal-review-1.md
+- Changed: 30+ pages (136 [proposed] markers flipped to [accepted]),
+  peerlings/creation-pipeline.md, glossary.md, decisions/D-0005, D-0007, D-0012,
+  open-questions.md, index.md
+- Notes: Approved all technical proposals and design items 1–4 (house art style,
+  300-character wishes, concept contents, 30 s image cooldown). Item 5 reopened:
+  proposed unique, normalized species names (Q-041, CRE-025). Items 6–20 still
+  pending. Fixed stale notes (D-0005, D-0007, D-0012, Region definition,
+  CRE-013 link).

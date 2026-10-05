@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-approvals-q016-q038.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -34,7 +35,7 @@ updated: 2026-10-05
 ## Species record
 
 [accepted] The species data (description, type, attacks, …) and its 3D model
-are stored on IPFS. [proposed] The species record is encoded as **DAG-CBOR**,
+are stored on IPFS. [accepted] The species record is encoded as **DAG-CBOR**,
 so the same data always produces the same bytes and therefore the same CID
 (the server and the player's browser must agree on the CID during
 [publishing](creation-pipeline.md#stage-7--publish)). Asset references are
@@ -100,7 +101,7 @@ no species has a useless stat or an extreme one.
 | Maximum per stat | **130** | Allows a clear specialty (a 130 stat is ~1.6× average) without making the other three stats useless |
 | Step | **5** | Readable numbers; fewer near-identical spreads |
 
-[proposed] Example spreads (HP / Attack / Defense / Speed), as guidance for
+[accepted] Example spreads (HP / Attack / Defense / Speed), as guidance for
 the LLM prompt:
 
 | Archetype | HP | Atk | Def | Spd |
@@ -120,7 +121,7 @@ step.
 
 [accepted] An instance is one individual Peerling owned by a player, stored
 in the player's [save](../tech/player-data.md#save-contents) (not on the shared
-registry). [proposed] Illustrative shape:
+registry). [accepted] Illustrative shape:
 
 ```json
 {
@@ -184,7 +185,7 @@ worth up to ±10%. [accepted] Details (approved 2026-10-05):
 
 ### Where the randomness comes from
 
-[proposed] For wild Peerlings, traits and the shimmer roll come from the
+[accepted] For wild Peerlings, traits and the shimmer roll come from the
 encounter seed, in the fixed order defined in
 [encounters § Wild Peerling generation](../gameplay/encounters.md#wild-peerling-generation),
 so they are checked when the catch is replayed. For starters and Creation Shrine
@@ -195,18 +196,18 @@ Peerlings, the server draws them and includes them in the origin attestation
 
 - **SPC-001** [accepted] A species' description, type, attacks and 3D model MUST be stored on IPFS.
 - **SPC-002** [accepted] A species MUST be identified by the CID of its species record.
-- **SPC-003** [proposed] A species record MUST reference its image, 3D model and thumbnail by CID.
-- **SPC-004** [proposed] A species record MUST carry a `schema` version string; clients MUST ignore records with unknown major versions rather than fail.
-- **SPC-005** [proposed] A species' types MUST satisfy TYP-001 and TYP-002 in [types](types.md#requirements).
-- **SPC-006** [proposed] A species' move set MUST satisfy the move-set rules in [moves](moves.md#requirements).
+- **SPC-003** [accepted] A species record MUST reference its image, 3D model and thumbnail by CID.
+- **SPC-004** [accepted] A species record MUST carry a `schema` version string; clients MUST ignore records with unknown major versions rather than fail.
+- **SPC-005** [accepted] A species' types MUST satisfy TYP-001 and TYP-002 in [types](types.md#requirements).
+- **SPC-006** [accepted] A species' move set MUST satisfy the move-set rules in [moves](moves.md#requirements).
 - **SPC-007** [accepted] Every species MUST have the same base-stat total (320), and each stat MUST lie within 40–130 in steps of 5.
-- **SPC-008** [proposed] Clients MUST verify the attestation of a species record before using it.
+- **SPC-008** [accepted] Clients MUST verify the attestation of a species record before using it.
 - **SPC-009** [accepted] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
-- **SPC-010** [proposed] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
+- **SPC-010** [accepted] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
 - **SPC-011** [accepted] There MUST NOT be evolution in v1.
 - **SPC-012** [accepted] Every Peerling instance MUST have a fixed trait from −10% to +10% for each of its four stats; traits are whole percents drawn uniformly, visible to players, and applied in PvP.
 - **SPC-013** [accepted] Peerlings MUST have a rare cosmetic shimmer variant with a chance of 1 in 500; the look is a species-specific hue shift plus a sparkle effect.
-- **SPC-014** [proposed] Traits and the shimmer roll MUST come from verifiable randomness: the encounter seed for wild Peerlings, the server's origin attestation for starters and shrine creations.
+- **SPC-014** [accepted] Traits and the shimmer roll MUST come from verifiable randomness: the encounter seed for wild Peerlings, the server's origin attestation for starters and shrine creations.
 
 ## Open questions
 

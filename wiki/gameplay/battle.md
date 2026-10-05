@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -225,7 +226,7 @@ players level up by exploring further out.
 
 ### Random number generator
 
-[proposed] Every random roll in a battle (accuracy, damage roll, secondary
+[accepted] Every random roll in a battle (accuracy, damage roll, secondary
 effects, catch chance, speed ties) and in encounter selection comes from one
 deterministic generator, so a battle can be replayed exactly on any browser and
 on the server ([BTL-002](#requirements)):
@@ -273,7 +274,7 @@ from the move's type and template, not authored per move.
 - **BTL-004** [proposed] Move visual effects MUST be derived from the move's type and template, so every generated move has an effect without per-move assets.
 - **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
 - **BTL-006** [accepted] Levels MUST run from 1 to 50, and XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
-- **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
+- **BTL-007** [accepted] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
 - **BTL-008** [accepted] Every stat MUST be multiplied by the individual's trait factor after the level formula.
 - **BTL-009** [accepted] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
 - **BTL-010** [accepted] There MUST NOT be critical hits or status conditions in v1.

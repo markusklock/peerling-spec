@@ -6,6 +6,7 @@ tags: [tech, orbitdb, decentralization, security]
 sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
@@ -13,7 +14,7 @@ related:
   - wiki/tech/resilience.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # D-0013: Peer-verified registry, catches and trades
@@ -21,7 +22,7 @@ updated: 2026-10-04
 **Status:** accepted (2026-10-04). Supersedes the "server is the only registry
 writer" part of [D-0005](D-0005-server-sole-registry-writer.md), and the
 server-signed catches and ownership ledger of
-[D-0009](D-0009-player-data-on-orbitdb.md). Details are [proposed].
+[D-0009](D-0009-player-data-on-orbitdb.md). Details are [accepted].
 
 ## Context
 The designer wants the game to work as far as possible without the operator

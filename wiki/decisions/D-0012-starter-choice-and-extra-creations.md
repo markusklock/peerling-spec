@@ -5,18 +5,19 @@ status: accepted
 tags: [peerlings, onboarding, creation]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/decisions/D-0002-all-peerlings-user-generated.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # D-0012: Starter choice and additional creations
 
 **Status:** accepted (2026-10-04, resolves [Q-001](../open-questions.md#q-001));
-the balancing details are [proposed]
+the balancing details were approved the same day ([Q-035](../open-questions.md#q-035))
 
 ## Context
 Originally every new player had to create their own starter, and the number of
@@ -31,7 +32,7 @@ to do it again.
   place on the map (the [Creation Shrine](../gameplay/creation-shrine.md))
   lets a player give something up, e.g. 3 different Peerlings, in exchange for
   one new creation.
-- [proposed] The exact cost and limits are in
+- [accepted] The exact cost and limits are in
   [creation-shrine](../gameplay/creation-shrine.md).
 
 ## Consequences

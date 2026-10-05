@@ -6,7 +6,8 @@ tags: [reference, terminology]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
-updated: 2026-10-04
+  - raw/conversations/2026-10-05-proposal-review-1.md
+updated: 2026-10-05
 ---
 
 # Glossary
@@ -16,7 +17,7 @@ updated: 2026-10-04
 > a link anchor.
 
 ### Attestation
-[proposed] A signature by the [generation server](#generation-server) over a
+[accepted] A signature by the [generation server](#generation-server) over a
 [species record](#species-record), proving the record was produced by the
 official pipeline and has not been altered. See
 [orbitdb-registry](tech/orbitdb-registry.md).
@@ -81,7 +82,7 @@ The biome-specific tall grass (or similar) where wild encounters happen. See
 [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage).
 
 ### Epoch record
-[proposed] A record the server signs and publishes every 5 minutes (one
+[accepted] A record the server signs and publishes every 5 minutes (one
 *epoch*). It holds a drand random value and the current registry height, and
 encounter seeds are derived from it, so players can't choose their encounters.
 See [player-data](tech/player-data.md#encounter-seeds).
@@ -148,7 +149,7 @@ The avatar a player controls in the world. See
 [player-character](gameplay/player-character.md).
 
 ### Presence
-[proposed] The live broadcast of a player's position in the shared world, sent
+[accepted] The live broadcast of a player's position in the shared world, sent
 to nearby players over libp2p pubsub. See
 [realtime-networking](tech/realtime-networking.md#presence-proposed).
 
@@ -161,7 +162,7 @@ A list of words shown to the player once, from which their identity key can
 be restored on another device. See [player-data](tech/player-data.md).
 
 ### Region
-[proposed] A square area of the world made of several chunks. It is the unit
+[accepted] A 64 m × 64 m square of the world (one chunk of 32 × 32 tiles). It is the unit
 for presence topics in multiplayer. See
 [procedural-generation](world/procedural-generation.md).
 

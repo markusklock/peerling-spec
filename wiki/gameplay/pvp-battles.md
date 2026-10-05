@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-approvals-q016-q038.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -27,7 +28,7 @@ updated: 2026-10-05
 
 ## Overview
 
-[accepted] Players can battle each other. [proposed] PvP battles are played
+[accepted] Players can battle each other. [accepted] PvP battles are played
 directly between the two players' browsers over a libp2p stream
 ([realtime-networking](../tech/realtime-networking.md)). Both clients run the
 same deterministic battle engine (BTL-002) and must agree on every turn.
@@ -37,7 +38,7 @@ same deterministic battle engine (BTL-002) and must agree on every turn.
 A modified client could lie about its Peerlings, so the protocol checks
 everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitdb.md):
 
-- [proposed] **Species are verifiable.** Each Peerling's species record is
+- [accepted] **Species are verifiable.** Each Peerling's species record is
   fetched by CID and its attestation checked, so stats, types and moves can't
   be faked.
 - [accepted] **Level mode** ([D-0015](../decisions/D-0015-pvp-level-modes.md)). The challenger picks a mode,
@@ -82,11 +83,11 @@ since results can't be verified by a third party.
 ## Requirements
 
 - **PVP-001** [accepted] Two players MUST be able to battle each other with their Peerlings.
-- **PVP-002** [proposed] PvP battles MUST run peer-to-peer between the two clients, with no server deciding the outcome.
-- **PVP-003** [proposed] Each client MUST verify every opposing species record (attestation) before the battle starts.
-- **PVP-004** [proposed] The battle RNG seed MUST be derived from values committed and revealed by both players.
-- **PVP-005** [proposed] Turn actions MUST use commit-reveal, so neither player sees the other's choice before committing.
-- **PVP-006** [proposed] Clients MUST compare battle-state hashes after each turn and void the battle on mismatch.
+- **PVP-002** [accepted] PvP battles MUST run peer-to-peer between the two clients, with no server deciding the outcome.
+- **PVP-003** [accepted] Each client MUST verify every opposing species record (attestation) before the battle starts.
+- **PVP-004** [accepted] The battle RNG seed MUST be derived from values committed and revealed by both players.
+- **PVP-005** [accepted] Turn actions MUST use commit-reveal, so neither player sees the other's choice before committing.
+- **PVP-006** [accepted] Clients MUST compare battle-state hashes after each turn and void the battle on mismatch.
 - ~~**PVP-007**~~ (removed 2026-10-05, replaced by PVP-010; see D-0015)
 - ~~**PVP-008**~~ (removed 2026-10-04, replaced by PVP-009; see D-0013)
 - **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)).

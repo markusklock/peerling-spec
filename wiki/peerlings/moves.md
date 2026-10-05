@@ -11,12 +11,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/battle.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Moves and Move Templates
@@ -93,7 +94,7 @@ specified in [battle](../gameplay/battle.md).
 
 For the `sig-weaken` and `sig-empower` templates, the LLM also chooses which
 stat is affected. That choice is stored in the move entry as `stat`.
-[proposed] The chosen stat must be Attack, Defense or Speed (HP has no stages;
+[accepted] The chosen stat must be Attack, Defense or Speed (HP has no stages;
 [battle § Stat stages](../gameplay/battle.md#stat-stages)). How every template
 behaves in battle is defined in [battle § Move mechanics](../gameplay/battle.md#move-mechanics).
 

@@ -9,10 +9,11 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
-updated: 2026-10-03
+updated: 2026-10-05
 ---
 
 # New Player Onboarding
@@ -66,7 +67,7 @@ choose can still create Peerlings later at the
 - ~~**ONB-001**~~ (removed 2026-10-04, replaced by ONB-005; see D-0012)
 - ~~**ONB-002**~~ (removed 2026-10-04, replaced by ONB-006; see D-0012)
 - **ONB-003** [proposed] Onboarding MUST let the player do something useful (e.g. character creation) while long generation stages run.
-- **ONB-004** [proposed] If the player leaves during onboarding, they MUST be able to resume the same creation job later ([CRE-014](../peerlings/creation-pipeline.md#requirements)).
+- **ONB-004** [accepted] If the player leaves during onboarding, they MUST be able to resume the same creation job later ([CRE-014](../peerlings/creation-pipeline.md#requirements)).
 - **ONB-005** [accepted] A new player MUST create a player character and get a starter Peerling before starting to explore.
 - **ONB-006** [accepted] The starter MUST be either an instance of a species the player creates, or an instance of an existing species the player chooses from a few random options.
 - **ONB-007** [proposed] When choosing, the player MUST be offered 3 random species from the registry.

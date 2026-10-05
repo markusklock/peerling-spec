@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
@@ -25,7 +26,7 @@ updated: 2026-10-05
 
 ## Overview
 
-[accepted] Players can trade Peerlings. [proposed] Trades happen peer-to-peer
+[accepted] Players can trade Peerlings. [accepted] Trades happen peer-to-peer
 over a direct libp2p stream between the two players
 ([realtime-networking](../tech/realtime-networking.md)).
 
@@ -66,8 +67,8 @@ flagged; one transfer stays valid and the other is void
 ## Requirements
 
 - **TRD-001** [accepted] Two players MUST be able to trade Peerlings with each other.
-- **TRD-002** [proposed] A trade MUST complete only after both players confirm the final offers; changing an offer MUST clear both confirmations.
-- **TRD-003** [proposed] A completed trade MUST produce a trade record signed by both players.
+- **TRD-002** [accepted] A trade MUST complete only after both players confirm the final offers; changing an offer MUST clear both confirmations.
+- **TRD-003** [accepted] A completed trade MUST produce a trade record signed by both players.
 - **TRD-004** [accepted] Trades MUST NOT require the operator server; each side MUST verify the other's offered Peerlings before signing.
 
 ## Open questions

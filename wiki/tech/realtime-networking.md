@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -56,14 +57,14 @@ updated: 2026-10-05
   Receivers animate the step from the previous tile to the new one, so movement
   looks smooth without extra messages.
 - [accepted] There is no chat; [emotes](../glossary.md#emote) are the only
-  player-to-player messages. [proposed] An emote is sent as a presence message
+  player-to-player messages. [accepted] An emote is sent as a presence message
   with an `emote` field (an ID from the fixed set in
   [multiplayer § Communication](../gameplay/multiplayer.md#communication)),
   rate-limited like other presence messages. Receivers ignore unknown emote IDs.
 - A player not heard from for **15 s** is removed from view.
 - Budget: a message is about 200 bytes, so 30 visible moving players cost about
   30 × 4 × 200 B ≈ 24 KB/s of download, which is fine on desktop.
-- [proposed] The operator server also joins the topics, to help gossip reach
+- [accepted] The operator server also joins the topics, to help gossip reach
   browsers that have few direct peers.
 
 ## Direct protocols (proposed)
@@ -78,10 +79,10 @@ Message formats are still to be specified.
 
 ## Requirements
 
-- **NET-001** [proposed] Player-to-player communication MUST use the client's libp2p node; game logic MUST NOT depend on a game server (the operator server MAY relay transport traffic).
-- **NET-002** [proposed] Presence MUST be distributed via pubsub topics scoped to world regions, so a client only receives nearby players.
-- **NET-003** [proposed] Presence messages MUST be signed with the player's identity key and rate-limited by the sender; receivers MUST drop messages that are unsigned, too frequent or impossibly far from the previous position.
-- **NET-004** [proposed] Battles, trades and profile requests MUST use versioned libp2p protocol IDs.
+- **NET-001** [accepted] Player-to-player communication MUST use the client's libp2p node; game logic MUST NOT depend on a game server (the operator server MAY relay transport traffic).
+- **NET-002** [accepted] Presence MUST be distributed via pubsub topics scoped to world regions, so a client only receives nearby players.
+- **NET-003** [accepted] Presence messages MUST be signed with the player's identity key and rate-limited by the sender; receivers MUST drop messages that are unsigned, too frequent or impossibly far from the previous position.
+- **NET-004** [accepted] Battles, trades and profile requests MUST use versioned libp2p protocol IDs.
 
 ## Open questions
 

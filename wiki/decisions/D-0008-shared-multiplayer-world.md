@@ -5,13 +5,14 @@ status: accepted
 tags: [gameplay, multiplayer, world, libp2p]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # D-0008: One shared world with PvP battles and trading
@@ -28,7 +29,7 @@ that all players share one world and can interact.
   world**.
 - [accepted] Players can **battle each other** and **trade** Peerlings.
 - [accepted] This is in scope for the first version.
-- [proposed] Player-to-player communication is peer-to-peer over libp2p
+- [accepted] Player-to-player communication is peer-to-peer over libp2p
   (pubsub for presence, direct streams for battles and trades), with the
   operator server acting only as bootstrap and relay. See
   [realtime-networking](../tech/realtime-networking.md).

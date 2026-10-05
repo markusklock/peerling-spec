@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -32,7 +33,7 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
 
 ## Generation basics
 
-[proposed]
+[accepted]
 - Generation is **deterministic from one global seed**, so every client
   generates the identical world locally without transferring world data. This
   is what makes the shared world possible with no world server.
@@ -123,8 +124,8 @@ rolled out without splitting players into different worlds.
 ## Requirements
 
 - **WGN-001** [accepted] The world MUST be procedurally generated.
-- **WGN-002** [proposed] World generation MUST be deterministic for a given seed and generator version, across browsers and platforms.
-- **WGN-003** [accepted] All players MUST be in the same world. [proposed] They MUST therefore use the same global seed.
+- **WGN-002** [accepted] World generation MUST be deterministic for a given seed and generator version, across browsers and platforms.
+- **WGN-003** [accepted] All players MUST be in the same world. [accepted] They MUST therefore use the same global seed.
 - **WGN-004** [proposed] Clients with different world-generator versions MUST NOT show each other's presence, so players never see someone walking through terrain that doesn't exist for them.
 - **WGN-005** [accepted] The world MUST be finite, 4 km × 4 km. [proposed] It MUST be bounded by a natural border (no invisible walls).
 - **WGN-006** [accepted] There MUST be 12 biomes, one for each type, and each biome MUST raise the chance of encountering Peerlings of its type.

@@ -7,13 +7,14 @@ tags: [tech, resilience, ipfs, libp2p, decentralization]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/generation-server.md
   - wiki/tech/player-data.md
   - wiki/gameplay/encounters.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Playing Without the Operator Server
@@ -33,7 +34,7 @@ doesn't block the game ([encounters § Candidates](../gameplay/encounters.md#can
 
 ## What works when the server is offline
 
-[proposed]
+[accepted]
 
 | Feature | Without the server? | How |
 |---------|:------------------:|-----|
@@ -49,7 +50,7 @@ doesn't block the game ([encounters § Candidates](../gameplay/encounters.md#can
 
 ## Distributed building blocks
 
-[proposed]
+[accepted]
 
 ### 1. Every player is a provider
 Each browser keeps and serves the species it has met, caught or created
@@ -98,9 +99,9 @@ species, publishing epoch records and updating creator stats.
 ## Requirements
 
 - **RES-001** [accepted] The game MUST keep working, as far as possible, while the operator server is offline: exploration, wild encounters, battles, catching, catch verification, PvP and trades MUST NOT require it.
-- **RES-002** [proposed] Clients MUST persist known peers and use public bootstrap nodes, relays and delegated routing in addition to the operator server.
-- **RES-003** [proposed] The game client MUST be published on IPFS (with DNSLink) and installable as a PWA, so it loads without the operator's web server.
-- **RES-004** [proposed] The operator SHOULD publish the full pinset so others can run mirror nodes (e.g. IPFS Cluster followers).
+- **RES-002** [accepted] Clients MUST persist known peers and use public bootstrap nodes, relays and delegated routing in addition to the operator server.
+- **RES-003** [accepted] The game client MUST be published on IPFS (with DNSLink) and installable as a PWA, so it loads without the operator's web server.
+- **RES-004** [accepted] The operator SHOULD publish the full pinset so others can run mirror nodes (e.g. IPFS Cluster followers).
 
 ## Open questions
 

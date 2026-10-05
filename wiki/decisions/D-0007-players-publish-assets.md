@@ -6,11 +6,12 @@ tags: [tech, ipfs, helia, creation]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/generation-server.md
-updated: 2026-10-03
+updated: 2026-10-05
 ---
 
 # D-0007: The player's browser publishes their Peerling to IPFS
@@ -28,9 +29,11 @@ server "autopinning all assets pushed to IPFS by users".
 record to IPFS through its own [Helia](../glossary.md#helia) node. The server
 then pins them by CID, fetching the content from the player's node over IPFS.
 The server still writes the registry entry
-([D-0005](D-0005-server-sole-registry-writer.md)).
+([D-0005](D-0005-server-sole-registry-writer.md); since
+[D-0013](D-0013-peer-verified-registry-catches-trades.md), the server signs the
+listing and the player's browser appends it).
 
-[proposed] The exact handshake, including the server checking that the pinned
+[accepted] The exact handshake, including the server checking that the pinned
 content matches what it generated, is specified in
 [creation-pipeline § Stage 7](../peerlings/creation-pipeline.md#stage-7--publish).
 

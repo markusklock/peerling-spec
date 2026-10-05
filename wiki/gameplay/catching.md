@@ -12,10 +12,11 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Catching
@@ -80,7 +81,7 @@ A fainted wild Peerling can't be caught; it gives XP
 - A Peerling caught while the team is full goes to the collection.
 - The team is stored in the [save](../tech/player-data.md#save-contents).
 
-[proposed] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)
+[accepted] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)
 in the player's save, referencing its species by CID
 ([D-0006](../decisions/D-0006-species-vs-instance.md)); its assets are then
 retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).

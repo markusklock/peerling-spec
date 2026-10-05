@@ -87,7 +87,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
 RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0016. Next free question ID: Q-041.
+D-0016. Next free question ID: Q-042.
 
 ## Sources
 
@@ -109,3 +109,4 @@ D-0016. Next free question ID: Q-041.
 | [2026-10-05-approvals-q016-q038](../raw/conversations/2026-10-05-approvals-q016-q038.md) | 2026-10-05 | Asset budgets and individual-variation details approved |
 | [2026-10-05-grid-foliage-battles](../raw/conversations/2026-10-05-grid-foliage-battles.md) | 2026-10-05 | Game Boy-style grid movement; encounters in biome foliage; battle design requested |
 | [2026-10-05-pvp-level-modes](../raw/conversations/2026-10-05-pvp-level-modes.md) | 2026-10-05 | PvP level modes (Fair / Real levels); battle rules and grid numbers approved |
+| [2026-10-05-proposal-review-1](../raw/conversations/2026-10-05-proposal-review-1.md) | 2026-10-05 | Proposal review: technical proposals and design items 1–4 approved; unique names requested |

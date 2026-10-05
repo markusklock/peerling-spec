@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -112,7 +113,7 @@ world centre (the spawn; the world is 4 km × 4 km, so d is at most about
 
 ## Wild Peerling generation
 
-[proposed] Once the species is chosen, the wild Peerling is generated from the
+[accepted] Once the species is chosen, the wild Peerling is generated from the
 same encounter seed and [random number generator](battle.md#random-number-generator),
 always in this order, so a replay produces exactly the same individual:
 
@@ -130,13 +131,13 @@ shimmer belong to the encounter, whichever candidate is met.
 
 [accepted] At launch the registry is not empty: the operator creates a handful
 of [seed species](../glossary.md#seed-species) through the normal pipeline
-([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)). [proposed]
+([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)). [accepted]
 While the registry is small, the same species simply appear repeatedly at
 different levels.
 
 ## Latency
 
-[proposed] An encounter must never stall on the network. As soon as a new
+[accepted] An encounter must never stall on the network. As soon as a new
 epoch record arrives, the client works out the candidate lists of its next few
 encounters in the current and neighbouring biomes and fetches them in the
 background ([Candidates](#candidates)). With 5 candidates prefetched, at least
@@ -146,12 +147,12 @@ one is almost always ready when an encounter triggers.
 
 - **ENC-001** [accepted] Wild Peerlings MUST be chosen from the species in the registry.
 - **ENC-002** [accepted] The chosen species' data and model MUST be retrieved via IPFS.
-- **ENC-003** [proposed] The client MUST prefetch the species of its upcoming encounters so an encounter normally starts without waiting for network retrieval.
-- **ENC-004** [proposed] Removed (tombstoned) species MUST NOT be chosen ([REG-005](../tech/orbitdb-registry.md#requirements)).
+- **ENC-003** [accepted] The client MUST prefetch the species of its upcoming encounters so an encounter normally starts without waiting for network retrieval.
+- **ENC-004** [accepted] Removed (tombstoned) species MUST NOT be chosen ([REG-005](../tech/orbitdb-registry.md#requirements)).
 - **ENC-005** [accepted] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
 - **ENC-006** [accepted] Each encounter MUST have up to 5 candidate species, and the encounter MUST use a candidate that was successfully fetched via IPFS.
 - **ENC-007** [accepted] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
-- **ENC-008** [proposed] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
+- **ENC-008** [accepted] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
 
 ## Open questions
 

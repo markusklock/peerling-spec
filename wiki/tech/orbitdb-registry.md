@@ -13,12 +13,13 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/encounters.md
   - wiki/decisions/D-0010-no-content-moderation.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Peerling Registry (OrbitDB)
@@ -39,7 +40,7 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
   accepts entries that carry a valid server signature
   ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md); this replaced the earlier "server is the only writer" rule,
   [D-0005](../decisions/D-0005-server-sole-registry-writer.md)).
-- [proposed] **Listing signature:** at the end of publishing, the server signs
+- [accepted] **Listing signature:** at the end of publishing, the server signs
   the entry's contents (species CID, `seq`, name, types, thumbnail CID,
   `createdAt`). The registry's OrbitDB access controller checks this signature
   on every entry, both when appending and when replicating, so invalid entries
@@ -47,7 +48,7 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
   appeared within a minute, the server appends the identical entry itself, so
   the sequence numbers never have gaps.
 
-[proposed]
+[accepted]
 - **Database type:** an OrbitDB *documents* (or keyvalue) database keyed by
   species CID, so a client can look up and iterate entries cheaply.
 - **Address:** one well-known database address, shipped with the client.
@@ -96,9 +97,9 @@ The registry is one of five kinds of OrbitDB database in the game:
 - **REG-001** [accepted] All published species MUST be listed in a single OrbitDB registry database.
 - **REG-002** [accepted] Clients MUST read the registry to choose wild encounters and fetch the chosen species via IPFS.
 - ~~**REG-003**~~ (removed 2026-10-04, replaced by REG-009; see D-0013)
-- **REG-004** [proposed] Registry entries MUST contain enough summary data (types, name, thumbnail CID, status) to select encounters without fetching the full species record.
-- **REG-005** [proposed] Clients MUST exclude entries whose status is `removed`.
-- **REG-006** [proposed] The client MUST start with its locally persisted copy of the registry and sync in the background, so the game is usable before sync completes.
+- **REG-004** [accepted] Registry entries MUST contain enough summary data (types, name, thumbnail CID, status) to select encounters without fetching the full species record.
+- **REG-005** [accepted] Clients MUST exclude entries whose status is `removed`.
+- **REG-006** [accepted] The client MUST start with its locally persisted copy of the registry and sync in the background, so the game is usable before sync completes.
 - **REG-007** [accepted] Each registry entry MUST carry a unique, gap-free sequence number `seq` assigned by the server; takedowns MUST record `removedAtSeq`.
 - **REG-008** [accepted] The operator MUST be able to delist a species with a tombstone entry, and clients MUST honor it (REG-005).
 - **REG-009** [accepted] Any player MAY append registry entries, but nodes MUST accept (and replicate) only entries carrying a valid server listing signature.

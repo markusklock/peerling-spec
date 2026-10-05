@@ -12,13 +12,14 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/generation-server.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/ipfs-showcase.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # System Architecture
@@ -66,7 +67,7 @@ flowchart LR
 | Helia node | Each player is an IPFS node that downloads, serves and publishes content | [ipfs-helia](ipfs-helia.md) | [accepted] |
 | OrbitDB registry | Database of all Peerling species; only the server writes | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
 | Generation server | LLM, image gen, image-to-3D, pinning, registry writer | [generation-server](generation-server.md) | [accepted] |
-| Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [proposed]) |
+| Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [accepted]) |
 | Player data | Per-player OrbitDB save log, identity key recovery, transfer log, peer verification | [player-data](player-data.md) | [accepted] |
 | Platform technologies | WebTransport, WebRTC, IPv6, WebGPU, OPFS, … | [tech-stack](tech-stack.md) | [accepted] principle ([D-0011](../decisions/D-0011-modern-web-platform-first.md)) |
 
@@ -90,14 +91,14 @@ flowchart LR
   every registry listing and every species record, and only signed entries are
   accepted ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)). It is also trusted for the origin of starters and
   Creation Shrine Peerlings, and for epoch records (with a drand-based fallback).
-- [proposed] Peers are untrusted for *content*. Everything fetched from peers is
+- [accepted] Peers are untrusted for *content*. Everything fetched from peers is
   verified by CID, and species records by the server's signature.
 - [accepted] Peers are untrusted for *claims about their own Peerlings*. Any
   player can check another's Peerling themselves: catches by replaying them,
   ownership by following the signed transfer chain
   ([player-data § Verification](player-data.md#verification)). No server is
   needed for this, so trades and PvP work while the server is offline.
-- [proposed] What can't be prevented without global agreement is detected
+- [accepted] What can't be prevented without global agreement is detected
   instead: a player who gives the same Peerling to two others is exposed by
   their own two signatures and flagged.
 
@@ -107,8 +108,8 @@ flowchart LR
 - **ARC-002** [accepted] Each client MUST run a Helia IPFS node ([D-0003](../decisions/D-0003-browser-client-is-ipfs-node.md)).
 - **ARC-003** [accepted] A single operator server MUST host the generation models and pin all game content ([D-0004](../decisions/D-0004-single-operator-server.md)).
 - **ARC-004** [accepted] Apart from creation, the game MUST remain playable using peers and local cache when the server is unreachable, as far as content and connectivity allow ([resilience](resilience.md)).
-- **ARC-005** [proposed] The client MUST NOT depend on any centralized service other than the operator server (and optionally public IPFS infrastructure such as bootstrap nodes or trustless gateways).
-- **ARC-006** [proposed] A client MUST NOT trust another client's claims without verification; data received from peers MUST be verified by CID, signature or protocol design (see trust model).
+- **ARC-005** [accepted] The client MUST NOT depend on any centralized service other than the operator server (and optionally public IPFS infrastructure such as bootstrap nodes or trustless gateways).
+- **ARC-006** [accepted] A client MUST NOT trust another client's claims without verification; data received from peers MUST be verified by CID, signature or protocol design (see trust model).
 
 ## Open questions
 

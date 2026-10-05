@@ -5,10 +5,11 @@ status: accepted
 tags: [tech, ipfs]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/decisions/D-0007-players-publish-assets.md
-updated: 2026-10-03
+updated: 2026-10-05
 ---
 
 # D-0003: Every browser client is a Helia IPFS node
@@ -33,4 +34,4 @@ as a full IPFS node that both downloads and serves (uploads) game content.
 
 ## Alternatives considered
 - Gateway-only HTTP fetching: simpler but defeats the showcase goal. May still be
-  used as a fallback ([proposed], see [ipfs-helia](../tech/ipfs-helia.md)).
+  used as a fallback ([accepted], see [ipfs-helia](../tech/ipfs-helia.md)).

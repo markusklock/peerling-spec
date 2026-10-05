@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-2.md
   - raw/conversations/2026-10-05-asset-budgets-request.md
   - raw/conversations/2026-10-05-approvals-q016-q038.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
@@ -30,7 +31,7 @@ updated: 2026-10-05
 [accepted] **Desktop only** for now: current versions of Chrome/Edge, Firefox
 and Safari on desktop operating systems. Mobile is not a focus; the game may
 happen to run there, but it isn't designed, tested or controlled for touch.
-[proposed] No polyfills or workarounds for older browsers.
+[accepted] No polyfills or workarounds for older browsers.
 
 As of 2026, WebTransport works in all of these browsers. WebGPU works in all of
 them except Firefox on Linux, which is why WebGL2 is kept as a fallback (see
@@ -42,17 +43,17 @@ them except Firefox on Linux, which is why WebGL2 is kept as a fallback (see
 |------|------------|--------|
 | Browser → operator server | **WebTransport** (HTTP/3 over QUIC) | [accepted] |
 | Browser → operator server, fallback | **WebRTC-direct** (libp2p's WebRTC browser-to-server transport), used when WebTransport fails. Also UDP-based, needs no TLS certificate | [accepted] |
-| Browser ↔ browser | **WebRTC**, set up through the server's circuit relay, then direct | [proposed] (the only option; browsers can't accept WebTransport) |
+| Browser ↔ browser | **WebRTC**, set up through the server's circuit relay, then direct | [accepted] (the only option; browsers can't accept WebTransport) |
 | WebSockets | Not used | [accepted] |
 | IP version | **IPv6 preferred**, IPv4 kept for players without IPv6 | [accepted] |
-| Creation API (HTTPS) | HTTP/3 | [proposed] |
+| Creation API (HTTPS) | HTTP/3 | [accepted] |
 
 Connection details (bootstrap, relay, fallbacks) are canonical in
 [ipfs-helia § Connectivity](ipfs-helia.md#connectivity).
 
 ### IPv6
 
-[accepted] IPv6 is used wherever possible. [proposed] How:
+[accepted] IPv6 is used wherever possible. [accepted] How:
 - The operator server is dual-stack: it has public IPv6 and IPv4 addresses,
   listens on both, and publishes multiaddrs for both. Its DNS names have AAAA
   records.
@@ -67,7 +68,7 @@ Connection details (bootstrap, relay, fallbacks) are canonical in
 
 ### WebTransport certificates
 
-[proposed] libp2p's WebTransport uses short-lived self-signed certificates.
+[accepted] libp2p's WebTransport uses short-lived self-signed certificates.
 Browsers only accept such certificates by their hash and only if they are valid
 for at most 14 days. The hash is part of the server's multiaddr (`/certhash/…`),
 so the server's addresses change every time its certificate rotates. Clients
@@ -88,7 +89,7 @@ services (OrbitDB) is an acceptable setup.
 
 - [accepted] **WebGPU** as the primary graphics API, with a **WebGL2
   fallback** where WebGPU isn't available (mainly Firefox on Linux).
-  [proposed] Modern engines provide the fallback almost for free.
+  [accepted] Modern engines provide the fallback almost for free.
 - The engine itself (e.g. three.js, Babylon.js) is the implementer's choice.
 
 ## Client runtime
@@ -158,7 +159,7 @@ oversized files.
 - **STK-001** [accepted] Browser ↔ server connections MUST use WebTransport; WebSockets MUST NOT be used.
 - **STK-002** [accepted] The game MUST use IPv6 wherever available: the server MUST be dual-stack, and clients MUST NOT suppress IPv6 connection candidates.
 - **STK-003** [accepted] The server MUST also accept WebRTC-direct connections from browsers, and clients MUST fall back to WebRTC-direct when WebTransport fails.
-- **STK-004** [proposed] Clients MUST discover the server's current multiaddrs (including WebTransport certificate hashes) at startup instead of hardcoding them.
+- **STK-004** [accepted] Clients MUST discover the server's current multiaddrs (including WebTransport certificate hashes) at startup instead of hardcoding them.
 - **STK-005** [accepted] Rendering MUST use WebGPU where available and fall back to WebGL2.
 - **STK-006** [accepted] The IPFS node, libp2p and OrbitDB MUST run off the main thread, and only one tab per player MUST run the node.
 - **STK-007** [accepted] The client blockstore and OrbitDB storage MUST use OPFS.

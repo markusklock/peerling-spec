@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/gameplay/core-loop.md
   - wiki/tech/architecture.md
@@ -66,7 +67,7 @@ The first playable version (v1) contains:
 - [accepted] Wild encounters with player-created Peerlings, turn-based battles,
   catching.
 - [accepted] PvP battles and trading between players.
-- [proposed] A team/collection of caught Peerlings.
+- [accepted] A team/collection of caught Peerlings.
 - [accepted] A top-down camera over a colorful 3D world ([visual-style](world/visual-style.md)).
 
 [accepted] Not in v1: evolution, Peerlings learning new moves, items in

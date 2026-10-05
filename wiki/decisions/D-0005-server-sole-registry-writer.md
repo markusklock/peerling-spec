@@ -6,10 +6,11 @@ tags: [tech, orbitdb, security]
 sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-05-proposal-review-1.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # D-0005: The generation server is the only registry writer
@@ -18,7 +19,7 @@ updated: 2026-10-04
 (2026-10-04): players now append registry entries, which are valid only with a
 server signature. Originally accepted 2026-10-03, resolving
 [Q-002](../open-questions.md#q-002).
-The attestation (signature) part below is still [proposed].
+The attestation (signature) part below was accepted on 2026-10-05.
 
 ## Context
 The [registry](../glossary.md#registry) decides which species appear in every
@@ -29,7 +30,7 @@ client-written entry could contain arbitrary stats, moves or unmoderated assets.
 - [accepted] The OrbitDB registry's access controller grants write access only
   to the generation server's OrbitDB identity. Clients replicate and read the
   registry; they never write to it.
-- [proposed] Every species record is additionally signed by the server
+- [accepted] Every species record is additionally signed by the server
   ([attestation](../glossary.md#attestation)), so the record stays verifiable
   when it is fetched from a peer outside OrbitDB, e.g. during a
   [PvP battle](../gameplay/pvp-battles.md) or [trade](../gameplay/trading.md).
