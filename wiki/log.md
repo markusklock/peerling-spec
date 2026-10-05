@@ -267,3 +267,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Changed: tech/player-data.md, tech/tech-stack.md, open-questions.md, index.md
 - Notes: Resolved Q-043 (SAVE-020, SAVE-021, STK-014 accepted). No open
   questions remain.
+
+## [2026-10-05] design | Spectating, sharing links, device linking, world feed
+- Source: raw/conversations/2026-10-05-showcase-features.md
+- Changed: decisions/D-0016 (new), gameplay/spectating.md (new),
+  gameplay/sharing.md (new), gameplay/world-feed.md (new), tech/player-data.md,
+  tech/realtime-networking.md, tech/ipfs-showcase.md, gameplay/pvp-battles.md,
+  gameplay/multiplayer.md, glossary.md, open-questions.md, index.md
+- Notes: Adopted four showcase features (D-0016) and proposed their details
+  (Q-044). Device linking introduces a one-device-at-a-time rule (SAVE-023),
+  because two devices playing at once would fork the save log. Added SPT-001…004,
+  LNK-001…003, FED-001/002, SAVE-022/023.

@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-05-save-recovery.md
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-peer-save-backups-approved.md
+  - raw/conversations/2026-10-05-showcase-features.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -90,6 +91,7 @@ the writer, so the log is also a tamper-evident history.
 | `catch` | A wild Peerling is caught | the new instance + **catch evidence** (see below) |
 | `battle-result` | After a wild battle | for each participating instance: XP gained, new level, HP |
 | `team` | Team changed | ordered instance IDs |
+| `session-start` | The game starts on a device | device ID ([Linking a device](#linking-a-device)) |
 | `nickname` | Peerling renamed | instance ID, nickname |
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
 | `seen` | First sighting of a species | species CID |
@@ -113,6 +115,36 @@ pins (SAVE-001). The key is recovered with the **recovery phrase** or a
 |--------|-----|----------|
 | **Recovery phrase** | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
 | **Backup file** | Export or import the key as a file | Strong, if the file is kept safe |
+
+### Linking a device
+
+[accepted] A player can link a second device to their account with a short
+code instead of typing the recovery phrase
+([D-0016](../decisions/D-0016-showcase-features.md)).
+
+[proposed] ([Q-044](../open-questions.md#q-044))
+- **On the existing device:** *Settings → Link a device* shows a short code
+  (a number plus three words, e.g. `7-crystal-lantern-moss`) and a QR code
+  holding the same code. The code is valid for 5 minutes and works once.
+- **On the new device:** *Link from another device*, then type the code (or
+  scan the QR code with a webcam where the browser supports it).
+- **Under the hood** (in the style of the "magic wormhole" tool): the number
+  selects a rendezvous pubsub topic where the two devices find each other. They
+  open a direct, encrypted libp2p connection (WebRTC) and run a
+  password-authenticated key exchange (PAKE, e.g. CPace or SPAKE2) using the
+  words, which gives both sides a shared secret that an eavesdropper can't
+  guess offline. The existing device asks the player to confirm
+  (*"Link this new device?"*), then sends the private key and the latest save
+  snapshot CID, encrypted with that secret.
+- **One device at a time.** Both devices now write the same save log. Playing on
+  two devices at once would create duplicate encounter numbers, which
+  verification treats as a forked save ([Verified Peerlings](#verified-peerlings)).
+  So a device appends a `session-start` event when the game starts and keeps
+  announcing the session in its presence messages. Another device of the same
+  player first syncs the save log; if a session is active elsewhere, it refuses
+  to start play (*"You're playing on another device"*). Playing on two devices
+  while both are offline can't be detected in time; the game warns about this
+  when linking.
 
 ### Finding the save again
 
@@ -445,10 +477,12 @@ D-0013, mostly checks any player can run).
 - ~~**SAVE-019**~~ (removed 2026-10-05: no password-based recovery; the designer chose the recovery phrase and backup file only)
 - **SAVE-020** [accepted] Inspecting another player's profile, trading or battling with them MUST fetch and keep a persistent backup of their save log (up to 100 players or 100 MB); clients MUST answer `save-wanted` requests for saves they hold.
 - **SAVE-021** [accepted] The backup file MUST contain the key and the latest save snapshot.
+- **SAVE-022** [proposed] A player MUST be able to link a new device with a single-use, 5-minute code; the key MUST travel only over a direct, encrypted libp2p connection secured by a PAKE, after confirmation on the existing device.
+- **SAVE-023** [proposed] Only one device per player MUST be able to play at a time: a device MUST sync the save log and MUST refuse to start play while another device's session is active.
 
 ## Open questions
 
-_None at the moment._
+[Q-044](../open-questions.md#q-044)
 
 ## See also
 

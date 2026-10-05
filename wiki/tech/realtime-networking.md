@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-peer-save-backups.md
+  - raw/conversations/2026-10-05-showcase-features.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -36,6 +37,9 @@ updated: 2026-10-05
 |------|-----------|
 | Know who is nearby | libp2p **pubsub (gossipsub)** topic per world [region](../glossary.md#region) |
 | Battle, trade, profile | Direct libp2p **streams** with custom protocol IDs |
+| Watching PvP battles | Pubsub topic `peerlings/v1/battle/<battleId>` ([spectating](../gameplay/spectating.md)) |
+| World feed | Pubsub topic `peerlings/v1/feed` ([world-feed](../gameplay/world-feed.md)) |
+| Linking a device | A rendezvous pubsub topic chosen by the link code, then a direct stream ([player-data § Linking a device](player-data.md#linking-a-device)) |
 | Save recovery requests | Pubsub topic `peerlings/v1/save-wanted` ([player-data](player-data.md#keeping-saves-available)) |
 | Epoch records | Pubsub topic `peerlings/v1/epoch`, published by the server ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Reaching other browsers | Circuit relay via the operator server, upgraded to direct **WebRTC** connections (preferring IPv6) when possible ([ipfs-helia § Connectivity](ipfs-helia.md#connectivity)) |
@@ -76,6 +80,7 @@ updated: 2026-10-05
 | `/peerlings/battle/1.0.0` | PvP battle session | [pvp-battles](../gameplay/pvp-battles.md) |
 | `/peerlings/trade/1.0.0` | Trade session | [trading](../gameplay/trading.md) |
 | `/peerlings/profile/1.0.0` | Request a player's public profile (team, created species) | [multiplayer](../gameplay/multiplayer.md) |
+| `/peerlings/link-device/1.0.0` | PAKE and encrypted key transfer between a player's devices | [player-data](player-data.md#linking-a-device) |
 | `/peerlings/save-backup/1.0.0` | Answer a `save-wanted` request with the snapshot CID and log heads of a held save backup | [player-data](player-data.md#keeping-saves-available) |
 
 Message formats are still to be specified.

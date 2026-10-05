@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-05-showcase-features.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -62,7 +63,7 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
 ## Protocol (proposed)
 
 1. **Challenge.** A sends a challenge, including the level mode (Fair or Real
-   levels), to B while standing next to them (MPL-006); B accepts or declines
+   levels) and whether spectators are allowed ([spectating](spectating.md)), to B while standing next to them (MPL-006); B accepts or declines
    (MPL-005).
 2. **Team exchange.** Each side sends its team: for each Peerling, the species
    CID and instance ID. Each side fetches and verifies the other's species and

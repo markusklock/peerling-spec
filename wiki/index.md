@@ -31,6 +31,9 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [trading](gameplay/trading.md) | draft | TRD | Peer-to-peer trades of Peerling instances |
 | [creation-shrine](gameplay/creation-shrine.md) | draft | SHR | Giving up 3 Peerlings to create a new species |
 | [creator-feedback](gameplay/creator-feedback.md) | draft | CFB | Species stats in OrbitDB, live creator notifications |
+| [spectating](gameplay/spectating.md) | draft | SPT | Watching PvP battles live over pubsub |
+| [sharing](gameplay/sharing.md) | draft | LNK | Shareable Peerling cards and IPNS player profiles, Peerlings Viewer |
+| [world-feed](gameplay/world-feed.md) | draft | FED | Live ticker of notable world events over pubsub |
 
 ## Peerlings
 
@@ -58,7 +61,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [orbitdb-registry](tech/orbitdb-registry.md) | draft | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
-| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
+| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file), device linking, who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
@@ -82,12 +85,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
 | [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
 | [D-0015](decisions/D-0015-pvp-level-modes.md) | accepted | PvP level modes: Fair or Real levels |
+| [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, device linking and a world feed |
 
 ## Registered requirement prefixes
 
-ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
-RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0016. Next free question ID: Q-044.
+ARC, BTL, CAT, CFB, CRE, ENC, EXP, FED, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
+PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
+D-0017. Next free question ID: Q-045.
 
 ## Sources
 
@@ -114,3 +118,4 @@ D-0016. Next free question ID: Q-044.
 | [2026-10-05-save-recovery](../raw/conversations/2026-10-05-save-recovery.md) | 2026-10-05 | Recovery by phrase and file only; save contents approved; who actually holds save copies |
 | [2026-10-05-peer-save-backups](../raw/conversations/2026-10-05-peer-save-backups.md) | 2026-10-05 | No community mirrors; peer save backups via profile inspection; storage persistence |
 | [2026-10-05-peer-save-backups-approved](../raw/conversations/2026-10-05-peer-save-backups-approved.md) | 2026-10-05 | Peer save backups and save snapshot in backup file approved |
+| [2026-10-05-showcase-features](../raw/conversations/2026-10-05-showcase-features.md) | 2026-10-05 | Adopted spectating, shareable links, device linking and a world feed |

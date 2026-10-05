@@ -101,6 +101,11 @@ runs a Helia node. See [ipfs-helia](tech/ipfs-helia.md).
 The InterPlanetary File System — a peer-to-peer network for storing and sharing
 content addressed by [CID](#cid).
 
+### IPNS
+The InterPlanetary Name System: a fixed name, derived from a key, that points to
+changing IPFS content through signed records. Player profiles use it. See
+[sharing](gameplay/sharing.md).
+
 ### Move
 An attack or action a Peerling can use in battle. Every move is an instance of a
 [move template](#move-template). See [moves](peerlings/moves.md).
@@ -139,6 +144,10 @@ One individual Peerling owned by a player (e.g. the starter, or a
 caught wild Peerling), with its own level, experience, current HP, etc. Many
 instances can exist of the same species. See
 [peerling-species](peerlings/peerling-species.md).
+
+### Peerlings Viewer
+A small web app, published on IPFS, that shows shared Peerling cards and player
+profiles outside the game. See [sharing](gameplay/sharing.md).
 
 ### Pin / pinning
 Telling an IPFS node to keep a piece of content permanently and serve it to
@@ -252,3 +261,7 @@ WebSockets. See [tech-stack](tech/tech-stack.md#networking).
 ### Wild Peerling
 An unowned Peerling instance met during exploration, generated from a species
 in the registry. See [encounters](gameplay/encounters.md).
+
+### World feed
+The live ticker of notable events (new Peerlings, shimmer catches) spread over a
+world-wide pubsub topic. See [world-feed](gameplay/world-feed.md).

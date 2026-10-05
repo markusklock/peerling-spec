@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-peer-save-backups.md
+  - raw/conversations/2026-10-05-showcase-features.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -51,6 +52,8 @@ updated: 2026-10-05
   *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (fetches their save, which also keeps a backup of it: [player-data § Keeping saves available](../tech/player-data.md#keeping-saves-available); their team, and the
   species they created). Once a battle or trade has started, it continues even
   if a player moves away.
+- [accepted] Nearby PvP battles can be watched ([spectating](spectating.md)), and
+  notable events across the world appear in a live feed ([world-feed](world-feed.md)).
 - [accepted] Wild encounters are **per player**: each player meets their own
   wild Peerlings, even when standing next to someone else. This avoids
   competing for the same creature.
