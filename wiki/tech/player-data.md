@@ -22,6 +22,7 @@ sources:
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-05-phone-backup-approved.md
   - raw/conversations/2026-10-05-world-details.md
+  - raw/conversations/2026-10-05-world-details-approved.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -71,7 +72,7 @@ refers to it by CID.
 | Created species | CID(s) of the species this player created | [accepted] |
 | Peerdex | Species seen and species caught (CIDs) | [accepted] |
 | Position | Last position and facing in the world | [accepted] |
-| Map | Chunks the player has explored, as a bit set ([exploration § Map](../gameplay/exploration.md#map)) | [proposed] |
+| Map | Chunks the player has explored, as a bit set ([exploration § Map](../gameplay/exploration.md#map)) | [accepted] |
 | Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [accepted] No inventory at all in the first version, so this part is empty | [accepted] |
 
 Not in the save: the identity **private key** (stays on the device; restored

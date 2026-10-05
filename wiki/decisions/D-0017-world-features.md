@@ -5,6 +5,7 @@ status: accepted
 tags: [world, gameplay, showcase]
 sources:
   - raw/conversations/2026-10-05-world-details.md
+  - raw/conversations/2026-10-05-world-details-approved.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/world/visual-style.md
@@ -14,7 +15,7 @@ updated: 2026-10-05
 
 # D-0017: World features: spawn hub, landmarks, map, day/night, weather
 
-**Status:** accepted (2026-10-05); smaller details [proposed]
+**Status:** accepted (2026-10-05); smaller details approved the same day
 ([Q-046](../open-questions.md#q-046))
 
 ## Context

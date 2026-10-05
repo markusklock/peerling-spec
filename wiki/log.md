@@ -306,3 +306,9 @@ List all entries with `grep "^## \[" wiki/log.md`.
   shared day/night and weather, and the generator-update plan (D-0017). Epoch
   records gain a `generator` field. Smaller numbers proposed (Q-046). Added
   WGN-012…016, EXP-007, VIS-006.
+
+## [2026-10-05] design | World details approved
+- Source: raw/conversations/2026-10-05-world-details-approved.md
+- Changed: world/procedural-generation.md, gameplay/exploration.md,
+  tech/player-data.md, decisions/D-0017, open-questions.md, index.md
+- Notes: Resolved Q-046. No open questions remain.

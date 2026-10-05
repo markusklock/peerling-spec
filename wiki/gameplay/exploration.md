@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-world-details.md
+  - raw/conversations/2026-10-05-world-details-approved.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -86,7 +87,7 @@ never does. Each biome's foliage is listed in
 explores ([D-0017](../decisions/D-0017-world-features.md)). Discovered rest points and landmarks are marked
 by name.
 
-[proposed] The minimap sits in a screen corner; the full map opens with the
+[accepted] The minimap sits in a screen corner; the full map opens with the
 **M** key. Exploration is tracked per chunk (32 × 32 tiles): a chunk is
 revealed once the player has been in it, and the set of revealed chunks is
 stored in the save ([player-data § Save contents](../tech/player-data.md#save-contents)).
@@ -122,5 +123,4 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 
 ## Open questions
 
-[Q-046](../open-questions.md#q-046)
-
+_None at the moment._

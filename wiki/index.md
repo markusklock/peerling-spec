@@ -123,3 +123,4 @@ D-0018. Next free question ID: Q-047.
 | [2026-10-05-phone-backup](../raw/conversations/2026-10-05-phone-backup.md) | 2026-10-05 | Spectating, sharing and world feed details approved; device linking replaced by phone backup via QR |
 | [2026-10-05-phone-backup-approved](../raw/conversations/2026-10-05-phone-backup-approved.md) | 2026-10-05 | Phone backup and one-computer-at-a-time rule approved |
 | [2026-10-05-world-details](../raw/conversations/2026-10-05-world-details.md) | 2026-10-05 | Spawn hub, landmarks, paths, map, hand-made art kit, day/night, weather, generator updates |
+| [2026-10-05-world-details-approved](../raw/conversations/2026-10-05-world-details-approved.md) | 2026-10-05 | Smaller world details approved |

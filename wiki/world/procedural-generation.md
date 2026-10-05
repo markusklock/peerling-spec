@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-world-details.md
+  - raw/conversations/2026-10-05-world-details-approved.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -146,13 +147,13 @@ and showcase heart ([D-0017](../decisions/D-0017-world-features.md)):
 - **New Peerlings gallery:** pedestals showing the most recently published
   Peerlings as 3D models, loaded live from IPFS and updated as new ones appear.
   Clicking one opens its card ([sharing](../gameplay/sharing.md)).
-  [proposed] 12 pedestals, newest first.
+  [accepted] 12 pedestals, newest first.
 - **Network monument:** a crystal tree whose glowing branches show live network
-  activity. [proposed] Each glowing branch is a peer the player is connected
+  activity. [accepted] Each glowing branch is a peer the player is connected
   to; the number of leaves follows how many Peerlings this computer is storing
   and serving; it pulses when content is served to someone.
 
-[proposed] The hub is about 30 × 30 tiles of paved ground with no foliage, so
+[accepted] The hub is about 30 × 30 tiles of paved ground with no foliage, so
 nobody meets wild Peerlings in the crowd.
 
 ## Points of interest
@@ -167,12 +168,12 @@ nobody meets wild Peerlings in the crowd.
   waterfall, ancient crystal, wrecked machine, haunted tower…), built from the
   biome's kit and placed by the seed. Each has a **generated name** (e.g.
   "Ember Crater", "Whispering Falls") so players can say where to meet.
-  [proposed] Names are built deterministically from per-biome word lists (an
+  [accepted] Names are built deterministically from per-biome word lists (an
   adjective-like part and a feature noun, e.g. *Whispering* + *Falls*), and are
   unique within the world.
 - **Paths and bridges:** paths connect the rest points and the spawn hub, with
   bridges where they cross rivers. They mostly avoid foliage, so players can
-  travel without constant encounters. [proposed] The path network links each
+  travel without constant encounters. [accepted] The path network links each
   rest point to its nearest neighbours (a minimum spanning tree plus a few
   extra links so there are loops), and paths may cross foliage only where no
   other route exists.
@@ -184,7 +185,7 @@ nobody meets wild Peerlings in the crowd.
 [accepted] A shared day/night cycle driven by the epoch clock, so every player
 sees the same time of day ([D-0017](../decisions/D-0017-world-features.md)).
 
-[proposed] One in-game day lasts 24 epochs (2 hours). The time of day is
+[accepted] One in-game day lasts 24 epochs (2 hours). The time of day is
 computed from Unix time, so it is smooth and identical everywhere without any
 messages. Night darkens the scene and lights up rest points, landmarks and
 glowing foliage. It is purely visual in v1 (no effect on encounters).
@@ -193,13 +194,13 @@ glowing foliage. It is purely visual in v1 (no effect on encounters).
 
 [accepted] Weather per biome, the same for every player ([D-0017](../decisions/D-0017-world-features.md)).
 
-[proposed] Each biome's weather changes every 3 epochs (15 minutes). The next
+[accepted] Each biome's weather changes every 3 epochs (15 minutes). The next
 state is chosen from the epoch record's randomness (drand) and the biome, so
 all clients agree, including while the server is offline (client-derived epoch
 records, [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
 Purely visual in v1.
 
-| Biome | Weather states [proposed] |
+| Biome | Weather states [accepted] |
 |-------|----------------|
 | Plains | Clear, cloudy, light rain |
 | Volcano | Clear, ash fall, ember storm |
@@ -250,10 +251,9 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-012** [accepted] The world MUST have a spawn hub with the Creation Shrine, a rest point, a New Peerlings gallery loaded live from IPFS, and a network monument showing live network activity.
 - **WGN-013** [accepted] Every biome area MUST have one landmark with a generated name; rest points MUST share one silhouette dressed per biome.
 - **WGN-014** [accepted] Paths MUST connect rest points and the spawn hub, with bridges over water and signposts showing area name, biome and level range.
-- **WGN-015** [accepted] The day/night cycle and per-biome weather MUST be the same for all players, derived from time and the epoch records. [proposed] A day lasts 24 epochs; weather changes every 3 epochs; both are purely visual in v1.
+- **WGN-015** [accepted] The day/night cycle and per-biome weather MUST be the same for all players, derived from time and the epoch records. [accepted] A day lasts 24 epochs; weather changes every 3 epochs; both are purely visual in v1.
 - **WGN-016** [accepted] Generator updates MUST switch at an epoch announced in the epoch records, and clients MUST keep all past generator versions for verification.
 
 ## Open questions
 
-[Q-046](../open-questions.md#q-046)
-
+_None at the moment._
