@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-peer-save-backups.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
@@ -84,7 +85,11 @@ Players can also load the game through any public IPFS gateway, or from the
 installed PWA cache. If the operator's web server is down, the game still
 loads.
 
-### 5. Community mirrors (optional)
+### 5. Community mirrors (optional, not expected)
+
+[accepted] The designer doesn't expect anyone to run mirrors (2026-10-05), so
+nothing in the design relies on them; the option below simply stays open.
+
 Anyone can help keep every Peerling available. The operator publishes the full
 pinset (every CID the registry references) as an IPFS Cluster that others can
 follow with `ipfs-cluster-follow`, or as a simple list volunteers can pin. Each

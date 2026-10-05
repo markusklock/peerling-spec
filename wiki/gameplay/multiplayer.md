@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-05-peer-save-backups.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -47,7 +48,7 @@ updated: 2026-10-05
   The player starts an interaction by facing the other player and pressing
   the interact key.
 - [accepted] Interacting with an adjacent player's character opens a menu:
-  *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (their team, and the
+  *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (fetches their save, which also keeps a backup of it: [player-data § Keeping saves available](../tech/player-data.md#keeping-saves-available); their team, and the
   species they created). Once a battle or trade has started, it continues even
   if a player moves away.
 - [accepted] Wild encounters are **per player**: each player meets their own

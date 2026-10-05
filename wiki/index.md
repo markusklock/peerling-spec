@@ -112,3 +112,4 @@ D-0016. Next free question ID: Q-044.
 | [2026-10-05-proposal-review-1](../raw/conversations/2026-10-05-proposal-review-1.md) | 2026-10-05 | Proposal review: technical proposals and design items 1–4 approved; unique names requested |
 | [2026-10-05-proposal-review-2](../raw/conversations/2026-10-05-proposal-review-2.md) | 2026-10-05 | Unique names and design items 6–16, 18–20 approved; account recovery via password asked |
 | [2026-10-05-save-recovery](../raw/conversations/2026-10-05-save-recovery.md) | 2026-10-05 | Recovery by phrase and file only; save contents approved; who actually holds save copies |
+| [2026-10-05-peer-save-backups](../raw/conversations/2026-10-05-peer-save-backups.md) | 2026-10-05 | No community mirrors; peer save backups via profile inspection; storage persistence |

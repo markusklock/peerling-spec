@@ -250,3 +250,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
   only hold a save log if they fetched it, so the operator server is the only
   dependable copy. Proposed keeping saves available via a save snapshot in the
   backup file and mirrors following save logs (Q-043).
+
+## [2026-10-05] design | Peer save backups via profile inspection
+- Source: raw/conversations/2026-10-05-peer-save-backups.md
+- Changed: tech/player-data.md, tech/tech-stack.md, tech/resilience.md,
+  tech/realtime-networking.md, gameplay/multiplayer.md, open-questions.md,
+  index.md
+- Notes: Community mirrors are not expected. Proposed the designer's idea:
+  inspecting, trading with or battling a player keeps a backup of their save,
+  served back via a `save-wanted` pubsub request; plus the save snapshot in the
+  backup file (Q-043, SAVE-020/021). Answered storage persistence; proposed
+  requesting persistent storage (STK-014).

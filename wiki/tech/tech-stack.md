@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-05-asset-budgets-request.md
   - raw/conversations/2026-10-05-approvals-q016-q038.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-peer-save-backups.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
@@ -102,8 +103,27 @@ services (OrbitDB) is an acceptable setup.
 | One node per player | The **Web Locks API** ensures only one open tab runs the player's node | Two tabs with the same identity would fight over the save log |
 | Storage | **OPFS** (Origin Private File System) for the IPFS blockstore and OrbitDB data | Much faster binary reads and writes than IndexedDB, especially from a worker |
 | Crypto | **Ed25519 via WebCrypto** for player identities and signatures | Built into all major browsers; no JavaScript crypto library on the hot path |
+| Persistent storage | The client calls `navigator.storage.persist()` at first launch, and again after the player installs the PWA | See [Does stored data survive a restart?](#does-stored-data-survive-a-restart) |
 | Installable app | **PWA** (installable desktop web app) with a service worker caching the app itself | The game loads offline, which fits offline play ([player-data](player-data.md#encounter-seeds)) |
 | Language | **TypeScript** | Helia, libp2p and OrbitDB are TypeScript/JavaScript |
+
+### Does stored data survive a restart?
+
+Yes. OPFS (where the IPFS blocks, OrbitDB logs, save backups and key live) is
+persistent storage: it survives closing the browser and restarting the
+computer, as long as browser data isn't cleared. Two caveats:
+- **Eviction under pressure.** By default, browser storage is "best effort":
+  when the disk runs low, the browser may delete an origin's data. Asking for
+  *persistent* storage (`navigator.storage.persist()`) prevents that. Browsers
+  grant it more readily to installed web apps, which is one more reason the
+  game is a PWA.
+- **Safari's 7-day rule.** Safari deletes a website's stored data if the site
+  isn't used for 7 days. Web apps added to the Dock count as installed and keep
+  their data longer, but rules differ per browser and change over time, so
+  implementers must check the current behaviour.
+
+The player's own data is protected by the recovery phrase, the backup file and
+the server's copy anyway.
 
 ## Asset formats
 
@@ -169,6 +189,7 @@ oversized files.
 - **STK-011** [accepted] The client MUST be written in TypeScript and be installable as a PWA.
 - **STK-012** [accepted] Every species asset MUST fit the [asset budgets](#asset-budgets); clients MUST refuse content that exceeds them.
 - **STK-013** [accepted] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations and collection.
+- **STK-014** [proposed] The client MUST request persistent storage (`navigator.storage.persist()`) and SHOULD encourage installing the PWA.
 
 ## Open questions
 

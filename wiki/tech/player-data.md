@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-save-recovery.md
+  - raw/conversations/2026-10-05-peer-save-backups.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -134,8 +135,8 @@ exists only where something has a reason to fetch it:
 |--------|---------------------|--------------|
 | **The operator server** | Replicates and pins every save log (SAVE-001) | The main copy; always online, but a single machine |
 | **The player's own browsers** | Every device the player plays on keeps its own log | Lost if browser data is cleared |
-| **Other players** | Verifying a catch or a trade fetches the catcher's save log ([Verified Peerlings](#verified-peerlings)) | Incidental: only some saves, and the copy may be evicted from their cache; browsers are only online while the game is open |
-| **Community mirrors** | Only if they choose to follow save logs ([resilience](resilience.md)) | Optional |
+| **Other players' backups** | Inspecting a player, trading or battling keeps a backup of their save ([Keeping saves available](#keeping-saves-available)) | Sporadic; only while the holder's game is open |
+| **Community mirrors** | Not expected (designer, 2026-10-05) | Not relied on |
 
 So in practice the operator server is the only dependable network copy. Ways
 to make saves more durable are proposed in
@@ -143,18 +144,45 @@ to make saves more durable are proposed in
 
 ### Keeping saves available
 
-[proposed] Options, written 2026-10-05 ([Q-043](../open-questions.md#q-043)):
+[accepted] Community mirrors are not expected, so nothing relies on them
+(2026-10-05). [proposed] Two complementary measures
+([Q-043](../open-questions.md#q-043)):
 
-| Option | How | Pros | Cons |
-|--------|-----|------|------|
-| **A. Snapshot in the backup file** (recommended) | The backup file holds the key *and* the latest save snapshot. The game reminds the player to refresh it now and then | Works even if every network copy is gone; costs nothing | The file is only as fresh as its last export |
-| **B. Mirrors follow save logs** (recommended) | The operator publishes the list of save-log addresses, and community mirrors ([RES-004](resilience.md#requirements)) replicate them along with the Peerlings | Real, always-on copies outside the operator's server | Depends on volunteers running mirrors |
-| C. Buddy pinning | Each client also keeps a few other players' save logs, chosen deterministically (e.g. 3 per save) | Spreads copies across players, a nice IPFS showcase | Browsers are online only while playing, so a buddy copy is often unreachable; extra work for every client |
-| D. Paid pinning or Filecoin | The server also stores save snapshots with a pinning service or as Filecoin deals | Very durable | Costs money; another external dependency |
+**1. Peer backups through profile inspection** (the designer's idea)
 
-Recommendation: **A + B**. A protects each player personally, B gives the
-network independent copies. C adds little because browser nodes are offline
-most of the time; D is overkill for a hobby project.
+- **Inspecting fetches the save.** When a player inspects a nearby player
+  ([multiplayer](../gameplay/multiplayer.md): stand on a neighbouring tile,
+  face them, choose *View profile*), the client fetches that player's **full save
+  log**: the latest snapshot plus the events after it. The profile screen is
+  built from it: team (with levels, traits, shimmer and verification), created
+  species, Peerdex counts, appearance.
+- **Trades and PvP fetch it too.** Verifying a trade partner's or opponent's
+  Peerlings already fetches their save log; that copy is kept the same way.
+- **Kept as a backup.** The client stores these logs persistently, apart from
+  the normal content cache, up to **100 other players or 100 MB**, whichever
+  comes first, dropping the save it has gone longest without refreshing. Each
+  backup is refreshed whenever that player is inspected, traded with or battled
+  again.
+- **Tamper-proof.** Every save-log entry is signed by its owner, so a backup
+  holder can't change anyone's save.
+- **Serving it back.** A player recovering their account publishes a request on
+  the pubsub topic `peerlings/v1/save-wanted` with their player ID. Every online
+  client holding a backup of that save answers over the direct protocol
+  `/peerlings/save-backup/1.0.0` with its snapshot CID and log heads. The
+  recovering client fetches them, merges them with the server's copy (OrbitDB
+  merges logs automatically), and continues from the newest state.
+- **Honest limits:** backups are sporadic. A player who never meets anyone has
+  none, and a holder can only help while their game is open. This is a
+  safety net next to the server, not a replacement.
+
+**2. Save snapshot in the backup file**
+
+The backup file holds the key *and* the latest save snapshot. The game reminds
+the player to refresh it now and then (e.g. after each level-up milestone).
+This works even if every network copy is gone.
+
+Not recommended: buddy pinning of assigned saves (browsers are offline most of
+the time), and paid pinning or Filecoin storage (costs money).
 
 ## Verification
 
