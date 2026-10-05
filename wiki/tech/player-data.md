@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-05-peer-save-backups-approved.md
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-05-phone-backup-approved.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -126,7 +127,7 @@ computer or after clearing browser data. The phone is only a backup carrier;
 the game isn't played on it (designer, 2026-10-05; replaces the earlier
 "link a device" idea).
 
-[proposed] ([Q-045](../open-questions.md#q-045))
+[accepted] Approved 2026-10-05.
 - **On the phone:** the phone opens the [Peerlings Viewer](../gameplay/sharing.md)
   (the small web app published on IPFS), which has a **Backup** section. It
   runs its own Helia node in the phone's browser, so the phone is another IPFS
@@ -155,7 +156,7 @@ the game isn't played on it (designer, 2026-10-05; replaces the earlier
 
 ### Using the same account on several computers
 
-[proposed] A restored account can end up on two computers at once (the old one
+[accepted] A restored account can end up on two computers at once (the old one
 still has it). Playing on both at the same time would create duplicate
 encounter numbers, which verification treats as a forked save
 ([Verified Peerlings](#verified-peerlings)). So a device appends a
@@ -497,12 +498,12 @@ D-0013, mostly checks any player can run).
 - **SAVE-020** [accepted] Inspecting another player's profile, trading or battling with them MUST fetch and keep a persistent backup of their save log (up to 100 players or 100 MB); clients MUST answer `save-wanted` requests for saves they hold.
 - **SAVE-021** [accepted] The backup file MUST contain the key and the latest save snapshot.
 - ~~**SAVE-022**~~ (removed 2026-10-05: device linking replaced by the phone backup, SAVE-024)
-- **SAVE-023** [proposed] Only one computer per player MUST be able to play at a time: a client MUST sync the save log and MUST refuse to start play while another computer's session for the same account is active.
-- **SAVE-024** [proposed] A player MUST be able to back up the identity key and save to a phone by scanning a QR code (one-time secret, 5 minutes) shown on the computer, and restore them to a computer the same way; the phone side runs in the Peerlings Viewer.
+- **SAVE-023** [accepted] Only one computer per player MUST be able to play at a time: a client MUST sync the save log and MUST refuse to start play while another computer's session for the same account is active.
+- **SAVE-024** [accepted] A player MUST be able to back up the identity key and save to a phone by scanning a QR code (one-time secret, 5 minutes) shown on the computer, and restore them to a computer the same way; the phone side runs in the Peerlings Viewer.
 
 ## Open questions
 
-[Q-045](../open-questions.md#q-045)
+_None at the moment._
 
 ## See also
 

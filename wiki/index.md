@@ -120,3 +120,4 @@ D-0017. Next free question ID: Q-046.
 | [2026-10-05-peer-save-backups-approved](../raw/conversations/2026-10-05-peer-save-backups-approved.md) | 2026-10-05 | Peer save backups and save snapshot in backup file approved |
 | [2026-10-05-showcase-features](../raw/conversations/2026-10-05-showcase-features.md) | 2026-10-05 | Adopted spectating, shareable links, device linking and a world feed |
 | [2026-10-05-phone-backup](../raw/conversations/2026-10-05-phone-backup.md) | 2026-10-05 | Spectating, sharing and world feed details approved; device linking replaced by phone backup via QR |
+| [2026-10-05-phone-backup-approved](../raw/conversations/2026-10-05-phone-backup-approved.md) | 2026-10-05 | Phone backup and one-computer-at-a-time rule approved |

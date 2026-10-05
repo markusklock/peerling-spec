@@ -17,19 +17,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-045
-**Approve the phone backup design and the one-computer-at-a-time rule?**
-- Affects: [player-data § Phone backup](tech/player-data.md#phone-backup), [sharing](gameplay/sharing.md), [tech-stack](tech/tech-stack.md)
-- Context: The designer replaced device linking with a phone backup: scan a QR
-  code with the phone, which fetches the save to carry it to another computer.
-- Proposal: the phone side runs in the Peerlings Viewer (mobile-capable); the
-  computer always shows the QR code (peer ID, relay address, one-time 5-minute
-  secret) and the phone always scans; key + save (CAR file) travel encrypted
-  over a direct libp2p connection after confirmation; restoring then syncs
-  newer data from the network. Plus: only one computer per account may play at
-  a time (SAVE-023).
-- Raised: 2026-10-05
-
 ## Resolved
 
 ### Q-002
@@ -269,3 +256,7 @@ storage. No reliance on community mirrors. Resolved 2026-10-05 →
 **Details of spectating, sharing links and the world feed.** Approved as
 proposed; device linking was replaced by a phone backup ([Q-045](#q-045)).
 Resolved 2026-10-05 → [D-0016](decisions/D-0016-showcase-features.md).
+
+### Q-045
+**Phone backup and one computer at a time.** Approved as proposed. Resolved
+2026-10-05 → [player-data § Phone backup](tech/player-data.md#phone-backup).

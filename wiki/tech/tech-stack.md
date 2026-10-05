@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-05-phone-backup-approved.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
@@ -34,7 +35,7 @@ updated: 2026-10-05
 and Safari on desktop operating systems. Mobile is not a focus; the game may
 happen to run there, but it isn't designed, tested or controlled for touch.
 [accepted] No polyfills or workarounds for older browsers. The Peerlings Viewer
-([sharing](../gameplay/sharing.md)) is the exception to desktop-only: [proposed] it
+([sharing](../gameplay/sharing.md)) is the exception to desktop-only: [accepted] it
 must also work in current mobile browsers, because it carries the phone backup.
 
 As of 2026, WebTransport works in all of these browsers. WebGPU works in all of

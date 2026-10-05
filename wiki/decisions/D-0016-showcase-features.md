@@ -6,6 +6,7 @@ tags: [showcase, libp2p, ipns, pubsub, social]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-05-phone-backup-approved.md
 related:
   - wiki/gameplay/spectating.md
   - wiki/gameplay/sharing.md
@@ -18,7 +19,7 @@ updated: 2026-10-05
 # D-0016: Spectating, shareable links, device linking and a world feed
 
 **Status:** accepted (2026-10-05); details of 1, 2 and 4 approved the same day
-([Q-044](../open-questions.md#q-044)); phone backup details [proposed]
+([Q-044](../open-questions.md#q-044)); phone backup details approved the same day
 ([Q-045](../open-questions.md#q-045))
 
 ## Context

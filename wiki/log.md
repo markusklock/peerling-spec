@@ -289,3 +289,9 @@ List all entries with `grep "^## \[" wiki/log.md`.
   device linking with a phone backup via QR code, run in the Peerlings Viewer
   (Q-045). Removed SAVE-022; added SAVE-024; SAVE-023 reworded to one computer
   per account at a time.
+
+## [2026-10-05] design | Phone backup approved
+- Source: raw/conversations/2026-10-05-phone-backup-approved.md
+- Changed: tech/player-data.md, tech/tech-stack.md, decisions/D-0016,
+  open-questions.md, index.md
+- Notes: Resolved Q-045 (SAVE-023, SAVE-024 accepted). No open questions remain.
