@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-save-recovery.md
   - raw/conversations/2026-10-05-peer-save-backups.md
+  - raw/conversations/2026-10-05-peer-save-backups-approved.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -66,7 +67,7 @@ refers to it by CID.
 | Created species | CID(s) of the species this player created | [accepted] |
 | Peerdex | Species seen and species caught (CIDs) | [accepted] |
 | Position | Last position and facing in the world | [accepted] |
-| Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [proposed] No inventory at all in the first version, so this part is empty | [accepted] |
+| Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [accepted] No inventory at all in the first version, so this part is empty | [accepted] |
 
 Not in the save: the identity **private key** (stays on the device; restored
 with the recovery phrase), and the authoritative owner of each Peerling (that is
@@ -139,14 +140,12 @@ exists only where something has a reason to fetch it:
 | **Community mirrors** | Not expected (designer, 2026-10-05) | Not relied on |
 
 So in practice the operator server is the only dependable network copy. Ways
-to make saves more durable are proposed in
-[Q-043](../open-questions.md#q-043) ([Keeping saves available](#keeping-saves-available)).
+to make saves more durable are in [Keeping saves available](#keeping-saves-available).
 
 ### Keeping saves available
 
 [accepted] Community mirrors are not expected, so nothing relies on them
-(2026-10-05). [proposed] Two complementary measures
-([Q-043](../open-questions.md#q-043)):
+(2026-10-05). [accepted] Two complementary measures (approved 2026-10-05):
 
 **1. Peer backups through profile inspection** (the designer's idea)
 
@@ -444,10 +443,12 @@ D-0013, mostly checks any player can run).
 - **SAVE-017** [accepted] A caught Peerling's instance ID MUST be SHA-256(player ID ‖ encounter number).
 - **SAVE-018** [accepted] A save log's OrbitDB address MUST be derivable from the player ID alone, so a recovered key can find its save on any node that holds it.
 - ~~**SAVE-019**~~ (removed 2026-10-05: no password-based recovery; the designer chose the recovery phrase and backup file only)
+- **SAVE-020** [accepted] Inspecting another player's profile, trading or battling with them MUST fetch and keep a persistent backup of their save log (up to 100 players or 100 MB); clients MUST answer `save-wanted` requests for saves they hold.
+- **SAVE-021** [accepted] The backup file MUST contain the key and the latest save snapshot.
 
 ## Open questions
 
-[Q-043](../open-questions.md#q-043)
+_None at the moment._
 
 ## See also
 

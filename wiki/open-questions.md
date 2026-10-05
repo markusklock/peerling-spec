@@ -17,18 +17,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-043
-**How should saves be kept available besides the operator server?**
-- Affects: [player-data § Keeping saves available](tech/player-data.md#keeping-saves-available), [multiplayer](gameplay/multiplayer.md), [realtime-networking](tech/realtime-networking.md), [tech-stack](tech/tech-stack.md)
-- Context: IPFS nodes only hold content they request, so apart from the
-  operator server nobody reliably holds a player's save log. Community mirrors
-  are not expected (designer, 2026-10-05).
-- Proposal (based on the designer's idea): inspecting a nearby player, trading
-  or battling keeps a persistent backup of their save (up to 100 players or 100
-  MB); recovering players ask for their save on a pubsub topic and holders
-  answer. Plus the latest save snapshot in the backup file. Storage persists
-  across restarts; the client requests persistent storage (STK-014).
-- Raised: 2026-10-05
 ## Resolved
 
 ### Q-002
@@ -256,3 +244,10 @@ with a live check and reservation; names stay taken after delisting. Resolved
 **Account recovery and save contents.** Recovery phrase and backup file only;
 no password recovery. The save contents list is approved. Resolved 2026-10-05 →
 [player-data § Account recovery](tech/player-data.md#account-recovery).
+
+### Q-043
+**Keeping saves available.** Inspecting, trading with or battling a player
+keeps a persistent backup of their save, served back on request via pubsub; the
+backup file holds the latest save snapshot; the client requests persistent
+storage. No reliance on community mirrors. Resolved 2026-10-05 →
+[player-data § Keeping saves available](tech/player-data.md#keeping-saves-available).
