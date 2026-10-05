@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-peer-save-backups-approved.md
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-05-phone-backup.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -91,7 +92,7 @@ the writer, so the log is also a tamper-evident history.
 | `catch` | A wild Peerling is caught | the new instance + **catch evidence** (see below) |
 | `battle-result` | After a wild battle | for each participating instance: XP gained, new level, HP |
 | `team` | Team changed | ordered instance IDs |
-| `session-start` | The game starts on a device | device ID ([Linking a device](#linking-a-device)) |
+| `session-start` | The game starts on a computer | device ID ([Using the same account on several computers](#using-the-same-account-on-several-computers)) |
 | `nickname` | Peerling renamed | instance ID, nickname |
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
 | `seen` | First sighting of a species | species CID |
@@ -115,36 +116,54 @@ pins (SAVE-001). The key is recovered with the **recovery phrase** or a
 |--------|-----|----------|
 | **Recovery phrase** | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
 | **Backup file** | Export or import the key as a file | Strong, if the file is kept safe |
+| **Phone backup** | Scan a QR code with your phone; it carries the key and the save ([Phone backup](#phone-backup)) | Strong; whoever has the phone has the account |
 
-### Linking a device
+### Phone backup
 
-[accepted] A player can link a second device to their account with a short
-code instead of typing the recovery phrase
-([D-0016](../decisions/D-0016-showcase-features.md)).
+[accepted] Players can back up their account to their phone by scanning a QR
+code. The phone keeps a copy of the save, which can be imported on another
+computer or after clearing browser data. The phone is only a backup carrier;
+the game isn't played on it (designer, 2026-10-05; replaces the earlier
+"link a device" idea).
 
-[proposed] ([Q-044](../open-questions.md#q-044))
-- **On the existing device:** *Settings → Link a device* shows a short code
-  (a number plus three words, e.g. `7-crystal-lantern-moss`) and a QR code
-  holding the same code. The code is valid for 5 minutes and works once.
-- **On the new device:** *Link from another device*, then type the code (or
-  scan the QR code with a webcam where the browser supports it).
-- **Under the hood** (in the style of the "magic wormhole" tool): the number
-  selects a rendezvous pubsub topic where the two devices find each other. They
-  open a direct, encrypted libp2p connection (WebRTC) and run a
-  password-authenticated key exchange (PAKE, e.g. CPace or SPAKE2) using the
-  words, which gives both sides a shared secret that an eavesdropper can't
-  guess offline. The existing device asks the player to confirm
-  (*"Link this new device?"*), then sends the private key and the latest save
-  snapshot CID, encrypted with that secret.
-- **One device at a time.** Both devices now write the same save log. Playing on
-  two devices at once would create duplicate encounter numbers, which
-  verification treats as a forked save ([Verified Peerlings](#verified-peerlings)).
-  So a device appends a `session-start` event when the game starts and keeps
-  announcing the session in its presence messages. Another device of the same
-  player first syncs the save log; if a session is active elsewhere, it refuses
-  to start play (*"You're playing on another device"*). Playing on two devices
-  while both are offline can't be detected in time; the game warns about this
-  when linking.
+[proposed] ([Q-045](../open-questions.md#q-045))
+- **On the phone:** the phone opens the [Peerlings Viewer](../gameplay/sharing.md)
+  (the small web app published on IPFS), which has a **Backup** section. It
+  runs its own Helia node in the phone's browser, so the phone is another IPFS
+  node for a moment. It can be installed on the home screen.
+- **Making a backup:** on the computer, *Settings → Back up to phone* shows a QR
+  code with the computer's peer ID, a relay address and a one-time secret
+  (32 random bytes, valid for 5 minutes). The phone scans it with its camera,
+  connects to the computer over libp2p (WebRTC, through a relay if needed) and
+  proves it knows the secret. The computer asks the player to confirm, then
+  sends the **identity key** and the **save** (latest snapshot plus log, packed
+  as a CAR file, the IPFS archive format that keeps every CID intact),
+  encrypted with a key derived from the secret. The phone stores it in its
+  browser storage and shows the date of the backup.
+- **Restoring:** on the new (or wiped) computer, *Recover account → Restore from
+  phone* shows a QR code of the same kind. The phone scans it, connects, and
+  sends the key and save. The computer imports both, then syncs the save log
+  from the network to pick up anything newer than the backup.
+- **Why the phone always scans:** phones have cameras, desktop computers often
+  don't, so the computer only ever *shows* QR codes.
+- **Keeping it fresh:** scanning again replaces the backup. The game reminds the
+  player now and then (e.g. after a level-up milestone).
+- **Security:** the QR code carries a full-strength random secret and is only
+  shown on the player's own screen, so nobody else can join the transfer. The
+  backup on the phone contains the private key, so the Viewer shows a warning
+  that whoever has the phone has the account, and offers to delete the backup.
+
+### Using the same account on several computers
+
+[proposed] A restored account can end up on two computers at once (the old one
+still has it). Playing on both at the same time would create duplicate
+encounter numbers, which verification treats as a forked save
+([Verified Peerlings](#verified-peerlings)). So a device appends a
+`session-start` event when the game starts and announces its session in its
+presence messages. Another computer with the same account first syncs the save
+log; if a session is active elsewhere, it refuses to start play (*"You're
+playing on another computer"*). Two computers playing while both are offline
+can't be detected in time; restoring shows a warning about this.
 
 ### Finding the save again
 
@@ -477,12 +496,13 @@ D-0013, mostly checks any player can run).
 - ~~**SAVE-019**~~ (removed 2026-10-05: no password-based recovery; the designer chose the recovery phrase and backup file only)
 - **SAVE-020** [accepted] Inspecting another player's profile, trading or battling with them MUST fetch and keep a persistent backup of their save log (up to 100 players or 100 MB); clients MUST answer `save-wanted` requests for saves they hold.
 - **SAVE-021** [accepted] The backup file MUST contain the key and the latest save snapshot.
-- **SAVE-022** [proposed] A player MUST be able to link a new device with a single-use, 5-minute code; the key MUST travel only over a direct, encrypted libp2p connection secured by a PAKE, after confirmation on the existing device.
-- **SAVE-023** [proposed] Only one device per player MUST be able to play at a time: a device MUST sync the save log and MUST refuse to start play while another device's session is active.
+- ~~**SAVE-022**~~ (removed 2026-10-05: device linking replaced by the phone backup, SAVE-024)
+- **SAVE-023** [proposed] Only one computer per player MUST be able to play at a time: a client MUST sync the save log and MUST refuse to start play while another computer's session for the same account is active.
+- **SAVE-024** [proposed] A player MUST be able to back up the identity key and save to a phone by scanning a QR code (one-time secret, 5 minutes) shown on the computer, and restore them to a computer the same way; the phone side runs in the Peerlings Viewer.
 
 ## Open questions
 
-[Q-044](../open-questions.md#q-044)
+[Q-045](../open-questions.md#q-045)
 
 ## See also
 

@@ -278,3 +278,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
   (Q-044). Device linking introduces a one-device-at-a-time rule (SAVE-023),
   because two devices playing at once would fork the save log. Added SPT-001…004,
   LNK-001…003, FED-001/002, SAVE-022/023.
+
+## [2026-10-05] design | Phone backup replaces device linking
+- Source: raw/conversations/2026-10-05-phone-backup.md
+- Changed: gameplay/spectating.md, gameplay/sharing.md, gameplay/world-feed.md,
+  tech/player-data.md, tech/realtime-networking.md, tech/ipfs-showcase.md,
+  tech/tech-stack.md, decisions/D-0016, glossary.md, open-questions.md,
+  index.md
+- Notes: Resolved Q-044 (spectating, sharing, world feed approved). Replaced
+  device linking with a phone backup via QR code, run in the Peerlings Viewer
+  (Q-045). Removed SAVE-022; added SAVE-024; SAVE-023 reworded to one computer
+  per account at a time.

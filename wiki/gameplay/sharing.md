@@ -6,6 +6,7 @@ req_prefix: LNK
 tags: [social, ipfs, ipns, showcase, sharing]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-05-phone-backup.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/ipfs-showcase.md
@@ -25,7 +26,7 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 
 ## Design
 
-[proposed] ([Q-044](../open-questions.md#q-044))
+[accepted] Approved 2026-10-05.
 
 ### The viewer
 
@@ -35,6 +36,10 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 - It fetches everything with `@helia/verified-fetch` in the visitor's browser,
   so each byte is checked against its CID. It renders the 3D model with the
   same stack as the game (WebGPU with WebGL2 fallback).
+- The Viewer also holds the **phone backup** feature: on a phone it can scan
+  the computer's QR code and carry the player's key and save
+  ([player-data § Phone backup](../tech/player-data.md#phone-backup)), so it
+  must work in mobile browsers.
 - The same links also work through the IPFS **Service Worker Gateway**
   (`inbrowser.link`), which loads and verifies content from IPFS in a service
   worker. They also work as native `ipfs://` / `ipns://` links in IPFS-aware
@@ -70,12 +75,12 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 ## Requirements
 
 - **LNK-001** [accepted] Players MUST be able to share links to Peerling cards and player profiles that open outside the game.
-- **LNK-002** [proposed] Links MUST open in a separate viewer web app published on IPFS (with DNSLink), which fetches and verifies all content by CID in the visitor's browser.
-- **LNK-003** [proposed] A player's profile MUST be published as a profile document behind an IPNS name derived from their identity key; the client MUST republish it each session and the server MUST republish the latest signed record.
+- **LNK-002** [accepted] Links MUST open in a separate viewer web app published on IPFS (with DNSLink), which fetches and verifies all content by CID in the visitor's browser.
+- **LNK-003** [accepted] A player's profile MUST be published as a profile document behind an IPNS name derived from their identity key; the client MUST republish it each session and the server MUST republish the latest signed record.
 
 ## Open questions
 
-[Q-044](../open-questions.md#q-044)
+_None at the moment._
 
 ## See also
 

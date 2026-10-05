@@ -6,6 +6,7 @@ req_prefix: SPT
 tags: [gameplay, multiplayer, pvp, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-05-phone-backup.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/gameplay/pvp-battles.md
@@ -25,7 +26,7 @@ updated: 2026-10-05
 
 ## Design
 
-[proposed] ([Q-044](../open-questions.md#q-044))
+[accepted] Approved 2026-10-05.
 
 - **Finding a battle.** A PvP battle happens on the spot in the world; the two
   fighters' characters show a battle indicator. A nearby player interacts with
@@ -56,13 +57,13 @@ updated: 2026-10-05
 ## Requirements
 
 - **SPT-001** [accepted] Players MUST be able to watch nearby PvP battles live.
-- **SPT-002** [proposed] Fighters MUST publish the teams, level mode, RNG seed and each turn's revealed actions with the battle-state hash on a per-battle pubsub topic; each turn message MUST include all earlier actions.
-- **SPT-003** [proposed] Spectators MUST render battles by running the deterministic battle engine on the published actions and MUST check the state hashes.
-- **SPT-004** [proposed] A PvP challenge MUST include a *Spectators allowed* option, on by default.
+- **SPT-002** [accepted] Fighters MUST publish the teams, level mode, RNG seed and each turn's revealed actions with the battle-state hash on a per-battle pubsub topic; each turn message MUST include all earlier actions.
+- **SPT-003** [accepted] Spectators MUST render battles by running the deterministic battle engine on the published actions and MUST check the state hashes.
+- **SPT-004** [accepted] A PvP challenge MUST include a *Spectators allowed* option, on by default.
 
 ## Open questions
 
-[Q-044](../open-questions.md#q-044)
+_None at the moment._
 
 ## See also
 

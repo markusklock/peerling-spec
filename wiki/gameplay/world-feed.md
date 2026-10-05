@@ -6,6 +6,7 @@ req_prefix: FED
 tags: [social, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-05-phone-backup.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/realtime-networking.md
@@ -24,7 +25,7 @@ updated: 2026-10-05
 
 ## Design
 
-[proposed] ([Q-044](../open-questions.md#q-044))
+[accepted] Approved 2026-10-05.
 
 - **Topic:** one world-wide pubsub topic, `peerlings/v1/feed`.
 - **Events:**
@@ -48,11 +49,11 @@ updated: 2026-10-05
 ## Requirements
 
 - **FED-001** [accepted] The game MUST show a live feed of notable world events.
-- **FED-002** [proposed] Feed events MUST be published on the world-wide topic `peerlings/v1/feed`, signed by the sender, rate-limited to one per player per minute by receivers, and checked before being shown.
+- **FED-002** [accepted] Feed events MUST be published on the world-wide topic `peerlings/v1/feed`, signed by the sender, rate-limited to one per player per minute by receivers, and checked before being shown.
 
 ## Open questions
 
-[Q-044](../open-questions.md#q-044)
+_None at the moment._
 
 ## See also
 

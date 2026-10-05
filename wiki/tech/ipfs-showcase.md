@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-05-phone-backup.md
 related:
   - wiki/overview.md
   - wiki/tech/ipfs-helia.md
@@ -45,7 +46,7 @@ updated: 2026-10-05
 | "You published this" | During onboarding the player watches their own node add their creation and the server pin it from them |
 | Shareable links | Peerling cards and player profiles open outside the game, loaded from IPFS/IPNS in the visitor's browser ([sharing](../gameplay/sharing.md)) |
 | Spectating and world feed | Battles and world events spread peer-to-peer over pubsub ([spectating](../gameplay/spectating.md), [world-feed](../gameplay/world-feed.md)) |
-| Linking a device | The key moves between your computers over a direct, encrypted connection ([player-data](player-data.md#linking-a-device)) |
+| Phone backup | Scan a QR code and your phone becomes an IPFS node for a moment, carrying your save as a CAR file ([player-data](player-data.md#phone-backup)) |
 | Verified badge | A visible check that content was verified against its CID and the species attestation |
 
 ## Requirements
