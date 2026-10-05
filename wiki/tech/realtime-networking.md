@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
+  - raw/conversations/2026-10-05-pvp-level-modes.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -48,7 +49,7 @@ updated: 2026-10-05
   constant resubscribing.
 - A client publishes a **presence message** to its current region topic **4
   times per second while moving**, and a heartbeat **every 5 s when idle**.
-  [proposed] With grid movement ([exploration § Grid movement](../gameplay/exploration.md#grid-movement))
+  [accepted] With grid movement ([exploration § Grid movement](../gameplay/exploration.md#grid-movement))
   a moving player sends one message per step (3 per second, within the
   limit). Contents: peer ID, player ID, display name, appearance hash, **tile
   coordinates**, facing direction, step start time, timestamp, signature.

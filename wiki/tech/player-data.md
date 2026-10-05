@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
+  - raw/conversations/2026-10-05-pvp-level-modes.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -45,7 +46,7 @@ updated: 2026-10-05
 | Recovery | The identity key can be restored with a **recovery phrase** |
 | Faked Peerlings | Anyone verifies a catch by **replaying the battle** from the public catch evidence |
 | Duplication via trades | Ownership is a signed **transfer chain** in an open OrbitDB **transfer log**; double trades are detected and the cheater is flagged |
-| Edited levels in PvP | PvP uses **level 50** for everyone |
+| Edited levels in PvP | PvP's default **Fair** mode uses level 50 for everyone; the opt-in Real-levels mode is unverified ([D-0015](../decisions/D-0015-pvp-level-modes.md)) |
 | What can be traded or used in PvP | Only **verified** Peerlings |
 
 ## Save contents
@@ -286,7 +287,7 @@ instead:
 
 ### PvP
 
-[accepted] PvP uses level 50 and only verified Peerlings. [proposed] Before
+[accepted] PvP uses only verified Peerlings; in Fair mode everyone fights at level 50 ([D-0015](../decisions/D-0015-pvp-level-modes.md)). [proposed] Before
 the battle, each side verifies the other's team (origin and ownership chain),
 using cached results where possible. No server is needed.
 
@@ -303,9 +304,10 @@ using cached results where possible. No server is needed.
   a new epoch. That is at most one re-roll per 5 minutes. Since D-0014 this can
   also be used to chase good traits or a shimmer; the 5-minute cost keeps it
   slow.
-- **Levels outside PvP aren't verified.** XP from wild battles isn't replayed.
-  An edited level only matters in the player's own wild battles, and in a
-  Peerling they trade away. The receiving player gets the level shown.
+- **Levels aren't verified.** XP from wild battles isn't replayed. An edited
+  level matters in the player's own wild battles, in a Peerling they trade away
+  (the receiver gets the level shown), and in Real-levels PvP, which both
+  players opt into ([D-0015](../decisions/D-0015-pvp-level-modes.md)).
 - **Double trades** are detected, not prevented ([Transfer log and trades](#transfer-log-and-trades)).
 - **Choice among encounter candidates.** A modified client could claim the first
   candidates failed to download and pick a later one: at most a choice of 1 in

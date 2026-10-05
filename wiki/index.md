@@ -27,7 +27,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [battle](gameplay/battle.md) | draft | BTL | Turns, action order, move mechanics, stat stages, damage model, XP, RNG, battle screen |
 | [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
 | [multiplayer](gameplay/multiplayer.md) | draft | MPL | Shared world: seeing other players, face-to-face interaction, emotes (no chat) |
-| [pvp-battles](gameplay/pvp-battles.md) | draft | PVP | Peer-to-peer battles: fairness, commit-reveal protocol |
+| [pvp-battles](gameplay/pvp-battles.md) | draft | PVP | Peer-to-peer battles: Fair / Real-levels modes, verification, commit-reveal protocol |
 | [trading](gameplay/trading.md) | draft | TRD | Peer-to-peer trades of Peerling instances |
 | [creation-shrine](gameplay/creation-shrine.md) | draft | SHR | Giving up 3 Peerlings to create a new species |
 | [creator-feedback](gameplay/creator-feedback.md) | draft | CFB | Species stats in OrbitDB, live creator notifications |
@@ -81,12 +81,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
 | [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
 | [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
+| [D-0015](decisions/D-0015-pvp-level-modes.md) | accepted | PvP level modes: Fair or Real levels |
 
 ## Registered requirement prefixes
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
 RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0015. Next free question ID: Q-041.
+D-0016. Next free question ID: Q-041.
 
 ## Sources
 
@@ -107,3 +108,4 @@ D-0015. Next free question ID: Q-041.
 | [2026-10-05-asset-budgets-request](../raw/conversations/2026-10-05-asset-budgets-request.md) | 2026-10-05 | Designer asked for asset budget suggestions (Q-016) and for Q-038 to be explained |
 | [2026-10-05-approvals-q016-q038](../raw/conversations/2026-10-05-approvals-q016-q038.md) | 2026-10-05 | Asset budgets and individual-variation details approved |
 | [2026-10-05-grid-foliage-battles](../raw/conversations/2026-10-05-grid-foliage-battles.md) | 2026-10-05 | Game Boy-style grid movement; encounters in biome foliage; battle design requested |
+| [2026-10-05-pvp-level-modes](../raw/conversations/2026-10-05-pvp-level-modes.md) | 2026-10-05 | PvP level modes (Fair / Real levels); battle rules and grid numbers approved |

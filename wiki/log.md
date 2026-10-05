@@ -208,3 +208,13 @@ List all entries with `grep "^## \[" wiki/log.md`.
   numbers (Q-040) and full battle rules (Q-039). Presence now sends tile
   coordinates per step; catch evidence includes the encounter tile, which
   verifiers check is foliage. Added EXP-004…006, WGN-010/011, BTL-009/010.
+
+## [2026-10-05] design | PvP level modes; battle rules and grid numbers approved
+- Source: raw/conversations/2026-10-05-pvp-level-modes.md
+- Changed: decisions/D-0015 (new), gameplay/pvp-battles.md, gameplay/battle.md,
+  gameplay/multiplayer.md, gameplay/exploration.md,
+  world/procedural-generation.md, tech/realtime-networking.md,
+  tech/player-data.md, open-questions.md, index.md
+- Notes: Resolved Q-039 and Q-040. PvP challenges now choose Fair (level 50,
+  default) or Real levels (unverified, opt-in). Removed PVP-007; added PVP-010.
+  No open questions remain.

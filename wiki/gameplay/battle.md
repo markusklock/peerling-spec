@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
+  - raw/conversations/2026-10-05-pvp-level-modes.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -36,8 +37,8 @@ updated: 2026-10-05
 
 [accepted] There are no items in battles in the first version.
 
-[proposed] The rules below were suggested 2026-10-05 at the designer's request
-([Q-039](../open-questions.md#q-039)). Guiding idea: classic Pokémon-style
+[accepted] The rules below were suggested at the designer's request and
+approved 2026-10-05. Guiding idea: classic Pokémon-style
 battles, trimmed to what our 3-move, 4-stat, item-free design needs. Every rule
 is deterministic apart from rolls of the
 [random number generator](#random-number-generator), so battles can be replayed
@@ -49,7 +50,7 @@ exactly.
 |--|-------------|------------|
 | Sides | The player's team (up to 4) vs one wild Peerling | Team vs team (up to 4 each) |
 | Active Peerlings | One per side | One per side |
-| Levels | Real levels | Everyone at level 50 ([PVP-007](pvp-battles.md#requirements)) |
+| Levels | Real levels | Level 50 for all (Fair mode, default) or real levels, chosen at the challenge ([PVP-010](pvp-battles.md#requirements)) |
 | Extra actions | Catch, Flee | none |
 | XP | Yes ([Experience and levelling](#experience-and-levelling)) | No |
 
@@ -158,8 +159,8 @@ chosen for them (via the battle RNG); two timeouts in a row count as a forfeit.
 [stat numbers](../peerlings/peerling-species.md#stat-numbers). It is a
 simplified version of the well-known Pokémon formula, adapted to four stats.
 
-- **Levels** run from 1 to 50. PvP uses level 50 for everyone (see
-  [pvp-battles](pvp-battles.md)). Levelling: see
+- **Levels** run from 1 to 50. PvP uses level 50 for everyone in Fair mode (see
+  [pvp-battles](pvp-battles.md#fairness)). Levelling: see
   [Experience and levelling](#experience-and-levelling).
 - **Stats at level L** (all rounded down):
   - HP = 2 × base × L / 100 + L + 10
@@ -274,12 +275,12 @@ from the move's type and template, not authored per move.
 - **BTL-006** [accepted] Levels MUST run from 1 to 50, and XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
 - **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
 - **BTL-008** [accepted] Every stat MUST be multiplied by the individual's trait factor after the level formula.
-- **BTL-009** [proposed] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
-- **BTL-010** [proposed] There MUST NOT be critical hits or status conditions in v1.
+- **BTL-009** [accepted] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
+- **BTL-010** [accepted] There MUST NOT be critical hits or status conditions in v1.
 
 ## Open questions
 
-[Q-039](../open-questions.md#q-039)
+_None at the moment._
 
 ## See also
 

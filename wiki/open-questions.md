@@ -17,26 +17,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-039
-**Approve the battle rules?**
-- Affects: [battle § Rules](gameplay/battle.md#rules), [moves](peerlings/moves.md), [pvp-battles](gameplay/pvp-battles.md)
-- Context: The designer asked for a battle design (2026-10-05).
-- Proposal: one active Peerling per side; each turn Move / Switch / Catch /
-  Flee; resolution order Flee → Switch → Catch → Moves (priority, then Speed);
-  flee always succeeds; stat stages −3…+3 on Attack/Defense/Speed; no critical
-  hits, no status conditions; wild Peerlings pick their best move half the
-  time; 30 s PvP turn timer.
-- Raised: 2026-10-05
-
-### Q-040
-**Approve the grid and encounter numbers?**
-- Affects: [exploration](gameplay/exploration.md), [procedural-generation](world/procedural-generation.md), [realtime-networking](tech/realtime-networking.md)
-- Context: Grid movement and foliage encounters are decided (2026-10-05).
-- Proposal: 2 m tiles (2,000 × 2,000 world); 4-directional movement at 3
-  tiles/s; 1 in 10 encounter chance per foliage step with 3 grace steps after a
-  battle; 20–30% of walkable tiles are foliage; chunks of 32 × 32 tiles.
-- Raised: 2026-10-05
-
 ## Resolved
 
 ### Q-002
@@ -244,3 +224,13 @@ cache. Resolved 2026-10-05 → [tech-stack § Asset budgets](tech/tech-stack.md#
 **Individual variation details.** Shimmer 1 in 500; traits visible with an
 overall rating; traits apply in PvP; species-specific shimmer look. Resolved
 2026-10-05 → [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).
+
+### Q-039
+**Battle rules.** Approved as proposed; PvP got a choice of level modes
+(D-0015). Resolved 2026-10-05 → [battle § Rules](gameplay/battle.md#rules).
+
+### Q-040
+**Grid and encounter numbers.** 2 m tiles, 4-directional movement at 3
+tiles/s, 1 in 10 encounter chance per foliage step with 3 grace steps, 20–30%
+foliage, 32 × 32-tile chunks. Resolved 2026-10-05 →
+[exploration § Grid movement](gameplay/exploration.md#grid-movement).

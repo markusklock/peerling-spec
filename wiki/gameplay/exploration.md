@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-tech-stack-2.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
+  - raw/conversations/2026-10-05-pvp-level-modes.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -38,7 +39,7 @@ exploring nearby are visible ([multiplayer](multiplayer.md)).
 grid**, one tile at a time. The grid isn't drawn; the 3D world simply lines up
 with it.
 
-[proposed] Details ([Q-040](../open-questions.md#q-040)):
+[accepted] Details (approved 2026-10-05):
 - **Tile size:** 2 m × 2 m. The 4 km world is 2,000 × 2,000 tiles.
 - **Directions:** 4 (up, down, left, right), no diagonals, as on the Game Boy.
   Tapping a direction turns the character to face it; holding it walks.
@@ -69,7 +70,7 @@ the biome**. Walking through foliage can trigger an encounter; walking elsewhere
 never does. Each biome's foliage is listed in
 [procedural-generation § Biomes](../world/procedural-generation.md#biomes).
 
-[proposed] Details ([Q-040](../open-questions.md#q-040)):
+[accepted] Details (approved 2026-10-05):
 - **Trigger chance:** each step onto a foliage tile has a 1 in 10 chance to
   start an encounter. The species and the rest of the encounter come from the
   encounter seed ([encounters](encounters.md)).
@@ -102,8 +103,8 @@ To be specified: points of interest, and the look of rest points.
 - **EXP-003** [accepted] When the whole team faints, the player MUST return to the last rest point with the team fully healed, losing nothing.
 - **EXP-004** [accepted] The player MUST move on an invisible grid, one tile at a time.
 - **EXP-005** [accepted] Wild encounters MUST only be triggered by walking through biome-specific encounter foliage.
-- **EXP-006** [proposed] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle.
+- **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle.
 
 ## Open questions
 
-[Q-040](../open-questions.md#q-040)
+_None at the moment._

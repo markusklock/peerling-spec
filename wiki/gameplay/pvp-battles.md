@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-approvals-q016-q038.md
+  - raw/conversations/2026-10-05-pvp-level-modes.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -39,8 +40,14 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
 - [proposed] **Species are verifiable.** Each Peerling's species record is
   fetched by CID and its attestation checked, so stats, types and moves can't
   be faked.
-- [accepted] **Levels are normalized.** All Peerlings fight at level 50 (as in
-  Pokémon's competitive formats), so edited levels give no advantage.
+- [accepted] **Level mode** ([D-0015](../decisions/D-0015-pvp-level-modes.md)). The challenger picks a mode,
+  and the other player sees it before accepting:
+  - **Fair** (default): all Peerlings fight at level 50 (as in Pokémon's
+    competitive formats), so edited levels give no advantage.
+  - **Real levels:** all Peerlings fight at their actual level. Levels aren't
+    verified ([player-data § Known gaps](../tech/player-data.md#known-gaps-accepted-risks)),
+    so a modified client could fake them; by agreeing to this mode, both
+    players accept that.
   [accepted] Individual stat traits still apply
   ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation));
   they are part of the verified Peerling, so they can't be faked.
@@ -52,8 +59,9 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
 
 ## Protocol (proposed)
 
-1. **Challenge.** A sends a challenge to B while standing next to them
-   (MPL-006); B accepts or declines (MPL-005).
+1. **Challenge.** A sends a challenge, including the level mode (Fair or Real
+   levels), to B while standing next to them (MPL-006); B accepts or declines
+   (MPL-005).
 2. **Team exchange.** Each side sends its team: for each Peerling, the species
    CID and instance ID. Each side fetches and verifies the other's species and
    verifies each Peerling (cached results are reused).
@@ -79,9 +87,10 @@ since results can't be verified by a third party.
 - **PVP-004** [proposed] The battle RNG seed MUST be derived from values committed and revealed by both players.
 - **PVP-005** [proposed] Turn actions MUST use commit-reveal, so neither player sees the other's choice before committing.
 - **PVP-006** [proposed] Clients MUST compare battle-state hashes after each turn and void the battle on mismatch.
-- **PVP-007** [accepted] All Peerlings MUST fight at level 50 in PvP.
+- ~~**PVP-007**~~ (removed 2026-10-05, replaced by PVP-010; see D-0015)
 - ~~**PVP-008**~~ (removed 2026-10-04, replaced by PVP-009; see D-0013)
 - **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)).
+- **PVP-010** [accepted] A PvP challenge MUST state a level mode, Fair (all Peerlings at level 50, the default) or Real levels (actual levels, unverified), and both players MUST agree to it.
 
 ## Open questions
 

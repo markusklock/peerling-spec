@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
+  - raw/conversations/2026-10-05-pvp-level-modes.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -37,7 +38,7 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
   is what makes the shared world possible with no world server.
 - The world is divided into **chunks** generated on demand. Chunks are grouped
   into [regions](../glossary.md#region), which scope multiplayer presence
-  ([realtime-networking](../tech/realtime-networking.md)). [proposed] With the
+  ([realtime-networking](../tech/realtime-networking.md)). [accepted] With the
   tile grid, a chunk is 32 × 32 tiles (64 m × 64 m), the same size as a
   region, so one chunk is one region.
 
@@ -46,7 +47,7 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
 [accepted] The world is laid out on an invisible grid of tiles that players
 move across one at a time ([exploration § Grid movement](../gameplay/exploration.md#grid-movement)).
 
-[proposed] Each 2 m × 2 m tile has one kind, decided by the generator:
+[accepted] Each 2 m × 2 m tile has one kind, decided by the generator:
 
 | Kind | Walkable | Notes |
 |------|:--------:|-------|
@@ -55,7 +56,7 @@ move across one at a time ([exploration § Grid movement](../gameplay/exploratio
 | Water | No | Lakes, rivers, sea at the border (no swimming in v1) |
 | Blocked | No | Trees, rocks, buildings, cliff faces, lava |
 
-[proposed] Each tile also has a height level; neighbouring tiles at different
+[accepted] Each tile also has a height level; neighbouring tiles at different
 heights are separated by a cliff unless one of them is a slope or stairs.
 About 20–30% of walkable tiles in a biome area are foliage, in patches of 10–60
 tiles, with paths of plain ground around and between them. Rest points and the
@@ -131,8 +132,8 @@ rolled out without splitting players into different worlds.
 - **WGN-008** [accepted] The spawn area MUST be Plains.
 - **WGN-009** [accepted] Every biome area MUST contain one rest point.
 - **WGN-010** [accepted] The world MUST be a grid of tiles, and each biome MUST have its own encounter foliage on which wild encounters happen.
-- **WGN-011** [proposed] Tiles MUST be 2 m × 2 m and of one kind (ground, foliage, water, blocked) with a height level; a chunk MUST be 32 × 32 tiles.
+- **WGN-011** [accepted] Tiles MUST be 2 m × 2 m and of one kind (ground, foliage, water, blocked) with a height level; a chunk MUST be 32 × 32 tiles.
 
 ## Open questions
 
-[Q-040](../open-questions.md#q-040)
+_None at the moment._
