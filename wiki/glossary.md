@@ -149,6 +149,11 @@ instances can exist of the same species. See
 A small web app, published on IPFS, that shows shared Peerling cards and player
 profiles outside the game. See [sharing](gameplay/sharing.md).
 
+### Phone backup
+A copy of a player's key and save carried on their phone, made and restored by
+scanning a QR code on the computer. See
+[player-data § Phone backup](tech/player-data.md#phone-backup).
+
 ### Pin / pinning
 Telling an IPFS node to keep a piece of content permanently and serve it to
 others. The generation server pins all game content so every CID is always

@@ -17,17 +17,17 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-044
-**Approve the details of spectating, sharing links, device linking and the world feed?**
-- Affects: [spectating](gameplay/spectating.md), [sharing](gameplay/sharing.md), [player-data § Linking a device](tech/player-data.md#linking-a-device), [world-feed](gameplay/world-feed.md)
-- Context: The four features were chosen (D-0016); the details are LLM
-  proposals.
-- Proposal: per-battle pubsub topic with spectators replaying the battle and
-  an opt-out switch; a separate Peerlings Viewer on IPFS with IPNS-based player
-  profiles republished by client and server; device linking with a 5-minute
-  word code, a PAKE over a direct connection and one device playing at a time;
-  a world feed of new Peerlings and shimmer catches, signed, rate-limited and
-  checked before showing.
+### Q-045
+**Approve the phone backup design and the one-computer-at-a-time rule?**
+- Affects: [player-data § Phone backup](tech/player-data.md#phone-backup), [sharing](gameplay/sharing.md), [tech-stack](tech/tech-stack.md)
+- Context: The designer replaced device linking with a phone backup: scan a QR
+  code with the phone, which fetches the save to carry it to another computer.
+- Proposal: the phone side runs in the Peerlings Viewer (mobile-capable); the
+  computer always shows the QR code (peer ID, relay address, one-time 5-minute
+  secret) and the phone always scans; key + save (CAR file) travel encrypted
+  over a direct libp2p connection after confirmation; restoring then syncs
+  newer data from the network. Plus: only one computer per account may play at
+  a time (SAVE-023).
 - Raised: 2026-10-05
 
 ## Resolved
@@ -264,3 +264,8 @@ keeps a persistent backup of their save, served back on request via pubsub; the
 backup file holds the latest save snapshot; the client requests persistent
 storage. No reliance on community mirrors. Resolved 2026-10-05 →
 [player-data § Keeping saves available](tech/player-data.md#keeping-saves-available).
+
+### Q-044
+**Details of spectating, sharing links and the world feed.** Approved as
+proposed; device linking was replaced by a phone backup ([Q-045](#q-045)).
+Resolved 2026-10-05 → [D-0016](decisions/D-0016-showcase-features.md).

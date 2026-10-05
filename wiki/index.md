@@ -61,7 +61,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [orbitdb-registry](tech/orbitdb-registry.md) | draft | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
-| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file), device linking, who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
+| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
@@ -91,7 +91,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, FED, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0017. Next free question ID: Q-045.
+D-0017. Next free question ID: Q-046.
 
 ## Sources
 
@@ -119,3 +119,4 @@ D-0017. Next free question ID: Q-045.
 | [2026-10-05-peer-save-backups](../raw/conversations/2026-10-05-peer-save-backups.md) | 2026-10-05 | No community mirrors; peer save backups via profile inspection; storage persistence |
 | [2026-10-05-peer-save-backups-approved](../raw/conversations/2026-10-05-peer-save-backups-approved.md) | 2026-10-05 | Peer save backups and save snapshot in backup file approved |
 | [2026-10-05-showcase-features](../raw/conversations/2026-10-05-showcase-features.md) | 2026-10-05 | Adopted spectating, shareable links, device linking and a world feed |
+| [2026-10-05-phone-backup](../raw/conversations/2026-10-05-phone-backup.md) | 2026-10-05 | Spectating, sharing and world feed details approved; device linking replaced by phone backup via QR |
