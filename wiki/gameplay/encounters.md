@@ -12,13 +12,14 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
+  - raw/conversations/2026-10-05-individual-variation.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/battle.md
   - wiki/tech/resilience.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Wild Encounters
@@ -101,6 +102,22 @@ world centre (the spawn; the world is 4 km × 4 km, so d is at most about
 - wild level = base level + a random offset from −2 to +2 (from the encounter
   seed), clamped to 1–50.
 
+## Wild Peerling generation
+
+[proposed] Once the species is chosen, the wild Peerling is generated from the
+same encounter seed and [random number generator](battle.md#random-number-generator),
+always in this order, so a replay produces exactly the same individual:
+
+1. The 5 candidate species ([Candidates](#candidates)).
+2. The level offset (−2 to +2) ([Wild level](#wild-level)).
+3. The four stat traits, in the order HP, Attack, Defense, Speed
+   ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation)).
+4. The shimmer roll (1 in 500).
+5. Then all battle rolls.
+
+The candidate actually met only changes the species: the level, traits and
+shimmer belong to the encounter, whichever candidate is met.
+
 ## Cold start
 
 [accepted] At launch the registry is not empty: the operator creates a handful
@@ -126,6 +143,7 @@ one is almost always ready when an encounter triggers.
 - **ENC-005** [accepted] Encounter species selection and wild level MUST be deterministic functions of the encounter seed, the player's position, the registry state named by the epoch record, and the player's save log.
 - **ENC-006** [accepted] Each encounter MUST have up to 5 candidate species, and the encounter MUST use a candidate that was successfully fetched via IPFS.
 - **ENC-007** [accepted] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
+- **ENC-008** [proposed] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
 
 ## Open questions
 

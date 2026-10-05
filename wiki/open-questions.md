@@ -27,22 +27,15 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Raised: 2026-10-03
 
 - 2026-10-04: deferred by the designer ("TBD").
-### Q-037
-**Should individual Peerlings vary, beyond their level?**
-- Affects: [peerling-species](peerlings/peerling-species.md), [battle](gameplay/battle.md), [encounters](gameplay/encounters.md), [trading](gameplay/trading.md), [pvp-battles](gameplay/pvp-battles.md)
-- Context: Wild Peerlings already differ in level (2–50 by distance, ±2).
-  Within one species at the same level, all Peerlings are currently identical.
-  In Pokémon, each individual also has hidden *IVs* (0–31 per stat), a
-  *nature* (+10% to one stat, −10% to another), and a rare *shiny* color.
-- Options: (a) no individual variation (current); (b) small random stat
-  variation (e.g. ±10% per stat); (c) a "nature" (+10% one stat, −10%
-  another); (d) rare cosmetic variants (e.g. a 1-in-500 color shift, easy to
-  do with a shader on static models). Any random part comes from the encounter
-  seed, so it stays verifiable by replay.
-- Trade-offs: variation makes individual Peerlings worth hunting and trading,
-  but makes double trades hurt more and adds a reason to re-roll encounters.
-  PvP could ignore stat variation, like it ignores level.
-- Raised: 2026-10-04
+### Q-038
+**Individual variation details: approve?**
+- Affects: [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation), [pvp-battles](gameplay/pvp-battles.md), [trading](gameplay/trading.md)
+- Context: Stat traits (±10%) and shimmer variants are decided (D-0014). The
+  details are LLM proposals.
+- Proposal: traits are whole percents −10…+10, drawn uniformly per stat; they
+  are visible on the Peerling card with an overall rating; they apply in PvP.
+  Shimmer chance 1 in 500; a species-specific hue shift plus a sparkle effect.
+- Raised: 2026-10-05
 
 ## Resolved
 
@@ -236,3 +229,8 @@ optional mirrors. Since D-0013, catch verification and trades also work without
 the server; only creation needs it. Resolved 2026-10-04 →
 [resilience](tech/resilience.md),
 [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md).
+
+### Q-037
+**Individual variation.** Stat traits of up to ±10% per stat, and rare
+cosmetic shimmer variants. Resolved 2026-10-05 →
+[D-0014](decisions/D-0014-individual-variation.md). Details: [Q-038](#q-038).

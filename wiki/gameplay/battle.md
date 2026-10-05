@@ -13,13 +13,14 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-05-individual-variation.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/catching.md
   - wiki/gameplay/pvp-battles.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Battle System
@@ -59,6 +60,10 @@ simplified version of the well-known Pokémon formula, adapted to four stats.
 
   At level 50 this gives HP = base + 60 and other stats = base + 5, so the base
   stats can be read directly as level-50 values.
+- **Traits:** [accepted] each stat above is then multiplied by
+  (1 + trait ÷ 100), where the trait is the individual's −10…+10 value for that
+  stat ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation),
+  [D-0014](../decisions/D-0014-individual-variation.md)). Rounded down.
 - **Damage** = (((2 × L / 5 + 2) × Power × Attack / Defense) / 50 + 2) ×
   Modifier, rounded down, minimum 1.
 - **Modifier** = same-type bonus × type effectiveness × random roll.
@@ -161,6 +166,7 @@ from the move's type and template, not authored per move.
 - **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
 - **BTL-006** [accepted] Levels MUST run from 1 to 50, and XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
 - **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
+- **BTL-008** [accepted] Every stat MUST be multiplied by the individual's trait factor after the level formula.
 
 ## Open questions
 

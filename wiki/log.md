@@ -170,3 +170,16 @@ List all entries with `grep "^## \[" wiki/log.md`.
   gone. Resolved Q-022; opened Q-037 (individual variation). Removed REG-003,
   CRE-019, SAVE-004, SAVE-006, PVP-008; added REG-009, CRE-024,
   SAVE-014…017, PVP-009, TRD-004.
+
+## [2026-10-05] design | Individual variation: stat traits and shimmer variants
+- Source: raw/conversations/2026-10-05-individual-variation.md
+- Changed: decisions/D-0014 (new), peerlings/peerling-species.md,
+  gameplay/battle.md, gameplay/encounters.md, gameplay/pvp-battles.md,
+  gameplay/trading.md, tech/player-data.md, overview.md, glossary.md,
+  open-questions.md, index.md
+- Notes: Resolved Q-037 (options b + d). Traits (−10…+10% per stat) multiply
+  stats after the level formula; shimmer variants are cosmetic. Defined the
+  fixed order in which a wild Peerling is generated from the encounter seed;
+  level, traits and shimmer belong to the encounter, not the candidate, so
+  candidate choice can't be used to chase them. Opened Q-038 (rarity 1 in 500,
+  visible traits, traits in PvP). Added SPC-012…014, BTL-008, ENC-008.

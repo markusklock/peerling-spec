@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-individual-variation.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -21,7 +22,7 @@ related:
   - wiki/peerlings/peerling-species.md
   - wiki/tech/architecture.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Player Data: Saves, Identity and Ownership
@@ -239,7 +240,8 @@ verified like any other: by whoever needs to check them, from the save log.
 created at the [Creation Shrine](../gameplay/creation-shrine.md) don't come from a
 catch, so there's no battle to replay. Instead the server, which is involved
 in both anyway, signs an **origin attestation**: instance ID, species CID, first
-owner, origin (`starter` or `created`) and level. These Peerlings are verified
+owner, origin (`starter` or `created`), level, and the randomly drawn traits and
+shimmer flag ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation)). These Peerlings are verified
 from the start.
 
 ### Transfer log and trades
@@ -275,9 +277,9 @@ instead:
   PvP battles with flagged players.
 - The player who received the void transfer loses that Peerling. This is
   acceptable: nothing in the game is scarce, every species can be caught again,
-  and the cheater is exposed. (See
-  [Q-037](../open-questions.md#q-037): individual variation would make this
-  more painful.)
+  and the cheater is exposed. Individual variation ([D-0014](../decisions/D-0014-individual-variation.md)) makes
+  a lost Peerling more valuable, so this rule may need revisiting if double
+  trades turn out to be common.
 
 ### PvP
 
@@ -293,15 +295,17 @@ using cached results where possible. No server is needed.
   checks that consecutive `position` events are reachable at walking speed.
 - **Small choice among recent epochs.** A player who knows the upcoming
   encounter (the client computes it in advance for prefetching) can stall until
-  a new epoch. That is at most one re-roll per 5 minutes, which seems acceptable.
+  a new epoch. That is at most one re-roll per 5 minutes. Since D-0014 this can
+  also be used to chase good traits or a shimmer; the 5-minute cost keeps it
+  slow.
 - **Levels outside PvP aren't verified.** XP from wild battles isn't replayed.
   An edited level only matters in the player's own wild battles, and in a
   Peerling they trade away. The receiving player gets the level shown.
 - **Double trades** are detected, not prevented ([Transfer log and trades](#transfer-log-and-trades)).
 - **Choice among encounter candidates.** A modified client could claim the first
   candidates failed to download and pick a later one: at most a choice of 1 in
-  5. All species are equally strong, so this only lets a player favour a species
-  they like.
+  5. Only the species differs between candidates: level, traits and shimmer
+  belong to the encounter, so this only lets a player favour a species they like.
 
 ## Storage options considered
 

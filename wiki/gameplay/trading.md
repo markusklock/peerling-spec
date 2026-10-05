@@ -9,11 +9,12 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-individual-variation.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Trading
@@ -32,7 +33,9 @@ over a direct libp2p stream between the two players
 
 1. A proposes a trade to B while standing next to them (MPL-006); B accepts
    the session (MPL-005).
-2. Both pick the instance(s) they offer. Both see the other's offer live. Each
+2. Both pick the instance(s) they offer. Both see the other's offer live,
+   including each Peerling's level, stat traits and whether it is a shimmer
+   ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation)). Each
    client fetches the offered species by CID and **verifies the offered
    Peerlings**: genuine origin, a valid ownership chain ending at the other
    player, and the other player not flagged

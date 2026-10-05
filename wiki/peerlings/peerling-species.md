@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-2.md
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-05-individual-variation.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -17,7 +18,7 @@ related:
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
   - wiki/gameplay/trading.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Peerling Species and Instances (Data Model)
@@ -131,7 +132,9 @@ registry). [proposed] Illustrative shape:
   "caughtAt": "2026-10-03T12:30:00Z",
   "origin": "starter | wild | trade",
   "originalOwner": "<player public key of whoever first obtained it>",
-  "originProof": "<CID of the catch event in the catcher's save log, or the server's origin attestation>"
+  "originProof": "<CID of the catch event in the catcher's save log, or the server's origin attestation>",
+  "traits": { "hp": 4, "attack": -7, "defense": 10, "speed": 0 },
+  "shimmer": false
 }
 ```
 
@@ -141,6 +144,51 @@ another species. Levels and XP are specified in
 Instances can change owner through [trading](../gameplay/trading.md).
 Instances are stored in the player's save, and their verification is
 described in [player-data](../tech/player-data.md#verification).
+
+## Individual variation
+
+[accepted] Individual Peerlings of the same species and level differ in two
+ways ([D-0014](../decisions/D-0014-individual-variation.md)).
+
+### Stat traits
+
+[accepted] Each individual has a random **trait** for each of its four stats,
+worth up to ±10%. [proposed] Details:
+- A trait is a whole number from −10 to +10 (percent), drawn uniformly and
+  independently for HP, Attack, Defense and Speed.
+- The trait multiplies the stat calculated at the Peerling's level
+  ([battle § Damage model](../gameplay/battle.md#damage-model)), so a +10 Attack
+  trait gives 10% more Attack at every level.
+- Traits never change (no training, no items) and travel with the Peerling
+  when it is traded.
+- Traits are **visible**: the Peerling's card shows each trait (e.g. "Attack
+  +7%") and a simple overall rating (sum of the four traits, from −40 to +40).
+  This makes it clear why one Mossnap is worth more than another, which drives
+  trading.
+- Traits **count in PvP**, while levels are still normalized to 50
+  ([pvp-battles](../gameplay/pvp-battles.md#fairness)). Otherwise the choice of
+  option (b) would mean nothing in PvP.
+
+### Shimmer variants
+
+[accepted] A rare, purely cosmetic color variant: a **shimmer**. [proposed]
+Details:
+- Chance: **1 in 500** per Peerling.
+- Look: the model's colors are hue-shifted by an angle derived from the species
+  CID (between 90° and 270°), so every shimmer of the same species looks the
+  same and players learn to recognize them. A sparkle effect plays when a
+  shimmer appears in battle. It's done with a shader on the existing static
+  model, so it needs no extra generated assets.
+- No effect on stats or battles.
+
+### Where the randomness comes from
+
+[proposed] For wild Peerlings, traits and the shimmer roll come from the
+encounter seed, in the fixed order defined in
+[encounters § Wild Peerling generation](../gameplay/encounters.md#wild-peerling-generation),
+so they are checked when the catch is replayed. For starters and Creation Shrine
+Peerlings, the server draws them and includes them in the origin attestation
+([player-data](../tech/player-data.md#starters-and-shrine-creations)).
 
 ## Requirements
 
@@ -155,10 +203,13 @@ described in [player-data](../tech/player-data.md#verification).
 - **SPC-009** [accepted] A Peerling instance MUST reference its species by CID and MUST NOT copy species data.
 - **SPC-010** [proposed] Species records MUST be encoded as DAG-CBOR so the encoding, and therefore the CID, is deterministic.
 - **SPC-011** [accepted] There MUST NOT be evolution in v1.
+- **SPC-012** [accepted] Every Peerling instance MUST have a fixed trait from −10% to +10% for each of its four stats. [proposed] Traits are whole percents drawn uniformly, visible to players, and applied in PvP.
+- **SPC-013** [accepted] Peerlings MUST have a rare cosmetic shimmer variant. [proposed] The chance is 1 in 500; the look is a species-specific hue shift plus a sparkle effect.
+- **SPC-014** [proposed] Traits and the shimmer roll MUST come from verifiable randomness: the encounter seed for wild Peerlings, the server's origin attestation for starters and shrine creations.
 
 ## Open questions
 
-[Q-016](../open-questions.md#q-016)
+[Q-016](../open-questions.md#q-016) · [Q-038](../open-questions.md#q-038)
 
 ## See also
 

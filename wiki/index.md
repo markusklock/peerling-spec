@@ -37,7 +37,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
 | [creation-pipeline](peerlings/creation-pipeline.md) | draft | CRE | Wish → concept (+type) → image (no limit, cooldown) → 3D → stats & moves → final review and naming → player publishes, server pins |
-| [peerling-species](peerlings/peerling-species.md) | draft | SPC | Species record (DAG-CBOR on IPFS), stats (total 320, 40–130), Peerling instance data model |
+| [peerling-species](peerlings/peerling-species.md) | draft | SPC | Species record (DAG-CBOR on IPFS), stats (total 320, 40–130), instance data model, individual traits and shimmers |
 | [types](peerlings/types.md) | draft | TYP | The 12 types, primary/secondary type, effectiveness chart |
 | [moves](peerlings/moves.md) | draft | MOV | Three move slots (quick/strong/signature), unlimited use, templates, how Pokémon-like games do it |
 | [moderation](peerlings/moderation.md) | deprecated | MOD | No content moderation (D-0010); kept for history |
@@ -80,12 +80,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first (WebTransport, IPv6) |
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
 | [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
+| [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
 
 ## Registered requirement prefixes
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
 RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0014. Next free question ID: Q-038.
+D-0015. Next free question ID: Q-039.
 
 ## Sources
 
@@ -102,3 +103,4 @@ D-0014. Next free question ID: Q-038.
 | [2026-10-04-answers-round-7](../raw/conversations/2026-10-04-answers-round-7.md) | 2026-10-04 | Extra creations and starter choice; unlimited images with cooldown; restart from images; players name Peerlings; creator feedback wanted; server-offline resilience with 5 encounter candidates |
 | [2026-10-04-answers-round-8](../raw/conversations/2026-10-04-answers-round-8.md) | 2026-10-04 | Shrine, character creation, multiplayer scale, encounter candidates approved; brainstorm on decentralizing registry writes and trades |
 | [2026-10-04-decentralize-level-3](../raw/conversations/2026-10-04-decentralize-level-3.md) | 2026-10-04 | Level 3 decentralization accepted (D-0013); question about individual variation of wild Peerlings |
+| [2026-10-05-individual-variation](../raw/conversations/2026-10-05-individual-variation.md) | 2026-10-05 | Individual variation: ±10% stat traits and rare color variants (options b and d) |

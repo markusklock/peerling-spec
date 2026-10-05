@@ -174,6 +174,10 @@ One of the handful of species the [operator](#operator) creates at launch,
 through the normal creation pipeline, so the first players have Peerlings to
 meet. See [D-0002](decisions/D-0002-all-peerlings-user-generated.md).
 
+### Shimmer
+A rare (1 in 500), purely cosmetic color variant of an individual Peerling. See
+[peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).
+
 ### Signature move
 [proposed] The move in a species' *signature* slot: its characteristic special
 attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
@@ -205,6 +209,10 @@ The Peerlings a player brings into battles: up to 4. See
 ### Trade
 An exchange of [Peerling instances](#peerling-instance) between two players.
 See [trading](gameplay/trading.md).
+
+### Trait
+An individual Peerling's fixed modifier of −10% to +10% on one of its four
+stats. See [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).
 
 ### Transfer log
 The open OrbitDB log of signed ownership transfers. Following a Peerling's
