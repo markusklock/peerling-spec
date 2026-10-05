@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
@@ -38,10 +39,10 @@ mechanical value comes from a small, hand-balanced table.
 
 [accepted] Every species has exactly **three** moves, one per slot: a quick
 attack, a strong attack and a special (signature) attack. There is no fourth
-slot. [proposed] One move per slot gives every Peerling a comparable toolkit. Identity comes from type, stat
+slot. [accepted] One move per slot gives every Peerling a comparable toolkit. Identity comes from type, stat
 spread and the signature move's flavour, not from having better moves.
 
-[proposed] Slot roles:
+[accepted] Slot roles:
 
 | Slot | Role | Trade-off | Allowed move type |
 |------|------|-----------|-------------------|
@@ -54,7 +55,7 @@ a slot name because Pokémon uses it for a damage category and a stat.
 
 ## Move structure
 
-[proposed] A generated move in the species record contains only:
+[accepted] A generated move in the species record contains only:
 
 | Field | From |
 |-------|------|
@@ -77,8 +78,7 @@ so a template can be rebalanced without republishing species.
 
 ## Template table
 
-[proposed] First draft. The numbers are placeholders until the damage formula is
-specified in [battle](../gameplay/battle.md).
+[accepted] Approved 2026-10-05, matching the [damage model](../gameplay/battle.md#damage-model).
 
 | ID | Slot | Power | Accuracy | Priority | Effect |
 |----|------|-------|----------|----------|--------|
@@ -130,13 +130,13 @@ the damage formula ([battle](../gameplay/battle.md)).
 ## Requirements
 
 - **MOV-001** [accepted] Every move MUST be an instance of a template in this page's template table.
-- **MOV-002** [proposed] Mechanical values MUST come from the template, not from the species record.
+- **MOV-002** [accepted] Mechanical values MUST come from the template, not from the species record.
 - ~~**MOV-003**~~ (removed 2026-10-03, replaced by the slot rules MOV-006 and MOV-008)
 - ~~**MOV-004**~~ (removed 2026-10-03, replaced by the per-slot type rule MOV-007)
-- **MOV-005** [proposed] Template IDs MUST be stable; changing a template's numbers is a balance change, recorded as a decision.
+- **MOV-005** [accepted] Template IDs MUST be stable; changing a template's numbers is a balance change, recorded as a decision.
 - **MOV-006** [accepted] A species' move set MUST contain exactly three moves, one for each slot: quick, strong, signature.
-- **MOV-007** [proposed] Quick and strong moves MUST be Normal type or one of the species' types; the signature move MUST be the species' primary type.
-- **MOV-008** [proposed] A move's template MUST be one allowed for its slot.
+- **MOV-007** [accepted] Quick and strong moves MUST be Normal type or one of the species' types; the signature move MUST be the species' primary type.
+- **MOV-008** [accepted] A move's template MUST be one allowed for its slot.
 - **MOV-009** [accepted] Moves MUST be usable without limit; there MUST NOT be per-battle use counts or a move resource.
 - **MOV-010** [accepted] A Peerling's move set MUST NOT change after its species is published.
 

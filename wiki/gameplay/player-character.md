@@ -12,10 +12,11 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Player Character and Identity
@@ -50,14 +51,14 @@ game app.
 
 ## Identity and save (proposed)
 
-[proposed] No traditional accounts. On first launch the client generates a
+[accepted] No traditional accounts. On first launch the client generates a
 cryptographic keypair; its public key is the player's identity (used as the
 [creator](../glossary.md#creator) ID on species and for server rate limits).
 [accepted] The save is a per-player OrbitDB log, and the key can be restored
 with a recovery phrase. What the save contains, and how it is stored and
 verified, is canonical in [player-data](../tech/player-data.md).
 
-[proposed] Because the world is shared ([multiplayer](multiplayer.md)), the
+[accepted] Because the world is shared ([multiplayer](multiplayer.md)), the
 identity also signs presence messages, PvP commitments and trade records. The
 display name and avatar are visible to other players. [accepted] Display names
 are not moderated ([D-0010](../decisions/D-0010-no-content-moderation.md)).
@@ -65,7 +66,7 @@ are not moderated ([D-0010](../decisions/D-0010-no-content-moderation.md)).
 ## Requirements
 
 - **PLR-001** [accepted] Each player MUST have a player character created during onboarding.
-- **PLR-002** [proposed] Each player MUST have a stable cryptographic identity generated client-side.
+- **PLR-002** [accepted] Each player MUST have a stable cryptographic identity generated client-side.
 - **PLR-004** [accepted] The player character MUST be built from game-made, rigged parts (body, colors, hairstyle, accessories) described by a small JSON document.
 - ~~**PLR-003**~~ (removed 2026-10-04: no content moderation, see [D-0010](../decisions/D-0010-no-content-moderation.md))
 

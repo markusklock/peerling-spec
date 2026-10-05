@@ -7,12 +7,13 @@ tags: [gameplay, social, orbitdb, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Creator Feedback
@@ -36,11 +37,11 @@ OrbitDB and pubsub. Counters can't be inflated by fake clients, because only
 events that pass verification count. That answers the spam worry raised in
 Q-021.
 
-[accepted] The feature is wanted (2026-10-04). The design below is [proposed].
+[accepted] The feature is wanted (2026-10-04). The design below was approved 2026-10-05.
 
 ## Design
 
-[proposed]
+[accepted]
 
 ### Species stats database
 An OrbitDB keyvalue database written only by the server, keyed by species CID.
@@ -76,9 +77,9 @@ Mossnap was met 120 times and caught 42 times. It now lives on 37 nodes."*
 ## Requirements
 
 - **CFB-001** [accepted] Creators MUST be able to see how their species are doing in the world.
-- **CFB-002** [proposed] Species statistics MUST be published in a server-written OrbitDB database and MUST only count events that pass verification.
-- **CFB-003** [proposed] The server MUST notify online creators via a per-creator pubsub topic when their species is caught or traded.
-- **CFB-004** [proposed] The client MUST show creators a summary of changes since their last session.
+- **CFB-002** [accepted] Species statistics MUST be published in a server-written OrbitDB database and MUST only count events that pass verification.
+- **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught or traded.
+- **CFB-004** [accepted] The client MUST show creators a summary of changes since their last session.
 
 ## See also
 

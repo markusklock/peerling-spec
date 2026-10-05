@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -36,7 +37,7 @@ updated: 2026-10-05
 - [accepted] Players can start a **[PvP battle](pvp-battles.md)** with another
   player.
 - [accepted] Players can **[trade](trading.md)** Peerlings with each other.
-- [proposed] Nearby players are visible as their
+- [accepted] Nearby players are visible as their
   [player character](player-character.md), with a display name above them.
   Their position and movement update live.
 - [accepted] Battles and trades can only be started when the two players are
@@ -45,11 +46,11 @@ updated: 2026-10-05
   neighbouring tile ([exploration § Grid movement](exploration.md#grid-movement)).
   The player starts an interaction by facing the other player and pressing
   the interact key.
-- [proposed] Interacting with an adjacent player's character opens a menu:
+- [accepted] Interacting with an adjacent player's character opens a menu:
   *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (their team, and the
   species they created). Once a battle or trade has started, it continues even
   if a player moves away.
-- [proposed] Wild encounters are **per player**: each player meets their own
+- [accepted] Wild encounters are **per player**: each player meets their own
   wild Peerlings, even when standing next to someone else. This avoids
   competing for the same creature.
 
@@ -93,9 +94,9 @@ Network rates and region size are in
 
 - **MPL-001** [accepted] All players MUST share one world.
 - **MPL-002** [accepted] Players MUST be able to battle each other and trade Peerlings.
-- **MPL-003** [proposed] A client MUST show other players who are near it in the world, with live movement.
-- **MPL-004** [proposed] Wild encounters MUST be local to each player; other players MUST NOT be able to interfere with them.
-- **MPL-005** [proposed] Battle and trade requests MUST require explicit acceptance by the receiving player, who MUST be able to block or ignore a player.
+- **MPL-003** [accepted] A client MUST show other players who are near it in the world, with live movement.
+- **MPL-004** [accepted] Wild encounters MUST be local to each player; other players MUST NOT be able to interfere with them.
+- **MPL-005** [accepted] Battle and trade requests MUST require explicit acceptance by the receiving player, who MUST be able to block or ignore a player.
 - **MPL-006** [accepted] A battle or trade request MUST only be possible when the two players are within 3 m of each other in the world.
 - **MPL-007** [accepted] There MUST NOT be free-text chat between players; players communicate only with emotes from a fixed set.
 

@@ -58,7 +58,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [orbitdb-registry](tech/orbitdb-registry.md) | draft | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
-| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, key recovery, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
+| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, password, file), peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
@@ -87,7 +87,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
 RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0016. Next free question ID: Q-042.
+D-0016. Next free question ID: Q-043.
 
 ## Sources
 
@@ -110,3 +110,4 @@ D-0016. Next free question ID: Q-042.
 | [2026-10-05-grid-foliage-battles](../raw/conversations/2026-10-05-grid-foliage-battles.md) | 2026-10-05 | Game Boy-style grid movement; encounters in biome foliage; battle design requested |
 | [2026-10-05-pvp-level-modes](../raw/conversations/2026-10-05-pvp-level-modes.md) | 2026-10-05 | PvP level modes (Fair / Real levels); battle rules and grid numbers approved |
 | [2026-10-05-proposal-review-1](../raw/conversations/2026-10-05-proposal-review-1.md) | 2026-10-05 | Proposal review: technical proposals and design items 1–4 approved; unique names requested |
+| [2026-10-05-proposal-review-2](../raw/conversations/2026-10-05-proposal-review-2.md) | 2026-10-05 | Unique names and design items 6–16, 18–20 approved; account recovery via password asked |

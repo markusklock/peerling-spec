@@ -7,6 +7,7 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 updated: 2026-10-05
 ---
 
@@ -184,7 +185,7 @@ A rare (1 in 500), purely cosmetic color variant of an individual Peerling. See
 [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).
 
 ### Signature move
-[proposed] The move in a species' *signature* slot: its characteristic special
+[accepted] The move in a species' *signature* slot: its characteristic special
 attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
 
 ### Species

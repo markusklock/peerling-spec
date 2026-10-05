@@ -229,3 +229,15 @@ List all entries with `grep "^## \[" wiki/log.md`.
   proposed unique, normalized species names (Q-041, CRE-025). Items 6–20 still
   pending. Fixed stale notes (D-0005, D-0007, D-0012, Region definition,
   CRE-013 link).
+
+## [2026-10-05] design | Proposal review part 2; account recovery proposed
+- Source: raw/conversations/2026-10-05-proposal-review-2.md
+- Changed: ~20 pages (53 [proposed] markers flipped to [accepted]),
+  tech/player-data.md (new Account recovery section), peerlings/moves.md,
+  tech/ipfs-showcase.md, gameplay/creator-feedback.md, open-questions.md,
+  index.md
+- Notes: Resolved Q-041 (unique names). Approved items 6–16 and 18–20. Item 17
+  (save contents) is pending with the designer's recovery question: proposed
+  deriving save-log addresses from the player ID plus an optional Argon2id
+  recovery password (Q-042, SAVE-018/019). Only the save-contents rows remain
+  [proposed].

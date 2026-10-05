@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-asset-budgets-request.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -185,8 +186,7 @@ LLM's name suggestions are shown, but the name is the player's choice.
 [accepted] If the player dislikes the 3D model, they can **restart from the
 image generation stage** (stage 3) instead of publishing.
 
-[proposed] Names must be **unique** across all species
-([Q-041](../open-questions.md#q-041)). The server enforces it, which is easy
+[accepted] Names must be **unique** across all species (approved 2026-10-05). The server enforces it, which is easy
 because every species already goes through it, and only names it has
 signed reach the registry ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)):
 - **Length:** 1–20 characters.
@@ -256,7 +256,7 @@ PROFILE_READY → IMAGE_READY (player restarts from image generation)
 any state → FAILED (error, retryable) | EXPIRED (abandoned)
 ```
 
-[proposed] Onboarding overlaps waiting time with other activity (e.g. character
+[accepted] Onboarding overlaps waiting time with other activity (e.g. character
 creation runs while the 3D model generates) — see
 [onboarding](../gameplay/onboarding.md).
 
@@ -286,11 +286,11 @@ creation runs while the 3D model generates) — see
 - **CRE-022** [accepted] Before publishing, the player MUST see the final Peerling and MUST be able to restart from image generation instead of publishing.
 - **CRE-023** [accepted] The player MUST choose the name of every Peerling they create.
 - **CRE-024** [accepted] The server MUST pin the species record and all its assets before signing the registry listing.
-- **CRE-025** [proposed] Species names MUST be unique in normalized form (NFKC, case-folded, accents and punctuation removed, confusables mapped); the server MUST check and reserve names during the final review and MUST NOT sign a listing with a taken name.
+- **CRE-025** [accepted] Species names MUST be unique in normalized form (NFKC, case-folded, accents and punctuation removed, confusables mapped); the server MUST check and reserve names during the final review and MUST NOT sign a listing with a taken name.
 
 ## Open questions
 
-[Q-041](../open-questions.md#q-041)
+_None at the moment._
 
 ## See also
 

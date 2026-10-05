@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-05-approvals-q016-q038.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -77,7 +78,7 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
 
 ## Rewards
 
-TBD. [proposed] No rewards that can be farmed in v1 (e.g. no XP from PvP),
+TBD. [accepted] No rewards that can be farmed in v1 (e.g. no XP from PvP),
 since results can't be verified by a third party.
 
 ## Requirements

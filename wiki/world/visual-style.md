@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
@@ -25,7 +26,7 @@ updated: 2026-10-05
 
 [accepted] The world is 3D and seen from a **top-down camera**.
 
-[proposed] Details:
+[accepted] Details:
 - **Tilted, not straight down.** The camera looks down at about 55° below the
   horizon. Peerling models are generated from three-quarter front images
   ([creation-pipeline § Stage 3](../peerlings/creation-pipeline.md#stage-3--image)),
@@ -45,7 +46,7 @@ updated: 2026-10-05
 
 [accepted] The visual style is **colorful**.
 
-[proposed] Details:
+[accepted] Details:
 - Bright, saturated colors, soft lighting and simple, stylized shapes: a
   "toy-like" world rather than a realistic one. This also keeps the 3D cheap
   enough to render in any browser.
@@ -61,7 +62,7 @@ updated: 2026-10-05
 
 - **VIS-001** [accepted] The world MUST be rendered in 3D and viewed from a top-down camera.
 - **VIS-002** [accepted] The visual style MUST be colorful.
-- **VIS-003** [proposed] The exploration camera MUST be tilted (about 55° below the horizon), fixed north-up, and follow the player.
+- **VIS-003** [accepted] The exploration camera MUST be tilted (about 55° below the horizon), fixed north-up, and follow the player.
 - **VIS-004** [accepted] The image prompt's house style MUST match the world's colorful, stylized look.
 - **VIS-005** [accepted] Each biome MUST have a visually distinct dominant color palette.
 

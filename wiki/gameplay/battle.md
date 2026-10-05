@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -245,14 +246,14 @@ PvP battles use the commit-reveal seed ([pvp-battles](pvp-battles.md)).
 ## Presentation
 
 [accepted] The visual style is colorful ([visual-style](../world/visual-style.md)).
-[proposed] Battles take place on the spot in the 3D world; the battle camera is
+[accepted] Battles take place on the spot in the 3D world; the battle camera is
 defined in [visual-style § Camera](../world/visual-style.md#camera).
 
 [accepted] Peerlings are static 3D models ([CRE-017](../peerlings/creation-pipeline.md#requirements)),
 and battles use simple 3D graphics.
 
 [accepted] Animation is procedural: whole-model transforms, no rigging.
-[proposed] Suggested set:
+[accepted] Suggested set:
 
 | Moment | Animation |
 |--------|-----------|
@@ -271,7 +272,7 @@ from the move's type and template, not authored per move.
 - **BTL-001** [accepted] The player MUST be able to battle wild Peerlings they encounter.
 - **BTL-002** [accepted] The battle engine MUST be deterministic given the initial state, the actions taken and the RNG seed, on every browser and on the server.
 - **BTL-003** [accepted] Battle animation MUST work with static, unrigged models using whole-model transforms only.
-- **BTL-004** [proposed] Move visual effects MUST be derived from the move's type and template, so every generated move has an effect without per-move assets.
+- **BTL-004** [accepted] Move visual effects MUST be derived from the move's type and template, so every generated move has an effect without per-move assets.
 - **BTL-005** [accepted] Damage, stats at a given level and turn order MUST follow the [damage model](#damage-model).
 - **BTL-006** [accepted] Levels MUST run from 1 to 50, and XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
 - **BTL-007** [accepted] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.

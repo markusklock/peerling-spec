@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -65,7 +66,7 @@ Creation Shrine are never surrounded by foliage.
 
 ## Size and shape
 
-[accepted] The world is **large but finite**: 4 km × 4 km. [proposed] Details:
+[accepted] The world is **large but finite**: 4 km × 4 km. [accepted] Details:
 - At the walking speed of 3 tiles per second (6 m/s,
   [exploration § Grid movement](../gameplay/exploration.md#grid-movement)),
   crossing it takes about 11 minutes, so the world feels big but players still
@@ -87,7 +88,7 @@ likely to appear (the weighting is in
 [accepted] Names and looks (approved 2026-10-04; each biome's dominant colors make it recognizable at
 a glance; [visual-style](visual-style.md)):
 
-| Biome | Type | Look | Encounter foliage [proposed] |
+| Biome | Type | Look | Encounter foliage [accepted] |
 |-------|------|------|------------------|
 | Plains | Normal | Rolling green-gold grassland, paths, fences, small farms | Tall grass |
 | Volcano | Fire | Black rock, glowing lava streams, red and orange | Ember-tipped ash grass |
@@ -126,8 +127,8 @@ rolled out without splitting players into different worlds.
 - **WGN-001** [accepted] The world MUST be procedurally generated.
 - **WGN-002** [accepted] World generation MUST be deterministic for a given seed and generator version, across browsers and platforms.
 - **WGN-003** [accepted] All players MUST be in the same world. [accepted] They MUST therefore use the same global seed.
-- **WGN-004** [proposed] Clients with different world-generator versions MUST NOT show each other's presence, so players never see someone walking through terrain that doesn't exist for them.
-- **WGN-005** [accepted] The world MUST be finite, 4 km × 4 km. [proposed] It MUST be bounded by a natural border (no invisible walls).
+- **WGN-004** [accepted] Clients with different world-generator versions MUST NOT show each other's presence, so players never see someone walking through terrain that doesn't exist for them.
+- **WGN-005** [accepted] The world MUST be finite, 4 km × 4 km. [accepted] It MUST be bounded by a natural border (no invisible walls).
 - **WGN-006** [accepted] There MUST be 12 biomes, one for each type, and each biome MUST raise the chance of encountering Peerlings of its type.
 - **WGN-007** [accepted] Every biome MUST occur in every distance ring, so every type can be met at every level range.
 - **WGN-008** [accepted] The spawn area MUST be Plains.

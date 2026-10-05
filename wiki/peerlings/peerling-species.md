@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-approvals-q016-q038.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -77,7 +78,7 @@ signs) are still to be specified. The move entries follow
 
 ## Stats
 
-[proposed] Every species has four base stats: **HP**, **Attack**, **Defense**,
+[accepted] Every species has four base stats: **HP**, **Attack**, **Defense**,
 **Speed**. (An earlier draft had a fifth "Special" stat. It was dropped to keep
 battles simple and to avoid confusion with the *signature* (special) move slot
 in [moves](moves.md).) How stats are used in damage and turn order is defined

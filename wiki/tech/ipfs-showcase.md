@@ -8,10 +8,11 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/overview.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-03
+updated: 2026-10-05
 ---
 
 # IPFS Showcase Features
@@ -23,13 +24,15 @@ updated: 2026-10-03
 
 ## Principles
 
-[proposed]
+[accepted]
 - Show the tech where it **means something to the player** ("your Peerling is
   being served to 3 other players right now") rather than as raw jargon.
 - Let curious players drill down to the real thing (CIDs, peer IDs, gateway
   links), and keep it out of the way for everyone else.
 
-## Ideas (all [proposed])
+## Ideas
+
+[accepted] All of the following (approved 2026-10-05):
 
 | Idea | What the player sees |
 |------|----------------------|
@@ -43,8 +46,8 @@ updated: 2026-10-03
 
 ## Requirements
 
-- **SHOW-001** [proposed] The game MUST provide an optional in-game view of the player's IPFS node activity (peers, data served, content held).
-- **SHOW-002** [proposed] Each species MUST display its CID somewhere accessible in the UI.
+- **SHOW-001** [accepted] The game MUST provide an optional in-game view of the player's IPFS node activity (peers, data served, content held).
+- **SHOW-002** [accepted] Each species MUST display its CID somewhere accessible in the UI.
 
 ## Open questions
 

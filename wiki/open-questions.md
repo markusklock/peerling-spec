@@ -17,15 +17,17 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-041
-**Unique Peerling names: approve the design?**
-- Affects: [creation-pipeline § Final review](peerlings/creation-pipeline.md#final-review), [orbitdb-registry](tech/orbitdb-registry.md)
-- Context: The designer wants names to be unique, to avoid confusion (e.g. 50
-  Peerlings called "Pikachu").
-- Proposal: the server enforces uniqueness on a normalized form (case,
-  accents, spaces, punctuation and look-alike letters ignored), with a live
-  availability check, a 30-minute reservation, and names staying taken even
-  after delisting. Near-identical names ("Pikachu2") stay allowed.
+### Q-042
+**Account recovery and save contents: approve?**
+- Affects: [player-data § Account recovery](tech/player-data.md#account-recovery), [player-data § Save contents](tech/player-data.md#save-contents)
+- Context: The designer asked whether an account can be recovered from the
+  network with a password or phrase, if another node still holds the data.
+- Proposal: the save-log address is derived from the player ID, so a recovered
+  key finds the save on any node (server, peers, mirrors). Ways to get the key
+  back: the recovery phrase (default), an optional recovery password (an
+  encrypted key backup stored in an OrbitDB recovery database; strong passwords
+  enforced), or a backup file. Also pending: the save contents list (team,
+  profile, created species, Peerdex, position, no inventory).
 - Raised: 2026-10-05
 
 ## Resolved
@@ -71,7 +73,7 @@ through the normal pipeline. Resolved 2026-10-03 →
 **World size.** Large but finite, with one shared world for all players.
 Resolved 2026-10-04 →
 [procedural-generation](world/procedural-generation.md) (WGN-005; the 4 km ×
-4 km size is still [proposed]).
+4 km size was approved on 2026-10-04).
 
 ### Q-028
 **How are battles and trades started?** Only when the two players are next to
@@ -245,3 +247,8 @@ overall rating; traits apply in PvP; species-specific shimmer look. Resolved
 tiles/s, 1 in 10 encounter chance per foliage step with 3 grace steps, 20–30%
 foliage, 32 × 32-tile chunks. Resolved 2026-10-05 →
 [exploration § Grid movement](gameplay/exploration.md#grid-movement).
+
+### Q-041
+**Unique species names.** Unique in normalized form, enforced by the server
+with a live check and reservation; names stay taken after delisting. Resolved
+2026-10-05 → [creation-pipeline § Final review](peerlings/creation-pipeline.md#final-review).

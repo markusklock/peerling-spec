@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -97,7 +98,7 @@ known gap is listed in
 
 The player's own species MAY appear in the wild (others certainly meet it).
 
-[proposed] Each player meets their own wild Peerlings, even in the shared
+[accepted] Each player meets their own wild Peerlings, even in the shared
 world ([MPL-004](multiplayer.md#requirements)).
 
 ## Wild level

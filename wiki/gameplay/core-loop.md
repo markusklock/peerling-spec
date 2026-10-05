@@ -7,13 +7,14 @@ sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-4.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/battle.md
   - wiki/gameplay/catching.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Core Gameplay Loop
@@ -57,7 +58,7 @@ Around the core loop, players meet each other, [battle](pvp-battles.md) and
 
 ## Motivations (proposed)
 
-[proposed] Why players keep playing:
+[accepted] Why players keep playing:
 - **Discovery** — every wild Peerling is another player's imagination; there is
   always something never seen before.
 - **Collection** — catch as many different species as possible (a "Peerdex"

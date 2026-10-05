@@ -10,12 +10,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-5.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/peerlings/moves.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/battle.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Peerling Types
@@ -34,7 +35,7 @@ the concept stage, based on the player's description
 [accepted] The list has 12 classic elements. [accepted] Each type has exactly
 one home biome, where it appears more often; the biome list is canonical in
 [procedural-generation § Biomes](../world/procedural-generation.md#biomes).
-Themes are [proposed]:
+Themes are [accepted]:
 
 | Type | Theme |
 |------|-------|
@@ -53,7 +54,7 @@ Themes are [proposed]:
 
 ## Primary and secondary type
 
-[proposed] A dual-typed species lists its types in order: the first is its
+[accepted] A dual-typed species lists its types in order: the first is its
 **primary** type, the one that best fits the concept. The signature move uses
 the primary type ([moves](moves.md#move-slots)).
 
@@ -126,7 +127,7 @@ Derived from the chart above (the chart is canonical if they ever differ).
 ## Requirements
 
 - **TYP-001** [accepted] There MUST be one predefined list of types (the 12 above); generated species MUST only use types from it.
-- **TYP-002** [proposed] Each species MUST have 1 or 2 types; with 2, the order defines primary and secondary.
+- **TYP-002** [accepted] Each species MUST have 1 or 2 types; with 2, the order defines primary and secondary.
 - **TYP-003** [accepted] Type effectiveness MUST follow the chart above: a multiplier from {2, 1, ½} for every attacker/defender pair, multiplied together against dual-typed defenders.
 - ~~**TYP-004**~~ (removed 2026-10-04, replaced by WGN-006 in [procedural-generation](../world/procedural-generation.md#requirements))
 

@@ -97,6 +97,71 @@ Loading a save means reading the latest `snapshot` and applying the events
 after it. The server replicates every player's log and pins the snapshots.
 Other players fetch a save log when they need to verify one of its catches.
 
+## Account recovery
+
+[accepted] An account is a cryptographic key pair; the public key is the
+player ID. The save is a per-player OrbitDB log that the server replicates and
+pins (SAVE-001), and the key can be restored with a recovery phrase (SAVE-002).
+
+[proposed] Details, written 2026-10-05 at the designer's request
+([Q-042](../open-questions.md#q-042)):
+
+### Recovering from the network
+
+Yes: an account can be recovered from any node that still holds its save log.
+- **The key is enough to find the save.** The save log's OrbitDB address is
+  computed from the player ID alone (fixed database name, type and writer), so
+  a recovered key leads straight to its save log. No central account directory
+  is needed.
+- **Where the data lives:** the operator server pins every save log;
+  players who verified one of your catches or trades replicated your log; and
+  community mirrors ([resilience](resilience.md)) can follow save logs too. Any
+  of them can serve it.
+- **Flow on a new device:** choose *Recover account* → enter the recovery phrase
+  (or the recovery password, below) → the client rebuilds the key, computes the
+  save-log address, fetches the log from whichever node has it, and loads the
+  latest snapshot.
+- **If no node has the save any more,** the key still works: the player keeps
+  their identity, and every species they created still names them as creator.
+  Only progress is lost.
+
+### Ways to get the key back
+
+| Method | How | Strength |
+|--------|-----|----------|
+| **Recovery phrase** (default, already accepted) | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
+| **Recovery password** (optional, new) | The player sets a display name + password. The client encrypts the private key with a key derived from them and publishes the encrypted backup to the network (details below) | Only as strong as the password |
+| **Backup file** | Export or import the key as a file | Strong, if the file is kept safe |
+
+### Recovery password (optional)
+
+- **Derivation:** the client runs Argon2id (a deliberately slow, memory-heavy
+  password hash; run in the browser via WebAssembly) on the password, salted
+  with the display name and a fixed game string. The output gives two values:
+  a **lookup ID** (where the backup is stored) and an **encryption key**.
+- **Backup:** the private key is encrypted with that key (AES-GCM via
+  WebCrypto) and stored under the lookup ID in an OrbitDB **recovery
+  database**. Any player can add entries, but an entry can only be created or
+  changed with a signature from the key inside it, so nobody can overwrite
+  someone else's backup. The server and mirrors replicate it.
+- **Recovering:** enter display name + password → recompute the lookup ID →
+  fetch the backup from any node → decrypt → the key is back, then continue as
+  above.
+- **The trade-off:** the encrypted backups are public, so anyone can download
+  them and try to guess passwords offline. Argon2id makes every guess slow
+  (about 1 second and 256 MB of memory per guess), but a weak password will
+  still be guessed eventually. So:
+  - the client only accepts strong passwords (at least 12 characters and a
+    high strength score; a 4-word passphrase is suggested);
+  - the player is told that the recovery phrase is the safer option;
+  - the password backup is optional and can be removed at any time.
+- If two players happen to pick the same display name and password, the second
+  is asked to choose another password (the lookup ID is taken).
+
+This changes the accepted rule that the private key never leaves the device in
+any other form ([SAVE-002](#requirements)): with a recovery password, an
+*encrypted* copy is stored on the network.
+
 ## Verification
 
 ### Verified Peerlings
@@ -355,10 +420,12 @@ D-0013, mostly checks any player can run).
 - **SAVE-015** [accepted] Conflicting transfers of the same Peerling MUST be detected; [accepted] the transfer with the lower log-entry CID wins, and the signer MUST be flagged and refused for trades and PvP.
 - **SAVE-016** [accepted] Any client MUST be able to verify a catch by replaying it from the catcher's save log; no server signature is required.
 - **SAVE-017** [accepted] A caught Peerling's instance ID MUST be SHA-256(player ID ‖ encounter number).
+- **SAVE-018** [proposed] A save log's OrbitDB address MUST be derivable from the player ID alone, so a recovered key can find its save on any node that holds it.
+- **SAVE-019** [proposed] Players MAY set an optional recovery password: the private key is encrypted with an Argon2id-derived key and stored in an OrbitDB recovery database under a password-derived lookup ID; the client MUST enforce strong passwords.
 
 ## Open questions
 
-_None at the moment._
+[Q-042](../open-questions.md#q-042)
 
 ## See also
 

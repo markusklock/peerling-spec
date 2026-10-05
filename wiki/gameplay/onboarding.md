@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
@@ -31,7 +32,7 @@ Peerling. [accepted] The player either **creates** their own starter or
 
 ### Choosing an existing starter
 
-[proposed] The server offers **3 species**, drawn at random (uniformly) from
+[accepted] The server offers **3 species**, drawn at random (uniformly) from
 the registry, excluding removed species. The player picks one, or switches to
 creating their own instead. The server signs an attestation for the new starter
 ([player-data § Verification](../tech/player-data.md#verification)). Players who
@@ -40,7 +41,7 @@ choose can still create Peerlings later at the
 
 ### Creating a starter
 
-[proposed] Suggested order, chosen to hide generation wait times:
+[accepted] Suggested order, chosen to hide generation wait times:
 
 1. **Welcome** — short intro to the world and the idea that every Peerling was
    made by a player. The player chooses: create a Peerling, or pick an existing
@@ -66,11 +67,11 @@ choose can still create Peerlings later at the
 
 - ~~**ONB-001**~~ (removed 2026-10-04, replaced by ONB-005; see D-0012)
 - ~~**ONB-002**~~ (removed 2026-10-04, replaced by ONB-006; see D-0012)
-- **ONB-003** [proposed] Onboarding MUST let the player do something useful (e.g. character creation) while long generation stages run.
+- **ONB-003** [accepted] Onboarding MUST let the player do something useful (e.g. character creation) while long generation stages run.
 - **ONB-004** [accepted] If the player leaves during onboarding, they MUST be able to resume the same creation job later ([CRE-014](../peerlings/creation-pipeline.md#requirements)).
 - **ONB-005** [accepted] A new player MUST create a player character and get a starter Peerling before starting to explore.
 - **ONB-006** [accepted] The starter MUST be either an instance of a species the player creates, or an instance of an existing species the player chooses from a few random options.
-- **ONB-007** [proposed] When choosing, the player MUST be offered 3 random species from the registry.
+- **ONB-007** [accepted] When choosing, the player MUST be offered 3 random species from the registry.
 
 ## Open questions
 
