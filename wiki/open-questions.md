@@ -17,17 +17,15 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-042
-**Account recovery and save contents: approve?**
-- Affects: [player-data § Account recovery](tech/player-data.md#account-recovery), [player-data § Save contents](tech/player-data.md#save-contents)
-- Context: The designer asked whether an account can be recovered from the
-  network with a password or phrase, if another node still holds the data.
-- Proposal: the save-log address is derived from the player ID, so a recovered
-  key finds the save on any node (server, peers, mirrors). Ways to get the key
-  back: the recovery phrase (default), an optional recovery password (an
-  encrypted key backup stored in an OrbitDB recovery database; strong passwords
-  enforced), or a backup file. Also pending: the save contents list (team,
-  profile, created species, Peerdex, position, no inventory).
+### Q-043
+**How should saves be kept available besides the operator server?**
+- Affects: [player-data § Keeping saves available](tech/player-data.md#keeping-saves-available), [resilience](tech/resilience.md)
+- Context: The designer pointed out that IPFS nodes only hold content they
+  request, so apart from the operator server, nobody reliably holds a player's
+  save log.
+- Proposal: (A) the backup file also contains the latest save snapshot, and (B)
+  community mirrors follow save logs. Options C (buddy pinning) and D (paid
+  pinning or Filecoin) are not recommended.
 - Raised: 2026-10-05
 
 ## Resolved
@@ -252,3 +250,8 @@ foliage, 32 × 32-tile chunks. Resolved 2026-10-05 →
 **Unique species names.** Unique in normalized form, enforced by the server
 with a live check and reservation; names stay taken after delisting. Resolved
 2026-10-05 → [creation-pipeline § Final review](peerlings/creation-pipeline.md#final-review).
+
+### Q-042
+**Account recovery and save contents.** Recovery phrase and backup file only;
+no password recovery. The save contents list is approved. Resolved 2026-10-05 →
+[player-data § Account recovery](tech/player-data.md#account-recovery).

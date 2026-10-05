@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-05-save-recovery.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -59,12 +60,12 @@ refers to it by CID.
 | Part | Contents | Provenance |
 |------|----------|------------|
 | Collection | Every Peerling the player owns, each with its **current level**, XP, current HP, nickname, origin and verification. Format: [Peerling instance](../peerlings/peerling-species.md#peerling-instance) | [accepted] |
-| Team | Ordered list of the instance IDs in the active team (size: [catching](../gameplay/catching.md)) | [proposed] |
-| Profile | Player ID (public key), display name, character appearance | [proposed] |
-| Created species | CID(s) of the species this player created | [proposed] |
-| Peerdex | Species seen and species caught (CIDs) | [proposed] |
-| Position | Last position and facing in the world | [proposed] |
-| Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [proposed] No inventory at all in the first version, so this part is empty | [proposed] |
+| Team | Ordered list of the instance IDs in the active team (size: [catching](../gameplay/catching.md)) | [accepted] |
+| Profile | Player ID (public key), display name, character appearance | [accepted] |
+| Created species | CID(s) of the species this player created | [accepted] |
+| Peerdex | Species seen and species caught (CIDs) | [accepted] |
+| Position | Last position and facing in the world | [accepted] |
+| Inventory | [accepted] No battle items in the first version ([CAT-003](../gameplay/catching.md#requirements)). [proposed] No inventory at all in the first version, so this part is empty | [accepted] |
 
 Not in the save: the identity **private key** (stays on the device; restored
 with the recovery phrase), and the authoritative owner of each Peerling (that is
@@ -101,66 +102,59 @@ Other players fetch a save log when they need to verify one of its catches.
 
 [accepted] An account is a cryptographic key pair; the public key is the
 player ID. The save is a per-player OrbitDB log that the server replicates and
-pins (SAVE-001), and the key can be restored with a recovery phrase (SAVE-002).
+pins (SAVE-001). The key is recovered with the **recovery phrase** or a
+**backup file**; there is no password-based recovery (decided 2026-10-05).
 
-[proposed] Details, written 2026-10-05 at the designer's request
-([Q-042](../open-questions.md#q-042)):
-
-### Recovering from the network
-
-Yes: an account can be recovered from any node that still holds its save log.
-- **The key is enough to find the save.** The save log's OrbitDB address is
-  computed from the player ID alone (fixed database name, type and writer), so
-  a recovered key leads straight to its save log. No central account directory
-  is needed.
-- **Where the data lives:** the operator server pins every save log;
-  players who verified one of your catches or trades replicated your log; and
-  community mirrors ([resilience](resilience.md)) can follow save logs too. Any
-  of them can serve it.
-- **Flow on a new device:** choose *Recover account* → enter the recovery phrase
-  (or the recovery password, below) → the client rebuilds the key, computes the
-  save-log address, fetches the log from whichever node has it, and loads the
-  latest snapshot.
-- **If no node has the save any more,** the key still works: the player keeps
-  their identity, and every species they created still names them as creator.
-  Only progress is lost.
-
-### Ways to get the key back
+### Getting the key back
 
 | Method | How | Strength |
 |--------|-----|----------|
-| **Recovery phrase** (default, already accepted) | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
-| **Recovery password** (optional, new) | The player sets a display name + password. The client encrypts the private key with a key derived from them and publishes the encrypted backup to the network (details below) | Only as strong as the password |
+| **Recovery phrase** | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
 | **Backup file** | Export or import the key as a file | Strong, if the file is kept safe |
 
-### Recovery password (optional)
+### Finding the save again
 
-- **Derivation:** the client runs Argon2id (a deliberately slow, memory-heavy
-  password hash; run in the browser via WebAssembly) on the password, salted
-  with the display name and a fixed game string. The output gives two values:
-  a **lookup ID** (where the backup is stored) and an **encryption key**.
-- **Backup:** the private key is encrypted with that key (AES-GCM via
-  WebCrypto) and stored under the lookup ID in an OrbitDB **recovery
-  database**. Any player can add entries, but an entry can only be created or
-  changed with a signature from the key inside it, so nobody can overwrite
-  someone else's backup. The server and mirrors replicate it.
-- **Recovering:** enter display name + password → recompute the lookup ID →
-  fetch the backup from any node → decrypt → the key is back, then continue as
-  above.
-- **The trade-off:** the encrypted backups are public, so anyone can download
-  them and try to guess passwords offline. Argon2id makes every guess slow
-  (about 1 second and 256 MB of memory per guess), but a weak password will
-  still be guessed eventually. So:
-  - the client only accepts strong passwords (at least 12 characters and a
-    high strength score; a 4-word passphrase is suggested);
-  - the player is told that the recovery phrase is the safer option;
-  - the password backup is optional and can be removed at any time.
-- If two players happen to pick the same display name and password, the second
-  is asked to choose another password (the lookup ID is taken).
+[accepted] The save log's OrbitDB address is computed from the player ID alone
+(fixed database name, type and writer), so a recovered key leads straight to
+its save log; no central account directory is needed. On a new device the
+player chooses *Recover account*, enters the phrase or loads the file, and the
+client fetches the save log from whichever node holds it and loads the latest
+snapshot.
 
-This changes the accepted rule that the private key never leaves the device in
-any other form ([SAVE-002](#requirements)): with a recovery password, an
-*encrypted* copy is stored on the network.
+If no node holds the save any more, the key still works: the player keeps
+their identity, and every species they created still names them as creator.
+Only progress is lost.
+
+### Who actually holds a save
+
+IPFS and OrbitDB nodes only hold what they have asked for, so a save log
+exists only where something has a reason to fetch it:
+
+| Holder | Why it has the save | How reliable |
+|--------|---------------------|--------------|
+| **The operator server** | Replicates and pins every save log (SAVE-001) | The main copy; always online, but a single machine |
+| **The player's own browsers** | Every device the player plays on keeps its own log | Lost if browser data is cleared |
+| **Other players** | Verifying a catch or a trade fetches the catcher's save log ([Verified Peerlings](#verified-peerlings)) | Incidental: only some saves, and the copy may be evicted from their cache; browsers are only online while the game is open |
+| **Community mirrors** | Only if they choose to follow save logs ([resilience](resilience.md)) | Optional |
+
+So in practice the operator server is the only dependable network copy. Ways
+to make saves more durable are proposed in
+[Q-043](../open-questions.md#q-043) ([Keeping saves available](#keeping-saves-available)).
+
+### Keeping saves available
+
+[proposed] Options, written 2026-10-05 ([Q-043](../open-questions.md#q-043)):
+
+| Option | How | Pros | Cons |
+|--------|-----|------|------|
+| **A. Snapshot in the backup file** (recommended) | The backup file holds the key *and* the latest save snapshot. The game reminds the player to refresh it now and then | Works even if every network copy is gone; costs nothing | The file is only as fresh as its last export |
+| **B. Mirrors follow save logs** (recommended) | The operator publishes the list of save-log addresses, and community mirrors ([RES-004](resilience.md#requirements)) replicate them along with the Peerlings | Real, always-on copies outside the operator's server | Depends on volunteers running mirrors |
+| C. Buddy pinning | Each client also keeps a few other players' save logs, chosen deterministically (e.g. 3 per save) | Spreads copies across players, a nice IPFS showcase | Browsers are online only while playing, so a buddy copy is often unreachable; extra work for every client |
+| D. Paid pinning or Filecoin | The server also stores save snapshots with a pinning service or as Filecoin deals | Very durable | Costs money; another external dependency |
+
+Recommendation: **A + B**. A protects each player personally, B gives the
+network independent copies. C adds little because browser nodes are offline
+most of the time; D is overkill for a hobby project.
 
 ## Verification
 
@@ -407,7 +401,7 @@ D-0013, mostly checks any player can run).
 - **SAVE-002** [accepted] The client MUST let the player back up their identity key with a recovery phrase and restore it on another device. The private key MUST NOT leave the device in any other form.
 - **SAVE-003** [accepted] Only verified Peerling instances MUST be usable in trades and PvP battles; verification follows [Verified Peerlings](#verified-peerlings).
 - ~~**SAVE-004**~~ (removed 2026-10-04, replaced by SAVE-014 and SAVE-015; see D-0013)
-- **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP. [proposed] It MUST also contain the parts listed in [Save contents](#save-contents).
+- **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP, and MUST also contain the parts listed in [Save contents](#save-contents).
 - ~~**SAVE-006**~~ (removed 2026-10-04, replaced by SAVE-016; see D-0013)
 - **SAVE-007** [accepted] The save log MUST be event-based as listed in [Save log](#save-log), with periodic snapshots so loading doesn't replay the full history.
 - **SAVE-008** [accepted] Encounter seeds MUST be derived as in [Encounter seeds](#encounter-seeds): from the epoch record's randomness, the player ID and a gap-free encounter number.
@@ -420,12 +414,12 @@ D-0013, mostly checks any player can run).
 - **SAVE-015** [accepted] Conflicting transfers of the same Peerling MUST be detected; [accepted] the transfer with the lower log-entry CID wins, and the signer MUST be flagged and refused for trades and PvP.
 - **SAVE-016** [accepted] Any client MUST be able to verify a catch by replaying it from the catcher's save log; no server signature is required.
 - **SAVE-017** [accepted] A caught Peerling's instance ID MUST be SHA-256(player ID ‖ encounter number).
-- **SAVE-018** [proposed] A save log's OrbitDB address MUST be derivable from the player ID alone, so a recovered key can find its save on any node that holds it.
-- **SAVE-019** [proposed] Players MAY set an optional recovery password: the private key is encrypted with an Argon2id-derived key and stored in an OrbitDB recovery database under a password-derived lookup ID; the client MUST enforce strong passwords.
+- **SAVE-018** [accepted] A save log's OrbitDB address MUST be derivable from the player ID alone, so a recovered key can find its save on any node that holds it.
+- ~~**SAVE-019**~~ (removed 2026-10-05: no password-based recovery; the designer chose the recovery phrase and backup file only)
 
 ## Open questions
 
-[Q-042](../open-questions.md#q-042)
+[Q-043](../open-questions.md#q-043)
 
 ## See also
 

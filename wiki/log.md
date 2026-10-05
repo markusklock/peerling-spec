@@ -241,3 +241,12 @@ List all entries with `grep "^## \[" wiki/log.md`.
   deriving save-log addresses from the player ID plus an optional Argon2id
   recovery password (Q-042, SAVE-018/019). Only the save-contents rows remain
   [proposed].
+
+## [2026-10-05] design | Save recovery settled; who holds saves corrected
+- Source: raw/conversations/2026-10-05-save-recovery.md
+- Changed: tech/player-data.md, open-questions.md, index.md
+- Notes: Resolved Q-042: recovery by phrase or backup file only (SAVE-019
+  removed); save contents approved. Corrected an overstatement: other nodes
+  only hold a save log if they fetched it, so the operator server is the only
+  dependable copy. Proposed keeping saves available via a save snapshot in the
+  backup file and mirrors following save logs (Q-043).
