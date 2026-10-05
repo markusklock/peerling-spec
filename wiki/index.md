@@ -22,9 +22,9 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [core-loop](gameplay/core-loop.md) | draft | — | Explore → encounter → battle → catch; player motivations |
 | [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates a character and creates or chooses a starter Peerling |
 | [player-character](gameplay/player-character.md) | stub | PLR | Avatar options (recommended: parts-based customizer), identity keypair |
-| [exploration](gameplay/exploration.md) | stub | EXP | Moving through the world; rest points and healing |
+| [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, encounters in foliage, rest points and healing |
 | [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings: weights, 5 ordered candidates, wild levels, prefetching |
-| [battle](gameplay/battle.md) | stub | BTL | Battle rules: damage model, XP and levelling, deterministic RNG; procedural animation of static models |
+| [battle](gameplay/battle.md) | draft | BTL | Turns, action order, move mechanics, stat stages, damage model, XP, RNG, battle screen |
 | [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
 | [multiplayer](gameplay/multiplayer.md) | draft | MPL | Shared world: seeing other players, face-to-face interaction, emotes (no chat) |
 | [pvp-battles](gameplay/pvp-battles.md) | draft | PVP | Peer-to-peer battles: fairness, commit-reveal protocol |
@@ -46,7 +46,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
-| [procedural-generation](world/procedural-generation.md) | draft | WGN | One shared 4 × 4 km seeded world; 12 biomes (one per type) and their layout |
+| [procedural-generation](world/procedural-generation.md) | draft | WGN | One shared 4 × 4 km seeded world on a tile grid; 12 biomes with their foliage and layout |
 | [visual-style](world/visual-style.md) | draft | VIS | Top-down tilted camera, battle camera, colorful stylized look |
 
 ## Tech
@@ -86,7 +86,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 ARC, BTL, CAT, CFB, CRE, ENC, EXP, MOD, MOV, MPL, NET, NODE, ONB, PLR, PVP, REG,
 RES, SAVE, SHOW, SHR, SPC, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0015. Next free question ID: Q-039.
+D-0015. Next free question ID: Q-041.
 
 ## Sources
 
@@ -106,3 +106,4 @@ D-0015. Next free question ID: Q-039.
 | [2026-10-05-individual-variation](../raw/conversations/2026-10-05-individual-variation.md) | 2026-10-05 | Individual variation: ±10% stat traits and rare color variants (options b and d) |
 | [2026-10-05-asset-budgets-request](../raw/conversations/2026-10-05-asset-budgets-request.md) | 2026-10-05 | Designer asked for asset budget suggestions (Q-016) and for Q-038 to be explained |
 | [2026-10-05-approvals-q016-q038](../raw/conversations/2026-10-05-approvals-q016-q038.md) | 2026-10-05 | Asset budgets and individual-variation details approved |
+| [2026-10-05-grid-foliage-battles](../raw/conversations/2026-10-05-grid-foliage-battles.md) | 2026-10-05 | Game Boy-style grid movement; encounters in biome foliage; battle design requested |

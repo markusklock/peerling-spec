@@ -93,6 +93,9 @@ specified in [battle](../gameplay/battle.md).
 
 For the `sig-weaken` and `sig-empower` templates, the LLM also chooses which
 stat is affected. That choice is stored in the move entry as `stat`.
+[proposed] The chosen stat must be Attack, Defense or Speed (HP has no stages;
+[battle § Stat stages](../gameplay/battle.md#stat-stages)). How every template
+behaves in battle is defined in [battle § Move mechanics](../gameplay/battle.md#move-mechanics).
 
 ## Reference: how Pokémon-like games structure moves
 

@@ -76,6 +76,10 @@ The ordered list of up to 5 species drawn for one wild encounter; the
 encounter uses the first one that could be fetched. See
 [encounters § Candidates](gameplay/encounters.md#candidates).
 
+### Encounter foliage
+The biome-specific tall grass (or similar) where wild encounters happen. See
+[exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage).
+
 ### Epoch record
 [proposed] A record the server signs and publishes every 5 minutes (one
 *epoch*). It holds a drand random value and the current registry height, and
@@ -205,6 +209,10 @@ during onboarding, or of an existing species they chose instead. See
 ### Team
 The Peerlings a player brings into battles: up to 4. See
 [catching](gameplay/catching.md#team-and-collection).
+
+### Tile
+One cell of the invisible grid the world is laid out on; players move one tile
+at a time. See [exploration § Grid movement](gameplay/exploration.md#grid-movement).
 
 ### Trade
 An exchange of [Peerling instances](#peerling-instance) between two players.

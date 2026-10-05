@@ -11,13 +11,14 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
+  - raw/conversations/2026-10-05-grid-foliage-battles.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Realtime Peer-to-Peer Networking
@@ -46,8 +47,13 @@ updated: 2026-10-04
   once it is 8 m past a region border, so walking along a border doesn't cause
   constant resubscribing.
 - A client publishes a **presence message** to its current region topic **4
-  times per second while moving**, and a heartbeat **every 5 s when idle**. Contents: peer ID, player ID, display name, avatar
-  reference, position, facing, timestamp, signature.
+  times per second while moving**, and a heartbeat **every 5 s when idle**.
+  [proposed] With grid movement ([exploration § Grid movement](../gameplay/exploration.md#grid-movement))
+  a moving player sends one message per step (3 per second, within the
+  limit). Contents: peer ID, player ID, display name, appearance hash, **tile
+  coordinates**, facing direction, step start time, timestamp, signature.
+  Receivers animate the step from the previous tile to the new one, so movement
+  looks smooth without extra messages.
 - [accepted] There is no chat; [emotes](../glossary.md#emote) are the only
   player-to-player messages. [proposed] An emote is sent as a presence message
   with an `emote` field (an ID from the fixed set in

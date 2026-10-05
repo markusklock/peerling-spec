@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-grid-foliage-battles.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -116,7 +117,7 @@ later. The server also verifies catches it sees, for the species stats
 
 1. When a player catches a Peerling, the client appends a `catch` event with
    the **catch evidence**: the encounter number, the epoch record used, the
-   position, which of the encounter's candidates was met
+   tile where it started, which of the encounter's candidates was met
    ([encounters § Candidates](../gameplay/encounters.md#candidates)), the
    battle's starting state, and every action taken. The Peerling can be used
    straight away in exploration and wild battles.
@@ -229,8 +230,10 @@ verified like any other: by whoever needs to check them, from the save log.
 2. Encounter numbers run from 0 with no gaps and appear only once; epochs never
    decrease. (A save log with two conflicting branches shows up as duplicate
    encounter numbers, so every catch after the fork fails.)
-3. The species is the logged candidate from the deterministic candidate list,
-   and the wild level matches, for (seed, position, registry height, save log).
+3. The logged tile is an encounter-foliage tile (the world is deterministic,
+   so any verifier can check). The species is the logged candidate from the
+   deterministic candidate list, and the wild level matches, for (seed, tile,
+   registry height, save log).
 4. Replaying the battle with the logged actions ends in this catch.
 5. The instance ID is SHA-256(player ID ‖ encounter number).
 
@@ -290,9 +293,11 @@ using cached results where possible. No server is needed.
 ## Known gaps (accepted risks)
 
 [proposed]
-- **Positions aren't verified.** A modified client could claim a different
-  position to target a biome or wild level. Possible mitigation: the server
-  checks that consecutive `position` events are reachable at walking speed.
+- **Positions aren't fully verified.** The encounter tile must be foliage
+  (checked), but a modified client could claim a foliage tile it never walked
+  to, to target a biome or wild level. Possible mitigation: verifiers check that
+  consecutive `position` events are reachable at walking speed (3 tiles per
+  second).
 - **Small choice among recent epochs.** A player who knows the upcoming
   encounter (the client computes it in advance for prefetching) can stall until
   a new epoch. That is at most one re-roll per 5 minutes. Since D-0014 this can

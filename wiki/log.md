@@ -197,3 +197,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Changed: tech/tech-stack.md, peerlings/peerling-species.md,
   gameplay/pvp-battles.md, decisions/D-0014, open-questions.md, index.md
 - Notes: Resolved Q-016 and Q-038. No open questions remain.
+
+## [2026-10-05] design | Grid movement, foliage encounters, battle rules proposal
+- Source: raw/conversations/2026-10-05-grid-foliage-battles.md
+- Changed: gameplay/exploration.md (stub → draft), gameplay/battle.md
+  (stub → draft), world/procedural-generation.md, gameplay/encounters.md,
+  gameplay/multiplayer.md, peerlings/moves.md, tech/player-data.md,
+  tech/realtime-networking.md, glossary.md, open-questions.md, index.md
+- Notes: Accepted grid movement and foliage-only encounters. Proposed grid
+  numbers (Q-040) and full battle rules (Q-039). Presence now sends tile
+  coordinates per step; catch evidence includes the encounter tile, which
+  verifiers check is foliage. Added EXP-004…006, WGN-010/011, BTL-009/010.

@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-grid-foliage-battles.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -32,6 +33,13 @@ updated: 2026-10-05
 [accepted] Wild Peerlings are drawn at random from **all player-created
 species**, read from the [registry](../tech/orbitdb-registry.md) and downloaded
 via IPFS.
+
+[accepted] Encounters happen only in the biome's encounter foliage (tall grass
+or similar). What triggers one is defined in
+[exploration § Wild encounters in foliage](exploration.md#wild-encounters-in-foliage).
+The biome used for [selection](#selection) is the biome of the foliage tile
+where the encounter started, and the distance for the [wild level](#wild-level)
+is measured from that tile's centre.
 
 ## Selection
 

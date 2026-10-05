@@ -11,13 +11,14 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
+  - raw/conversations/2026-10-05-grid-foliage-battles.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Multiplayer — The Shared World
@@ -39,6 +40,10 @@ updated: 2026-10-04
   Their position and movement update live.
 - [accepted] Battles and trades can only be started when the two players are
   **next to each other** in the world, meaning within 3 metres.
+- [proposed] With grid movement, "within 3 metres" means standing on a
+  neighbouring tile ([exploration § Grid movement](exploration.md#grid-movement)).
+  The player starts an interaction by facing the other player and pressing
+  the interact key.
 - [proposed] Interacting with an adjacent player's character opens a menu:
   *Challenge to battle*, *Propose trade*, *View profile* (their team, and the
   species they created). Once a battle or trade has started, it continues even

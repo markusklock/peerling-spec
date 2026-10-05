@@ -1,7 +1,7 @@
 ---
 title: Battle System
 type: system
-status: stub
+status: draft
 req_prefix: BTL
 tags: [gameplay, battle, balance]
 sources:
@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-individual-variation.md
+  - raw/conversations/2026-10-05-grid-foliage-battles.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -26,7 +27,7 @@ updated: 2026-10-05
 # Battle System
 
 > The battle rules, shared by wild battles and [PvP battles](pvp-battles.md),
-> and how battles look. Status: stub. Rules are mostly still to be written.
+> and how battles look.
 
 [accepted] Players fight wild Peerlings (Pokémon-inspired) and each other
 ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)).
@@ -35,15 +36,121 @@ updated: 2026-10-05
 
 [accepted] There are no items in battles in the first version.
 
-[proposed] Turn-based, one active Peerling per side. Each turn the player
-either uses one of the active Peerling's three moves, switches to another team
-member (team size: [catching](catching.md#team-and-collection)), tries to
-[catch](catching.md#catching-without-items) (wild battles only), or flees (wild
-battles only).
+[proposed] The rules below were suggested 2026-10-05 at the designer's request
+([Q-039](../open-questions.md#q-039)). Guiding idea: classic Pokémon-style
+battles, trimmed to what our 3-move, 4-stat, item-free design needs. Every rule
+is deterministic apart from rolls of the
+[random number generator](#random-number-generator), so battles can be replayed
+exactly.
 
-Decided: the damage model, turn order and experience below. To be specified:
-stat stages and rewards other than XP. Healing between battles happens at
-rest points ([exploration § Healing and rest points](exploration.md#healing-and-rest-points)).
+### Formats
+
+| | Wild battle | PvP battle |
+|--|-------------|------------|
+| Sides | The player's team (up to 4) vs one wild Peerling | Team vs team (up to 4 each) |
+| Active Peerlings | One per side | One per side |
+| Levels | Real levels | Everyone at level 50 ([PVP-007](pvp-battles.md#requirements)) |
+| Extra actions | Catch, Flee | none |
+| XP | Yes ([Experience and levelling](#experience-and-levelling)) | No |
+
+The first team member that hasn't fainted is sent out first (the *lead*).
+
+### A turn
+
+1. **Choose.** Each side picks one action. In PvP both pick at the same time
+   (commit-reveal, [pvp-battles](pvp-battles.md#protocol-proposed)). The wild
+   Peerling picks with the rules in [Wild Peerling behaviour](#wild-peerling-behaviour).
+   The actions are:
+   - **Move:** one of the active Peerling's three moves.
+   - **Switch:** swap in another team member that hasn't fainted. This uses the
+     turn.
+   - **Catch** (wild only): see [catching](catching.md#catch-chance).
+   - **Flee** (wild only): always succeeds and ends the battle at once. Being
+     forgiving fits a casual game, and fleeing is still a logged encounter.
+2. **Resolve, in this order:**
+   1. Flee.
+   2. Switches (both sides).
+   3. Catch attempt. On success the battle ends before the wild Peerling acts.
+   4. Moves: higher move priority first (quick moves have priority +1, all
+      others 0); within the same priority, higher effective Speed first; ties
+      broken by the RNG.
+3. **Faints.** A Peerling at 0 HP faints. Its side picks a replacement before
+   the next turn; this doesn't use a turn.
+
+### Move mechanics
+
+How each [move template](../peerlings/moves.md#template-table) behaves in battle:
+- **Accuracy:** one roll per use of a move; "never misses" skips the roll. A
+  miss does nothing.
+- **Damage:** the [damage model](#damage-model), once per hit.
+- **Two hits** (`quick-flurry`): one accuracy roll, then two hits, each with its
+  own damage roll.
+- **Recoil** (`strong-recoil`): after hitting, the user loses 33% of the damage
+  dealt (at least 1 HP). The user can faint from recoil.
+- **Charge** (`strong-charge`): on the first turn the user gathers power and
+  does nothing else. On its next turn it strikes automatically; the player
+  doesn't pick an action for that turn. If the user is switched out by fainting
+  first, the charge is lost.
+- **Drain** (`sig-drain`): the user heals 50% of the damage dealt, up to its max
+  HP.
+- **Stat effects** (`sig-weaken`, `sig-empower`): after a hit, a 30% chance to
+  change the chosen stat by one stage (below).
+
+### Stat stages
+
+- Attack, Defense and Speed can be raised or lowered in stages from −3 to +3;
+  HP can't. (So the LLM must pick Attack, Defense or Speed for stat-effect
+  moves: [moves](../peerlings/moves.md#template-table).)
+- Multipliers: −3 → ×0.4, −2 → ×0.5, −1 → ×0.67, 0 → ×1, +1 → ×1.5, +2 → ×2,
+  +3 → ×2.5. They apply after level and traits.
+- A change beyond ±3 has no effect. Stages reset when a Peerling switches out
+  and at the end of the battle.
+
+### Left out on purpose (v1)
+
+- **No critical hits:** the damage roll (0.85–1.00) is enough randomness.
+- **No status conditions** (sleep, poison, …): none of the move templates cause
+  them, and they'd need more design and UI.
+
+### Wild Peerling behaviour
+
+Each turn the wild Peerling picks a move using the battle RNG:
+- 50% of the time, the move with the highest expected damage against the
+  player's active Peerling (power × type effectiveness × same-type bonus ×
+  accuracy);
+- otherwise, one of its three moves at random.
+
+It never flees or switches. This makes it a fair, slightly unpredictable
+opponent.
+
+### Ending a battle
+
+| Outcome | Wild battle | PvP battle |
+|---------|-------------|------------|
+| Opponent's last Peerling faints | Win; XP is awarded | Win |
+| Wild Peerling caught | Win; XP is awarded | — |
+| Player flees | Battle ends; no XP | — |
+| All the player's Peerlings faint | Loss; return to the last rest point, fully healed ([EXP-003](exploration.md#requirements)) | Loss |
+| Forfeit / timeout | — | Loss ([pvp-battles](pvp-battles.md)) |
+
+After a battle, HP carries over; stat stages reset.
+
+### PvP turn timer
+
+Each player has 30 s to choose an action. On a timeout, a random move is
+chosen for them (via the battle RNG); two timeouts in a row count as a forfeit.
+
+### Battle screen
+
+- **Bottom panel:** three move buttons (name, type color, slot icon). Hovering
+  shows power, accuracy, effect, and a hint against the current opponent
+  ("Super effective", "Not very effective"). Next to them: Switch, plus Catch and
+  Flee in wild battles.
+- **Each Peerling:** name, level, type badges, an HP bar with numbers, and stat
+  stage arrows when they're not 0. A shimmer sparkles when it enters.
+- **Battle text:** "Mossnap used Moss Swipe! It's super effective!"
+- **Keyboard:** 1–3 for moves, S switch, C catch, F flee.
+- **Pace:** each action animates in about 1.5 s; a toggle doubles the speed.
 
 ### Damage model
 
@@ -167,10 +274,12 @@ from the move's type and template, not authored per move.
 - **BTL-006** [accepted] Levels MUST run from 1 to 50, and XP gain and the XP curve MUST follow [Experience and levelling](#experience-and-levelling).
 - **BTL-007** [proposed] All randomness in battles and encounter selection MUST come from the [random number generator](#random-number-generator) defined above.
 - **BTL-008** [accepted] Every stat MUST be multiplied by the individual's trait factor after the level formula.
+- **BTL-009** [proposed] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
+- **BTL-010** [proposed] There MUST NOT be critical hits or status conditions in v1.
 
 ## Open questions
 
-_None at the moment._
+[Q-039](../open-questions.md#q-039)
 
 ## See also
 

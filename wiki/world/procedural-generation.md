@@ -11,13 +11,14 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-05-grid-foliage-battles.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/types.md
   - wiki/world/visual-style.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Procedural World Generation
@@ -36,13 +37,37 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
   is what makes the shared world possible with no world server.
 - The world is divided into **chunks** generated on demand. Chunks are grouped
   into [regions](../glossary.md#region), which scope multiplayer presence
-  ([realtime-networking](../tech/realtime-networking.md)).
+  ([realtime-networking](../tech/realtime-networking.md)). [proposed] With the
+  tile grid, a chunk is 32 × 32 tiles (64 m × 64 m), the same size as a
+  region, so one chunk is one region.
+
+## Tiles
+
+[accepted] The world is laid out on an invisible grid of tiles that players
+move across one at a time ([exploration § Grid movement](../gameplay/exploration.md#grid-movement)).
+
+[proposed] Each 2 m × 2 m tile has one kind, decided by the generator:
+
+| Kind | Walkable | Notes |
+|------|:--------:|-------|
+| Ground | Yes | Paths, open ground, sand, snow |
+| Foliage | Yes | The biome's encounter foliage (below); wild encounters happen only here |
+| Water | No | Lakes, rivers, sea at the border (no swimming in v1) |
+| Blocked | No | Trees, rocks, buildings, cliff faces, lava |
+
+[proposed] Each tile also has a height level; neighbouring tiles at different
+heights are separated by a cliff unless one of them is a slope or stairs.
+About 20–30% of walkable tiles in a biome area are foliage, in patches of 10–60
+tiles, with paths of plain ground around and between them. Rest points and the
+Creation Shrine are never surrounded by foliage.
 
 ## Size and shape
 
 [accepted] The world is **large but finite**: 4 km × 4 km. [proposed] Details:
-- At a walking speed of about 5 m/s, crossing it takes about 13 minutes, so the
-  world feels big but players still run into each other.
+- At the walking speed of 3 tiles per second (6 m/s,
+  [exploration § Grid movement](../gameplay/exploration.md#grid-movement)),
+  crossing it takes about 11 minutes, so the world feels big but players still
+  run into each other.
 - A natural border (ocean, impassable mountains) surrounds it. There are no
   invisible walls.
 - One shared spawn area in the centre, where new players meet. Wild levels
@@ -60,20 +85,20 @@ likely to appear (the weighting is in
 [accepted] Names and looks (approved 2026-10-04; each biome's dominant colors make it recognizable at
 a glance; [visual-style](visual-style.md)):
 
-| Biome | Type | Look |
-|-------|------|------|
-| Plains | Normal | Rolling green-gold grassland, paths, fences, small farms |
-| Volcano | Fire | Black rock, glowing lava streams, red and orange |
-| Lakeland | Water | Lakes, rivers, waterfalls and beaches; blues |
-| Forest | Grass | Dense woods, mushrooms, mossy logs; deep greens |
-| Storm Highlands | Electric | Plateau with crackling crystal spires; yellow and violet |
-| Badlands | Earth | Canyons, mesas and sand; ochre and rust |
-| Windy Peaks | Air | Cliffs and high ridges with drifting clouds; white and sky blue |
-| Tundra | Ice | Snowfields, frozen lakes, glaciers; pale blue |
-| Scrapyard Ruins | Metal | Rusted ruins, old machines, gears; steel grey and copper |
-| Crystal Meadows | Light | Shining flowers and glowing crystals; white and gold |
-| Gloomwood | Shadow | Dark twisted forest in mist; deep purple |
-| Haunted Marsh | Spirit | Foggy marsh, will-o'-wisps, old standing stones; teal |
+| Biome | Type | Look | Encounter foliage [proposed] |
+|-------|------|------|------------------|
+| Plains | Normal | Rolling green-gold grassland, paths, fences, small farms | Tall grass |
+| Volcano | Fire | Black rock, glowing lava streams, red and orange | Ember-tipped ash grass |
+| Lakeland | Water | Lakes, rivers, waterfalls and beaches; blues | Reeds along the shores |
+| Forest | Grass | Dense woods, mushrooms, mossy logs; deep greens | Ferns and undergrowth |
+| Storm Highlands | Electric | Plateau with crackling crystal spires; yellow and violet | Crackling static grass |
+| Badlands | Earth | Canyons, mesas and sand; ochre and rust | Dry scrub |
+| Windy Peaks | Air | Cliffs and high ridges with drifting clouds; white and sky blue | Wind-swept tall grass |
+| Tundra | Ice | Snowfields, frozen lakes, glaciers; pale blue | Snow-covered shrubs |
+| Scrapyard Ruins | Metal | Rusted ruins, old machines, gears; steel grey and copper | Overgrown scrap heaps |
+| Crystal Meadows | Light | Shining flowers and glowing crystals; white and gold | Glowing flower beds |
+| Gloomwood | Shadow | Dark twisted forest in mist; deep purple | Dark brambles |
+| Haunted Marsh | Spirit | Foggy marsh, will-o'-wisps, old standing stones; teal | Misty marsh grass |
 
 ### Layout
 
@@ -105,7 +130,9 @@ rolled out without splitting players into different worlds.
 - **WGN-007** [accepted] Every biome MUST occur in every distance ring, so every type can be met at every level range.
 - **WGN-008** [accepted] The spawn area MUST be Plains.
 - **WGN-009** [accepted] Every biome area MUST contain one rest point.
+- **WGN-010** [accepted] The world MUST be a grid of tiles, and each biome MUST have its own encounter foliage on which wild encounters happen.
+- **WGN-011** [proposed] Tiles MUST be 2 m × 2 m and of one kind (ground, foliage, water, blocked) with a height level; a chunk MUST be 32 × 32 tiles.
 
 ## Open questions
 
-_None at the moment._
+[Q-040](../open-questions.md#q-040)
