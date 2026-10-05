@@ -44,7 +44,7 @@ updated: 2026-10-05
 | Replicate and pin every player's save log | [accepted] ([player-data](player-data.md)) |
 | Replicate save logs and replay catches for the species stats (optional; anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
 | Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [accepted] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
-| Expose a creation API with a job queue | [accepted] |
+| Expose a creation API with a job queue ([creation-api](creation-api.md)) | [accepted] |
 | Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [accepted] ([player-data](player-data.md#starters-and-shrine-creations)) |
 | Maintain species stats and send creator notifications | [accepted] ([creator-feedback](../gameplay/creator-feedback.md)) |
 | Validate generated battle data | [accepted] |

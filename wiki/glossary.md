@@ -212,6 +212,11 @@ A rare (1 in 500), purely cosmetic color variant of an individual Peerling. See
 [accepted] The move in a species' *signature* slot: its characteristic special
 attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
 
+### Signed envelope
+The common wrapper for records that must be verifiable on their own: version,
+type, signer, body and an Ed25519 signature. See
+[data-formats § Signed envelope](tech/data-formats.md#signed-envelope).
+
 ### Spawn hub
 The centre of the world, where every player starts: Creation Shrine, rest
 point, New Peerlings gallery and network monument. See

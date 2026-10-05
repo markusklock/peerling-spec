@@ -62,6 +62,8 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
 
 ## Protocol (proposed)
 
+Exact messages: [protocols](../tech/protocols.md).
+
 1. **Challenge.** A sends a challenge, including the level mode (Fair or Real
    levels) and whether spectators are allowed ([spectating](spectating.md)), to B while standing next to them (MPL-006); B accepts or declines
    (MPL-005).

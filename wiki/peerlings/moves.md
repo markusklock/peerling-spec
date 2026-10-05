@@ -61,7 +61,7 @@ a slot name because Pokémon uses it for a damage category and a stat.
 |-------|------|
 | `slot` | Fixed by the slot being filled |
 | `template` | LLM chooses a template ID allowed for that slot |
-| `name` | LLM (max length TBD) |
+| `name` | LLM (≤ 24 characters, [data-formats](../tech/data-formats.md#species-record--peerlingsspecies)) |
 | `description` | LLM (one sentence of flavour text) |
 | `type` | LLM, constrained by the slot (table above) |
 

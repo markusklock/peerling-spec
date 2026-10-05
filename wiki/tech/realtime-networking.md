@@ -83,7 +83,7 @@ updated: 2026-10-05
 | `/peerlings/phone-backup/1.0.0` | Encrypted transfer of key and save between a computer and the player's phone | [player-data](player-data.md#phone-backup) |
 | `/peerlings/save-backup/1.0.0` | Answer a `save-wanted` request with the snapshot CID and log heads of a held save backup | [player-data](player-data.md#keeping-saves-available) |
 
-Message formats are still to be specified.
+Exact message formats: [protocols](protocols.md).
 
 ## Requirements
 

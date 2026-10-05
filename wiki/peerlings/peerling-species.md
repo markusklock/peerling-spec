@@ -41,7 +41,8 @@ so the same data always produces the same bytes and therefore the same CID
 (the server and the player's browser must agree on the CID during
 [publishing](creation-pipeline.md#stage-7--publish)). Asset references are
 real IPLD links. Its CID is the species' identity. Illustrative shape, shown as
-JSON for readability:
+JSON for readability (exact format:
+[data-formats § Species record](../tech/data-formats.md#species-record--peerlingsspecies)):
 
 ```json
 {
@@ -122,18 +123,19 @@ step.
 
 [accepted] An instance is one individual Peerling owned by a player, stored
 in the player's [save](../tech/player-data.md#save-contents) (not on the shared
-registry). [accepted] Illustrative shape:
+registry). Illustrative shape (exact format:
+[data-formats § Peerling instance](../tech/data-formats.md#peerling-instance)):
 
 ```json
 {
-  "instanceId": "<random uuid>",
+  "id": "<instance ID: 64 hex characters>",
   "species": { "/": "bafy…species-cid" },
   "nickname": null,
   "level": 5,
   "xp": 0,
   "currentHp": 22,
   "caughtAt": "2026-10-03T12:30:00Z",
-  "origin": "starter | wild | trade",
+  "origin": "wild | starter | created",
   "originalOwner": "<player public key of whoever first obtained it>",
   "originProof": "<CID of the catch event in the catcher's save log, or the server's origin attestation>",
   "traits": { "hp": 4, "attack": -7, "defense": 10, "speed": 0 },

@@ -52,7 +52,8 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 - **Database type:** an OrbitDB *documents* (or keyvalue) database keyed by
   species CID, so a client can look up and iterate entries cheaply.
 - **Address:** one well-known database address, shipped with the client.
-- **Entry contents:** small and index-like — enough to choose an encounter
+- **Entry contents** (illustrative; exact format:
+  [data-formats § Registry entry](data-formats.md#registry-entry--peerlingslisting)): small and index-like — enough to choose an encounter
   without downloading the species record:
 
 ```json

@@ -32,6 +32,8 @@ over a direct libp2p stream between the two players
 
 ## Flow (proposed)
 
+Exact messages: [protocols](../tech/protocols.md).
+
 1. A proposes a trade to B while standing next to them (MPL-006); B accepts
    the session (MPL-005).
 2. Both pick the instance(s) they offer. Both see the other's offer live,

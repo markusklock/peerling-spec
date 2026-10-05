@@ -86,6 +86,8 @@ overwritten. The current save is what you get by applying all events in
 order. OrbitDB *events* databases are append-only and every entry is signed by
 the writer, so the log is also a tamper-evident history.
 
+Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-events).
+
 | Event | Written when | Payload |
 |-------|-------------|---------|
 | `profile` | Onboarding; profile changes | display name, appearance |
@@ -101,6 +103,7 @@ the writer, so the log is also a tamper-evident history.
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
 | `seen` | First sighting of a species | species CID |
 | `position` | Every 30 s while moving, and on exit | position, facing |
+| `explored` | The player enters a chunk for the first time | the newly revealed chunks ([exploration § Map](../gameplay/exploration.md#map)) |
 | `snapshot` | Every 50 events, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
 
 Loading a save means reading the latest `snapshot` and applying the events
@@ -284,7 +287,8 @@ without the server, and the server can check everything afterwards.
 - Time is divided into 5-minute **epochs**: epoch number E = floor(Unix time in
   seconds ÷ 300).
 - At the start of each epoch the server publishes a signed
-  [epoch record](../glossary.md#epoch-record):
+  [epoch record](../glossary.md#epoch-record) (illustrative; exact format:
+  [data-formats § Epoch record](data-formats.md#epoch-record--peerlingsepoch)):
 
   ```json
   {

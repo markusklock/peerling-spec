@@ -26,6 +26,8 @@ updated: 2026-10-05
 
 ## Design
 
+Exact messages: [protocols](../tech/protocols.md).
+
 [accepted] Approved 2026-10-05.
 
 - **Finding a battle.** A PvP battle happens on the spot in the world; the two

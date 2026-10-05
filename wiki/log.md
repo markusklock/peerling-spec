@@ -312,3 +312,18 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Changed: world/procedural-generation.md, gameplay/exploration.md,
   tech/player-data.md, decisions/D-0017, open-questions.md, index.md
 - Notes: Resolved Q-046. No open questions remain.
+
+## [2026-10-05] design | Exact data formats, protocols and creation API drafted
+- Source: raw/conversations/2026-10-05-formats-request.md
+- Changed: tech/data-formats.md (new), tech/protocols.md (new),
+  tech/creation-api.md (new), peerlings/peerling-species.md,
+  peerlings/moves.md, tech/orbitdb-registry.md, tech/player-data.md,
+  tech/realtime-networking.md, tech/generation-server.md, tech/architecture.md,
+  gameplay/pvp-battles.md, gameplay/trading.md, gameplay/spectating.md,
+  glossary.md, open-questions.md, index.md
+- Notes: Drafted exact formats for implementers (Q-047): DAG-CBOR without
+  floats, one Ed25519 key per player for all identities, a signed envelope,
+  five OrbitDB databases, every record, all pubsub topics and stream message
+  sequences, and the HTTP/3 creation API. Example records on other pages now
+  point to the exact formats. Instance origin values aligned (wild, starter,
+  created). Added FMT, PRT and API requirements (all proposed).
