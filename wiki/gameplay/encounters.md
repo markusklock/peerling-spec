@@ -61,7 +61,7 @@ seed. The wild level depends on where it is met ([Wild level](#wild-level)),
 not on the species.
 
 [accepted] Selection must be a deterministic function of the encounter seed and
-data the server can also see, so the server can check it when verifying a catch
+data any verifier can also see, so anyone can check it when verifying a catch
 ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
 
 ## Candidates
@@ -86,13 +86,13 @@ them follow fixed rules:
 4. **Nothing arrives.** If no candidate arrives within 10 seconds, no encounter
    happens and the encounter number isn't used up. The next encounter trigger
    tries the same 5 candidates again.
-5. **Logging.** The save log records which candidate (1–5) was met; the server
-   checks it is on the list.
+5. **Logging.** The save log records which candidate (1–5) was met; verifiers
+   check it is on the list.
 
 Why "earliest in the list" instead of always "first to download": with
 prefetching, several candidates are usually already downloaded, so "first to
-download" is unclear. Earliest in the list keeps the outcome stable and the
-server can check it. A modified client could still pick any of the 5; that
+download" is unclear. Earliest in the list keeps the outcome stable, and any
+verifier can check it. A modified client could still pick any of the 5; that
 known gap is listed in
 [player-data § Known gaps](../tech/player-data.md#known-gaps-accepted-risks).
 

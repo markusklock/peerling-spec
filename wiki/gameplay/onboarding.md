@@ -58,8 +58,9 @@ choose can still create Peerlings later at the
    ([final review](../peerlings/creation-pipeline.md#final-review)). Then the
    player's own browser publishes it to IPFS (stage 7). This is a
    good moment to show the player that their node now serves their creation to
-   the world ([IPFS showcase](../tech/ipfs-showcase.md)). It then becomes the
-   player's [starter](../glossary.md#starter) (stage 8).
+   the world ([IPFS showcase](../tech/ipfs-showcase.md)). The server then signs
+   the new [starter](../glossary.md#starter)'s origin attestation, with its
+   traits and shimmer roll (stage 8).
 6. **Into the world** — the player starts exploring; an early guaranteed
    encounter teaches battling and catching.
 

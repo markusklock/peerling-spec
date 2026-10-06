@@ -34,7 +34,8 @@ updated: 2026-10-05
 > How a player's free-text wish becomes a published Peerling
 > [species](../glossary.md#species): concept (including type) → image → player
 > review → 3D model → stats and moves → the player's browser publishes to IPFS,
-> the server pins and lists it. This page is the canonical description of the
+> the server pins it and signs its listing, and the browser adds it to the
+> registry. This page is the canonical description of the
 > pipeline's stages, their order and the publish handshake.
 
 ## Why it works this way
@@ -75,7 +76,7 @@ updated: 2026-10-05
 | 4 | Review | client | image | accept / regenerate | [accepted] |
 | 5 | 3D model | server: image-to-3D | accepted image | static 3D model (GLB) | [accepted] |
 | 6 | Stats & moves | server: concept LLM + validator | concept | base stats, moves | [accepted] |
-| 7 | Publish | client adds to IPFS; server verifies, pins, signs the listing; client appends it | everything above | species on IPFS + registry entry | [accepted] (handshake details: [accepted]) |
+| 7 | Publish | client adds to IPFS; server verifies, pins, signs the listing; client appends it | everything above | species on IPFS + registry entry | [accepted] |
 | 8 | Starter | client | published species CID | [starter](../glossary.md#starter) instance in the player's save | [accepted] |
 
 ```mermaid
@@ -104,8 +105,8 @@ sequenceDiagram
 ### Stage 1 — Wish
 The player describes the Peerling they want in free text (e.g. *"a small
 sleepy fox made of moss that carries a lantern"*). [accepted] The client shows
-a few example wishes and limits the wish to 300 characters. [accepted] The wish is sent with the
-player's identity ([player-character](../gameplay/player-character.md)) so the server can apply
+a few example wishes and limits the wish to 300 characters. [accepted] The wish is sent in a request signed with the
+player's key ([creation-api § General rules](../tech/creation-api.md#general-rules)), so the server can apply
 rate limits.
 
 ### Stage 2 — Concept
@@ -237,10 +238,15 @@ If the client disconnects during 7b–7d, the job waits in `PUBLISHING` until
 the client reconnects and resumes providing (CRE-014). The species becomes
 visible to other players at 7f.
 
-### Stage 8 — Starter
-The client creates the player's starter
-[instance](../glossary.md#peerling-instance) in its save from the species CID
-([D-0006](../decisions/D-0006-species-vs-instance.md)).
+### Stage 8 — The new Peerling joins the player
+For a starter or a Creation Shrine creation, the server creates the player's
+new [instance](../glossary.md#peerling-instance) of the species: it draws the
+instance ID, traits and shimmer roll and signs an **origin attestation**
+([player-data § Starters and shrine creations](../tech/player-data.md#starters-and-shrine-creations),
+SAVE-012), returned in the job object ([creation-api](../tech/creation-api.md#the-job-object)).
+The client adds the instance to its save with a `starter` or `created` event
+([D-0006](../decisions/D-0006-species-vs-instance.md)). Operator seed species
+get no instance.
 
 ## Job handling
 

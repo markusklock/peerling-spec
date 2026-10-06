@@ -44,7 +44,7 @@ turn, and the wild Peerling then acts as normal. Attempts are unlimited.
 - level factor = 1 if the wild Peerling's level is at most the level of the
   player's active Peerling; otherwise max(0.5, 1 − 0.05 × the level difference).
 - The roll uses the battle's [random number generator](battle.md#random-number-generator),
-  so the server can replay it when verifying the catch.
+  so anyone can replay it when verifying the catch.
 
 | Wild Peerling's HP | Chance (same level) |
 |--------------------|--------------------:|

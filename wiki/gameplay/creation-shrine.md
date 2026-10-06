@@ -8,12 +8,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
+  - raw/conversations/2026-10-05-world-details.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/player-data.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Creation Shrine

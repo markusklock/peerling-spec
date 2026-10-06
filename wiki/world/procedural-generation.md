@@ -1,7 +1,7 @@
 ---
 title: Procedural World Generation
 type: system
-status: stub
+status: draft
 req_prefix: WGN
 tags: [world, procedural]
 sources:
@@ -41,11 +41,10 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
 - Generation is **deterministic from one global seed**, so every client
   generates the identical world locally without transferring world data. This
   is what makes the shared world possible with no world server.
-- The world is divided into **chunks** generated on demand. Chunks are grouped
-  into [regions](../glossary.md#region), which scope multiplayer presence
-  ([realtime-networking](../tech/realtime-networking.md)). [accepted] With the
-  tile grid, a chunk is 32 × 32 tiles (64 m × 64 m), the same size as a
-  region, so one chunk is one region.
+- The world is divided into **chunks** generated on demand. [accepted] A chunk
+  is 32 × 32 tiles (64 m × 64 m), and each chunk is also a
+  [region](../glossary.md#region), the unit that scopes multiplayer presence
+  ([realtime-networking](../tech/realtime-networking.md)).
 
 ## Tiles
 

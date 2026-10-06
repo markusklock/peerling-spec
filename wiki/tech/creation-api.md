@@ -62,6 +62,8 @@ updated: 2026-10-06
   "profile": null,
   "name": null,
   "listing": null,
+  "origin": null,
+  "releaseEntry": null,
   "error": null,
   "expiresAt": 1791238167000
 }
@@ -70,7 +72,10 @@ updated: 2026-10-06
 `state` follows the job state machine in
 [creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling).
 `profile` (once `PROFILE_READY`) holds the types, base stats and moves.
-`listing` (once `PUBLISHED`) is the registry listing envelope.
+`listing` (once signed at stage 7e) is the registry listing envelope.
+`origin` (once the new Peerling exists) is its origin attestation, for starters
+and Creation Shrine creations. `releaseEntry` (shrine jobs) is the CID of the
+transfer-log entry that released the offering.
 
 ## Endpoints
 
@@ -96,7 +101,7 @@ updated: 2026-10-06
 |-----------------|------|------|
 | `POST /v1/starters/options` | — | Returns 3 random species (CIDs) for a new player ([onboarding](../gameplay/onboarding.md#choosing-an-existing-starter)). One set per player; asking again returns the same set |
 | `POST /v1/starters/choose` | `species` (one of the offered CIDs) | Returns the starter's origin attestation |
-| — | — | A created starter gets its origin attestation in the job object when the job is `PUBLISHED` |
+| — | — | A created starter (or Creation Shrine Peerling) gets its origin attestation in the job object's `origin` field |
 
 ### Network
 

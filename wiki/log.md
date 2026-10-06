@@ -354,3 +354,20 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Source: raw/conversations/2026-10-06-cry-details-approved.md
 - Changed: world/audio.md, open-questions.md, index.md
 - Notes: Resolved Q-048. No open questions or proposals remain.
+
+## [2026-10-06] lint | Full consistency review (four parallel reviewers)
+- Source: none (review at the designer's request)
+- Changed: ~35 pages across gameplay, peerlings, world, tech, decisions,
+  glossary, open-questions, index, AGENTS.md, README.md
+- Notes: Fixed mechanical issues: leftovers of the superseded server-only
+  registry, server catch checks and `origin: "trade"`; examples that drifted
+  from data-formats (species record, instance, registry entry, epoch record);
+  SAVE-002 vs backups; STK-001 scope; ARC-005 drand; stale "(proposed)"
+  headings (anchors relinked); page statuses for player-character and
+  procedural-generation; overview v1 scope; creation stage 8 (origin
+  attestation); job object `origin`/`releaseEntry`; D-0009/D-0008/D-0002/D-0013
+  notes; missing Consequences/Context in D-0017/D-0019; 23 glossary terms added;
+  AGENTS decision-status convention. Substantive findings (trade atomicity,
+  deterministic arithmetic and hashing, rules versioning, epoch/delisting
+  checks, gameplay edge cases, creation job lifecycle, world geometry) were
+  collected for the designer.

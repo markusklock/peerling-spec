@@ -1,7 +1,7 @@
 ---
 title: Player Character and Identity
 type: system
-status: stub
+status: draft
 req_prefix: PLR
 tags: [gameplay, player, identity]
 sources:
@@ -22,7 +22,6 @@ updated: 2026-10-05
 # Player Character and Identity
 
 > The avatar the player controls, and the player's identity and save data.
-> Status: stub.
 
 ## Character
 
@@ -49,11 +48,13 @@ short hash of it, and other players fetch the full JSON from the player's
 profile when the hash changes. The base bodies and accessories ship with the
 game app.
 
-## Identity and save (proposed)
+## Identity and save
 
 [accepted] No traditional accounts. On first launch the client generates a
 cryptographic keypair; its public key is the player's identity (used as the
 [creator](../glossary.md#creator) ID on species and for server rate limits).
+[accepted] The same key is also the player's libp2p peer ID, OrbitDB identity
+and IPNS name ([D-0018](../decisions/D-0018-one-key-per-player.md)).
 [accepted] The save is a per-player OrbitDB log, and the key can be restored
 with a recovery phrase. What the save contains, and how it is stored and
 verified, is canonical in [player-data](../tech/player-data.md).
@@ -67,8 +68,8 @@ are not moderated ([D-0010](../decisions/D-0010-no-content-moderation.md)).
 
 - **PLR-001** [accepted] Each player MUST have a player character created during onboarding.
 - **PLR-002** [accepted] Each player MUST have a stable cryptographic identity generated client-side.
-- **PLR-004** [accepted] The player character MUST be built from game-made, rigged parts (body, colors, hairstyle, accessories) described by a small JSON document.
 - ~~**PLR-003**~~ (removed 2026-10-04: no content moderation, see [D-0010](../decisions/D-0010-no-content-moderation.md))
+- **PLR-004** [accepted] The player character MUST be built from game-made, rigged parts (body, colors, hairstyle, accessories) described by a small JSON document.
 
 ## Open questions
 

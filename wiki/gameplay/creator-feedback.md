@@ -78,7 +78,7 @@ Mossnap was met 120 times and caught 42 times. It now lives on 37 nodes."*
 
 - **CFB-001** [accepted] Creators MUST be able to see how their species are doing in the world.
 - **CFB-002** [accepted] Species statistics MUST be published in a server-written OrbitDB database and MUST only count events that pass verification.
-- **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught or traded.
+- **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught, traded or delisted.
 - **CFB-004** [accepted] The client MUST show creators a summary of changes since their last session.
 
 ## See also

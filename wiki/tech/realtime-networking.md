@@ -32,7 +32,7 @@ updated: 2026-10-05
 > over the same libp2p node that powers each client's Helia IPFS node, with no
 > game server. This is a showcase of the libp2p stack underneath IPFS.
 
-## Building blocks (proposed)
+## Building blocks
 
 | Need | Mechanism |
 |------|-----------|
@@ -40,11 +40,12 @@ updated: 2026-10-05
 | Battle, trade, profile | Direct libp2p **streams** with custom protocol IDs |
 | Watching PvP battles | Pubsub topic `peerlings/v1/battle/<battleId>` ([spectating](../gameplay/spectating.md)) |
 | World feed | Pubsub topic `peerlings/v1/feed` ([world-feed](../gameplay/world-feed.md)) |
+| Creator notifications | Pubsub topic `peerlings/v1/creator/<player ID>`, published by the server ([creator-feedback](../gameplay/creator-feedback.md)) |
 | Save recovery requests | Pubsub topic `peerlings/v1/save-wanted` ([player-data](player-data.md#keeping-saves-available)) |
 | Epoch records | Pubsub topic `peerlings/v1/epoch`, published by the server ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Reaching other browsers | Circuit relay via the operator server, upgraded to direct **WebRTC** connections (preferring IPv6) when possible ([ipfs-helia § Connectivity](ipfs-helia.md#connectivity)) |
 
-## Presence (proposed)
+## Presence
 
 [accepted] The region size, rates and timeout below were approved 2026-10-04.
 
@@ -58,8 +59,10 @@ updated: 2026-10-05
   times per second while moving**, and a heartbeat **every 5 s when idle**.
   [accepted] With grid movement ([exploration § Grid movement](../gameplay/exploration.md#grid-movement))
   a moving player sends one message per step (3 per second, within the
-  limit). Contents: peer ID, player ID, display name, appearance hash, **tile
-  coordinates**, facing direction, step start time, timestamp, signature.
+  limit). Contents: tile, facing, step start time, display name, appearance
+  hash, generator version, session and (in a PvP battle) battle ID; exact fields
+  in [protocols](protocols.md#peerlingsv1presencerx_ry--presence). The message is
+  signed by gossipsub with the player's key ([D-0018](../decisions/D-0018-one-key-per-player.md)).
   Receivers animate the step from the previous tile to the new one, so movement
   looks smooth without extra messages.
 - [accepted] There is no chat; [emotes](../glossary.md#emote) are the only
@@ -73,7 +76,7 @@ updated: 2026-10-05
 - [accepted] The operator server also joins the topics, to help gossip reach
   browsers that have few direct peers.
 
-## Direct protocols (proposed)
+## Direct protocols
 
 | Protocol ID | Purpose | Canonical page |
 |-------------|---------|----------------|

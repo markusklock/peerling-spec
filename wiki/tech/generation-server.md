@@ -41,11 +41,11 @@ updated: 2026-10-05
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Sign species records (attestation) | [accepted] |
-| Replicate and pin every player's save log | [accepted] ([player-data](player-data.md)) |
-| Replicate save logs and replay catches for the species stats (optional; anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
+| Replicate and pin every player's save log; replay catches for the species stats (optional; anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
 | Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [accepted] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Expose a creation API with a job queue ([creation-api](creation-api.md)) | [accepted] |
 | Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [accepted] ([player-data](player-data.md#starters-and-shrine-creations)) |
+| Store and republish every player's latest signed IPNS profile record | [accepted] ([sharing](../gameplay/sharing.md), LNK-003) |
 | Maintain species stats and send creator notifications | [accepted] ([creator-feedback](../gameplay/creator-feedback.md)) |
 | Validate generated battle data | [accepted] |
 | Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [accepted] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |

@@ -56,9 +56,9 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 
 - Link: `https://view.<domain>/#/player/<IPNS name>`. The **IPNS name** is
   derived from the player's identity key, so it never changes.
-- The client publishes a small **profile document** (DAG-CBOR): display name,
-  appearance, team summary (species CIDs, levels, traits, shimmer), created
-  species, Peerdex counts. It is updated with each save snapshot, and an IPNS
+- The client publishes a small **profile document**: display name, appearance,
+  team summary, created species and Peerdex counts (exact fields:
+  [data-formats § Player profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile)). It is updated with each save snapshot, and an IPNS
   record signed by the player's key points to the latest version.
 - IPNS records are published from the browser through delegated routing.
   IPNS records must be republished regularly to stay findable, so the client

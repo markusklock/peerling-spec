@@ -25,7 +25,7 @@ updated: 2026-10-05
 ## One-time: onboarding
 
 [accepted] Every new player creates their [player character](player-character.md)
-and their starting Peerling by describing it. See [onboarding](onboarding.md).
+and creates or chooses their starting Peerling. See [onboarding](onboarding.md).
 
 ## The loop
 
@@ -56,12 +56,12 @@ flowchart LR
 Around the core loop, players meet each other, [battle](pvp-battles.md) and
 [trade](trading.md). See [multiplayer](multiplayer.md).
 
-## Motivations (proposed)
+## Motivations
 
 [accepted] Why players keep playing:
 - **Discovery** — every wild Peerling is another player's imagination; there is
   always something never seen before.
-- **Collection** — catch as many different species as possible (a "Peerdex"
+- **Collection** — catch as many different species as possible (the [Peerdex](peerdex.md)
   of everything you have seen and caught).
 - **Mastery** — build a team that handles every type matchup; reach harder
   areas further from the start; beat other players.

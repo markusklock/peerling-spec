@@ -30,7 +30,7 @@ updated: 2026-10-05
 over a direct libp2p stream between the two players
 ([realtime-networking](../tech/realtime-networking.md)).
 
-## Flow (proposed)
+## Flow
 
 Exact messages: [protocols](../tech/protocols.md).
 
@@ -44,12 +44,13 @@ Exact messages: [protocols](../tech/protocols.md).
    player, and the other player not flagged
    ([player-data § Verified Peerlings](../tech/player-data.md#verified-peerlings)).
 3. Both confirm. Any change to an offer resets both confirmations.
-4. Both sign their transfers, and the two signed transfers are written as one
+4. Both sign their transfers, and all signed transfers are written as one
    entry to the open **transfer log**
    ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
    No server is involved.
 5. Each side then appends a `trade` event to its save, removing the outgoing
-   instances and adding the incoming ones with `origin: "trade"`.
+   instances and adding the incoming ones (their `origin` stays as it was;
+   trades don't change it).
 6. After the trade, the receiving player's node fetches and keeps
    ([NODE-004](../tech/ipfs-helia.md#requirements)) the species content of what
    it received.

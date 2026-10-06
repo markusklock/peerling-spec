@@ -58,7 +58,7 @@ and [orbitdb-registry](../tech/orbitdb-registry.md).
 - Cheating in trades is detected after the fact rather than prevented. This is
   acceptable because nothing in the game is scarce: every species can be caught
   by anyone and all species are equally strong (but see
-  [Q-037](../open-questions.md#q-037) on individual variation).
+  [D-0014](D-0014-individual-variation.md) on individual variation).
 - Browsers do more work: replaying catches and checking transfer chains.
   Results can be cached per Peerling.
 - The server is still trusted to sign species records, starters and shrine

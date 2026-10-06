@@ -33,7 +33,7 @@ updated: 2026-10-05
   | Event | Published by | Checked by receivers |
   |-------|-------------|----------------------|
   | *New Peerling published: Lanternfox (by Mia)* | The creator's client, once the registry entry is in | The entry exists in the registry |
-  | *Someone caught a shimmer Mossnap!* | The catcher's client | The catch is verified by replay before it's shown ([player-data § Catches](../tech/player-data.md#catches-accepted-details-proposed)) |
+  | *Someone caught a shimmer Mossnap!* | The catcher's client | The catch is verified by replay before it's shown ([player-data § Catches](../tech/player-data.md#catches)) |
   | *A new Peerling was created at the Creation Shrine* | The creator's client | As for new Peerlings |
 
 - **Signed and limited.** Every feed message is signed by the sender's identity

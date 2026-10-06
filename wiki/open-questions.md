@@ -3,7 +3,7 @@ title: Open Questions
 type: reference
 status: draft
 tags: [questions, backlog]
-updated: 2026-10-04
+updated: 2026-10-06
 ---
 
 # Open Questions
@@ -22,6 +22,8 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 ### Q-002
 **Who is allowed to write to the registry?** Only the operator's server.
 Resolved 2026-10-03 → [D-0005](decisions/D-0005-server-sole-registry-writer.md).
+(Superseded 2026-10-04 by [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md):
+players append entries; the server signs listings.)
 
 ### Q-003
 **Who adds the generated assets to IPFS?** The player's browser; the server
@@ -38,7 +40,7 @@ stage. Resolved 2026-10-03 →
 **Does every species get the same base-stat total?** Yes. The LLM spreads
 stats to fit the concept. Resolved 2026-10-03 →
 [peerling-species § Stats](peerlings/peerling-species.md#stats). The numbers
-are still open in [Q-023](#q-023).
+were settled in [Q-023](#q-023).
 
 ### Q-013
 **Multiplayer scope.** All players share one world and can battle and trade,
@@ -91,6 +93,8 @@ attestation. (Since D-0013: only verified Peerlings, checked by the opponent
 itself.) Resolved 2026-10-04 →
 [D-0009](decisions/D-0009-player-data-on-orbitdb.md),
 [pvp-battles](gameplay/pvp-battles.md#fairness).
+(Level 50 became the default Fair mode with an opt-in Real-levels mode:
+[D-0015](decisions/D-0015-pvp-level-modes.md).)
 
 ### Q-026
 **Trade integrity.** Trades complete only when the server's ownership ledger
@@ -180,7 +184,7 @@ from image generation in the final review. Resolved 2026-10-04 →
 ### Q-021
 **Creator feedback.** Yes: server-verified species stats in OrbitDB, live pubsub
 notifications, and a "since you were last here" summary. Resolved 2026-10-04 →
-[creator-feedback](gameplay/creator-feedback.md) (design details proposed).
+[creator-feedback](gameplay/creator-feedback.md).
 
 ### Q-019
 **Player character creation.** Parts-based customizer with game-made, rigged
@@ -190,8 +194,8 @@ bodies (option A); an AI-generated 2D portrait may come later. Resolved
 ### Q-027
 **Multiplayer scale.** 64 m regions (3 × 3 subscribed), 30 nearest players
 drawn, 4 updates/s moving, 5 s heartbeat, 15 s timeout. Resolved 2026-10-04 →
-[realtime-networking § Presence](tech/realtime-networking.md#presence-proposed),
-[multiplayer](gameplay/multiplayer.md#scale-and-visibility-proposed).
+[realtime-networking § Presence](tech/realtime-networking.md#presence),
+[multiplayer](gameplay/multiplayer.md#scale-and-visibility).
 
 ### Q-035
 **Creation Shrine cost and limits.** Approved as proposed. Resolved 2026-10-04 →

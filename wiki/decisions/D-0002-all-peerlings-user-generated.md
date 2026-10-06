@@ -22,7 +22,7 @@ Creature-collecting games normally ship a fixed, hand-designed roster. Peerlings
 wants the roster to be the players' collective creation, distributed via IPFS.
 
 ## Decision
-No Peerling species exist when the game launches. Every species is created by a
+No hand-designed Peerling species exist when the game launches. Every species is created by a
 player through the [creation pipeline](../peerlings/creation-pipeline.md), and
 each new player creates one as their starter. (Updated by
 [D-0012](D-0012-starter-choice-and-extra-creations.md): new players may instead

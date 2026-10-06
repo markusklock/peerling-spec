@@ -63,7 +63,7 @@ with it.
   (no blocking), so crowds at the spawn never get stuck.
 
 Why: grid movement is simple to control, makes positions tiny to transmit
-(tile coordinates, [realtime-networking](../tech/realtime-networking.md#presence-proposed)),
+(tile coordinates, [realtime-networking](../tech/realtime-networking.md#presence)),
 and makes encounter tiles easy to check during verification.
 
 ## Wild encounters in foliage
@@ -127,7 +127,7 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 ## Requirements
 
 - **EXP-001** [accepted] The player MUST be able to travel freely around the procedurally generated world.
-- **EXP-002** [accepted] Visiting a rest point MUST fully heal the player's team and record it as the last rest point.
+- **EXP-002** [accepted] Interacting with a rest point MUST fully heal the player's team and record it as the last rest point.
 - **EXP-003** [accepted] When the whole team faints, the player MUST return to the last rest point with the team fully healed, losing nothing.
 - **EXP-004** [accepted] The player MUST move on an invisible grid, one tile at a time.
 - **EXP-005** [accepted] Wild encounters MUST only be triggered by walking through biome-specific encounter foliage.

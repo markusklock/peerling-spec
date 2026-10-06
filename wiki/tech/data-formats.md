@@ -210,7 +210,7 @@ Peerlings.
 ### Catch evidence
 
 Part of a `catch` save-log event. Meaning:
-[player-data § Catches](player-data.md#catches-accepted-details-proposed).
+[player-data § Catches](player-data.md#catches).
 
 | Field | Type | Rules |
 |-------|------|-------|
@@ -283,7 +283,7 @@ A **transfer** is a signed envelope; signer: the `from` player.
 
 A **transfer-log entry** is `{ "v": 1, "type": "peerlings/transfers",
 "transfers": [<transfer>, …] }`. A trade is one entry with both players'
-transfers; a Creation Shrine release is one entry with up to 3 transfers to
+transfers; a Creation Shrine release is one entry with exactly 3 transfers to
 `"released"`. Conflict rule: two transfers with the same `prev` → the one whose
 **log entry** CID is lower wins ([SAVE-015](player-data.md#requirements)).
 

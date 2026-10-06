@@ -46,35 +46,40 @@ JSON for readability (exact format:
 
 ```json
 {
-  "schema": "peerlings/species@1",
+  "v": 1,
+  "type": "peerlings/species",
+  "signer": "<operator ID>",
+  "body": {
   "name": "Mossnap",
   "summary": "A sleepy fox made of moss that carries a glowing lantern.",
   "lore": "…",
   "types": ["Grass"],
   "baseStats": { "hp": 80, "attack": 55, "defense": 70, "speed": 45 },
   "moves": [
-    { "slot": "quick", "template": "quick-jab", "name": "Moss Swipe", "type": "Normal", "description": "…" }
+    { "slot": "quick", "template": "quick-jab", "name": "Moss Swipe", "type": "Normal", "description": "…" },
+    { "slot": "signature", "template": "sig-weaken", "name": "Lantern Glare", "type": "Grass", "description": "…", "stat": "defense" }
   ],
   "assets": {
     "image":     { "/": "bafy…" },
     "model":     { "/": "bafy…" },
     "thumbnail": { "/": "bafy…" }
   },
-  "creator": { "id": "<player public key / DID>", "displayName": "…" },
-  "createdAt": "2026-10-03T12:00:00Z",
+  "creator": { "id": "12D3KooW…", "displayName": "…" },
+  "createdAt": 1791234567000,
   "provenance": {
     "wish": "a small sleepy fox made of moss that carries a lantern",
     "concept": { "…": "…" },
     "imagePrompt": { "…": "…" },
     "models": { "concept": "<name@version>", "image": "<name@version>", "to3d": "<name@version>" },
     "seeds": { "image": 1234567 }
+  }
   },
-  "attestation": { "signer": "<server key id>", "signature": "…" }
+  "sig": { "/": { "bytes": "<Ed25519 signature>" } }
 }
 ```
 
-Field details (lengths, allowed characters, the exact bytes the attestation
-signs) are still to be specified. The move entries follow
+Field lengths, allowed values and the exact bytes the signature covers are in
+[data-formats](../tech/data-formats.md#species-record--peerlingsspecies). The move entries follow
 [moves § Move structure](moves.md#move-structure).
 
 ## Stats
@@ -133,10 +138,10 @@ registry). Illustrative shape (exact format:
   "nickname": null,
   "level": 5,
   "xp": 0,
-  "currentHp": 22,
-  "caughtAt": "2026-10-03T12:30:00Z",
+  "hp": 22,
+  "obtainedAt": 1791234567000,
   "origin": "wild | starter | created",
-  "originalOwner": "<player public key of whoever first obtained it>",
+  "originalOwner": "<player ID of whoever first obtained it>",
   "originProof": "<CID of the catch event in the catcher's save log, or the server's origin attestation>",
   "traits": { "hp": 4, "attack": -7, "defense": 10, "speed": 0 },
   "shimmer": false
@@ -170,8 +175,8 @@ worth up to ±10%. [accepted] Details (approved 2026-10-05):
   +7%") and a simple overall rating (sum of the four traits, from −40 to +40).
   This makes it clear why one Mossnap is worth more than another, which drives
   trading.
-- Traits **count in PvP**, while levels are still normalized to 50
-  ([pvp-battles](../gameplay/pvp-battles.md#fairness)). Otherwise the choice of
+- Traits **count in PvP**, in both level modes (Fair and Real levels,
+  [pvp-battles](../gameplay/pvp-battles.md#fairness)). Otherwise the choice of
   option (b) would mean nothing in PvP.
 
 ### Shimmer variants
@@ -200,7 +205,7 @@ Peerlings, the server draws them and includes them in the origin attestation
 - **SPC-001** [accepted] A species' description, type, attacks and 3D model MUST be stored on IPFS.
 - **SPC-002** [accepted] A species MUST be identified by the CID of its species record.
 - **SPC-003** [accepted] A species record MUST reference its image, 3D model and thumbnail by CID.
-- **SPC-004** [accepted] A species record MUST carry a `schema` version string; clients MUST ignore records with unknown major versions rather than fail.
+- **SPC-004** [accepted] A species record MUST carry the version field `v` and type `peerlings/species` ([data-formats](../tech/data-formats.md#conventions)); clients MUST ignore records with an unknown `v` rather than fail.
 - **SPC-005** [accepted] A species' types MUST satisfy TYP-001 and TYP-002 in [types](types.md#requirements).
 - **SPC-006** [accepted] A species' move set MUST satisfy the move-set rules in [moves](moves.md#requirements).
 - **SPC-007** [accepted] Every species MUST have the same base-stat total (320), and each stat MUST lie within 40–130 in steps of 5.

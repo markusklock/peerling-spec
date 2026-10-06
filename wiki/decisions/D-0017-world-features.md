@@ -40,6 +40,13 @@ Details: [procedural-generation](../world/procedural-generation.md),
 [exploration § Map](../gameplay/exploration.md#map),
 [visual-style](../world/visual-style.md).
 
+## Consequences
+- The game app ships a hand-made art kit and every past world-generator
+  version.
+- Epoch records gain a `generator` field; day/night and weather need no
+  messages because they derive from time and the epoch records.
+- The save gains the explored-chunks map.
+
 ## Alternatives considered
 - Environment art made once by the operator with the AI pipeline and stored on
   IPFS: not chosen.

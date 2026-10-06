@@ -8,7 +8,7 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Glossary
@@ -23,15 +23,35 @@ updated: 2026-10-05
 official pipeline and has not been altered. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
+### Backup file
+A `.car` file the player can export, holding their private key and latest save
+snapshot. See [data-formats § Backup file](tech/data-formats.md#backup-file-
+and-phone-backup-payload--peerlingsbackup).
+
 ### Biome
-One of the 12 region types of the world, one per Peerling type (e.g. Forest
+One of the 12 area types of the world, one per Peerling type (e.g. Forest
 for Grass). Peerlings of a biome's type are more likely to be encountered
 there. See [procedural-generation](world/procedural-generation.md#biomes).
+
+### Biome area
+One area of the world (about 300–500 m across) with a single biome, its own
+rest point and its own landmark. See [procedural-generation §
+Layout](world/procedural-generation.md#layout).
+
+### Bootstrap peer
+A known node a client connects to first, to find other peers. The operator
+server is the main one; public IPFS bootstrap nodes are fallbacks. See [ipfs-
+helia § Connectivity](tech/ipfs-helia.md#connectivity).
 
 ### Catch evidence
 The record of a catch in the catcher's save log (encounter number, epoch
 record, position, candidate, battle actions). Anyone can replay it to verify
-the catch. See [player-data](tech/player-data.md#catches-accepted-details-proposed).
+the catch. See [player-data](tech/player-data.md#catches).
+
+### Chunk
+A 32 × 32-tile (64 m × 64 m) piece of the world, generated on demand. Each
+chunk is also a [region](#region). See [procedural-
+generation](world/procedural-generation.md#generation-basics).
 
 ### CID
 Content Identifier — the IPFS address of a piece of content, derived from a hash
@@ -44,12 +64,14 @@ size limit. See [catching](gameplay/catching.md#team-and-collection).
 
 ### Concept
 The structured description of a new Peerling produced by the
-[concept LLM](#concept-llm) from the player's free-text wish: name, appearance,
-lore, etc. See [creation-pipeline](peerlings/creation-pipeline.md).
+[concept LLM](#concept-llm) from the player's free-text wish: name
+suggestions, summary, lore, types, appearance and temperament. See
+[creation-pipeline § Stage 2](peerlings/creation-pipeline.md#stage-2--concept).
 
 ### Concept LLM
-The small, self-hosted language model on the generation server that turns
-player wishes into concepts and later assigns types and moves.
+The small, self-hosted language model on the generation server. It turns
+player wishes into concepts (including the Peerling's types) and later spreads
+the stats and writes the moves.
 
 ### Creation Shrine
 A place at the world's spawn where a player gives up 3 Peerlings in exchange
@@ -62,6 +84,11 @@ in the species record and credited in-game.
 ### Cry
 The sound a Peerling makes, synthesized in the browser from its species CID and
 type. See [audio § Peerling cries](world/audio.md#peerling-cries).
+
+### Delisting
+The operator's emergency removal of a species from the registry with a signed
+tombstone entry; clients stop showing it. Not moderation. See [orbitdb-registry
+§ Design](tech/orbitdb-registry.md#design).
 
 ### drand
 A public, verifiable randomness beacon run by the League of Entropy. The
@@ -86,16 +113,40 @@ encounter uses the first one that could be fetched. See
 The biome-specific tall grass (or similar) where wild encounters happen. See
 [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage).
 
+### Encounter seed
+The random value that determines one wild encounter (its candidates, level,
+traits, shimmer roll and battle rolls), derived from the epoch record, the
+player ID and the encounter number. See [player-data § Encounter
+seeds](tech/player-data.md#encounter-seeds).
+
+### Epoch
+A 5-minute time slot (Unix seconds ÷ 300). The server publishes an [epoch
+record](#epoch-record) for each one. See [player-data § Encounter
+seeds](tech/player-data.md#encounter-seeds).
+
 ### Epoch record
 [accepted] A record the server signs and publishes every 5 minutes (one
 *epoch*). It holds a drand random value and the current registry height, and
 encounter seeds are derived from it, so players can't choose their encounters.
 See [player-data](tech/player-data.md#encounter-seeds).
 
+### Faint
+A Peerling at 0 HP faints and can't fight until healed at a rest point. See
+[battle § Rules](gameplay/battle.md#rules).
+
+### Fair mode
+The default PvP level mode: every Peerling fights at level 50. See [pvp-battles
+§ Fairness](gameplay/pvp-battles.md#fairness).
+
 ### Generation server
 The single operator-hosted server that runs the concept LLM, the image
 generator, the image-to-3D generator, and pins all game content on IPFS. See
 [generation-server](tech/generation-server.md).
+
+### Generator version
+The version of the world generator. All clients switch at an epoch announced in
+the epoch records. See [procedural-generation § Generator
+updates](world/procedural-generation.md#generator-updates).
 
 ### Helia
 A TypeScript implementation of IPFS that runs in the browser. Every game client
@@ -115,6 +166,16 @@ A large, unique feature with a generated name in each biome area (e.g.
 "Whispering Falls"), used for orientation. See
 [procedural-generation § Points of interest](world/procedural-generation.md#points-of-interest).
 
+### Level
+A Peerling instance's level, 1–50, raised by XP. It scales its stats. See
+[battle § Experience and levelling](gameplay/battle.md#experience-and-
+levelling).
+
+### libp2p
+The peer-to-peer networking library under IPFS. Each client runs a libp2p node
+for connections, pubsub and direct streams. See [realtime-
+networking](tech/realtime-networking.md).
+
 ### Move
 An attack or action a Peerling can use in battle. Every move is an instance of a
 [move template](#move-template). See [moves](peerlings/moves.md).
@@ -126,6 +187,16 @@ and *signature*. See [moves](peerlings/moves.md#move-slots).
 ### Move template
 A predefined, balanced pattern (power range, accuracy, effects, …) that
 generated moves must follow. See [moves](peerlings/moves.md).
+
+### Network monument
+A crystal tree in the spawn hub that shows the player's live network activity.
+See [procedural-generation § Spawn hub](world/procedural-generation.md#spawn-
+hub).
+
+### New Peerlings gallery
+Pedestals in the spawn hub showing the newest published Peerlings, loaded live
+from IPFS. See [procedural-generation § Spawn hub](world/procedural-
+generation.md#spawn-hub).
 
 ### Operator
 The person running the game's [generation server](#generation-server): the
@@ -152,6 +223,11 @@ individual *instance*; when the distinction matters, the spec says
 [species](#species) or [Peerling instance](#peerling-instance).
 Plural: Peerlings. The game itself is also called *Peerlings*.
 
+### Peerling card
+The detail view of a species: 3D model, stats, moves, lore, creator, world
+stats and CID. Shareable as a link. See [peerdex](gameplay/peerdex.md) and
+[sharing](gameplay/sharing.md).
+
 ### Peerling instance
 One individual Peerling owned by a player (e.g. the starter, or a
 caught wild Peerling), with its own level, experience, current HP, etc. Many
@@ -176,18 +252,32 @@ reachable from at least one node.
 The avatar a player controls in the world. See
 [player-character](gameplay/player-character.md).
 
+### Player ID
+A player's identity: the libp2p peer ID of their Ed25519 key, which is also
+their OrbitDB identity and IPNS name. See [D-0018](decisions/D-0018-one-key-
+per-player.md).
+
 ### Presence
 [accepted] The live broadcast of a player's position in the shared world, sent
 to nearby players over libp2p pubsub. See
-[realtime-networking](tech/realtime-networking.md#presence-proposed).
+[realtime-networking](tech/realtime-networking.md#presence).
+
+### Pubsub
+Publish/subscribe messaging (libp2p gossipsub): messages on a topic reach
+everyone subscribed. Used for presence, epoch records, the world feed,
+spectating and more. See [protocols](tech/protocols.md#pubsub-topics).
 
 ### PvP battle
 A battle between two players' Peerlings, played peer-to-peer. See
 [pvp-battles](gameplay/pvp-battles.md).
 
+### Real-levels mode
+The opt-in PvP level mode where Peerlings fight at their actual (unverified)
+levels. See [pvp-battles § Fairness](gameplay/pvp-battles.md#fairness).
+
 ### Recovery phrase
 A list of words shown to the player once, from which their identity key can
-be restored on another device. See [player-data](tech/player-data.md).
+be restored on another device. See [player-data](tech/player-data.md#account-recovery).
 
 ### Region
 [accepted] A 64 m × 64 m square of the world (one chunk of 32 × 32 tiles). It is the unit
@@ -198,6 +288,11 @@ for presence topics in multiplayer. See
 The OrbitDB database that lists every published Peerling species. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
+### Relay
+A libp2p node (mainly the operator server) that passes traffic between browsers
+so they can find each other and set up direct WebRTC connections. See [ipfs-
+helia § Connectivity](tech/ipfs-helia.md#connectivity).
+
 ### Rest point
 A beacon in every biome area that fully heals the player's team and becomes
 their respawn point. See
@@ -206,6 +301,11 @@ their respawn point. See
 ### Save log
 A player's save: a per-player OrbitDB event log, written only by that
 player and replicated by the server. See [player-data](tech/player-data.md#save-log).
+
+### Save snapshot
+A full copy of a player's save at one moment, referenced from the save log so
+loading doesn't replay everything. See [data-formats § Save
+snapshot](tech/data-formats.md#save-snapshot--peerlingssave).
 
 ### Seed species
 One of the handful of species the [operator](#operator) creates at launch,
@@ -245,10 +345,18 @@ Per-species counters (encounters, catches, owners, trades, providers) that the
 server publishes in an OrbitDB database for creators and species cards. See
 [creator-feedback](gameplay/creator-feedback.md).
 
+### Spectator
+A nearby player watching a PvP battle live. See
+[spectating](gameplay/spectating.md).
+
 ### Starter
 The first Peerling a player owns: an instance of a species the player created
 during onboarding, or of an existing species they chose instead. See
 [onboarding](gameplay/onboarding.md).
+
+### Stat stage
+A temporary battle modifier on Attack, Defense or Speed, from −3 to +3. See
+[battle § Stat stages](gameplay/battle.md#stat-stages).
 
 ### Team
 The Peerlings a player brings into battles: up to 4. See
@@ -298,3 +406,8 @@ in the registry. See [encounters](gameplay/encounters.md).
 ### World feed
 The live ticker of notable events (new Peerlings, shimmer catches) spread over a
 world-wide pubsub topic. See [world-feed](gameplay/world-feed.md).
+
+### XP
+Experience points a Peerling earns from wild battles; enough XP raises its
+level. See [battle § Experience and levelling](gameplay/battle.md#experience-
+and-levelling).

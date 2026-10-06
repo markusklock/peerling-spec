@@ -64,6 +64,7 @@ a slot name because Pokémon uses it for a damage category and a stat.
 | `name` | LLM (≤ 24 characters, [data-formats](../tech/data-formats.md#species-record--peerlingsspecies)) |
 | `description` | LLM (one sentence of flavour text) |
 | `type` | LLM, constrained by the slot (table above) |
+| `stat` | LLM, only for `sig-weaken` and `sig-empower`: which stat is affected |
 
 [accepted] A Peerling's moves are fixed when its species is created and
 **never change**: no learning new moves on level-up, no move tutors.

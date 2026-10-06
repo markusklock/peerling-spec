@@ -49,7 +49,7 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
   the sequence numbers never have gaps.
 
 [accepted]
-- **Database type:** an OrbitDB *documents* (or keyvalue) database keyed by
+- **Database type:** an OrbitDB *documents* database keyed by
   species CID, so a client can look up and iterate entries cheaply.
 - **Address:** one well-known database address, shipped with the client.
 - **Entry contents** (illustrative; exact format:
@@ -59,14 +59,16 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 ```json
 {
   "_id": "bafy…species-cid",
-  "seq": 1842,
-  "species": { "/": "bafy…species-cid" },
-  "name": "Mossnap",
-  "types": ["Grass"],
-  "thumbnail": { "/": "bafy…" },
-  "createdAt": "2026-10-03T12:00:00Z",
-  "status": "active",
-  "listingSignature": "<server signature>"
+  "listing": {
+    "v": 1, "type": "peerlings/listing", "signer": "<operator ID>",
+    "body": {
+      "species": { "/": "bafy…species-cid" }, "seq": 1842,
+      "name": "Mossnap", "nameKey": "mossnap", "types": ["Grass"],
+      "thumbnail": { "/": "bafy…" }, "createdAt": 1791234567000,
+      "status": "active"
+    },
+    "sig": { "/": { "bytes": "<Ed25519 signature>" } }
+  }
 }
 ```
 

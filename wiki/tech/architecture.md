@@ -65,8 +65,8 @@ flowchart LR
 |-----------|----------------|----------------|------------|
 | Game client | Runs the game in the browser | [gameplay](../gameplay/core-loop.md) | [accepted] |
 | Helia node | Each player is an IPFS node that downloads, serves and publishes content | [ipfs-helia](ipfs-helia.md) | [accepted] |
-| OrbitDB registry | Database of all Peerling species; only the server writes | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
-| Generation server | LLM, image gen, image-to-3D, pinning, registry writer | [generation-server](generation-server.md) | [accepted] |
+| OrbitDB registry | Database of all Peerling species; players append entries signed by the server | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
+| Generation server | LLM, image gen, image-to-3D, pinning, listing signer | [generation-server](generation-server.md) | [accepted] |
 | Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [accepted]) |
 | Player data | Per-player OrbitDB save log, identity key recovery, transfer log, peer verification | [player-data](player-data.md) | [accepted] |
 | Data and message formats | Exact records, pubsub and stream messages, HTTP API | [data-formats](data-formats.md), [protocols](protocols.md), [creation-api](creation-api.md) | [accepted] |
@@ -76,7 +76,8 @@ flowchart LR
 
 1. **Creation**: client ⇄ server over HTTPS for the
    [creation pipeline](../peerlings/creation-pipeline.md). The client publishes
-   the result to IPFS, and the server pins it and lists it in the registry.
+   the result to IPFS; the server pins it and signs its registry listing, which
+   the client appends.
 2. **Registry sync**: every client replicates the registry from peers and the
    server via OrbitDB.
 3. **Asset fetch**: when a species is needed (encounter, collection, an
@@ -109,7 +110,7 @@ flowchart LR
 - **ARC-002** [accepted] Each client MUST run a Helia IPFS node ([D-0003](../decisions/D-0003-browser-client-is-ipfs-node.md)).
 - **ARC-003** [accepted] A single operator server MUST host the generation models and pin all game content ([D-0004](../decisions/D-0004-single-operator-server.md)).
 - **ARC-004** [accepted] Apart from creation, the game MUST remain playable using peers and local cache when the server is unreachable, as far as content and connectivity allow ([resilience](resilience.md)).
-- **ARC-005** [accepted] The client MUST NOT depend on any centralized service other than the operator server (and optionally public IPFS infrastructure such as bootstrap nodes or trustless gateways).
+- **ARC-005** [accepted] The client MUST NOT depend on any centralized service other than the operator server (and optionally public IPFS infrastructure such as bootstrap nodes, relays, delegated routing or trustless gateways, and public drand endpoints).
 - **ARC-006** [accepted] A client MUST NOT trust another client's claims without verification; data received from peers MUST be verified by CID, signature or protocol design (see trust model).
 
 ## Open questions

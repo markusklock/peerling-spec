@@ -42,7 +42,8 @@ that all players share one world and can interact.
   changes ([architecture § Trust model](../tech/architecture.md#trust-model)).
   Cheating and duplication need answers ([Q-025](../open-questions.md#q-025),
   [Q-026](../open-questions.md#q-026)); answered by
-  [D-0009](D-0009-player-data-on-orbitdb.md).
+  [D-0009](D-0009-player-data-on-orbitdb.md), later replaced by
+  [D-0013](D-0013-peer-verified-registry-catches-trades.md).
 - The battle engine must be deterministic so two peers can run the same battle
   and agree on the result ([battle](../gameplay/battle.md)).
 - Multiplayer becomes a strong libp2p showcase (seeing players found and

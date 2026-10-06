@@ -11,7 +11,6 @@ sources:
   - raw/conversations/2026-10-04-answers-round-3.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
-  - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-grid-foliage-battles.md
@@ -61,7 +60,7 @@ The first team member that hasn't fainted is sent out first (the *lead*).
 ### A turn
 
 1. **Choose.** Each side picks one action. In PvP both pick at the same time
-   (commit-reveal, [pvp-battles](pvp-battles.md#protocol-proposed)). The wild
+   (commit-reveal, [pvp-battles](pvp-battles.md#protocol)). The wild
    Peerling picks with the rules in [Wild Peerling behaviour](#wild-peerling-behaviour).
    The actions are:
    - **Move:** one of the active Peerling's three moves.
@@ -197,9 +196,9 @@ lasts about 3–6 turns:
 [accepted] The battle engine is **deterministic**: given the starting state,
 both sides' actions and the RNG seed, it always gives the same result. PvP
 needs this so both players' clients can agree on every turn
-([pvp-battles](pvp-battles.md)). The server needs it to verify catches by
+([pvp-battles](pvp-battles.md)). Any verifier needs it to check catches by
 replaying the battle ([player-data](../tech/player-data.md#verification),
-[D-0009](../decisions/D-0009-player-data-on-orbitdb.md)).
+[D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)).
 
 ### Experience and levelling
 

@@ -131,7 +131,7 @@ the server's copy anyway.
 
 ## Asset formats
 
-[accepted] Approved 2026-10-04. Size budgets are still open.
+[accepted] Approved 2026-10-04. Size budgets: [Asset budgets](#asset-budgets).
 - **3D models:** binary glTF 2.0 (`.glb`) with meshopt geometry compression
   (`EXT_meshopt_compression`) and KTX2/Basis Universal textures
   (`KHR_texture_basisu`). The files are smaller to share peer-to-peer, and the
@@ -164,9 +164,11 @@ the server's copy anyway.
 | **Whole species** | **≤ 1.2 MB** | **~0.6 MB** | |
 
 What that means in practice:
-- An encounter whose 5 candidates are all uncached costs about 3 MB at
-  worst; most species near the spawn will already be cached.
-- A PvP battle against an unknown team costs about 2.5 MB at worst.
+- An encounter whose 5 candidates are all uncached costs about 3 MB with
+  typical species, at most 6 MB; most species near the spawn will already be
+  cached.
+- A PvP battle against an unknown team costs about 2.5 MB with typical
+  species, at most 4.8 MB.
 - **Client cache:** the browser keeps up to **1 GB** of game content
   (roughly 1,500 species at typical size) and evicts the least recently used
   beyond that, except the player's own creations and collection
@@ -180,7 +182,7 @@ oversized files.
 
 ## Requirements
 
-- **STK-001** [accepted] Browser ↔ server connections MUST use WebTransport; WebSockets MUST NOT be used.
+- **STK-001** [accepted] The browser's libp2p connections to the server MUST use WebTransport, falling back to WebRTC-direct (STK-003); WebSockets MUST NOT be used. (The creation API is plain HTTPS over HTTP/3.)
 - **STK-002** [accepted] The game MUST use IPv6 wherever available: the server MUST be dual-stack, and clients MUST NOT suppress IPv6 connection candidates.
 - **STK-003** [accepted] The server MUST also accept WebRTC-direct connections from browsers, and clients MUST fall back to WebRTC-direct when WebTransport fails.
 - **STK-004** [accepted] Clients MUST discover the server's current multiaddrs (including WebTransport certificate hashes) at startup instead of hardcoding them.

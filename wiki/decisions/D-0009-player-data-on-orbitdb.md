@@ -20,7 +20,9 @@ updated: 2026-10-04
 [D-0013](D-0013-peer-verified-registry-catches-trades.md) (2026-10-04):
 catches are verified by anyone through replay, and the ownership ledger is
 replaced by a peer-to-peer transfer log. The save-log storage and key recovery
-still hold. (Originally resolved [Q-014](../open-questions.md#q-014),
+still hold. Point 4 was later changed by
+[D-0015](D-0015-pvp-level-modes.md): level 50 is the default Fair mode, with an
+opt-in Real-levels mode. (Originally resolved [Q-014](../open-questions.md#q-014),
 [Q-025](../open-questions.md#q-025), [Q-026](../open-questions.md#q-026))
 
 ## Context
@@ -48,7 +50,8 @@ players. The options were analysed in [player-data](../tech/player-data.md).
 - Faked Peerlings and trade duplication are prevented without a game server.
   The server signs results; it does not run the game.
 - Trades need the server to be reachable. Catches work offline and are
-  verified later.
+  verified later. (No longer true since D-0013: trades and catch checks work
+  without the server.)
 - New server workload: one replicated OrbitDB database per player, plus
   battle replays (CPU only). If per-player databases don't scale, the fallback is
   IPNS snapshots ([player-data § Storage options](../tech/player-data.md#storage-options-considered));

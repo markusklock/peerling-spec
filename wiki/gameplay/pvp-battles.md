@@ -38,7 +38,8 @@ same deterministic battle engine (BTL-002) and must agree on every turn.
 ## Fairness
 
 A modified client could lie about its Peerlings, so the protocol checks
-everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitdb.md):
+everything it can (decided in [D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md) and
+[D-0015](../decisions/D-0015-pvp-level-modes.md)):
 
 - [accepted] **Species are verifiable.** Each Peerling's species record is
   fetched by CID and its attestation checked, so stats, types and moves can't
@@ -60,15 +61,16 @@ everything it can. Decided in [D-0009](../decisions/D-0009-player-data-on-orbitd
   Each side checks the other itself, so faked or traded-away Peerlings can't be
   used and no server is needed.
 
-## Protocol (proposed)
+## Protocol
 
 Exact messages: [protocols](../tech/protocols.md).
 
 1. **Challenge.** A sends a challenge, including the level mode (Fair or Real
    levels) and whether spectators are allowed ([spectating](spectating.md)), to B while standing next to them (MPL-006); B accepts or declines
    (MPL-005).
-2. **Team exchange.** Each side sends its team: for each Peerling, the species
-   CID and instance ID. Each side fetches and verifies the other's species and
+2. **Team exchange.** Each side sends its team (species, instance and
+   verification details per Peerling; exact fields in
+   [protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle)). Each side fetches and verifies the other's species and
    verifies each Peerling (cached results are reused).
 3. **Shared randomness.** Both commit to a random value (send its hash), then
    reveal it. The battle RNG seed is derived from both values, so neither side
@@ -76,12 +78,13 @@ Exact messages: [protocols](../tech/protocols.md).
 4. **Turns.** Each turn, both sides commit to their action (send a hash), then
    reveal it. Neither can react to the other's choice. Both run the engine and
    exchange a hash of the resulting battle state. A mismatch voids the battle.
-5. **End.** The result is shown to both players. A disconnect, or no action
-   within a turn timer, counts as a forfeit after a grace period.
+5. **End.** The result is shown to both players. Timeouts follow
+   [battle § PvP turn timer](battle.md#pvp-turn-timer) (a random move, two in a
+   row forfeit); a disconnect counts as a forfeit.
 
 ## Rewards
 
-TBD. [accepted] No rewards that can be farmed in v1 (e.g. no XP from PvP),
+[accepted] None in v1: no rewards that can be farmed (e.g. no XP from PvP),
 since results can't be verified by a third party.
 
 ## Requirements

@@ -67,7 +67,7 @@ refers to it by CID.
 
 | Part | Contents | Provenance |
 |------|----------|------------|
-| Collection | Every Peerling the player owns, each with its **current level**, XP, current HP, nickname, origin and verification. Format: [Peerling instance](../peerlings/peerling-species.md#peerling-instance) | [accepted] |
+| Collection | Every Peerling the player owns, each with its **current level**, XP, current HP, nickname, origin and verification. Format: [data-formats § Peerling instance](data-formats.md#peerling-instance) | [accepted] |
 | Team | Ordered list of the instance IDs in the active team (size: [catching](../gameplay/catching.md)) | [accepted] |
 | Profile | Player ID (public key), display name, character appearance | [accepted] |
 | Created species | CID(s) of the species this player created | [accepted] |
@@ -102,7 +102,7 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 | `session-start` | The game starts on a computer | device ID ([Using the same account on several computers](#using-the-same-account-on-several-computers)) |
 | `nickname` | Peerling renamed | instance ID, nickname |
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
-| `seen` | First sighting of a species | species CID |
+| `seen` | First sighting of a species, and first sighting as a shimmer | species CID, biome, shimmer flag |
 | `position` | Every 30 s while moving, and on exit | position, facing |
 | `explored` | The player enters a chunk for the first time | the newly revealed chunks ([exploration § Map](../gameplay/exploration.md#map)) |
 | `snapshot` | Every 50 events, at every rest point visit, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
@@ -144,8 +144,9 @@ the game isn't played on it (designer, 2026-10-05; replaces the earlier
   (32 random bytes, valid for 5 minutes). The phone scans it with its camera,
   connects to the computer over libp2p (WebRTC, through a relay if needed) and
   proves it knows the secret. The computer asks the player to confirm, then
-  sends the **identity key** and the **save** (latest snapshot plus log, packed
-  as a CAR file, the IPFS archive format that keeps every CID intact),
+  sends the **identity key** and the **save** (the latest save snapshot, packed
+  as a CAR file, the IPFS archive format that keeps every CID intact; exact
+  contents: [data-formats § Backup file](data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup)),
   encrypted with a key derived from the secret. The phone stores it in its
   browser storage and shows the date of the backup.
 - **Restoring:** on the new (or wiped) computer, *Recover account → Restore from
@@ -261,7 +262,7 @@ caches results per Peerling and checks only the new part of an ownership chain
 later. The server also verifies catches it sees, for the species stats
 ([creator-feedback](../gameplay/creator-feedback.md)), but nothing depends on it.
 
-### Catches [accepted, details proposed]
+### Catches
 
 1. When a player catches a Peerling, the client appends a `catch` event with
    the **catch evidence**: the encounter number, the epoch record used, the
@@ -299,8 +300,7 @@ without the server, and the server can check everything afterwards.
     "randomness": "<32 bytes, hex>",
     "drandSignature": "<hex>",
     "registryHeight": 1842,
-    "generator": { "version": 2, "fromEpoch": 5873400 },
-    "serverSignature": "<hex>"
+    "generator": { "version": 2, "fromEpoch": 5873400 }
   }
   ```
 
@@ -362,7 +362,7 @@ records itself:
   drand's public key as usual.
 - `registryHeight` is the height from the latest server-signed epoch record the
   client has. While the server is down nothing can be added to the registry
-  (only the server writes it), so nothing is missed.
+  (only the server can sign listings), so nothing is missed.
 - The record is marked as client-derived and has no server signature.
 
 This keeps wild encounters working with nothing from the operator server.
@@ -408,7 +408,8 @@ from the start.
 - **The log:** an OrbitDB *events* database that any player may append to.
   Its access controller accepts an entry only if every transfer in it is
   signed by the `from` player.
-- **A transfer:** `{ instanceId, from, to, prev, signature }`. `prev` is the CID
+- **A transfer:** `{ instanceId, from, to, prev, trade }`, signed by `from`
+  ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)). `prev` is the CID
   of the previous transfer of this Peerling, or `origin` for its first
   transfer. `to` is a player ID, or `released` for Peerlings given up at the
   [Creation Shrine](../gameplay/creation-shrine.md).
@@ -489,7 +490,7 @@ D-0013, mostly checks any player can run).
 ## Requirements
 
 - **SAVE-001** [accepted] A player's save MUST be stored as a per-player OrbitDB log, writable only by the player's identity and replicated and pinned by the server, so it survives cleared browser storage and can be loaded on another device.
-- **SAVE-002** [accepted] The client MUST let the player back up their identity key with a recovery phrase and restore it on another device. The private key MUST NOT leave the device in any other form.
+- **SAVE-002** [accepted] The client MUST let the player back up their identity key with a recovery phrase and restore it on another device. The private key MUST NOT leave the device in any other form than the recovery phrase, the backup file (SAVE-021) and the phone backup (SAVE-024).
 - **SAVE-003** [accepted] Only verified Peerling instances MUST be usable in trades and PvP battles; verification follows [Verified Peerlings](#verified-peerlings).
 - ~~**SAVE-004**~~ (removed 2026-10-04, replaced by SAVE-014 and SAVE-015; see D-0013)
 - **SAVE-005** [accepted] The save MUST contain every owned Peerling instance with its current level and XP, and MUST also contain the parts listed in [Save contents](#save-contents).

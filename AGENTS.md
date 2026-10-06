@@ -41,7 +41,7 @@ wiki/                  ← LAYER 2: the specification itself (LLM-maintained)
   decisions/           ← one file per design decision (ADR style)
   gameplay/            ← what the player does: loop, exploration, battle, …
   peerlings/           ← the creatures: data model, creation, types, moves, …
-  world/               ← the world and its procedural generation
+  world/               ← the world: generation, visual style, audio
   tech/                ← architecture, IPFS/Helia, OrbitDB, servers, …
 ```
 
@@ -86,6 +86,11 @@ Body structure (omit sections that don't apply, keep the order):
 | `proposed`   | Complete proposal awaiting designer review.                     |
 | `accepted`   | Designer has approved the whole page.                           |
 | `deprecated` | Superseded; keep for history, link to the replacement.          |
+
+Decision records (`wiki/decisions/`) use the decision statuses from §7 in
+their `status:` field instead: `proposed`, `accepted`,
+`superseded by D-XXXX`, or `accepted` with a note in the body when a later
+decision changed only part of it ("partly superseded by D-XXXX").
 
 ## 4. Requirements
 
@@ -133,7 +138,8 @@ conversation in `sources`, and log it. Never silently upgrade a proposal.
   decision or page that answers it — never delete it.
 - **Decisions** are files `wiki/decisions/D-NNNN-short-slug.md` with:
   Context, Decision, Consequences, Alternatives considered, Status
-  (`proposed | accepted | superseded by D-XXXX`). Significant design choices —
+  (`proposed | accepted | superseded by D-XXXX`; a decision changed only in part
+  stays `accepted` and its Status line names the later decision). Significant design choices —
   especially ones that change existing behavior — get a decision record.
 
 ## 8. Workflows

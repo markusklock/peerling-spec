@@ -28,8 +28,8 @@ updated: 2026-10-05
 ## Elevator pitch
 
 You arrive in a procedurally generated world with one companion: a
-[Peerling](glossary.md#peerling) **you** invented. You describe it in your own
-words; AI models turn that description into artwork, a 3D model, an elemental
+[Peerling](glossary.md#peerling) **you** invented (or, if you prefer, one
+chosen from other players' creations). You describe it in your own words; AI models turn that description into artwork, a 3D model, an elemental
 type and a move set. Your creation is then published to IPFS — and from that
 moment it lives in *everyone's* world. Exploring means meeting the imaginations
 of other players: every wild Peerling you fight and catch was dreamt up by
@@ -53,7 +53,7 @@ trade-off in a [decision](decisions/) if one goal must yield.
 | # | Pillar | Meaning for the design | Provenance |
 |---|--------|------------------------|------------|
 | 1 | **Every creature is someone's creation** | There is no hand-designed roster. All species come from players via the [creation pipeline](peerlings/creation-pipeline.md). Even the operator's handful of launch [seed species](glossary.md#seed-species) go through the same pipeline. | [accepted] |
-| 2 | **IPFS is the backbone, and it shows** | Peerling data and 3D models live on IPFS; the registry lives in [OrbitDB](glossary.md#orbitdb); players are nodes that download *and* serve content. The tech should be visible and celebrated in the UI (see [IPFS showcase](tech/ipfs-showcase.md)). | [accepted] (UI visibility: [accepted]) |
+| 2 | **IPFS is the backbone, and it shows** | Peerling data and 3D models live on IPFS; the registry lives in [OrbitDB](glossary.md#orbitdb); players are nodes that download *and* serve content. The tech should be visible and celebrated in the UI (see [IPFS showcase](tech/ipfs-showcase.md)). | [accepted] |
 | 3 | **Familiar creature-collecting fun** | Explore a [procedural world](world/procedural-generation.md), encounter, battle and catch — the Pokémon formula players already understand — in one world shared with every other player, who you can battle and trade with ([multiplayer](gameplay/multiplayer.md)). | [accepted] |
 | 4 | **Fair by construction** | Generated content is constrained by predefined [types](peerlings/types.md), [move templates](peerlings/moves.md) and the same base-stat total for every species, so no player's creation is objectively stronger because of how it was described. Individual Peerlings still differ by up to ±10% per stat ([D-0014](decisions/D-0014-individual-variation.md)). | [accepted] |
 | 5 | **Minimal central infrastructure** | One operator server runs generation and pinning; everything else is peer-to-peer and client-side. See [architecture](tech/architecture.md). | [accepted] |
@@ -62,17 +62,24 @@ trade-off in a [decision](decisions/) if one goal must yield.
 
 The first playable version (v1) contains:
 
-- [accepted] Player onboarding: create a player character and a starter Peerling.
+- [accepted] Player onboarding: create a player character, and create or choose
+  a starter Peerling ([D-0012](decisions/D-0012-starter-choice-and-extra-creations.md)).
 - [accepted] Exploration of one procedural world shared by all players, who see
   each other ([D-0008](decisions/D-0008-shared-multiplayer-world.md)).
 - [accepted] Wild encounters with player-created Peerlings, turn-based battles,
   catching.
 - [accepted] PvP battles and trading between players.
 - [accepted] A team/collection of caught Peerlings.
-- [accepted] A top-down camera over a colorful 3D world ([visual-style](world/visual-style.md)).
+- [accepted] A top-down camera over a colorful 3D world ([visual-style](world/visual-style.md)),
+  with a shared day/night cycle and weather ([D-0017](decisions/D-0017-world-features.md)).
+- [accepted] Additional creations at the [Creation Shrine](gameplay/creation-shrine.md),
+  the [Peerdex](gameplay/peerdex.md), [spectating](gameplay/spectating.md),
+  shareable [links](gameplay/sharing.md), the [world feed](gameplay/world-feed.md)
+  and [phone backup](tech/player-data.md#phone-backup).
 
 [accepted] Not in v1: evolution, Peerlings learning new moves, items in
-battles, and content moderation ([D-0010](decisions/D-0010-no-content-moderation.md)).
+battles, critical hits and status conditions (BTL-010), fast travel (D-0019),
+and content moderation ([D-0010](decisions/D-0010-no-content-moderation.md)).
 
 ## See also
 

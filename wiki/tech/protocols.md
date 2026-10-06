@@ -49,7 +49,7 @@ updated: 2026-10-06
 
 Region coordinates `rx`, `ry` = tile ÷ 32. Rate: one per step while moving (at
 most 4 per second), a heartbeat every 5 s when idle. Meaning:
-[realtime-networking § Presence](realtime-networking.md#presence-proposed).
+[realtime-networking § Presence](realtime-networking.md#presence).
 
 | Field | Type | Notes |
 |-------|------|-------|

@@ -62,7 +62,7 @@ updated: 2026-10-05
 
 [accepted] There is **no chat**. Players communicate only with
 [emotes](../glossary.md#emote). [accepted] The fixed set below, sent through the
-presence channel ([realtime-networking](../tech/realtime-networking.md#presence-proposed))
+presence channel ([realtime-networking](../tech/realtime-networking.md#presence))
 and shown as a bubble or animation above the player's character:
 
 | Emote | Meaning |
@@ -79,7 +79,7 @@ and shown as a bubble or animation above the player's character:
 Why no chat: emotes keep interactions light and friendly between strangers,
 and they work in every language.
 
-## Scale and visibility (proposed)
+## Scale and visibility
 
 [accepted] Approved 2026-10-04:
 - A client shows players in its own and the 8 neighbouring
@@ -92,7 +92,7 @@ and they work in every language.
   updates and drawn about 150 ms behind real time.
 
 Network rates and region size are in
-[realtime-networking § Presence](../tech/realtime-networking.md#presence-proposed).
+[realtime-networking § Presence](../tech/realtime-networking.md#presence).
 
 ## Requirements
 

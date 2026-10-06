@@ -16,6 +16,8 @@ LLMs (or people) to implement the game from it.
 - [wiki/index.md](wiki/index.md) — catalog of every spec page
 - [wiki/open-questions.md](wiki/open-questions.md) — what is still undecided
 - [wiki/glossary.md](wiki/glossary.md) — terminology
+- [wiki/decisions/](wiki/decisions/) — every design decision, starting with
+  [D-0001](wiki/decisions/D-0001-spec-only-llm-wiki.md), how this repo works
 
 ## How this repo is organized
 

@@ -9,7 +9,6 @@ sources:
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
-  - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-05-proposal-review-2.md
 related:
   - wiki/peerlings/moves.md

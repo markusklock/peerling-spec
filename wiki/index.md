@@ -21,7 +21,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 |------|--------|-----------|---------|
 | [core-loop](gameplay/core-loop.md) | draft | — | Explore → encounter → battle → catch; player motivations |
 | [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates a character and creates or chooses a starter Peerling |
-| [player-character](gameplay/player-character.md) | stub | PLR | Avatar options (recommended: parts-based customizer), identity keypair |
+| [player-character](gameplay/player-character.md) | draft | PLR | Parts-based avatar, identity key (one key per player) |
 | [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, map, encounters in foliage, rest points, no fast travel |
 | [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings: weights, 5 ordered candidates, wild levels, prefetching |
 | [battle](gameplay/battle.md) | draft | BTL | Turns, action order, move mechanics, stat stages, damage model, XP, RNG, battle screen |
@@ -62,7 +62,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [architecture](tech/architecture.md) | draft | ARC | Components, data flows, trust model |
 | [ipfs-helia](tech/ipfs-helia.md) | draft | NODE | Browser IPFS node: connectivity, publishing, CID import parameters, caching |
 | [orbitdb-registry](tech/orbitdb-registry.md) | draft | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
-| [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
+| [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, listing and origin signer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [data-formats](tech/data-formats.md) | accepted | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
@@ -84,9 +84,9 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0006](decisions/D-0006-species-vs-instance.md) | accepted | Separate immutable species from owned instances |
 | [D-0007](decisions/D-0007-players-publish-assets.md) | accepted | The player's browser publishes their Peerling to IPFS |
 | [D-0008](decisions/D-0008-shared-multiplayer-world.md) | accepted | One shared world with PvP battles and trading |
-| [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted (partly superseded by D-0013) | Player saves on OrbitDB, with server-verified catches and trades |
+| [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted (partly superseded by D-0013, D-0015) | Player saves on OrbitDB, with server-verified catches and trades |
 | [D-0010](decisions/D-0010-no-content-moderation.md) | accepted | No content moderation |
-| [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first (WebTransport, IPv6) |
+| [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first |
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
 | [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
 | [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
