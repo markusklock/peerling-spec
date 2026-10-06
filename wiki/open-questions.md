@@ -17,6 +17,72 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
+### Q-049
+**Approve the exact integer battle maths?**
+- Affects: [battle § Deterministic arithmetic](gameplay/battle.md#deterministic-arithmetic) (BTL-012), [catching](gameplay/catching.md), [encounters](gameplay/encounters.md)
+- Context: replays must give identical results on every browser, so every
+  formula needs an exact integer form and every random draw a fixed order
+  (review finding 2, 2026-10-06).
+- Proposal: integer-only formulas with rounding down at each step, stat stages
+  as fractions, catch chance in per mille, and a fixed draw order for battles
+  and encounters, as written on the battle page.
+- Raised: 2026-10-06
+
+### Q-050
+**Record PvP wins as a player stat?**
+- Affects: [pvp-battles § Win record](gameplay/pvp-battles.md#win-record), [player-data](tech/player-data.md#pvp), [protocols](tech/protocols.md)
+- Context: the designer asked whether both players could publish the winner
+  and count it in a stat like "number of PvP wins" (2026-10-06).
+- Proposal: signed per-turn `state` messages; a result counts when both
+  players, or the loser, signed the final state; a `pvp-result` save-log event;
+  wins and losses on the profile; no rewards; collusion accepted as a known gap.
+- Raised: 2026-10-06
+
+### Q-051
+**Approve the exact presentation formulas?**
+- Affects: [peerling-species § Shimmer variants](peerlings/peerling-species.md#shimmer-variants), [audio § Peerling cries](world/audio.md#peerling-cries), [procedural-generation § Day and night](world/procedural-generation.md#day-and-night), [§ Weather](world/procedural-generation.md#weather)
+- Context: so all players see and hear the same thing, the shimmer hue, cry
+  parameters, day clock and weather choice need exact formulas (review
+  finding 31, 2026-10-06).
+- Proposal: as written on those pages: hue from bytes 6–7 of the species hash;
+  linear/log byte mappings for cries; day phase from Unix time with midnight
+  at phase 0; weather by weighted choice from a hash of the epoch randomness
+  and the biome.
+- Raised: 2026-10-06
+
+### Q-052
+**How does the guaranteed first encounter work?**
+- Affects: [onboarding](gameplay/onboarding.md#creating-a-starter), [encounters](gameplay/encounters.md), [player-data § Encounter seeds](tech/player-data.md#encounter-seeds)
+- Context: onboarding promises "an early guaranteed encounter" to teach
+  battling and catching, but the encounter rules (1-in-10 chance per foliage
+  step) don't say how it is guaranteed or verified (review finding 12).
+- Proposal: the player's first step onto foliage outside the spawn hub always
+  triggers an encounter. It is an ordinary encounter (encounter number 0, same
+  seed and verification rules); only the 1-in-10 roll is skipped, which
+  verifiers can check because it is the player's first encounter.
+- Raised: 2026-10-06
+
+### Q-053
+**World layout: a central spawn hexagon with 12 biome hexagons around it?**
+- Affects: [procedural-generation § Layout](world/procedural-generation.md#layout) (WGN-007, WGN-008), [encounters § Wild level](gameplay/encounters.md#wild-level)
+- Context: review finding 27: the inner ring (0–500 m) is too small to hold
+  areas of all 12 biomes. The designer suggested building the world from 12
+  hexagons around one central spawn hexagon, the centre being Plains (where
+  Normal Peerlings are more common) (2026-10-06). A hexagon has 6 neighbours
+  (rings hold 6, then 12), and Plains is one of the 12 biomes, so the layout
+  needs choosing. Options:
+  - A. 13 hexagons literally: Plains in the centre, the other biomes in the
+    rings around it. Simple and readable, but each biome sits at one distance,
+    so its type is only common at one level range (would replace WGN-007).
+  - B. Plains hexagon in the centre, then 12 wedge-shaped sectors (one per
+    biome, Plains included) running from the hexagon to the border. Every
+    biome spans every level range, and walking around the centre visits all
+    12 (LLM recommendation).
+  - C. A hexagonal grid of smaller biome areas, centre hex Plains, biomes
+    spread so each appears at every distance. Keeps WGN-007 but looks less
+    like the designer's 12 + 1 picture.
+- Raised: 2026-10-06
+
 ## Resolved
 
 ### Q-002

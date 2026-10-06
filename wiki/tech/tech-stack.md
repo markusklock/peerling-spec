@@ -1,7 +1,7 @@
 ---
 title: Tech Stack
 type: system
-status: draft
+status: accepted
 req_prefix: STK
 tags: [tech, platform, networking, rendering]
 sources:
@@ -13,13 +13,14 @@ sources:
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-05-phone-backup-approved.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/generation-server.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Tech Stack
@@ -106,7 +107,7 @@ services (OrbitDB) is an acceptable setup.
 | Threads | Helia, libp2p and OrbitDB run in a **Web Worker** | Networking and hashing never stall rendering |
 | One node per player | The **Web Locks API** ensures only one open tab runs the player's node | Two tabs with the same identity would fight over the save log |
 | Storage | **OPFS** (Origin Private File System) for the IPFS blockstore and OrbitDB data | Much faster binary reads and writes than IndexedDB, especially from a worker |
-| Crypto | **Ed25519 via WebCrypto** for player identities and signatures | Built into all major browsers; no JavaScript crypto library on the hot path |
+| Crypto | **Ed25519** for player identities and signatures, via WebCrypto where the browser supports it ([accepted] 2026-10-06) | WebCrypto needs no JavaScript crypto library on the hot path; a library fallback covers browsers without Ed25519 in WebCrypto, and some libp2p code paths use their own implementation |
 | Persistent storage | [accepted] The client calls `navigator.storage.persist()` at first launch, and again after the player installs the PWA | See [Does stored data survive a restart?](#does-stored-data-survive-a-restart) |
 | Installable app | **PWA** (installable desktop web app) with a service worker caching the app itself | The game loads offline, which fits offline play ([player-data](player-data.md#encounter-seeds)) |
 | Language | **TypeScript** | Helia, libp2p and OrbitDB are TypeScript/JavaScript |
@@ -189,7 +190,7 @@ oversized files.
 - **STK-005** [accepted] Rendering MUST use WebGPU where available and fall back to WebGL2.
 - **STK-006** [accepted] The IPFS node, libp2p and OrbitDB MUST run off the main thread, and only one tab per player MUST run the node.
 - **STK-007** [accepted] The client blockstore and OrbitDB storage MUST use OPFS.
-- **STK-008** [accepted] Player identity keys and signatures MUST use Ed25519 via WebCrypto.
+- **STK-008** [accepted] Player identity keys and signatures MUST use Ed25519, through WebCrypto where the browser supports it.
 - **STK-009** [accepted] 3D models MUST be glTF 2.0 binary with meshopt compression and KTX2 textures; 2D images MUST be AVIF.
 - **STK-010** [accepted] The game MUST target current desktop versions of Chrome/Edge, Firefox and Safari; mobile is not a target.
 - **STK-011** [accepted] The client MUST be written in TypeScript and be installable as a PWA.

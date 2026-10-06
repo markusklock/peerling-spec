@@ -17,13 +17,14 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/catching.md
   - wiki/gameplay/pvp-battles.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Battle System
@@ -89,12 +90,15 @@ How each [move template](../peerlings/moves.md#template-table) behaves in battle
   own damage roll.
 - **Recoil** (`strong-recoil`): after hitting, the user loses 33% of the damage
   dealt (at least 1 HP). The user can faint from recoil.
+  [accepted] "Damage dealt" here and for drain means the HP actually removed
+  from the target (never more than it had left); the result is rounded down,
+  minimum 1.
 - **Charge** (`strong-charge`): on the first turn the user gathers power and
   does nothing else. On its next turn it strikes automatically; the player
   doesn't pick an action for that turn. If the user is switched out by fainting
   first, the charge is lost.
-- **Drain** (`sig-drain`): the user heals 50% of the damage dealt, up to its max
-  HP.
+- **Drain** (`sig-drain`): the user heals 50% of the damage dealt (as defined
+  under Recoil), up to its max HP.
 - **Stat effects** (`sig-weaken`, `sig-empower`): after a hit, a 30% chance to
   change the chosen stat by one stage (below).
 
@@ -122,6 +126,10 @@ Each turn the wild Peerling picks a move using the battle RNG:
   accuracy);
 - otherwise, one of its three moves at random.
 
+[accepted] For the expected-damage comparison, `quick-flurry` counts as power
+2 × 20 = 40 and `strong-charge` as 130 ÷ 2 = 65 (it needs two turns). Ties go
+to the quick move, then the strong move, then the signature move.
+
 It never flees or switches. This makes it a fair, slightly unpredictable
 opponent.
 
@@ -132,15 +140,29 @@ opponent.
 | Opponent's last Peerling faints | Win; XP is awarded | Win |
 | Wild Peerling caught | Win; XP is awarded | — |
 | Player flees | Battle ends; no XP | — |
-| All the player's Peerlings faint | Loss; return to the last rest point, fully healed ([EXP-003](exploration.md#requirements)) | Loss |
+| All the player's Peerlings faint | Loss; return to the last rest point, fully healed ([EXP-003](exploration.md#requirements)) | Loss; the player stays where they are |
 | Forfeit / timeout | — | Loss ([pvp-battles](pvp-battles.md)) |
 
-After a battle, HP carries over; stat stages reset.
+After a wild battle, HP carries over; stat stages reset.
+
+[accepted] A PvP battle is separate from the player's adventure: every
+Peerling starts it at full HP, and nothing carries over afterwards (HP,
+fainting, stages). Losing a PvP battle never sends the player to a rest point.
 
 ### PvP turn timer
 
-Each player has 30 s to choose an action. On a timeout, a random move is
-chosen for them (via the battle RNG); two timeouts in a row count as a forfeit.
+[accepted] Each player has 30 s for every decision: a turn action, or a
+replacement after a faint. Exact messages:
+[protocols § PvP battle](../tech/protocols.md#peerlingsbattle100--pvp-battle).
+
+- Timed-out turn action: a random one of the active Peerling's three moves,
+  drawn with the battle RNG.
+- Timed-out replacement: the first team member in team order that hasn't
+  fainted.
+- Two timeouts in a row by the same player: that player forfeits.
+- The second turn of a charge move needs no decision, so it has no timer.
+- Disconnect: the player who dropped has 60 s to reconnect and resume the
+  battle; otherwise they forfeit.
 
 ### Battle screen
 
@@ -242,6 +264,87 @@ on the server ([BTL-002](#requirements)):
 Seeds: wild battles use the [encounter seed](../tech/player-data.md#encounter-seeds);
 PvP battles use the commit-reveal seed ([pvp-battles](pvp-battles.md)).
 
+### Deterministic arithmetic
+
+[proposed] Replays only agree if every browser computes exactly the same
+numbers, so all battle, catch and encounter maths uses **integers only**
+([data-formats](../tech/data-formats.md) already bans floats in signed data).
+`div` is integer division rounding down; `rand_int(n)` is an integer in
+[0, n) from the [random number generator](#random-number-generator). The
+formulas below are the integer form of the rules above; where they differ by
+a rounding step, this section wins. Awaiting approval:
+[Q-049](../open-questions.md#q-049).
+
+**Stats**
+- HP = 2 × base × L div 100 + L + 10; other stats = 2 × base × L div 100 + 5.
+- With the trait t (−10…+10): stat = stat × (100 + t) div 100.
+- Stat stages multiply the effective stat by a fraction, then `div`:
+  −3: 2/5, −2: 1/2, −1: 2/3, 0: 1/1, +1: 3/2, +2: 2/1, +3: 5/2.
+
+**Damage** (each step rounds down)
+1. a = 2 × L div 5 + 2
+2. b = a × Power × Attack div Defense
+3. c = b div 50 + 2
+4. Same-type bonus: c = c × 3 div 2.
+5. Effectiveness, once per defender type, primary first: ×2 → c = c × 2;
+   ×½ → c = c div 2.
+6. Random roll: r = 85 + rand_int(16) (85…100); c = c × r div 100.
+7. Minimum 1.
+
+**Recoil and drain:** removed = HP actually removed; recoil = max(1, removed
+× 33 div 100); drain = max(1, removed div 2).
+
+**Catch chance** (in per mille)
+- base = 600 × (3 × maxHP − 2 × currentHP) div (3 × maxHP)
+- level factor = 1000 if the wild level ≤ the active Peerling's level,
+  otherwise max(500, 1000 − 50 × the level difference)
+- chance = base × level factor div 1000; success if rand_int(1000) < chance.
+
+**Other rolls**
+- Accuracy: hit if rand_int(100) < accuracy (in %); "never misses" draws
+  nothing.
+- 30% stat effect: applies if rand_int(100) < 30.
+- Wild move choice: rand_int(2) = 0 → the best expected-damage move, otherwise
+  the move at index rand_int(3) (quick, strong, signature).
+- Speed tie: rand_int(2) = 0 → the side listed first goes first (wild: the
+  player; PvP: the lower player ID).
+- PvP timeout move: rand_int(3), drawn when the turn resolves; if both players
+  timed out, the lower player ID draws first.
+
+**Draw order within a turn**
+1. The wild Peerling's move choice.
+2. The catch roll (if the player tries to catch).
+3. The speed-tie roll (only if needed).
+4. Then, for each move in execution order: accuracy, damage roll(s) (two for
+   `quick-flurry`), stat-effect roll.
+
+Rolls are only drawn when needed (no accuracy roll for a move that never
+misses, no damage roll after a miss).
+
+**Encounter draws** (in the order of
+[encounters § Wild Peerling generation](encounters.md#wild-peerling-generation))
+- Candidates: eligible species sorted by registry `seq`; each of the 5 draws
+  takes r = rand_int(total weight) and picks the first species whose running
+  weight total exceeds r, then removes it.
+- Level offset: rand_int(5) − 2.
+- Traits: rand_int(21) − 10, in the order HP, Attack, Defense, Speed.
+- Shimmer: rand_int(500) = 0.
+
+**Wild level from a tile** `[x, y]` (tile centres, in metres):
+dx = 2x + 1 − 2000, dy = 2y + 1 − 2000, d = isqrt(dx² + dy²) (integer square
+root, rounded down), base level = 2 + (48 × min(d, 2000) + 1000) div 2000.
+
+### Rules versions
+
+[accepted] The battle rules (formulas, numbers and template behaviour) can
+change in a balance update. So that old catches still verify:
+- each rules set has a version number; the
+  [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch) announces the current
+  version and the epoch it applies from;
+- a battle (wild or PvP) uses the version active in its epoch;
+- the game keeps every past rules version, so it can replay and verify catches
+  made under any of them.
+
 ## Presentation
 
 [accepted] The visual style is colorful ([visual-style](../world/visual-style.md)).
@@ -266,6 +369,10 @@ and battles use simple 3D graphics.
 Move visual effects (particles, projectiles, coloured flashes) are generated
 from the move's type and template, not authored per move.
 
+[accepted] Models are drawn at the height of their species' size class
+([peerling-species § Size and temperament](../peerlings/peerling-species.md#size-and-temperament)),
+so a large Peerling looms over a small one; size has no effect on the rules.
+
 ## Requirements
 
 - **BTL-001** [accepted] The player MUST be able to battle wild Peerlings they encounter.
@@ -278,10 +385,13 @@ from the move's type and template, not authored per move.
 - **BTL-008** [accepted] Every stat MUST be multiplied by the individual's trait factor after the level formula.
 - **BTL-009** [accepted] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
 - **BTL-010** [accepted] There MUST NOT be critical hits or status conditions in v1.
+- **BTL-011** [accepted] A battle MUST use the rules version active in its epoch, and the client MUST keep every past rules version so it can verify older catches ([Rules versions](#rules-versions)).
+- **BTL-012** [proposed] Battle, catch and encounter maths MUST use only the integer formulas and the draw order in [Deterministic arithmetic](#deterministic-arithmetic).
+- **BTL-013** [accepted] Every Peerling MUST start a PvP battle at full HP, and a PvP battle MUST NOT change any Peerling's HP afterwards or move the player to a rest point.
 
 ## Open questions
 
-_None at the moment._
+- [Q-049](../open-questions.md#q-049) — approve the exact integer battle maths
 
 ## See also
 

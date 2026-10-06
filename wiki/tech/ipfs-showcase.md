@@ -1,7 +1,7 @@
 ---
 title: IPFS Showcase Features
 type: concept
-status: draft
+status: accepted
 req_prefix: SHOW
 tags: [tech, ipfs, ux, goals]
 sources:
@@ -11,10 +11,11 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/overview.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # IPFS Showcase Features

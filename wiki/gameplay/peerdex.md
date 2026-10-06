@@ -6,6 +6,7 @@ req_prefix: DEX
 tags: [gameplay, collection, ui]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/gameplay/catching.md
@@ -33,6 +34,8 @@ The registry keeps growing, so the Peerdex lists only species the player has
 | **Seen** (met, not caught) | A silhouette with the name, types, and the biome where it was first met |
 | **Caught** | The full card: rotatable 3D model, stats, moves, lore, creator, world stats (met, caught, nodes holding it; [creator-feedback](creator-feedback.md)), CID and a Share button ([sharing](sharing.md)) |
 
+- [accepted] Starters, shrine creations and Peerlings received in trades count
+  as seen and caught, just like wild catches.
 - **Shimmer badge:** shown on species the player has seen or caught as a
   shimmer.
 - **Counters:** "Seen 143 · Caught 61 · Species in the world 2,310" (the last is
@@ -47,6 +50,7 @@ The registry keeps growing, so the Peerdex lists only species the player has
 - **DEX-001** [accepted] The Peerdex MUST list only species the player has seen, showing seen species as silhouettes (name, types, first biome) and caught species as full cards.
 - **DEX-002** [accepted] The Peerdex MUST show seen and caught counts and the number of species in the world, mark shimmer sightings and catches, and offer filters, sorting and search.
 - **DEX-003** [accepted] The Peerdex MUST include a "My creations" tab.
+- **DEX-004** [accepted] Receiving a Peerling as a starter, a shrine creation or in a trade MUST mark its species as seen and caught.
 
 ## See also
 

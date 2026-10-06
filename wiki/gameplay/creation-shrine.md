@@ -1,7 +1,7 @@
 ---
 title: Creation Shrine
 type: system
-status: draft
+status: accepted
 req_prefix: SHR
 tags: [gameplay, creation, progression]
 sources:
@@ -9,12 +9,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-world-details.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/player-data.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Creation Shrine
@@ -40,7 +41,7 @@ the possibility to create a new one
 | What happens to the offering | The 3 Peerlings are **released**: removed from the player's collection by a signed transfer to `released` in the [transfer log](../glossary.md#transfer-log) | Makes it a real sacrifice, and stops the same Peerlings from being offered twice |
 | Reward | One run of the [creation pipeline](../peerlings/creation-pipeline.md); the new Peerling joins the player's collection | |
 | Level of the new Peerling | The average level of the 3 offered Peerlings, rounded down | Sacrificing three level-30s shouldn't hand back a level-5 |
-| Limit | One shrine creation per player per 7 days | Caps GPU load and registry growth at about one species per active player per week |
+| Limit | One shrine creation per player per 7 days, counted from the previous shrine creation's publishing | Caps GPU load and registry growth at about one species per active player per week |
 
 [accepted] Flow:
 1. The player walks to the shrine and chooses 3 Peerlings to offer.
@@ -56,6 +57,10 @@ the possibility to create a new one
 
 If the player abandons the creation job, the offering is not refunded, but the
 right to create is kept: the player can resume the job later (CRE-014).
+[accepted] If the job is abandoned or expires
+([creation-api](../tech/creation-api.md#the-job-object)), the player keeps a
+**shrine credit** for 30 days: they can start a new shrine job without a new
+offering. After 30 days the credit is gone.
 
 The server must be online to use the shrine.
 
@@ -63,8 +68,9 @@ The server must be online to use the shrine.
 
 - **SHR-001** [accepted] There MUST be a place in the world where a player can give up Peerlings in exchange for creating a new species.
 - **SHR-002** [accepted] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (signed transfers to `released` in the transfer log) when the creation starts.
-- **SHR-003** [accepted] A player MUST be limited to one shrine creation per 7 days.
+- **SHR-003** [accepted] A player MUST be limited to one shrine creation per 7 days, counted from the publishing of their previous shrine creation.
 - **SHR-004** [accepted] The new Peerling MUST start at the average level of the offered Peerlings, rounded down.
+- **SHR-005** [accepted] When a shrine job is abandoned or expires, the server MUST keep a shrine credit for the player for 30 days, which lets them start one new shrine job without an offering.
 
 ## Open questions
 

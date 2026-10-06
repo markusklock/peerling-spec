@@ -1,7 +1,7 @@
 ---
 title: Playing Without the Operator Server
 type: system
-status: draft
+status: accepted
 req_prefix: RES
 tags: [tech, resilience, ipfs, libp2p, decentralization]
 sources:
@@ -9,13 +9,14 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-peer-save-backups.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/generation-server.md
   - wiki/tech/player-data.md
   - wiki/gameplay/encounters.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Playing Without the Operator Server

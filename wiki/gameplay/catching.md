@@ -1,7 +1,7 @@
 ---
 title: Catching
 type: system
-status: draft
+status: accepted
 req_prefix: CAT
 tags: [gameplay, catching, collection]
 sources:
@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
@@ -80,6 +81,8 @@ A fainted wild Peerling can't be caught; it gives XP
   player can swap Peerlings between team and collection at any time outside
   battle.
 - A Peerling caught while the team is full goes to the collection.
+- [accepted] The team always holds **at least 1** Peerling: the last team
+  member can't be moved to the collection or offered in a trade.
 - The team is stored in the [save](../tech/player-data.md#save-contents).
 
 [accepted] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)
@@ -106,6 +109,7 @@ be traded or used in PvP. See
 - **CAT-005** [accepted] The catch chance MUST follow [Catch chance](#catch-chance).
 - **CAT-006** [accepted] A team MUST hold at most 4 Peerlings; all other owned Peerlings are in the collection, which has no size limit.
 - **CAT-007** [accepted] The player MUST be able to swap Peerlings between team and collection at any time outside battle.
+- **CAT-008** [accepted] The team MUST always hold at least 1 Peerling; the client MUST NOT allow the last team member to be moved to the collection or offered in a trade.
 
 ## Open questions
 

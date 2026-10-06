@@ -7,6 +7,7 @@ tags: [tech, libp2p, pubsub, protocols, formats]
 sources:
   - raw/conversations/2026-10-05-formats-request.md
   - raw/conversations/2026-10-06-formats-approved.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -60,7 +61,7 @@ most 4 per second), a heartbeat every 5 s when idle. Meaning:
 | `step` | time | when the current step started |
 | `name` | string ≤ 20 | display name |
 | `look` | bytes(8) | first 8 bytes of SHA-256 of the appearance map |
-| `emote` | string, optional | emote ID ([multiplayer § Communication](../gameplay/multiplayer.md#communication)) |
+| `emote` | string, optional | emote ID: `wave`, `heart`, `laugh`, `wow`, `thumbs-up`, `thumbs-down`, `challenge` or `trade` ([multiplayer § Communication](../gameplay/multiplayer.md#communication)) |
 | `session` | bytes(16) | device ID of the active session ([SAVE-023](player-data.md#requirements)) |
 | `battle` | bytes(32), optional | battle ID while in a PvP battle that allows spectators |
 | `t` | time | |
@@ -82,8 +83,10 @@ Rate: receivers accept at most 1 per player per minute. Meaning:
 | `t` | time | |
 
 ### `peerlings/v1/battle/<battle ID>` — spectating
-Battle ID (hex) = SHA-256(lower player ID ‖ higher player ID ‖ battle start
-time as 8-byte big-endian), where player IDs are compared as strings. Published
+Battle ID (hex) = SHA-256(lower player ID ‖ higher player ID ‖ the
+challenge message's `t`), where player IDs are compared as strings. In every
+two-player list (`players`, `teams`, the action pairs) the player with the
+lower ID comes first. Published
 by both fighters. Meaning: [spectating](../gameplay/spectating.md).
 
 | `kind` | Fields |
@@ -91,6 +94,13 @@ by both fighters. Meaning: [spectating](../gameplay/spectating.md).
 | `"start"` | `players` [2 player IDs], `mode` (`"fair"` \| `"real"`), `teams` (two lists of team members, as in the battle `team` message) |
 | `"turn"` | `turn` (uint), `seed` (bytes(32), once revealed), `actions` (all revealed actions so far, per turn: [[action of player 0, action of player 1]]), `state` (bytes(32), state hash after this turn) |
 | `"end"` | `result` (`"win"` \| `"void"` \| `"forfeit"`), `winner` (player ID or null) |
+
+### `peerlings/v1/session/<player ID>` — active session
+Published by the computer that is currently playing, every 15 s:
+`{ "kind": "session", "device": <bytes(16)>, "t": <time> }`. A computer with
+the same account subscribes to its own player's topic before starting play; a
+session counts as active while heartbeats arrive, and as ended after 60 s
+without one ([player-data § Using the same account on several computers](player-data.md#using-the-same-account-on-several-computers)).
 
 ### `peerlings/v1/save-wanted` — save recovery
 `{ "kind": "save-wanted", "player": <player ID>, "t": <time> }`. Rate: 1 per
@@ -110,7 +120,7 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 | # | From | `kind` | Fields |
 |---|------|--------|--------|
 | 1 | A | `challenge` | `mode` (`"fair"` \| `"real"`), `spectators` (bool), `t` |
-| 2 | B | `accept` / `decline` | — |
+| 2 | B | `accept` / `decline` | `decline` carries `reason`: `"declined"` or `"busy"` (already in a battle or trade; also used for blocked players) |
 | 3 | both | `team` | `members`: [map: `instanceId`, `species`, `level`, `traits`, `shimmer`, `originProof`, `saveLog`] (up to 4, team order) |
 | 4 | both | `seed-commit` | `hash`: SHA-256(value) |
 | 5 | both | `seed-reveal` | `value`: bytes(32) |
@@ -127,9 +137,28 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 - Replacing a fainted Peerling is also a commit/reveal decision (`replace`
   action), so neither side sees the other's choice first.
 - A `state` hash that differs from one's own → `end` with result `"void"`.
-- The battle state that is hashed is defined by the battle engine: for each
-  side, the active instance, each team member's HP, stat stages and charge
-  flag, plus the turn number, as a DAG-CBOR map.
+- **Battle state** (exact, [accepted] 2026-10-06): the hashed value is the
+  DAG-CBOR map
+  `{ "turn": uint, "sides": [side, side] }` with the lower player ID's side
+  first, where `side` = `{ "active": <instance ID bytes>, "members": [member, …] }`
+  in team order and `member` = `{ "id": <instance ID bytes>, "hp": uint,
+  "stages": [attack, defense, speed] (ints −3…3), "charging": bool }`.
+- **Timers and timeouts** ([accepted] 2026-10-06; rules in
+  [battle § PvP turn timer](../gameplay/battle.md#pvp-turn-timer)):
+  - every decision (turn action or replacement) has a 30 s timer, started when
+    the previous turn's `state` messages have been exchanged;
+  - a side that hasn't received the other's `commit` in time sends
+    `{ "kind": "timeout", "turn": uint }`; both sides then use the action
+    `{ "kind": "timeout" }` for the late player. When the turn resolves, a
+    timed-out turn action becomes a random move from the battle RNG, and a
+    timed-out replacement becomes the first non-fainted team member in team
+    order;
+  - two timeouts in a row by the same player end the battle as a forfeit;
+  - a charging Peerling's second turn needs no decision (its strike is
+    automatic);
+  - if the stream drops, the player who dropped may reopen it within 60 s with
+    `{ "kind": "resume", "battle": <battle ID>, "turn": uint }`; otherwise the
+    battle ends as a forfeit by that player.
 
 ### `/peerlings/trade/1.0.0` — trade
 
@@ -138,15 +167,17 @@ Meaning: [trading](../gameplay/trading.md).
 | # | From | `kind` | Fields |
 |---|------|--------|--------|
 | 1 | A | `propose` | `t` |
-| 2 | B | `accept` / `decline` | — |
-| 3 | either, any time | `offer` | `instances` [instance ID]: the full current offer of the sender; clears both confirmations |
-| 4 | either | `confirm` | `offers`: SHA-256 of both current offers (A's, then B's) |
-| 5 | both, after both confirmed | `transfers` | the sender's signed transfer envelopes, sharing one `trade` ID chosen by A |
+| 2 | B | `accept` / `decline` | `decline` carries `reason` (`"declined"` or `"busy"`) |
+| 3 | either, any time | `offer` | `instances` [instance]: the full instance data of the sender's current offer ([data-formats § Peerling instance](data-formats.md#peerling-instance)); clears both confirmations |
+| 4 | either | `confirm` | `offers`: SHA-256 of `[A's offer, B's offer]`, each offer being its list of instance IDs |
+| 5 | both, after both confirmed | `transfers` | the sender's signed transfer envelopes, sharing one `trade` ID chosen by A and the `offers` hash ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer): trades are all or nothing) |
 | 6 | A | `done` | `entry`: CID of the transfer-log entry A appended (both sides' transfers) |
 | — | either, before 6 | `cancel` | — |
 
 B checks the entry appears in the transfer log, then both append `trade` events
-to their save logs.
+to their save logs. Each side checks the received instance data against what
+it can verify from the partner's save log (origin, ownership, traits); level,
+XP and HP are taken from the offer.
 
 ### `/peerlings/profile/1.0.0` — profile
 

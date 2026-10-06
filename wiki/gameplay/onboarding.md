@@ -1,7 +1,7 @@
 ---
 title: New Player Onboarding
 type: system
-status: draft
+status: accepted
 req_prefix: ONB
 tags: [gameplay, onboarding, creation]
 sources:
@@ -11,10 +11,11 @@ sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # New Player Onboarding
@@ -26,7 +27,7 @@ updated: 2026-10-05
 ## Flow
 
 [accepted] Every new player creates a player character and gets a starter
-Peerling. [accepted] The player either **creates** their own starter or
+Peerling, once: a player can never get a second starter. [accepted] The player either **creates** their own starter or
 **chooses** one of a few random existing species
 ([D-0012](../decisions/D-0012-starter-choice-and-extra-creations.md)).
 
@@ -62,7 +63,8 @@ choose can still create Peerlings later at the
    the new [starter](../glossary.md#starter)'s origin attestation, with its
    traits and shimmer roll (stage 8).
 6. **Into the world** — the player starts exploring; an early guaranteed
-   encounter teaches battling and catching.
+   encounter teaches battling and catching (how it is guaranteed:
+   [Q-052](../open-questions.md#q-052)).
 
 ## Requirements
 
@@ -73,7 +75,8 @@ choose can still create Peerlings later at the
 - **ONB-005** [accepted] A new player MUST create a player character and get a starter Peerling before starting to explore.
 - **ONB-006** [accepted] The starter MUST be either an instance of a species the player creates, or an instance of an existing species the player chooses from a few random options.
 - **ONB-007** [accepted] When choosing, the player MUST be offered 3 random species from the registry.
+- **ONB-008** [accepted] Each player MUST get exactly one starter, ever ([API-004](../tech/creation-api.md#requirements)).
 
 ## Open questions
 
-_None at the moment._
+- [Q-052](../open-questions.md#q-052) — how the guaranteed first encounter works

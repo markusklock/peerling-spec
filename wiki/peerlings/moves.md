@@ -1,7 +1,7 @@
 ---
 title: Moves and Move Templates
 type: reference
-status: draft
+status: accepted
 req_prefix: MOV
 tags: [peerlings, battle, balance]
 sources:
@@ -13,12 +13,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/battle.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Moves and Move Templates

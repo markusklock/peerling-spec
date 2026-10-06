@@ -24,6 +24,7 @@ sources:
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -168,10 +169,14 @@ the game isn't played on it (designer, 2026-10-05; replaces the earlier
 still has it). Playing on both at the same time would create duplicate
 encounter numbers, which verification treats as a forked save
 ([Verified Peerlings](#verified-peerlings)). So a device appends a
-`session-start` event when the game starts and announces its session in its
-presence messages. Another computer with the same account first syncs the save
-log; if a session is active elsewhere, it refuses to start play (*"You're
-playing on another computer"*). Two computers playing while both are offline
+`session-start` event when the game starts and, while playing, publishes a
+heartbeat every 15 s on its own session topic
+([protocols](protocols.md#peerlingsv1sessionplayer-id--active-session)).
+Another computer with the same account first syncs the save log and listens on
+that topic; if a heartbeat has arrived within the last 60 s, a session is
+active elsewhere and it refuses to start play (*"You're playing on another
+computer"*). A crashed computer's session simply stops sending heartbeats and
+counts as ended after 60 s. Two computers playing while both are offline
 can't be detected in time; restoring shows a warning about this.
 
 ### Finding the save again
@@ -360,9 +365,12 @@ records itself:
 - `randomness` is the drand value for the epoch, fetched directly from public
   drand endpoints (run by League of Entropy members) and checked against
   drand's public key as usual.
-- `registryHeight` is the height from the latest server-signed epoch record the
-  client has. While the server is down nothing can be added to the registry
-  (only the server can sign listings), so nothing is missed.
+- `registryHeight` (and the `generator` and `rules` versions) are copied from
+  the latest server-signed epoch record in the epoch log whose epoch is lower
+  than the derived record's ([accepted] 2026-10-06). Any verifier can look that
+  record up, so a client can't pick an older, smaller registry state. While the
+  server is down nothing can be added to the registry (only the server can sign
+  listings), so nothing is missed.
 - The record is marked as client-derived and has no server signature.
 
 This keeps wild encounters working with nothing from the operator server.
@@ -380,7 +388,8 @@ verified like any other: by whoever needs to check them, from the save log.
 1. The epoch record is genuine: drand signature, plus either the server's
    signature or the client-derived rules above.
 2. Encounter numbers run from 0 with no gaps and appear only once; epochs never
-   decrease. (A save log with two conflicting branches shows up as duplicate
+   decrease (every `battle-result` records its epoch, so this can be checked for
+   all encounters, not just catches). (A save log with two conflicting branches shows up as duplicate
    encounter numbers, so every catch after the fork fails.)
 3. The logged tile is an encounter-foliage tile (the world is deterministic,
    so any verifier can check). The species is the logged candidate from the
@@ -415,7 +424,10 @@ from the start.
   [Creation Shrine](../gameplay/creation-shrine.md).
 - **A trade** is a single log entry holding both players' transfers and both
   signatures, so either both sides happen or neither does
-  ([trading](../gameplay/trading.md)).
+  ([trading](../gameplay/trading.md)). [accepted] This is enforced: a transfer
+  with a trade ID only counts inside an entry that holds the complete transfer
+  set for both confirmed offers
+  ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
 - **Current owner:** follow the Peerling's chain from its origin; the last `to`
   is the owner. A Peerling with no transfers belongs to its first owner.
 - **Before trading,** each side syncs the transfer log and checks that the
@@ -442,6 +454,10 @@ instead:
 [accepted] PvP uses only verified Peerlings; in Fair mode everyone fights at level 50 ([D-0015](../decisions/D-0015-pvp-level-modes.md)). [accepted] Before
 the battle, each side verifies the other's team (origin and ownership chain),
 using cached results where possible. No server is needed.
+
+[proposed] PvP results could be recorded as signed `pvp-result` events for a
+"PvP wins" stat ([pvp-battles § Win record](../gameplay/pvp-battles.md#win-record),
+[Q-050](../open-questions.md#q-050)).
 
 ## Known gaps (accepted risks)
 
@@ -501,7 +517,7 @@ D-0013, mostly checks any player can run).
 - **SAVE-010** [accepted] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
 - **SAVE-011** [accepted] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
 - **SAVE-012** [accepted] Starters and shrine-created Peerlings MUST receive a server origin attestation when they are created.
-- **SAVE-013** [accepted] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand and their latest signed registry height, and verifiers MUST accept such records.
+- **SAVE-013** [accepted] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand, copying the registry height and versions from the latest server-signed epoch record before that epoch; verifiers MUST accept such records.
 - **SAVE-014** [accepted] Ownership MUST be a chain of transfers signed by the current owner and stored in an open OrbitDB transfer log; a trade MUST be a single entry holding both players' signed transfers.
 - **SAVE-015** [accepted] Conflicting transfers of the same Peerling MUST be detected; [accepted] the transfer with the lower log-entry CID wins, and the signer MUST be flagged and refused for trades and PvP.
 - **SAVE-016** [accepted] Any client MUST be able to verify a catch by replaying it from the catcher's save log; no server signature is required.
@@ -513,6 +529,8 @@ D-0013, mostly checks any player can run).
 - ~~**SAVE-022**~~ (removed 2026-10-05: device linking replaced by the phone backup, SAVE-024)
 - **SAVE-023** [accepted] Only one computer per player MUST be able to play at a time: a client MUST sync the save log and MUST refuse to start play while another computer's session for the same account is active.
 - **SAVE-024** [accepted] A player MUST be able to back up the identity key and save to a phone by scanning a QR code (one-time secret, 5 minutes) shown on the computer, and restore them to a computer the same way; the phone side runs in the Peerlings Viewer.
+- **SAVE-025** [accepted] A transfer that carries a trade ID MUST only be valid inside a transfer-log entry that holds the complete set of transfers for both confirmed offers.
+- **SAVE-026** [accepted] Every `battle-result` MUST record the epoch used, and verifiers MUST check that epochs never decrease across all encounters.
 
 ## Open questions
 

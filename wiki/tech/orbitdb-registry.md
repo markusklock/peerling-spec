@@ -1,7 +1,7 @@
 ---
 title: Peerling Registry (OrbitDB)
 type: system
-status: draft
+status: accepted
 req_prefix: REG
 tags: [tech, orbitdb, ipfs, data]
 sources:
@@ -14,12 +14,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/encounters.md
   - wiki/decisions/D-0010-no-content-moderation.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Peerling Registry (OrbitDB)
@@ -75,8 +76,11 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
 - **Emergency delisting:** there is no content moderation
   ([D-0010](../decisions/D-0010-no-content-moderation.md)), but the operator
   can delist a species by appending a server-signed update to its entry with
-  `"status": "removed"` (a tombstone). The update also records `removedAtSeq`, the registry height at
-  which the species was removed. The server then unpins the species' content.
+  `"status": "removed"` (a tombstone). A tombstone takes the next `seq` of its
+  own, and records it as `removedAtSeq`. [accepted] The server then unpins the
+  species' **image, model and thumbnail**, but keeps the small **species
+  record** pinned: old catches of the species stay verifiable by replay, which
+  needs its stats and moves (2026-10-06).
 - **Sequence numbers:** the server gives each new entry the next `seq` (1, 2,
   3, …) when it signs the listing. Together with `removedAtSeq`, this lets every client and the server
   agree exactly on which species were eligible at a given registry height
@@ -106,6 +110,7 @@ The registry is one of five kinds of OrbitDB database in the game:
 - **REG-007** [accepted] Each registry entry MUST carry a unique, gap-free sequence number `seq` assigned by the server; takedowns MUST record `removedAtSeq`.
 - **REG-008** [accepted] The operator MUST be able to delist a species with a tombstone entry, and clients MUST honor it (REG-005).
 - **REG-009** [accepted] Any player MAY append registry entries, but nodes MUST accept (and replicate) only entries carrying a valid server listing signature.
+- **REG-010** [accepted] A tombstone MUST take its own new `seq`; after delisting, the server MUST keep the species record pinned and MAY unpin its assets.
 
 ## Open questions
 

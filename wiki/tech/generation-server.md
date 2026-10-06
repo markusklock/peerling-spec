@@ -1,7 +1,7 @@
 ---
 title: Generation Server
 type: system
-status: draft
+status: accepted
 req_prefix: SRV
 tags: [tech, server, ai, ipfs]
 sources:
@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -22,7 +23,7 @@ related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Generation Server

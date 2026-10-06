@@ -15,11 +15,12 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # PvP Battles
@@ -80,12 +81,41 @@ Exact messages: [protocols](../tech/protocols.md).
    exchange a hash of the resulting battle state. A mismatch voids the battle.
 5. **End.** The result is shown to both players. Timeouts follow
    [battle § PvP turn timer](battle.md#pvp-turn-timer) (a random move, two in a
-   row forfeit); a disconnect counts as a forfeit.
+   row forfeit); a player who disconnects has 60 s to resume, otherwise they
+   forfeit. Every Peerling starts at full HP and the battle changes nothing
+   afterwards ([battle § Ending a battle](battle.md#ending-a-battle)).
 
 ## Rewards
 
 [accepted] None in v1: no rewards that can be farmed (e.g. no XP from PvP),
 since results can't be verified by a third party.
+
+### Win record
+
+[proposed] The designer asked whether both players could publish the winner
+and count it in a player stat such as "PvP wins". Suggested design, awaiting
+approval ([Q-050](../open-questions.md#q-050)):
+
+- **Signed states.** Each `state` message (the per-turn battle-state hash,
+  [protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle)) is signed
+  by its sender with the player key. The `end` message carries the final
+  state hash, also signed.
+- **Proof of a result.** A result counts when both players signed the same
+  final state, or when the loser did (the loser has no reason to fake their
+  own loss). A forfeit by timeout or disconnect needs the loser's last signed
+  state plus the winner's signed claim; it counts as a win, but is shown
+  separately as "won by forfeit".
+- **Recording.** Each player appends a `pvp-result` event to their own
+  [save log](../tech/player-data.md#save-log) with the battle ID, both
+  player IDs, the mode, the winner and both signatures. Verifiers check the
+  signatures, so anyone can count a player's wins.
+- **Showing it.** Wins and losses (Fair and Real-levels counted separately)
+  appear on the player profile and in the shareable snapshot.
+- **No rewards.** It is a stat only; there are still no XP or items for PvP.
+- **Known gap:** two friends (or one person with two accounts) can still
+  play fixed battles to raise a win count. Since it gives no reward, this is
+  accepted; the profile could show the number of distinct opponents beaten
+  next to the total to make farming visible.
 
 ## Requirements
 
@@ -102,7 +132,7 @@ since results can't be verified by a third party.
 
 ## Open questions
 
-_None at the moment._
+- [Q-050](../open-questions.md#q-050) — record PvP wins as a player stat?
 
 ## See also
 

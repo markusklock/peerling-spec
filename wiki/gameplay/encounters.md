@@ -1,7 +1,7 @@
 ---
 title: Wild Encounters
 type: system
-status: draft
+status: accepted
 req_prefix: ENC
 tags: [gameplay, encounters, ipfs]
 sources:
@@ -16,13 +16,14 @@ sources:
   - raw/conversations/2026-10-05-grid-foliage-battles.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/battle.md
   - wiki/tech/resilience.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Wild Encounters

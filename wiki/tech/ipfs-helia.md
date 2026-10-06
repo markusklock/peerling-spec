@@ -1,7 +1,7 @@
 ---
 title: Browser IPFS Node (Helia)
 type: system
-status: draft
+status: accepted
 req_prefix: NODE
 tags: [tech, ipfs, helia, libp2p]
 sources:
@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-05-asset-budgets-request.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
@@ -21,7 +22,7 @@ related:
   - wiki/tech/realtime-networking.md
   - wiki/tech/tech-stack.md
   - wiki/decisions/D-0011-modern-web-platform-first.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Browser IPFS Node (Helia)

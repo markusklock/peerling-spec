@@ -7,6 +7,7 @@ tags: [tech, server, api, creation]
 sources:
   - raw/conversations/2026-10-05-formats-request.md
   - raw/conversations/2026-10-06-formats-approved.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/generation-server.md
@@ -41,7 +42,8 @@ updated: 2026-10-06
   - the server rejects requests more than 60 s old or replayed.
 - **Errors:** status code plus `{ "error": "<code>", "message": "<text>" }`.
   Codes include `rate-limited` (with `Retry-After`), `cooldown`, `name-taken`,
-  `invalid`, `not-found`, `job-expired`, `verification-failed`.
+  `invalid`, `not-found`, `job-expired`, `verification-failed`,
+  `starter-taken` (the player already has a starter).
 - **Progress:** `GET /v1/jobs/{id}/events` is a Server-Sent Events stream that
   sends the job object again whenever it changes. Clients may poll
   `GET /v1/jobs/{id}` instead.
@@ -69,6 +71,9 @@ updated: 2026-10-06
 }
 ```
 
+[accepted] A job expires (`job-expired`) after 24 h without a request from
+the player; `expiresAt` moves forward with every request.
+
 `state` follows the job state machine in
 [creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling).
 `profile` (once `PROFILE_READY`) holds the types, base stats and moves.
@@ -83,24 +88,25 @@ transfer-log entry that released the offering.
 
 | Method and path | Body | Does |
 |-----------------|------|------|
-| `POST /v1/jobs` | `kind` (`"starter"` \| `"shrine"`), `wish` (≤ 300 characters), `release` (shrine only: the 3 signed transfers to `"released"`) | Starts a job. For `shrine`, checks the offering first ([creation-shrine](../gameplay/creation-shrine.md)) |
+| `POST /v1/jobs` | `kind` (`"starter"` \| `"shrine"`), `wish` (≤ 300 characters), `release` (shrine only: the 3 signed transfers to `"released"`; omitted when using a kept shrine credit) | Starts a job. For `starter`, fails with `starter-taken` if the player already has a starter. For `shrine`, checks the offering or the player's shrine credit first ([creation-shrine](../gameplay/creation-shrine.md)) |
 | `GET /v1/jobs/{id}` | — | The job object |
 | `GET /v1/jobs/{id}/events` | — | Server-Sent Events, as above |
 | `POST /v1/jobs/{id}/regenerate` | `wish` (optional: an edited wish) | New image; respects the 30 s cooldown (`nextImageAt`) |
 | `POST /v1/jobs/{id}/accept-image` | — | Starts 3D generation, then stats and moves |
-| `POST /v1/jobs/{id}/back-to-image` | — | From the final review, back to image generation |
+| `POST /v1/jobs/{id}/back-to-image` | — | From the final review, back to image generation; keeps the name |
 | `GET /v1/names/{name}` | — | `{ "available": bool, "nameKey": "…" }` |
-| `POST /v1/jobs/{id}/name` | `name` | Reserves the name for 30 minutes; `name-taken` if not free |
+| `POST /v1/jobs/{id}/name` | `name` | Reserves the name for as long as the job lives; `name-taken` if not free |
+| `POST /v1/jobs/{id}/finalize` | — | [accepted] The player confirms publishing (needs a name). The server signs the species record; the job goes from `PROFILE_READY` to `PUBLISHING`, and `files/record` becomes available |
 | `GET /v1/jobs/{id}/files/{file}` | — | `image`, `model`, `thumbnail` or `record` (the signed species record, DAG-CBOR) |
 | `POST /v1/jobs/{id}/published` | `species` (CID) | Called after the client added everything to IPFS (stage 7). The server fetches, compares, pins and signs the listing; returns the job with `listing` |
-| `DELETE /v1/jobs/{id}` | — | Abandons the job (frees the name; shrine offering not refunded) |
+| `DELETE /v1/jobs/{id}` | — | Abandons the job (frees the name; a shrine job's offering is not refunded, but the player keeps a shrine credit for 30 days: [creation-shrine](../gameplay/creation-shrine.md)) |
 
 ### Starters
 
 | Method and path | Body | Does |
 |-----------------|------|------|
 | `POST /v1/starters/options` | — | Returns 3 random species (CIDs) for a new player ([onboarding](../gameplay/onboarding.md#choosing-an-existing-starter)). One set per player; asking again returns the same set |
-| `POST /v1/starters/choose` | `species` (one of the offered CIDs) | Returns the starter's origin attestation |
+| `POST /v1/starters/choose` | `species` (one of the offered CIDs) | Returns the starter's origin attestation; `starter-taken` if the player already has a starter |
 | — | — | A created starter (or Creation Shrine Peerling) gets its origin attestation in the job object's `origin` field |
 
 ### Network
@@ -114,6 +120,8 @@ transfer-log entry that released the offering.
 - **API-001** [accepted] The client and operator server MUST communicate for creation, starters and names through the endpoints on this page, over HTTP/3.
 - **API-002** [accepted] Every request acting for a player MUST carry a fresh Ed25519 signature by the player's key as defined on this page.
 - **API-003** [accepted] Job progress MUST be available as a Server-Sent Events stream and by polling.
+- **API-004** [accepted] The server MUST give each player at most one starter, ever, whether created or chosen.
+- **API-005** [accepted] A creation job MUST expire after 24 h without a request from the player, and its name reservation MUST last until then.
 
 ## Open questions
 

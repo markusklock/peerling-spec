@@ -1,7 +1,7 @@
 ---
 title: Camera and Visual Style
 type: system
-status: draft
+status: accepted
 req_prefix: VIS
 tags: [world, presentation, camera, art]
 sources:
@@ -10,12 +10,13 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-world-details.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/battle.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Camera and Visual Style

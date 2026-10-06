@@ -1,13 +1,14 @@
 ---
 title: Glossary
 type: reference
-status: draft
+status: accepted
 tags: [reference, terminology]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 updated: 2026-10-06
 ---
 
@@ -37,6 +38,10 @@ there. See [procedural-generation](world/procedural-generation.md#biomes).
 One area of the world (about 300–500 m across) with a single biome, its own
 rest point and its own landmark. See [procedural-generation §
 Layout](world/procedural-generation.md#layout).
+
+### Block list
+A player's local list of blocked players: their characters, names and emotes are hidden and their requests are declined as "busy". See
+[multiplayer § What players experience](gameplay/multiplayer.md#what-players-experience).
 
 ### Bootstrap peer
 A known node a client connects to first, to find other peers. The operator
@@ -298,6 +303,10 @@ A beacon in every biome area that fully heals the player's team and becomes
 their respawn point. See
 [exploration § Healing and rest points](gameplay/exploration.md#healing-and-rest-points).
 
+### Rules version
+The version number of the battle rules. Epoch records announce it, and every battle uses the version active in its epoch, so old catches still verify. See
+[battle § Rules versions](gameplay/battle.md#rules-versions).
+
 ### Save log
 A player's save: a per-player OrbitDB event log, written only by that
 player and replicated by the server. See [player-data](tech/player-data.md#save-log).
@@ -316,6 +325,10 @@ meet. See [D-0002](decisions/D-0002-all-peerlings-user-generated.md).
 A rare (1 in 500), purely cosmetic color variant of an individual Peerling. See
 [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).
 
+### Shrine credit
+The right to one new Creation Shrine job without a new offering, kept for 30 days when a shrine job is abandoned or expires. See
+[creation-shrine](gameplay/creation-shrine.md).
+
 ### Signature move
 [accepted] The move in a species' *signature* slot: its characteristic special
 attack, always of the species' primary type. See [moves](peerlings/moves.md#move-slots).
@@ -324,6 +337,10 @@ attack, always of the species' primary type. See [moves](peerlings/moves.md#move
 The common wrapper for records that must be verifiable on their own: version,
 type, signer, body and an Ed25519 signature. See
 [data-formats § Signed envelope](tech/data-formats.md#signed-envelope).
+
+### Size class
+A species' `small`, `medium` or `large` class, which sets the height its model is drawn at. See
+[peerling-species § Size and temperament](peerlings/peerling-species.md#size-and-temperament).
 
 ### Spawn hub
 The centre of the world, where every player starts: Creation Shrine, rest
@@ -361,6 +378,10 @@ A temporary battle modifier on Attack, Defense or Speed, from −3 to +3. See
 ### Team
 The Peerlings a player brings into battles: up to 4. See
 [catching](gameplay/catching.md#team-and-collection).
+
+### Temperament
+A species' short personality line (at most 60 characters), shown on its card and used to style its idle animation. See
+[peerling-species § Size and temperament](peerlings/peerling-species.md#size-and-temperament).
 
 ### Tile
 One cell of the invisible grid the world is laid out on; players move one tile

@@ -1,7 +1,7 @@
 ---
 title: Realtime Peer-to-Peer Networking
 type: system
-status: draft
+status: accepted
 req_prefix: NET
 tags: [tech, libp2p, multiplayer, pubsub]
 sources:
@@ -17,13 +17,14 @@ sources:
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Realtime Peer-to-Peer Networking

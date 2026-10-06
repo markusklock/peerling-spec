@@ -1,17 +1,18 @@
 ---
 title: Live World Feed
 type: system
-status: draft
+status: accepted
 req_prefix: FED
 tags: [social, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/realtime-networking.md
   - wiki/gameplay/creator-feedback.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Live World Feed
@@ -36,6 +37,9 @@ updated: 2026-10-05
   | *Someone caught a shimmer Mossnap!* | The catcher's client | The catch is verified by replay before it's shown ([player-data § Catches](../tech/player-data.md#catches)) |
   | *A new Peerling was created at the Creation Shrine* | The creator's client | As for new Peerlings |
 
+  [accepted] A species created at the Creation Shrine emits only the shrine
+  event, not also a "new Peerling published" event.
+
 - **Signed and limited.** Every feed message is signed by the sender's identity
   key. Receivers show at most one message per player per minute, and ignore
   flagged players ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
@@ -50,6 +54,7 @@ updated: 2026-10-05
 
 - **FED-001** [accepted] The game MUST show a live feed of notable world events.
 - **FED-002** [accepted] Feed events MUST be published on the world-wide topic `peerlings/v1/feed`, signed by the sender, rate-limited to one per player per minute by receivers, and checked before being shown.
+- **FED-003** [accepted] A species created at the Creation Shrine MUST produce only a `shrine-creation` feed event, not a `species-published` event.
 
 ## Open questions
 

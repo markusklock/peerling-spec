@@ -371,3 +371,25 @@ List all entries with `grep "^## \[" wiki/log.md`.
   deterministic arithmetic and hashing, rules versioning, epoch/delisting
   checks, gameplay edge cases, creation job lifecycle, world geometry) were
   collected for the designer.
+
+## [2026-10-06] design | Consistency-review findings decided
+- Source: raw/conversations/2026-10-06-review-decisions.md
+- Changed: gameplay/battle.md, pvp-battles.md, catching.md, peerdex.md,
+  exploration.md, multiplayer.md, ui.md, trading.md, world-feed.md,
+  creation-shrine.md, onboarding.md; peerlings/creation-pipeline.md,
+  peerling-species.md; world/procedural-generation.md, audio.md;
+  tech/data-formats.md, protocols.md, player-data.md, orbitdb-registry.md,
+  creation-api.md, tech-stack.md; glossary.md, open-questions.md, index.md
+- Notes: Applied the approved fixes: exact hash encodings, rules versions
+  (BTL-011), trade all-or-nothing (SAVE-025), epoch checks (SAVE-026), tombstone
+  seq and kept species records (REG-010), session heartbeat, PvP full HP and
+  timeouts (BTL-013), team minimum (CAT-008), Peerdex for non-wild Peerlings
+  (DEX-004), first rest point (EXP-010), blocking and busy players
+  (MPL-008/009), emote IDs, move details, shrine feed event (FED-003),
+  signpost ranges, duplicate-name suffix, finalize endpoint, 24 h job expiry
+  (API-005), one starter ever (API-004, ONB-008), shrine credit (SHR-005),
+  full trade offers, no world growth in v1, relaxed STK-008, size class and
+  temperament (SPC-015). Pages with no proposals left are now `accepted`.
+  New proposals: integer battle maths (BTL-012, Q-049), PvP win record
+  (Q-050), presentation formulas (Q-051). New questions: first encounter
+  (Q-052), hexagon world layout (Q-053).

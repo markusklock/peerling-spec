@@ -1,18 +1,19 @@
 ---
 title: Shareable Peerling Cards and Player Profiles
 type: system
-status: draft
+status: accepted
 req_prefix: LNK
 tags: [social, ipfs, ipns, showcase, sharing]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/player-data.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Shareable Peerling Cards and Player Profiles

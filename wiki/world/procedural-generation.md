@@ -17,13 +17,14 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/types.md
   - wiki/world/visual-style.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Procedural World Generation
@@ -77,8 +78,8 @@ Creation Shrine are never surrounded by foliage.
   invisible walls.
 - One shared spawn area in the centre, where new players meet. Wild levels
   rise toward the edges ([encounters § Wild level](../gameplay/encounters.md#wild-level)).
-- Being finite makes it possible to grow the world later: a new generator
-  version can add an outer ring without changing the existing terrain.
+- [accepted] The world does not grow in v1: its size is fixed, because wild
+  levels and the biome layout depend on it.
 
 ## Biomes
 
@@ -114,7 +115,9 @@ a glance; [visual-style](visual-style.md)):
   divided into rings (0–500 m, 500–1000 m, 1000–1500 m, 1500–2000 m, beyond
   2000 m), and each ring contains areas of all 12 biomes. Since wild levels
   depend on distance, this means every type can be found at every level range,
-  not just Ice Peerlings far out.
+  not just Ice Peerlings far out. The inner ring is too small for areas of all
+  12 biomes; a new layout is under discussion
+  ([Q-053](../open-questions.md#q-053)).
 - The spawn area (about 150 m around the centre) is Plains.
 - Borders between areas blend over a short distance, so biomes flow into each
   other rather than switching abruptly.
@@ -178,6 +181,9 @@ nobody meets wild Peerlings in the crowd.
   other route exists.
 - **Signposts:** at path junctions and area borders, showing the area's landmark
   name, biome and level range (e.g. *"Gloomwood: wild Peerlings level 22–26"*).
+  [accepted] The range is the lowest base level in the area minus 2 to the
+  highest base level plus 2 (the random offset), clamped to 1–50
+  ([encounters § Wild level](../gameplay/encounters.md#wild-level)).
 
 ## Day and night
 
@@ -189,6 +195,11 @@ computed from Unix time, so it is smooth and identical everywhere without any
 messages. Night darkens the scene and lights up rest points, landmarks and
 glowing foliage. It is purely visual in v1 (no effect on encounters).
 
+[proposed] Exact clock, awaiting approval ([Q-051](../open-questions.md#q-051)):
+day phase = Unix time in ms mod 7,200,000. Phase 0 is midnight and 3,600,000 is
+noon; each in-game hour is 300,000 ms (one epoch). Night runs from 18:00 to
+06:00 in-game time (phase below 1,800,000 or from 5,400,000).
+
 ## Weather
 
 [accepted] Weather per biome, the same for every player ([D-0017](../decisions/D-0017-world-features.md)).
@@ -198,6 +209,17 @@ state is chosen from the epoch record's randomness (drand) and the biome, so
 all clients agree, including while the server is offline (client-derived epoch
 records, [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
 Purely visual in v1.
+
+[proposed] Exact selection, awaiting approval ([Q-051](../open-questions.md#q-051)):
+- Weather periods start at every epoch number divisible by 3. The period uses
+  the `randomness` of the epoch record of its first epoch.
+- h = SHA-256(`"peerlings/weather/v1"` ‖ that randomness ‖ the biome's index
+  as one byte), where the index is the biome's row (0–11) in the table below.
+- Weights: the first state listed for the biome has weight 3, each other
+  state 1. Aurora has weight 0 unless the period starts at night (see
+  [Day and night](#day-and-night)).
+- The state = the first 4 bytes of h as a big-endian unsigned integer, mod
+  the total weight, mapped onto the states in table order.
 
 | Biome | Weather states [accepted] |
 |-------|----------------|
@@ -231,7 +253,7 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **Nobody gets stuck.** A player standing on a tile that became blocked is
   moved to the nearest walkable tile. A last rest point that no longer exists
   becomes the nearest one.
-- **Prefer additive changes:** new outer rings and new landmarks rather than
+- **Prefer additive changes:** new landmarks and details rather than
   reshaping existing land, so players' knowledge of the world stays valid.
 
 ## Requirements
@@ -255,4 +277,5 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 
 ## Open questions
 
-_None at the moment._
+- [Q-051](../open-questions.md#q-051) — exact day clock and weather selection
+- [Q-053](../open-questions.md#q-053) — world layout: central spawn hexagon with 12 biomes around it?

@@ -1,7 +1,7 @@
 ---
 title: Trading
 type: system
-status: draft
+status: accepted
 req_prefix: TRD
 tags: [gameplay, multiplayer, trading, libp2p]
 sources:
@@ -11,11 +11,12 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Trading
@@ -36,7 +37,10 @@ Exact messages: [protocols](../tech/protocols.md).
 
 1. A proposes a trade to B while standing next to them (MPL-006); B accepts
    the session (MPL-005).
-2. Both pick the instance(s) they offer. Both see the other's offer live,
+2. Both pick the instance(s) they offer. Each offer carries the full instance
+   data, so the other side needn't fetch the offerer's save first ([accepted]
+   2026-10-06; fields in [protocols](../tech/protocols.md#peerlingstrade100--trade)).
+   Both see the other's offer live,
    including each Peerling's level, stat traits and whether it is a shimmer
    ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation)). Each
    client fetches the offered species by CID and **verifies the offered
@@ -44,7 +48,9 @@ Exact messages: [protocols](../tech/protocols.md).
    player, and the other player not flagged
    ([player-data § Verified Peerlings](../tech/player-data.md#verified-peerlings)).
 3. Both confirm. Any change to an offer resets both confirmations.
-4. Both sign their transfers, and all signed transfers are written as one
+4. Both sign their transfers (each one names the hash of both final offers, so
+   a trade is all or nothing:
+   [data-formats § Transfer](../tech/data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)), and all signed transfers are written as one
    entry to the open **transfer log**
    ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
    No server is involved.

@@ -6,6 +6,7 @@ req_prefix: UI
 tags: [gameplay, ui, controls]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/gameplay/exploration.md
@@ -73,6 +74,7 @@ All keys can be remapped in Settings.
 - Key remapping.
 - Default for "Spectators allowed" in PvP challenges ([spectating](spectating.md)).
 - Toggles: world feed, network overlay.
+- Blocked players: a list with Unblock ([multiplayer § Interactions](multiplayer.md#what-players-experience)).
 
 ## Requirements
 

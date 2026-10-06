@@ -1,7 +1,7 @@
 ---
 title: Peerling Creation Pipeline
 type: system
-status: draft
+status: accepted
 req_prefix: CRE
 tags: [peerlings, generation, ai, ipfs]
 sources:
@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-asset-budgets-request.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -26,7 +27,7 @@ related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
   - wiki/decisions/D-0007-players-publish-assets.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Peerling Creation Pipeline
@@ -121,8 +122,9 @@ fields [accepted]:
 | `summary` | One sentence describing the creature |
 | `lore` | 2–4 sentences of flavor text shown in-game |
 | `types` | [accepted] Type(s) from the type list, chosen to fit the description (count: [TYP-002](types.md#requirements)) |
-| `appearance` | Structured visual description: body plan, size class, colors, materials/textures, distinctive features, pose. Reflects the chosen type(s) |
-| `temperament` | Short personality description (flavor; may inform animation style) |
+| `appearance` | Structured visual description: body plan, colors, materials/textures, distinctive features, pose. Reflects the chosen type(s) |
+| `sizeClass` | [accepted] `small`, `medium` or `large`; sets how big the model is drawn ([peerling-species § Size and temperament](peerling-species.md#size-and-temperament)) |
+| `temperament` | [accepted] Short personality description, at most 60 characters; drives the idle animation ([peerling-species § Size and temperament](peerling-species.md#size-and-temperament)) |
 
 The concept must stay faithful to the wish; the LLM elaborates, it does not
 replace the player's idea. [accepted] The validator checks `types` against the
@@ -145,7 +147,9 @@ The seed and the full prompt are recorded for provenance.
 ### Stage 4 — Review
 The player sees the image and either **accepts** it or **regenerates**.
 [accepted] Regenerate uses a new seed; the player may adjust their wish before
-regenerating.
+regenerating. [accepted] An edited wish runs the concept stage again, so the
+types, lore and name suggestions may change too; the species record's
+provenance keeps the final wish.
 
 [accepted] There is **no limit** on the number of image generations. A
 **cooldown** between generations prevents spam. [accepted] The cooldown is 30
@@ -185,7 +189,9 @@ The validator, not the LLM, is the authority on balance.
 rotatable 3D model, types, stats and moves. The player **names** it here: the
 LLM's name suggestions are shown, but the name is the player's choice.
 [accepted] If the player dislikes the 3D model, they can **restart from the
-image generation stage** (stage 3) instead of publishing.
+image generation stage** (stage 3) instead of publishing. [accepted] The
+chosen name is kept (and stays reserved); the 3D model, stats and moves are
+generated again from the new image.
 
 [accepted] Names must be **unique** across all species (approved 2026-10-05). The server enforces it, which is easy
 because every species already goes through it, and only names it has
@@ -200,14 +206,17 @@ signed reach the registry ([D-0013](../decisions/D-0013-peer-verified-registry-c
 - **Live check:** while the player types a name in the final review, the client
   asks the server whether it's free. The LLM's name suggestions are checked
   before they're shown, so they're always available.
-- **Reservation:** when the player confirms a name, the server reserves it for
-  their creation job for 30 minutes, until publishing. If the job expires, the
-  name is freed.
+- **Reservation:** [accepted] when the player confirms a name, the server
+  reserves it for their creation job until publishing. The reservation lasts
+  as long as the job: a job expires after 24 h without activity from the
+  player, and then the name is freed.
 - **Taken forever:** a published name stays taken, even if the species is later
   delisted, so an old name never points to two different Peerlings.
 - **Registry rule:** the listing signature covers the name. If two signed entries
   ever share a normalized name (a server bug), clients treat the one with the
-  lower `seq` as the owner of the name.
+  lower `seq` as the owner of the name. [accepted] The other one is shown with
+  a short suffix from its species CID (its last 4 characters, e.g.
+  *"Mossnap·k3x9"*), so the two can be told apart.
 - Seed species created by the operator follow the same rule.
 
 Not covered: near-identical names such as "Pikachu2" or "Pikachuu". Blocking
@@ -227,7 +236,7 @@ appends the registry entry ([D-0007](../decisions/D-0007-players-publish-assets.
 
 | Step | Actor | Action |
 |------|-------|--------|
-| 7a | server | Sends the client the image, model and thumbnail files plus the [species record](peerling-species.md#species-record), with asset CIDs filled in and signed ([attestation](../glossary.md#attestation)). The server computes the asset CIDs using the [fixed import parameters](../tech/ipfs-helia.md#content-import-parameters). |
+| 7a | server | [accepted] When the player confirms publishing (the *finalize* request, [creation-api](../tech/creation-api.md#creating-a-peerling); job state `PUBLISHING`), signs the species record and sends the client the image, model and thumbnail files plus the [species record](peerling-species.md#species-record), with asset CIDs filled in and signed ([attestation](../glossary.md#attestation)). The server computes the asset CIDs using the [fixed import parameters](../tech/ipfs-helia.md#content-import-parameters). |
 | 7b | client | Adds the three asset files and the species record to its Helia node, using the same import parameters. The asset CIDs must equal those in the record. |
 | 7c | client | Reports the species CID to the server. The client keeps providing the content. |
 | 7d | server | Fetches the species record and every asset by CID from the network (in practice from the player's node), checks they are byte-identical to what it generated, and pins them. |
@@ -257,9 +266,9 @@ machine; the client follows its progress.
 ```
 WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
   → IMAGE_ACCEPTED → MODEL_READY → PROFILE_READY (final review)
-  → PUBLISHING → PUBLISHED
+  → (finalize) PUBLISHING → PUBLISHED
 PROFILE_READY → IMAGE_READY (player restarts from image generation)
-any state → FAILED (error, retryable) | EXPIRED (abandoned)
+any state → FAILED (error, retryable) | EXPIRED (24 h without activity, or abandoned)
 ```
 
 [accepted] Onboarding overlaps waiting time with other activity (e.g. character

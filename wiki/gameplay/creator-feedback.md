@@ -1,19 +1,20 @@
 ---
 title: Creator Feedback
 type: system
-status: draft
+status: accepted
 req_prefix: CFB
 tags: [gameplay, social, orbitdb, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Creator Feedback

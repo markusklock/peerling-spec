@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-05-formats-request.md
   - raw/conversations/2026-10-06-formats-approved.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
@@ -84,7 +85,17 @@ envelope:
 
 ### Hashes
 `SHA-256(…)` of structured data means SHA-256 of its DAG-CBOR bytes. A list of
-values joined with `‖` means plain byte concatenation.
+values joined with `‖` means plain byte concatenation. Inside such
+concatenations ([accepted], 2026-10-06):
+- a **player ID** is the UTF-8 bytes of its base58btc string (`12D3KooW…`);
+- an **integer** (encounter number, time, turn, …) is 8 bytes, unsigned,
+  big-endian;
+- a **string constant** (e.g. `"peerlings/pvp-seed/v1"`) is its UTF-8 bytes;
+- **bytes** values are used as they are.
+
+**Comparing CIDs** ("the lower CID wins"): compare the binary CIDs byte by
+byte (the shorter one is lower if it is a prefix of the other), not their text
+form.
 
 ### Size limits
 
@@ -127,6 +138,8 @@ envelope. Meaning: [peerling-species](../peerlings/peerling-species.md).
 | `assets` | map | `image`, `model`, `thumbnail`: CID |
 | `creator` | map | `id`: player ID; `displayName`: string ≤ 20 |
 | `createdAt` | time | |
+| `sizeClass` | string | `"small"`, `"medium"` or `"large"` ([peerling-species § Size and temperament](../peerlings/peerling-species.md#size-and-temperament)) |
+| `temperament` | string | ≤ 60 characters, from the concept |
 | `provenance` | map | `wish`: string ≤ 300; `concept`: map; `imagePrompt`: map; `models`: map of `concept`, `image`, `to3d` → string `"<name>@<version>"`; `seeds`: map of stage → uint |
 
 **Move:** `slot` (`"quick"` \| `"strong"` \| `"signature"`), `template` (template
@@ -149,7 +162,7 @@ Signed envelope; signer: **operator**.
 | `thumbnail` | CID | |
 | `createdAt` | time | |
 | `status` | string | `"active"` or `"removed"` |
-| `removedAtSeq` | uint | only when `status` is `"removed"` |
+| `removedAtSeq` | uint | only when `status` is `"removed"`: a tombstone takes the next `seq` of its own, and `removedAtSeq` is that new number |
 
 Delisting replaces the document with a new envelope that has `status:
 "removed"`.
@@ -168,9 +181,13 @@ and in the epoch log. Meaning:
 | `drandSignature` | bytes | that round's signature, for verification |
 | `registryHeight` | uint | |
 | `generator` | map | `version`: uint; `fromEpoch`: uint |
+| `rules` | map | `version`: uint; `fromEpoch`: uint: the battle-rules version ([battle § Rules versions](../gameplay/battle.md#rules-versions)) |
 
 A **client-derived** epoch record has the same body, `"signer": null`, no
-`sig`, and an extra top-level field `"derivedBy": "client"`.
+`sig`, and an extra top-level field `"derivedBy": "client"`. Its
+`registryHeight`, `generator` and `rules` are copied from the latest
+server-signed epoch record in the epoch log whose `epoch` is lower than its own
+([player-data § Encounter seeds](player-data.md#encounter-seeds)).
 
 ### Peerling instance
 
@@ -224,7 +241,8 @@ Part of a `catch` save-log event. Meaning:
 **Action** (also used in PvP): `{ "kind": "move", "slot": "quick" | "strong" |
 "signature" }`, `{ "kind": "switch", "to": <instance ID> }`, `{ "kind":
 "replace", "to": <instance ID> }` (after a faint), `{ "kind": "catch" }`,
-`{ "kind": "flee" }`.
+`{ "kind": "flee" }`, and in PvP only `{ "kind": "timeout" }`
+([protocols § PvP battle](protocols.md#peerlingsbattle100--pvp-battle)).
 
 ### Save-log events
 
@@ -240,7 +258,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `created` | `instance`, `attestation` (origin attestation) |
 | `release` | `instances` ([instance ID]), `transferEntry` (CID) |
 | `catch` | `instance`, `evidence` (catch evidence) |
-| `battle-result` | `encounter` (uint), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]) |
+| `battle-result` | `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]) |
 | `team` | `instances` ([instance ID], ≤ 4) |
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
@@ -280,11 +298,20 @@ A **transfer** is a signed envelope; signer: the `from` player.
 | `to` | player ID or `"released"` | |
 | `prev` | CID or `"origin"` | the CID of this Peerling's previous transfer envelope |
 | `trade` | bytes(16) or absent | shared random ID tying the two sides of one trade together |
+| `offers` | bytes(32) or absent | trades only: SHA-256 of both confirmed offers (the `confirm` value, [protocols § trade](protocols.md#peerlingstrade100--trade)) |
 
 A **transfer-log entry** is `{ "v": 1, "type": "peerlings/transfers",
 "transfers": [<transfer>, …] }`. A trade is one entry with both players'
 transfers; a Creation Shrine release is one entry with exactly 3 transfers to
-`"released"`. Conflict rule: two transfers with the same `prev` → the one whose
+`"released"`.
+
+[accepted] **Trades are all or nothing** (2026-10-06): a transfer that carries
+a `trade` ID is valid only if the same log entry contains the complete set of
+transfers for both confirmed offers: every instance in both offers, each
+signed by its owner, all with the same `trade` and `offers` values. The
+transfer-log access controller rejects any entry that breaks this, and readers
+ignore such transfers. So neither player can record only the other side's
+half. Conflict rule: two transfers with the same `prev` → the one whose
 **log entry** CID is lower wins ([SAVE-015](player-data.md#requirements)).
 
 ### Species stats — `peerlings/species-stats`

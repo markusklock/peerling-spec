@@ -1,20 +1,21 @@
 ---
 title: Core Gameplay Loop
 type: overview
-status: draft
+status: accepted
 tags: [gameplay, loop]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-03-answers-round-1.md
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/battle.md
   - wiki/gameplay/catching.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Core Gameplay Loop

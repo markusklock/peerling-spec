@@ -1,18 +1,19 @@
 ---
 title: Spectating PvP Battles
 type: system
-status: draft
+status: accepted
 req_prefix: SPT
 tags: [gameplay, multiplayer, pvp, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/battle.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Spectating PvP Battles

@@ -1,7 +1,7 @@
 ---
 title: Player Character and Identity
 type: system
-status: draft
+status: accepted
 req_prefix: PLR
 tags: [gameplay, player, identity]
 sources:
@@ -13,10 +13,11 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Player Character and Identity

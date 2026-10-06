@@ -1,7 +1,7 @@
 ---
 title: System Architecture
 type: system
-status: draft
+status: accepted
 req_prefix: ARC
 tags: [tech, architecture, ipfs]
 sources:
@@ -13,13 +13,14 @@ sources:
   - raw/conversations/2026-10-04-answers-round-7.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/generation-server.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/ipfs-showcase.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # System Architecture

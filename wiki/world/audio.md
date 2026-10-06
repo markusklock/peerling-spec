@@ -1,12 +1,13 @@
 ---
 title: Music, Sound Effects and Peerling Cries
 type: system
-status: accepted
+status: draft
 req_prefix: AUD
 tags: [world, audio, presentation]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-cry-details-approved.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/world/visual-style.md
@@ -58,6 +59,20 @@ Audio API, so no audio files are generated or downloaded.
   | 4 | Vibrato depth | 0–1 semitone |
   | 5 | Noise mix | 0–40% |
 
+  [proposed] Exact mapping, with b = the byte's value (0–255); awaiting
+  approval ([Q-051](../open-questions.md#q-051)):
+
+  | Parameter | Formula |
+  |-----------|---------|
+  | Base pitch | 110 × 2^(3 × b ÷ 255) Hz (110 Hz at 0, 880 Hz at 255) |
+  | Syllables | 1 + (b mod 3) |
+  | Syllable length | 80 + b × 170 div 255 ms |
+  | Contour | b mod 4: 0 rising, 1 falling, 2 rise-fall, 3 flat |
+  | Vibrato depth | b ÷ 255 semitone |
+  | Noise mix | b × 40 div 255 % |
+
+  Cries are never verified, so floating point is fine here.
+
 - **Type flavour** [accepted] (the timbre each type adds; the exact sound design is the
   implementer's choice, as long as it depends only on the parameters above and
   the type):
@@ -88,7 +103,7 @@ Audio API, so no audio files are generated or downloaded.
 
 ## Open questions
 
-_None at the moment._
+- [Q-051](../open-questions.md#q-051) — exact cry parameter mapping
 
 ## See also
 

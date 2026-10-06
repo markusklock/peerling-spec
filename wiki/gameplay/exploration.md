@@ -1,7 +1,7 @@
 ---
 title: Exploration
 type: system
-status: draft
+status: accepted
 req_prefix: EXP
 tags: [gameplay, world]
 sources:
@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -96,7 +97,7 @@ The spawn hub and the paths leading out of it are revealed from the start.
 
 ## Healing and rest points
 
-[accepted] There are no healing items. A Peerling's HP carries over between
+[accepted] There are no healing items. A Peerling's HP carries over between wild
 battles and is restored at **rest points**:
 - Every biome area has a rest point
   ([procedural-generation § Points of interest](../world/procedural-generation.md#points-of-interest)).
@@ -104,6 +105,8 @@ battles and is restored at **rest points**:
   rest point*.
 - If the player's whole team faints, the player returns to their last rest
   point with the team fully healed. Nothing is lost.
+- [accepted] Until the player visits a rest point, their last rest point is
+  the spawn hub's.
 
 [accepted] Up close ([D-0019](../decisions/D-0019-peerdex-ui-audio.md)):
 - The player faces the beacon and presses interact. The beacon flares, the
@@ -135,6 +138,7 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-007** [accepted] The game MUST have a minimap and a world map that reveal explored areas and mark discovered rest points and landmarks.
 - **EXP-008** [accepted] Interacting with a rest point MUST heal the team, set it as the last rest point, and write a save snapshot.
 - **EXP-009** [accepted] There MUST NOT be fast travel.
+- **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
 
 ## Open questions
 

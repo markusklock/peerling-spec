@@ -1,7 +1,7 @@
 ---
 title: Multiplayer — The Shared World
 type: system
-status: draft
+status: accepted
 req_prefix: MPL
 tags: [gameplay, multiplayer, social]
 sources:
@@ -16,13 +16,14 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-showcase-features.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Multiplayer — The Shared World
@@ -52,6 +53,16 @@ updated: 2026-10-05
   *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (fetches their save, which also keeps a backup of it: [player-data § Keeping saves available](../tech/player-data.md#keeping-saves-available); their team, and the
   species they created). Once a battle or trade has started, it continues even
   if a player moves away.
+- [accepted] **Crowded tile:** if several players stand on the faced tile,
+  the interact key first opens a list of their names to pick from.
+- [accepted] **Busy players:** a request to a player who is already in a
+  battle or trade is declined automatically with the reason "busy"
+  ([protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle)).
+- [accepted] **Blocking:** *Block* is in the same menu and on the profile
+  screen. A blocked player's character, display name and emotes are hidden,
+  and their requests are declined automatically with the reason "busy", so
+  they can't tell they were blocked. The block list is stored only in the
+  local browser and can be edited in Settings ([ui](ui.md#settings)).
 - [accepted] Nearby PvP battles can be watched ([spectating](spectating.md)), and
   notable events across the world appear in a live feed ([world-feed](world-feed.md)).
 - [accepted] Wild encounters are **per player**: each player meets their own
@@ -65,16 +76,16 @@ updated: 2026-10-05
 presence channel ([realtime-networking](../tech/realtime-networking.md#presence))
 and shown as a bubble or animation above the player's character:
 
-| Emote | Meaning |
-|-------|---------|
-| Wave | Hello / goodbye |
-| Heart | Like / thanks |
-| Laugh | Fun |
-| Wow | Surprise / admiration |
-| Thumbs up | OK / agree |
-| Thumbs down | No / disagree |
-| Challenge | "Want to battle?" |
-| Trade | "Want to trade?" |
+| Emote | ID (in presence messages) | Meaning |
+|-------|------|---------|
+| Wave | `wave` | Hello / goodbye |
+| Heart | `heart` | Like / thanks |
+| Laugh | `laugh` | Fun |
+| Wow | `wow` | Surprise / admiration |
+| Thumbs up | `thumbs-up` | OK / agree |
+| Thumbs down | `thumbs-down` | No / disagree |
+| Challenge | `challenge` | "Want to battle?" |
+| Trade | `trade` | "Want to trade?" |
 
 Why no chat: emotes keep interactions light and friendly between strangers,
 and they work in every language.
@@ -103,6 +114,8 @@ Network rates and region size are in
 - **MPL-005** [accepted] Battle and trade requests MUST require explicit acceptance by the receiving player, who MUST be able to block or ignore a player.
 - **MPL-006** [accepted] A battle or trade request MUST only be possible when the two players are within 3 m of each other in the world.
 - **MPL-007** [accepted] There MUST NOT be free-text chat between players; players communicate only with emotes from a fixed set.
+- **MPL-008** [accepted] A client MUST hide a blocked player's character, name and emotes and MUST decline their requests with the reason "busy"; the block list MUST be stored only locally.
+- **MPL-009** [accepted] A client already in a battle or trade MUST decline new requests with the reason "busy".
 
 ## Open questions
 

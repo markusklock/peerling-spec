@@ -1,7 +1,7 @@
 ---
 title: Overview — Vision, Goals and Design Pillars
 type: overview
-status: draft
+status: accepted
 tags: [vision, pillars]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
@@ -11,11 +11,12 @@ sources:
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/gameplay/core-loop.md
   - wiki/tech/architecture.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Overview — Vision, Goals and Design Pillars

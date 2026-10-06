@@ -1,7 +1,7 @@
 ---
 title: Peerling Types
 type: reference
-status: draft
+status: accepted
 req_prefix: TYP
 tags: [peerlings, battle, balance]
 sources:
@@ -10,12 +10,13 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/peerlings/moves.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/battle.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Peerling Types

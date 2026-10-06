@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-approvals-q016-q038.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
+  - raw/conversations/2026-10-06-review-decisions.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -21,7 +22,7 @@ related:
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
   - wiki/gameplay/trading.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Peerling Species and Instances (Data Model)
@@ -54,6 +55,8 @@ JSON for readability (exact format:
   "summary": "A sleepy fox made of moss that carries a glowing lantern.",
   "lore": "…",
   "types": ["Grass"],
+  "sizeClass": "small",
+  "temperament": "Sleepy and gentle, wakes up for shiny things",
   "baseStats": { "hp": 80, "attack": 55, "defense": 70, "speed": 45 },
   "moves": [
     { "slot": "quick", "template": "quick-jab", "name": "Moss Swipe", "type": "Normal", "description": "…" },
@@ -81,6 +84,30 @@ JSON for readability (exact format:
 Field lengths, allowed values and the exact bytes the signature covers are in
 [data-formats](../tech/data-formats.md#species-record--peerlingsspecies). The move entries follow
 [moves § Move structure](moves.md#move-structure).
+
+### Size and temperament
+
+[accepted] Two presentation fields come from the
+[concept](creation-pipeline.md#stage-2--concept) (approved 2026-10-06):
+
+- **`sizeClass`** (`small`, `medium` or `large`): image-to-3D models come out
+  at no particular scale, so the client scales every model to a fixed height
+  for its class, in the world and in battle:
+
+  | Size class | Model height |
+  |------------|-------------:|
+  | `small` | 0.6 tiles (1.2 m) |
+  | `medium` | 1.0 tile (2 m) |
+  | `large` | 1.4 tiles (2.8 m) |
+
+- **`temperament`** (at most 60 characters): a short personality line shown on
+  the Peerling card. It also sets the style of the idle animation (a calm
+  Peerling bobs slowly, a lively one quickly,
+  [battle § Presentation](../gameplay/battle.md#presentation)); how the
+  client maps the text to an animation style is up to the implementer, as
+  long as the same temperament always gives the same animation.
+
+Neither field affects battles.
 
 ## Stats
 
@@ -190,6 +217,11 @@ worth up to ±10%. [accepted] Details (approved 2026-10-05):
   shimmer appears in battle. It's done with a shader on the existing static
   model, so it needs no extra generated assets.
 - No effect on stats or battles.
+- [proposed] Exact angle, so every client draws the same colors: with h =
+  SHA-256 of the species CID's bytes (the same hash the
+  [cry](../world/audio.md#peerling-cries) uses), hue shift =
+  90 + (h[6] × 256 + h[7]) mod 181 degrees (90°–270°). Awaiting approval:
+  [Q-051](../open-questions.md#q-051).
 
 ### Where the randomness comes from
 
@@ -216,10 +248,11 @@ Peerlings, the server draws them and includes them in the origin attestation
 - **SPC-012** [accepted] Every Peerling instance MUST have a fixed trait from −10% to +10% for each of its four stats; traits are whole percents drawn uniformly, visible to players, and applied in PvP.
 - **SPC-013** [accepted] Peerlings MUST have a rare cosmetic shimmer variant with a chance of 1 in 500; the look is a species-specific hue shift plus a sparkle effect.
 - **SPC-014** [accepted] Traits and the shimmer roll MUST come from verifiable randomness: the encounter seed for wild Peerlings, the server's origin attestation for starters and shrine creations.
+- **SPC-015** [accepted] Every species record MUST have a `sizeClass` and a `temperament`, and clients MUST draw the model at the height given for its size class.
 
 ## Open questions
 
-_None at the moment._
+- [Q-051](../open-questions.md#q-051) — exact shimmer hue formula
 
 ## See also
 
