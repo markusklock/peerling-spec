@@ -1,18 +1,19 @@
 ---
 title: Data Formats
 type: data
-status: proposed
+status: accepted
 req_prefix: FMT
 tags: [tech, formats, ipld, orbitdb, signatures]
 sources:
   - raw/conversations/2026-10-05-formats-request.md
+  - raw/conversations/2026-10-06-formats-approved.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Data Formats
@@ -23,7 +24,7 @@ updated: 2026-10-05
 > show simplified examples; when they differ, this page wins. Messages sent
 > over the network are in [protocols](protocols.md).
 
-**Status: [proposed]** in full, drafted 2026-10-05 ([Q-047](../open-questions.md#q-047)).
+**Status: [accepted]**: drafted 2026-10-05, approved 2026-10-06 ([Q-047](../open-questions.md#q-047)).
 
 ## Conventions
 
@@ -51,7 +52,7 @@ updated: 2026-10-05
 | **Tile** | `[x, y]`, integers, 0–1999, origin at the world's north-west corner |
 | **Instance ID** | 32 bytes, written as 64 lower-case hex characters |
 
-**One key per player.** A player's single Ed25519 key pair is at the same time:
+**One key per player** ([D-0018](../decisions/D-0018-one-key-per-player.md)). A player's single Ed25519 key pair is at the same time:
 their player ID, their libp2p peer ID, their OrbitDB identity, and their IPNS
 name. So pubsub messages, OrbitDB entries and IPNS records are all
 authenticated by the same key with no extra mapping. (Implementers may need a
@@ -340,14 +341,14 @@ derived as: BIP-39 seed (empty passphrase) → HKDF-SHA256 with info
 
 ## Requirements
 
-- **FMT-001** [proposed] All records and messages MUST be DAG-CBOR without floating-point numbers, following the conventions on this page.
-- **FMT-002** [proposed] Each player MUST have one Ed25519 key that is their player ID, libp2p peer ID, OrbitDB identity and IPNS name.
-- **FMT-003** [proposed] Records that need standalone verification MUST use the signed envelope with the `"peerlings-sig-v1\n"` prefix.
-- **FMT-004** [proposed] The OrbitDB databases, record types and fields MUST be exactly as defined on this page; readers MUST ignore unknown fields and records with an unknown `v`.
+- **FMT-001** [accepted] All records and messages MUST be DAG-CBOR without floating-point numbers, following the conventions on this page.
+- **FMT-002** [accepted] Each player MUST have one Ed25519 key that is their player ID, libp2p peer ID, OrbitDB identity and IPNS name.
+- **FMT-003** [accepted] Records that need standalone verification MUST use the signed envelope with the `"peerlings-sig-v1\n"` prefix.
+- **FMT-004** [accepted] The OrbitDB databases, record types and fields MUST be exactly as defined on this page; readers MUST ignore unknown fields and records with an unknown `v`.
 
 ## Open questions
 
-[Q-047](../open-questions.md#q-047)
+_None at the moment._
 
 ## See also
 

@@ -62,9 +62,9 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [generation-server](tech/generation-server.md) | draft | SRV | Self-hosted AI models, pinning, registry writer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | draft | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
-| [data-formats](tech/data-formats.md) | proposed | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
-| [protocols](tech/protocols.md) | proposed | PRT | Exact pubsub and libp2p stream messages |
-| [creation-api](tech/creation-api.md) | proposed | API | HTTP/3 API between client and operator server |
+| [data-formats](tech/data-formats.md) | accepted | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
+| [protocols](tech/protocols.md) | accepted | PRT | Exact pubsub and libp2p stream messages |
+| [creation-api](tech/creation-api.md) | accepted | API | HTTP/3 API between client and operator server |
 | [tech-stack](tech/tech-stack.md) | draft | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | draft | RES | What works without the operator server, and how |
 | [ipfs-showcase](tech/ipfs-showcase.md) | draft | SHOW | Making IPFS visible and meaningful to players |
@@ -90,12 +90,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0015](decisions/D-0015-pvp-level-modes.md) | accepted | PvP level modes: Fair or Real levels |
 | [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, phone backup and a world feed |
 | [D-0017](decisions/D-0017-world-features.md) | accepted | World features: spawn hub, landmarks, map, day/night, weather |
+| [D-0018](decisions/D-0018-one-key-per-player.md) | accepted | One key per player for every identity |
 
 ## Registered requirement prefixes
 
 API, ARC, BTL, CAT, CFB, CRE, ENC, EXP, FED, FMT, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0018. Next free question ID: Q-048.
+D-0019. Next free question ID: Q-048.
 
 ## Sources
 
@@ -128,3 +129,4 @@ D-0018. Next free question ID: Q-048.
 | [2026-10-05-world-details](../raw/conversations/2026-10-05-world-details.md) | 2026-10-05 | Spawn hub, landmarks, paths, map, hand-made art kit, day/night, weather, generator updates |
 | [2026-10-05-world-details-approved](../raw/conversations/2026-10-05-world-details-approved.md) | 2026-10-05 | Smaller world details approved |
 | [2026-10-05-formats-request](../raw/conversations/2026-10-05-formats-request.md) | 2026-10-05 | Designer asked for the exact data and message formats |
+| [2026-10-06-formats-approved](../raw/conversations/2026-10-06-formats-approved.md) | 2026-10-06 | Formats approved; one key per player kept after weighing pros and cons |

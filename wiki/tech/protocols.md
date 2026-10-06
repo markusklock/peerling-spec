@@ -1,11 +1,12 @@
 ---
 title: Network Protocols
 type: data
-status: proposed
+status: accepted
 req_prefix: PRT
 tags: [tech, libp2p, pubsub, protocols, formats]
 sources:
   - raw/conversations/2026-10-05-formats-request.md
+  - raw/conversations/2026-10-06-formats-approved.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -13,7 +14,7 @@ related:
   - wiki/gameplay/trading.md
   - wiki/gameplay/spectating.md
   - wiki/tech/player-data.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Network Protocols
@@ -23,7 +24,7 @@ updated: 2026-10-05
 > signatures and record formats follow [data-formats](data-formats.md). What the
 > protocols are *for* is described on the linked gameplay and tech pages.
 
-**Status: [proposed]** in full, drafted 2026-10-05 ([Q-047](../open-questions.md#q-047)).
+**Status: [accepted]**: drafted 2026-10-05, approved 2026-10-06 ([Q-047](../open-questions.md#q-047)).
 
 ## General rules
 
@@ -186,13 +187,13 @@ The phone always dials the computer.
 
 ## Requirements
 
-- **PRT-001** [proposed] All pubsub topics and their messages MUST be exactly as defined on this page, with gossipsub strict signing.
-- **PRT-002** [proposed] All direct streams MUST use length-prefixed DAG-CBOR messages in the order defined per protocol.
-- **PRT-003** [proposed] PvP seeds, commitments and state hashes MUST be computed exactly as defined here, so that every client and spectator gets the same results.
+- **PRT-001** [accepted] All pubsub topics and their messages MUST be exactly as defined on this page, with gossipsub strict signing.
+- **PRT-002** [accepted] All direct streams MUST use length-prefixed DAG-CBOR messages in the order defined per protocol.
+- **PRT-003** [accepted] PvP seeds, commitments and state hashes MUST be computed exactly as defined here, so that every client and spectator gets the same results.
 
 ## Open questions
 
-[Q-047](../open-questions.md#q-047)
+_None at the moment._
 
 ## See also
 

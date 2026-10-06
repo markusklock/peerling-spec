@@ -17,17 +17,6 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-047
-**Approve the exact data formats, protocols and creation API?**
-- Affects: [data-formats](tech/data-formats.md), [protocols](tech/protocols.md), [creation-api](tech/creation-api.md)
-- Context: Implementers need exact formats so independently built clients can
-  talk to each other. Drafted by the LLM at the designer's request.
-- Proposal: DAG-CBOR everywhere with no floats; one Ed25519 key per player as
-  player ID, peer ID, OrbitDB identity and IPNS name; a signed envelope for
-  standalone records; five OrbitDB databases; exact records, pubsub topics,
-  stream message sequences and an HTTP/3 creation API.
-- Raised: 2026-10-05
-
 ## Resolved
 
 ### Q-002
@@ -277,3 +266,9 @@ Resolved 2026-10-05 → [D-0016](decisions/D-0016-showcase-features.md).
 weather, map: all approved as proposed. Resolved 2026-10-05 →
 [procedural-generation](world/procedural-generation.md),
 [exploration § Map](gameplay/exploration.md#map).
+
+### Q-047
+**Exact data formats, protocols and creation API.** Approved, including one key
+per player (D-0018), the phone backup flow and the text limits. Resolved
+2026-10-06 → [data-formats](tech/data-formats.md), [protocols](tech/protocols.md),
+[creation-api](tech/creation-api.md).

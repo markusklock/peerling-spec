@@ -1,18 +1,19 @@
 ---
 title: Creation API
 type: data
-status: proposed
+status: accepted
 req_prefix: API
 tags: [tech, server, api, creation]
 sources:
   - raw/conversations/2026-10-05-formats-request.md
+  - raw/conversations/2026-10-06-formats-approved.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/generation-server.md
   - wiki/tech/data-formats.md
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Creation API
@@ -23,7 +24,7 @@ updated: 2026-10-05
 > server's current libp2p addresses. Everything else is peer-to-peer
 > ([protocols](protocols.md)).
 
-**Status: [proposed]** in full, drafted 2026-10-05 ([Q-047](../open-questions.md#q-047)).
+**Status: [accepted]**: drafted 2026-10-05, approved 2026-10-06 ([Q-047](../open-questions.md#q-047)).
 
 ## General rules
 
@@ -105,13 +106,13 @@ updated: 2026-10-05
 
 ## Requirements
 
-- **API-001** [proposed] The client and operator server MUST communicate for creation, starters and names through the endpoints on this page, over HTTP/3.
-- **API-002** [proposed] Every request acting for a player MUST carry a fresh Ed25519 signature by the player's key as defined on this page.
-- **API-003** [proposed] Job progress MUST be available as a Server-Sent Events stream and by polling.
+- **API-001** [accepted] The client and operator server MUST communicate for creation, starters and names through the endpoints on this page, over HTTP/3.
+- **API-002** [accepted] Every request acting for a player MUST carry a fresh Ed25519 signature by the player's key as defined on this page.
+- **API-003** [accepted] Job progress MUST be available as a Server-Sent Events stream and by polling.
 
 ## Open questions
 
-[Q-047](../open-questions.md#q-047)
+_None at the moment._
 
 ## See also
 

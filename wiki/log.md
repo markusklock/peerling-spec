@@ -327,3 +327,11 @@ List all entries with `grep "^## \[" wiki/log.md`.
   sequences, and the HTTP/3 creation API. Example records on other pages now
   point to the exact formats. Instance origin values aligned (wild, starter,
   created). Added FMT, PRT and API requirements (all proposed).
+
+## [2026-10-06] design | Formats approved; one key per player
+- Source: raw/conversations/2026-10-06-formats-approved.md
+- Changed: decisions/D-0018 (new), tech/data-formats.md, tech/protocols.md,
+  tech/creation-api.md, tech/architecture.md, open-questions.md, index.md
+- Notes: Resolved Q-047. The three format pages are accepted. Kept one Ed25519
+  key per player for all identities after weighing pros and cons (D-0018).
+  No open questions remain.
