@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-pvp-wins-hex-world.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -87,14 +88,17 @@ Exact messages: [protocols](../tech/protocols.md).
 
 ## Rewards
 
-[accepted] None in v1: no rewards that can be farmed (e.g. no XP from PvP),
-since results can't be verified by a third party.
+[accepted] No rewards that can be farmed: no XP or items from PvP.
+
+[accepted] Each player has a **counter of PvP battles won**, shown on their
+profile ([D-0021](../decisions/D-0021-pvp-win-counter.md)). In the designer's
+words, with nothing to lose or gain PvP would feel meaningless; the counter
+gives players something to show for it.
 
 ### Win record
 
-[proposed] The designer asked whether both players could publish the winner
-and count it in a player stat such as "PvP wins". Suggested design, awaiting
-approval ([Q-050](../open-questions.md#q-050)):
+[proposed] How wins are proven and recorded, so anyone can check a player's
+count. Awaiting approval ([Q-050](../open-questions.md#q-050)):
 
 - **Signed states.** Each `state` message (the per-turn battle-state hash,
   [protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle)) is signed
@@ -110,7 +114,9 @@ approval ([Q-050](../open-questions.md#q-050)):
   player IDs, the mode, the winner and both signatures. Verifiers check the
   signatures, so anyone can count a player's wins.
 - **Showing it.** Wins and losses (Fair and Real-levels counted separately)
-  appear on the player profile and in the shareable snapshot.
+  appear on the player profile (in game and in the shared
+  [profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile),
+  which gains a `pvp` field: `{ wins, losses, opponentsBeaten }`).
 - **No rewards.** It is a stat only; there are still no XP or items for PvP.
 - **Known gap:** two friends (or one person with two accounts) can still
   play fixed battles to raise a win count. Since it gives no reward, this is
@@ -129,10 +135,12 @@ approval ([Q-050](../open-questions.md#q-050)):
 - ~~**PVP-008**~~ (removed 2026-10-04, replaced by PVP-009; see D-0013)
 - **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)).
 - **PVP-010** [accepted] A PvP challenge MUST state a level mode, Fair (all Peerlings at level 50, the default) or Real levels (actual levels, unverified), and both players MUST agree to it.
+- **PVP-011** [accepted] The game MUST count each player's PvP wins and show the count on their profile.
+- **PVP-012** [proposed] Only wins proven as in [Win record](#win-record) MUST be counted.
 
 ## Open questions
 
-- [Q-050](../open-questions.md#q-050) — record PvP wins as a player stat?
+- [Q-050](../open-questions.md#q-050) — how PvP wins are proven and recorded
 
 ## See also
 

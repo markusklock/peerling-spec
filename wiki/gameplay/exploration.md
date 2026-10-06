@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-world-details-approved.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-pvp-wins-hex-world.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -80,6 +81,12 @@ never does. Each biome's foliage is listed in
   encounter seed ([encounters](encounters.md)).
 - **Grace steps:** after a battle ends, the next 3 steps can't trigger an
   encounter, so the player can't get trapped in back-to-back battles.
+- **Guaranteed first encounter:** [accepted] (2026-10-06) a new player's first
+  step onto foliage outside the spawn hub always starts an encounter, so
+  onboarding can teach battling and catching right away
+  ([onboarding](onboarding.md#creating-a-starter)). Only the 1-in-10 roll is
+  skipped: it is an ordinary encounter (encounter number 0) with the usual
+  seed and verification.
 - Foliage rustles visibly when the player walks through it, so players learn
   that grass means Peerlings.
 
@@ -134,11 +141,12 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-003** [accepted] When the whole team faints, the player MUST return to the last rest point with the team fully healed, losing nothing.
 - **EXP-004** [accepted] The player MUST move on an invisible grid, one tile at a time.
 - **EXP-005** [accepted] Wild encounters MUST only be triggered by walking through biome-specific encounter foliage.
-- **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle.
+- **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle and for the guaranteed first encounter (EXP-011).
 - **EXP-007** [accepted] The game MUST have a minimap and a world map that reveal explored areas and mark discovered rest points and landmarks.
 - **EXP-008** [accepted] Interacting with a rest point MUST heal the team, set it as the last rest point, and write a save snapshot.
 - **EXP-009** [accepted] There MUST NOT be fast travel.
 - **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
+- **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll.
 
 ## Open questions
 

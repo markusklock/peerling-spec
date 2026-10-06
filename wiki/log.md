@@ -393,3 +393,16 @@ List all entries with `grep "^## \[" wiki/log.md`.
   New proposals: integer battle maths (BTL-012, Q-049), PvP win record
   (Q-050), presentation formulas (Q-051). New questions: first encounter
   (Q-052), hexagon world layout (Q-053).
+
+## [2026-10-06] design | PvP win counter, first encounter, hexagon world
+- Source: raw/conversations/2026-10-06-pvp-wins-hex-world.md
+- Changed: world/procedural-generation.md, gameplay/pvp-battles.md,
+  gameplay/battle.md, gameplay/exploration.md, gameplay/onboarding.md,
+  decisions/D-0020-hexagon-spawn-biome-sectors.md (new),
+  decisions/D-0021-pvp-win-counter.md (new), glossary.md, open-questions.md,
+  index.md
+- Notes: Central Plains spawn hexagon with 12 biome sectors (D-0020; WGN-007
+  replaced by WGN-017; exact geometry proposed as WGN-018, Q-054). PvP win
+  counter accepted (D-0021, PVP-011); proof mechanism still proposed (Q-050,
+  PVP-012). Guaranteed first encounter approved (EXP-011); resolved Q-052 and
+  Q-053.

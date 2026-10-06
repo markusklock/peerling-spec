@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-pvp-wins-hex-world.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -108,19 +109,40 @@ a glance; [visual-style](visual-style.md)):
 
 ### Layout
 
-[accepted] (approved 2026-10-04)
-- The world is split into biome **areas** about 300–500 m across (e.g. Voronoi
-  cells around points scattered by the seed), giving roughly 80–150 areas.
-- **Every biome appears at every distance from the centre.** The world is
-  divided into rings (0–500 m, 500–1000 m, 1000–1500 m, 1500–2000 m, beyond
-  2000 m), and each ring contains areas of all 12 biomes. Since wild levels
-  depend on distance, this means every type can be found at every level range,
-  not just Ice Peerlings far out. The inner ring is too small for areas of all
-  12 biomes; a new layout is under discussion
-  ([Q-053](../open-questions.md#q-053)).
-- The spawn area (about 150 m around the centre) is Plains.
-- Borders between areas blend over a short distance, so biomes flow into each
-  other rather than switching abruptly.
+[accepted] A **central spawn hexagon** surrounded by **12 biome sectors**
+(approved 2026-10-06, [D-0020](../decisions/D-0020-hexagon-spawn-biome-sectors.md);
+it replaces the earlier ring layout):
+- **Spawn hexagon:** a Plains hexagon in the middle of the world, where
+  everyone spawns, with the [spawn hub](#spawn-hub) at its centre. New players
+  start among Plains Peerlings (where Normal Peerlings are more common) at low
+  levels.
+- **Biome sectors:** around it, 12 wedge-shaped sectors, one per biome (Plains
+  included), each running from the hexagon to the world's border.
+- **Every type at every level:** wild levels depend on the distance from the
+  centre ([encounters § Wild level](../gameplay/encounters.md#wild-level)), and
+  every sector covers every distance from the hexagon to the border, so every
+  type can be found at every level range outside the hexagon, not just Ice
+  Peerlings far out.
+- **Readable map:** the direction from the centre picks the biome, the
+  distance picks the level, so the world map works like a compass.
+- [accepted] (approved 2026-10-04) Each sector is split into biome **areas**
+  about 300–500 m across (e.g. Voronoi cells around points scattered by the
+  seed, clipped to the sector); the hexagon is one area. That gives roughly
+  80–150 areas.
+- Borders between areas and sectors blend over a short distance, so biomes
+  flow into each other rather than switching abruptly.
+
+[proposed] Exact geometry, awaiting approval ([Q-054](../open-questions.md#q-054)):
+
+| Property | Value |
+|----------|-------|
+| Hexagon size | Corner-to-centre 300 m (150 tiles), pointy-top (one corner points north) |
+| Sectors | 30° each, measured clockwise from north: sector *i* covers [30 × i°, 30 × (i + 1)°). Six sector borders run through the hexagon's corners and six through the middles of its sides, so each side of the hexagon faces two sectors |
+| Sector order (clockwise from north, i = 0…11) | Plains, Forest, Gloomwood, Haunted Marsh, Lakeland, Tundra, Windy Peaks, Storm Highlands, Crystal Meadows, Scrapyard Ruins, Badlands, Volcano. Neighbours fit each other (dark woods next to the marsh, snow next to the peaks, ruins between crystals and badlands, Volcano next to Badlands) |
+| Natural borders | The hexagon's edge and the sector borders are moved by smooth noise from the world seed by up to ±40 m, so they don't look ruler-straight; the map still clearly shows a hexagon with 12 slices |
+| Which biome a tile has | Move the tile's centre by the border noise; inside the hexagon → Plains (spawn hexagon); otherwise the sector containing its angle from the world centre |
+
+Levels inside the hexagon are 2 to about 9.
 - Every biome area contains one **rest point**
   ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
 
@@ -264,7 +286,7 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-004** [accepted] Clients with different world-generator versions MUST NOT show each other's presence, so players never see someone walking through terrain that doesn't exist for them.
 - **WGN-005** [accepted] The world MUST be finite, 4 km × 4 km. [accepted] It MUST be bounded by a natural border (no invisible walls).
 - **WGN-006** [accepted] There MUST be 12 biomes, one for each type, and each biome MUST raise the chance of encountering Peerlings of its type.
-- **WGN-007** [accepted] Every biome MUST occur in every distance ring, so every type can be met at every level range.
+- ~~**WGN-007**~~ (removed 2026-10-06, replaced by WGN-017; see D-0020)
 - **WGN-008** [accepted] The spawn area MUST be Plains.
 - **WGN-009** [accepted] Every biome area MUST contain one rest point.
 - **WGN-010** [accepted] The world MUST be a grid of tiles, and each biome MUST have its own encounter foliage on which wild encounters happen.
@@ -274,8 +296,10 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-014** [accepted] Paths MUST connect rest points and the spawn hub, with bridges over water and signposts showing area name, biome and level range.
 - **WGN-015** [accepted] The day/night cycle and per-biome weather MUST be the same for all players, derived from time and the epoch records. [accepted] A day lasts 24 epochs; weather changes every 3 epochs; both are purely visual in v1.
 - **WGN-016** [accepted] Generator updates MUST switch at an epoch announced in the epoch records, and clients MUST keep all past generator versions for verification.
+- **WGN-017** [accepted] The world MUST consist of a central Plains spawn hexagon containing the spawn hub, surrounded by 12 wedge-shaped biome sectors, one per biome, each reaching from the hexagon to the world's border.
+- **WGN-018** [proposed] The hexagon, sectors and sector order MUST follow the exact geometry in [Layout](#layout).
 
 ## Open questions
 
 - [Q-051](../open-questions.md#q-051) — exact day clock and weather selection
-- [Q-053](../open-questions.md#q-053) — world layout: central spawn hexagon with 12 biomes around it?
+- [Q-054](../open-questions.md#q-054) — exact geometry of the spawn hexagon and biome sectors

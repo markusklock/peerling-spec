@@ -29,10 +29,11 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 - Raised: 2026-10-06
 
 ### Q-050
-**Record PvP wins as a player stat?**
+**How are PvP wins proven and recorded?** (The win counter itself is
+accepted: [D-0021](decisions/D-0021-pvp-win-counter.md).)
 - Affects: [pvp-battles § Win record](gameplay/pvp-battles.md#win-record), [player-data](tech/player-data.md#pvp), [protocols](tech/protocols.md)
-- Context: the designer asked whether both players could publish the winner
-  and count it in a stat like "number of PvP wins" (2026-10-06).
+- Context: the designer wants a counter of PvP battles won (2026-10-06); for
+  it to mean anything, results must be provable by third parties.
 - Proposal: signed per-turn `state` messages; a result counts when both
   players, or the loser, signed the final state; a `pvp-result` save-log event;
   wins and losses on the profile; no rewards; collusion accepted as a known gap.
@@ -50,37 +51,15 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
   and the biome.
 - Raised: 2026-10-06
 
-### Q-052
-**How does the guaranteed first encounter work?**
-- Affects: [onboarding](gameplay/onboarding.md#creating-a-starter), [encounters](gameplay/encounters.md), [player-data § Encounter seeds](tech/player-data.md#encounter-seeds)
-- Context: onboarding promises "an early guaranteed encounter" to teach
-  battling and catching, but the encounter rules (1-in-10 chance per foliage
-  step) don't say how it is guaranteed or verified (review finding 12).
-- Proposal: the player's first step onto foliage outside the spawn hub always
-  triggers an encounter. It is an ordinary encounter (encounter number 0, same
-  seed and verification rules); only the 1-in-10 roll is skipped, which
-  verifiers can check because it is the player's first encounter.
-- Raised: 2026-10-06
-
-### Q-053
-**World layout: a central spawn hexagon with 12 biome hexagons around it?**
-- Affects: [procedural-generation § Layout](world/procedural-generation.md#layout) (WGN-007, WGN-008), [encounters § Wild level](gameplay/encounters.md#wild-level)
-- Context: review finding 27: the inner ring (0–500 m) is too small to hold
-  areas of all 12 biomes. The designer suggested building the world from 12
-  hexagons around one central spawn hexagon, the centre being Plains (where
-  Normal Peerlings are more common) (2026-10-06). A hexagon has 6 neighbours
-  (rings hold 6, then 12), and Plains is one of the 12 biomes, so the layout
-  needs choosing. Options:
-  - A. 13 hexagons literally: Plains in the centre, the other biomes in the
-    rings around it. Simple and readable, but each biome sits at one distance,
-    so its type is only common at one level range (would replace WGN-007).
-  - B. Plains hexagon in the centre, then 12 wedge-shaped sectors (one per
-    biome, Plains included) running from the hexagon to the border. Every
-    biome spans every level range, and walking around the centre visits all
-    12 (LLM recommendation).
-  - C. A hexagonal grid of smaller biome areas, centre hex Plains, biomes
-    spread so each appears at every distance. Keeps WGN-007 but looks less
-    like the designer's 12 + 1 picture.
+### Q-054
+**Exact geometry of the spawn hexagon and biome sectors?**
+- Affects: [procedural-generation § Layout](world/procedural-generation.md#layout) (WGN-018)
+- Context: the layout (a central Plains hexagon with 12 biome sectors) is
+  accepted ([D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md)); the
+  numbers and order are LLM proposals.
+- Proposal: hexagon 300 m centre-to-corner, pointy-top; 30° sectors starting
+  at north; a fixed clockwise biome order chosen so neighbours fit; borders
+  moved by up to ±40 m of noise.
 - Raised: 2026-10-06
 
 ## Resolved
@@ -346,3 +325,15 @@ per player (D-0018), the phone backup flow and the text limits. Resolved
 ### Q-048
 **Peerling cry details.** Approved as proposed. Resolved 2026-10-06 →
 [audio § Peerling cries](world/audio.md#peerling-cries).
+
+### Q-052
+**How does the guaranteed first encounter work?** The first step onto
+foliage outside the spawn hub always starts an ordinary encounter (number 0).
+Approved as proposed (the designer's comment under "12" was meant for item 7).
+Resolved 2026-10-06 → [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage) (EXP-011).
+
+### Q-053
+**World layout.** Option B: a central Plains spawn hexagon with 12 wedge-shaped
+biome sectors reaching to the border. Resolved 2026-10-06 →
+[D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md); exact geometry in
+[Q-054](#q-054).

@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-pvp-wins-hex-world.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
@@ -63,8 +64,9 @@ choose can still create Peerlings later at the
    the new [starter](../glossary.md#starter)'s origin attestation, with its
    traits and shimmer roll (stage 8).
 6. **Into the world** — the player starts exploring; an early guaranteed
-   encounter teaches battling and catching (how it is guaranteed:
-   [Q-052](../open-questions.md#q-052)).
+   encounter teaches battling and catching: the first step onto foliage
+   outside the spawn hub always starts an encounter
+   ([exploration § Encounters in foliage](exploration.md#wild-encounters-in-foliage)).
 
 ## Requirements
 
@@ -79,4 +81,4 @@ choose can still create Peerlings later at the
 
 ## Open questions
 
-- [Q-052](../open-questions.md#q-052) — how the guaranteed first encounter works
+_None at the moment._

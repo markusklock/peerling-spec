@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-pvp-wins-hex-world.md
 updated: 2026-10-06
 ---
 
@@ -37,6 +38,11 @@ there. See [procedural-generation](world/procedural-generation.md#biomes).
 ### Biome area
 One area of the world (about 300–500 m across) with a single biome, its own
 rest point and its own landmark. See [procedural-generation §
+Layout](world/procedural-generation.md#layout).
+
+### Biome sector
+One of the 12 wedge-shaped slices of the world, one per biome, running from
+the spawn hexagon to the border. See [procedural-generation §
 Layout](world/procedural-generation.md#layout).
 
 ### Block list
@@ -341,6 +347,11 @@ type, signer, body and an Ed25519 signature. See
 ### Size class
 A species' `small`, `medium` or `large` class, which sets the height its model is drawn at. See
 [peerling-species § Size and temperament](peerlings/peerling-species.md#size-and-temperament).
+
+### Spawn hexagon
+The Plains hexagon in the middle of the world where everyone spawns; the spawn
+hub sits at its centre. See [procedural-generation §
+Layout](world/procedural-generation.md#layout).
 
 ### Spawn hub
 The centre of the world, where every player starts: Creation Shrine, rest

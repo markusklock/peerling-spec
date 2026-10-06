@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-pvp-wins-hex-world.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -235,7 +236,7 @@ replaying the battle ([player-data](../tech/player-data.md#verification),
 | XP needed to go from level L to L + 1 | 5 × L² |
 | XP gained for each wild Peerling defeated **or caught** | 10 × the wild Peerling's level |
 | Who gets the XP | Every one of the player's Peerlings that took part in the battle and didn't faint, each gets the full amount |
-| XP from PvP | None ([pvp-battles § Rewards](pvp-battles.md#rewards)) |
+| XP from PvP | None; PvP counts wins instead ([pvp-battles § Rewards](pvp-battles.md#rewards)) |
 | Starter level | 5 |
 | Maximum level | 50; XP stops accumulating there |
 | On level-up | Stats are recomputed with the stat formula above; current HP rises by the same amount as max HP |

@@ -95,12 +95,14 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0017](decisions/D-0017-world-features.md) | accepted | World features: spawn hub, landmarks, map, day/night, weather |
 | [D-0018](decisions/D-0018-one-key-per-player.md) | accepted | One key per player for every identity |
 | [D-0019](decisions/D-0019-peerdex-ui-audio.md) | accepted | Peerdex, menus, audio and rest points |
+| [D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md) | accepted | Central Plains spawn hexagon with 12 biome sectors |
+| [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted | PvP win counter on the player profile |
 
 ## Registered requirement prefixes
 
 API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0020. Next free question ID: Q-054.
+D-0022. Next free question ID: Q-055.
 
 ## Sources
 
@@ -137,3 +139,4 @@ D-0020. Next free question ID: Q-054.
 | [2026-10-06-peerdex-ui-audio-restpoints](../raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md) | 2026-10-06 | Peerdex, menus/HUD/controls, audio with CID-synthesized cries, rest points; no fast travel |
 | [2026-10-06-cry-details-approved](../raw/conversations/2026-10-06-cry-details-approved.md) | 2026-10-06 | Peerling cry details approved |
 | [2026-10-06-review-decisions](../raw/conversations/2026-10-06-review-decisions.md) | 2026-10-06 | Consistency-review findings approved; PvP win stat suggested; hexagon world layout suggested |
+| [2026-10-06-pvp-wins-hex-world](../raw/conversations/2026-10-06-pvp-wins-hex-world.md) | 2026-10-06 | PvP win counter; first encounter approved; hexagon + 12 biome sectors (option B) |
