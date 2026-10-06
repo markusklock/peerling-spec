@@ -6,6 +6,7 @@ tags: [gameplay, pvp, multiplayer]
 sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/gameplay/pvp-battles.md
   - wiki/tech/player-data.md
@@ -28,10 +29,10 @@ result.
 [accepted] Each player has a **counter of PvP battles won**, shown on their
 profile. It is a stat only: still no XP or items from PvP.
 
-[proposed] How results are proven and recorded (both players sign the battle
-states, a `pvp-result` save-log event):
-[pvp-battles § Win record](../gameplay/pvp-battles.md#win-record),
-[Q-050](../open-questions.md#q-050).
+[accepted] How results are proven and recorded (approved 2026-10-06): both
+players sign every battle state and the end of the battle, and each player
+records a signed `pvp-result` save-log event:
+[pvp-battles § Win record](../gameplay/pvp-battles.md#win-record).
 
 ## Consequences
 - PvP results must be provable by third parties, so the battle protocol needs

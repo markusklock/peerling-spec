@@ -1,13 +1,14 @@
 ---
 title: Music, Sound Effects and Peerling Cries
 type: system
-status: draft
+status: accepted
 req_prefix: AUD
 tags: [world, audio, presentation]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-cry-details-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/world/visual-style.md
@@ -59,8 +60,7 @@ Audio API, so no audio files are generated or downloaded.
   | 4 | Vibrato depth | 0–1 semitone |
   | 5 | Noise mix | 0–40% |
 
-  [proposed] Exact mapping, with b = the byte's value (0–255); awaiting
-  approval ([Q-051](../open-questions.md#q-051)):
+  [accepted] Exact mapping, with b = the byte's value (0–255):
 
   | Parameter | Formula |
   |-----------|---------|
@@ -103,7 +103,7 @@ Audio API, so no audio files are generated or downloaded.
 
 ## Open questions
 
-- [Q-051](../open-questions.md#q-051) — exact cry parameter mapping
+_None at the moment._
 
 ## See also
 

@@ -406,3 +406,16 @@ List all entries with `grep "^## \[" wiki/log.md`.
   counter accepted (D-0021, PVP-011); proof mechanism still proposed (Q-050,
   PVP-012). Guaranteed first encounter approved (EXP-011); resolved Q-052 and
   Q-053.
+
+## [2026-10-06] design | Remaining proposals approved
+- Source: raw/conversations/2026-10-06-proposals-approved.md
+- Changed: gameplay/battle.md, gameplay/pvp-battles.md,
+  peerlings/peerling-species.md, world/audio.md,
+  world/procedural-generation.md, tech/protocols.md, tech/data-formats.md,
+  tech/player-data.md, decisions/D-0020, decisions/D-0021, open-questions.md,
+  index.md
+- Notes: Resolved Q-049 (integer battle maths, BTL-012), Q-050 (PvP win
+  record, PVP-012; signed `state`/`end` messages and the `pvp-result` event and
+  `pvp` profile counters added to protocols and data-formats), Q-051
+  (presentation formulas) and Q-054 (hexagon geometry, WGN-018). No proposals
+  or open questions remain.

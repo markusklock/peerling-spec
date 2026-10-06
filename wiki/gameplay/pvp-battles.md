@@ -1,7 +1,7 @@
 ---
 title: PvP Battles
 type: system
-status: draft
+status: accepted
 req_prefix: PVP
 tags: [gameplay, multiplayer, battle, libp2p]
 sources:
@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -97,31 +98,33 @@ gives players something to show for it.
 
 ### Win record
 
-[proposed] How wins are proven and recorded, so anyone can check a player's
-count. Awaiting approval ([Q-050](../open-questions.md#q-050)):
+[accepted] How wins are proven and recorded, so anyone can check a player's
+count (approved 2026-10-06; exact messages in
+[protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle), exact event
+in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
 
-- **Signed states.** Each `state` message (the per-turn battle-state hash,
-  [protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle)) is signed
-  by its sender with the player key. The `end` message carries the final
-  state hash, also signed.
+- **Signed states.** Each `state` message (the per-turn battle-state hash) is
+  signed by its sender with the player key. The `end` message names the
+  result, the winner and the final state hash, also signed.
 - **Proof of a result.** A result counts when both players signed the same
   final state, or when the loser did (the loser has no reason to fake their
   own loss). A forfeit by timeout or disconnect needs the loser's last signed
   state plus the winner's signed claim; it counts as a win, but is shown
   separately as "won by forfeit".
-- **Recording.** Each player appends a `pvp-result` event to their own
-  [save log](../tech/player-data.md#save-log) with the battle ID, both
-  player IDs, the mode, the winner and both signatures. Verifiers check the
-  signatures, so anyone can count a player's wins.
+- **Recording.** Each player, winner and loser, appends a `pvp-result` event
+  to their own [save log](../tech/player-data.md#save-log) with the battle
+  ID, both player IDs, the mode, the winner and the signatures that prove it.
+  Verifiers check the signatures, so anyone can count a player's wins. A void
+  battle is not recorded.
 - **Showing it.** Wins and losses (Fair and Real-levels counted separately)
   appear on the player profile (in game and in the shared
-  [profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile),
-  which gains a `pvp` field: `{ wins, losses, opponentsBeaten }`).
+  [profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile)),
+  with wins by forfeit and the number of different opponents beaten.
 - **No rewards.** It is a stat only; there are still no XP or items for PvP.
 - **Known gap:** two friends (or one person with two accounts) can still
   play fixed battles to raise a win count. Since it gives no reward, this is
-  accepted; the profile could show the number of distinct opponents beaten
-  next to the total to make farming visible.
+  accepted; the profile shows the number of different opponents beaten next
+  to the total, which makes farming visible.
 
 ## Requirements
 
@@ -136,11 +139,11 @@ count. Awaiting approval ([Q-050](../open-questions.md#q-050)):
 - **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)).
 - **PVP-010** [accepted] A PvP challenge MUST state a level mode, Fair (all Peerlings at level 50, the default) or Real levels (actual levels, unverified), and both players MUST agree to it.
 - **PVP-011** [accepted] The game MUST count each player's PvP wins and show the count on their profile.
-- **PVP-012** [proposed] Only wins proven as in [Win record](#win-record) MUST be counted.
+- **PVP-012** [accepted] Only wins proven as in [Win record](#win-record) MUST be counted.
 
 ## Open questions
 
-- [Q-050](../open-questions.md#q-050) — how PvP wins are proven and recorded
+_None at the moment._
 
 ## See also
 

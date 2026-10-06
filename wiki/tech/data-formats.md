@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-06-formats-approved.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
@@ -266,6 +267,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
+| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid if: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles are not recorded |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
 
 ### Save snapshot — `peerlings/save`
@@ -286,6 +288,7 @@ save log).
 | `lastRestPoint` | tile |
 | `explored` | bytes: bit set of 63 × 63 chunks, row-major, bit 1 = revealed |
 | `nextEncounter` | uint |
+| `pvp` | PvP counters, as in the profile document |
 
 ### Transfer and transfer-log entry — `peerlings/transfer`
 
@@ -338,6 +341,7 @@ record points to `/ipfs/<CID of this envelope>`. Meaning:
 | `team` | [map: `species`, `level`, `traits`, `shimmer`, `nickname`] |
 | `created` | [CID] |
 | `peerdex` | map: `seen` uint, `caught` uint |
+| `pvp` | map: `fairWins`, `fairLosses`, `realWins`, `realLosses`, `forfeitWins` (included in the win counts), `opponentsBeaten` (different players beaten): all uint, counted from valid `pvp-result` events |
 | `saveLog` | string: the save log's OrbitDB address |
 | `updated` | time |
 

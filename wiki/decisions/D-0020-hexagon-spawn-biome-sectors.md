@@ -6,6 +6,7 @@ tags: [world, generation, biomes]
 sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -32,7 +33,7 @@ Peerlings are more common, with the 12 biomes around it.
 - Around it, **12 wedge-shaped biome sectors**, one per biome (Plains
   included), each reaching from the hexagon to the world's border.
 
-Exact size, orientation and biome order: [proposed], see
+[accepted] Exact size, orientation and biome order (approved 2026-10-06):
 [procedural-generation § Layout](../world/procedural-generation.md#layout).
 
 ## Consequences

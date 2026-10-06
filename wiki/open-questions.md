@@ -17,50 +17,7 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-049
-**Approve the exact integer battle maths?**
-- Affects: [battle § Deterministic arithmetic](gameplay/battle.md#deterministic-arithmetic) (BTL-012), [catching](gameplay/catching.md), [encounters](gameplay/encounters.md)
-- Context: replays must give identical results on every browser, so every
-  formula needs an exact integer form and every random draw a fixed order
-  (review finding 2, 2026-10-06).
-- Proposal: integer-only formulas with rounding down at each step, stat stages
-  as fractions, catch chance in per mille, and a fixed draw order for battles
-  and encounters, as written on the battle page.
-- Raised: 2026-10-06
-
-### Q-050
-**How are PvP wins proven and recorded?** (The win counter itself is
-accepted: [D-0021](decisions/D-0021-pvp-win-counter.md).)
-- Affects: [pvp-battles § Win record](gameplay/pvp-battles.md#win-record), [player-data](tech/player-data.md#pvp), [protocols](tech/protocols.md)
-- Context: the designer wants a counter of PvP battles won (2026-10-06); for
-  it to mean anything, results must be provable by third parties.
-- Proposal: signed per-turn `state` messages; a result counts when both
-  players, or the loser, signed the final state; a `pvp-result` save-log event;
-  wins and losses on the profile; no rewards; collusion accepted as a known gap.
-- Raised: 2026-10-06
-
-### Q-051
-**Approve the exact presentation formulas?**
-- Affects: [peerling-species § Shimmer variants](peerlings/peerling-species.md#shimmer-variants), [audio § Peerling cries](world/audio.md#peerling-cries), [procedural-generation § Day and night](world/procedural-generation.md#day-and-night), [§ Weather](world/procedural-generation.md#weather)
-- Context: so all players see and hear the same thing, the shimmer hue, cry
-  parameters, day clock and weather choice need exact formulas (review
-  finding 31, 2026-10-06).
-- Proposal: as written on those pages: hue from bytes 6–7 of the species hash;
-  linear/log byte mappings for cries; day phase from Unix time with midnight
-  at phase 0; weather by weighted choice from a hash of the epoch randomness
-  and the biome.
-- Raised: 2026-10-06
-
-### Q-054
-**Exact geometry of the spawn hexagon and biome sectors?**
-- Affects: [procedural-generation § Layout](world/procedural-generation.md#layout) (WGN-018)
-- Context: the layout (a central Plains hexagon with 12 biome sectors) is
-  accepted ([D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md)); the
-  numbers and order are LLM proposals.
-- Proposal: hexagon 300 m centre-to-corner, pointy-top; 30° sectors starting
-  at north; a fixed clockwise biome order chosen so neighbours fit; borders
-  moved by up to ±40 m of noise.
-- Raised: 2026-10-06
+_None at the moment._
 
 ## Resolved
 
@@ -337,3 +294,25 @@ Resolved 2026-10-06 → [exploration § Wild encounters in foliage](gameplay/exp
 biome sectors reaching to the border. Resolved 2026-10-06 →
 [D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md); exact geometry in
 [Q-054](#q-054).
+
+### Q-049
+**Exact integer battle maths.** Approved as proposed. Resolved 2026-10-06 →
+[battle § Deterministic arithmetic](gameplay/battle.md#deterministic-arithmetic) (BTL-012).
+
+### Q-050
+**How PvP wins are proven and recorded.** Approved as proposed: signed
+`state` and `end` messages, `pvp-result` save-log events. Resolved 2026-10-06 →
+[pvp-battles § Win record](gameplay/pvp-battles.md#win-record) (PVP-012),
+[D-0021](decisions/D-0021-pvp-win-counter.md).
+
+### Q-051
+**Exact presentation formulas.** Approved as proposed. Resolved 2026-10-06 →
+[peerling-species § Shimmer variants](peerlings/peerling-species.md#shimmer-variants),
+[audio § Peerling cries](world/audio.md#peerling-cries),
+[procedural-generation § Day and night](world/procedural-generation.md#day-and-night),
+[§ Weather](world/procedural-generation.md#weather).
+
+### Q-054
+**Exact geometry of the spawn hexagon and biome sectors.** Approved as
+proposed. Resolved 2026-10-06 →
+[procedural-generation § Layout](world/procedural-generation.md#layout) (WGN-018).

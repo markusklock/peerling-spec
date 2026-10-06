@@ -1,7 +1,7 @@
 ---
 title: Procedural World Generation
 type: system
-status: draft
+status: accepted
 req_prefix: WGN
 tags: [world, procedural]
 sources:
@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-05-world-details-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -132,7 +133,7 @@ it replaces the earlier ring layout):
 - Borders between areas and sectors blend over a short distance, so biomes
   flow into each other rather than switching abruptly.
 
-[proposed] Exact geometry, awaiting approval ([Q-054](../open-questions.md#q-054)):
+[accepted] Exact geometry (approved 2026-10-06):
 
 | Property | Value |
 |----------|-------|
@@ -217,7 +218,7 @@ computed from Unix time, so it is smooth and identical everywhere without any
 messages. Night darkens the scene and lights up rest points, landmarks and
 glowing foliage. It is purely visual in v1 (no effect on encounters).
 
-[proposed] Exact clock, awaiting approval ([Q-051](../open-questions.md#q-051)):
+[accepted] Exact clock (approved 2026-10-06):
 day phase = Unix time in ms mod 7,200,000. Phase 0 is midnight and 3,600,000 is
 noon; each in-game hour is 300,000 ms (one epoch). Night runs from 18:00 to
 06:00 in-game time (phase below 1,800,000 or from 5,400,000).
@@ -232,7 +233,7 @@ all clients agree, including while the server is offline (client-derived epoch
 records, [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
 Purely visual in v1.
 
-[proposed] Exact selection, awaiting approval ([Q-051](../open-questions.md#q-051)):
+[accepted] Exact selection (approved 2026-10-06):
 - Weather periods start at every epoch number divisible by 3. The period uses
   the `randomness` of the epoch record of its first epoch.
 - h = SHA-256(`"peerlings/weather/v1"` ‖ that randomness ‖ the biome's index
@@ -297,9 +298,8 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-015** [accepted] The day/night cycle and per-biome weather MUST be the same for all players, derived from time and the epoch records. [accepted] A day lasts 24 epochs; weather changes every 3 epochs; both are purely visual in v1.
 - **WGN-016** [accepted] Generator updates MUST switch at an epoch announced in the epoch records, and clients MUST keep all past generator versions for verification.
 - **WGN-017** [accepted] The world MUST consist of a central Plains spawn hexagon containing the spawn hub, surrounded by 12 wedge-shaped biome sectors, one per biome, each reaching from the hexagon to the world's border.
-- **WGN-018** [proposed] The hexagon, sectors and sector order MUST follow the exact geometry in [Layout](#layout).
+- **WGN-018** [accepted] The hexagon, sectors and sector order MUST follow the exact geometry in [Layout](#layout).
 
 ## Open questions
 
-- [Q-051](../open-questions.md#q-051) — exact day clock and weather selection
-- [Q-054](../open-questions.md#q-054) — exact geometry of the spawn hexagon and biome sectors
+_None at the moment._

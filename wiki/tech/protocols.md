@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-05-formats-request.md
   - raw/conversations/2026-10-06-formats-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -126,8 +127,8 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 | 5 | both | `seed-reveal` | `value`: bytes(32) |
 | 6 | both, per decision | `commit` | `turn` (uint), `hash`: SHA-256(action ‖ nonce) |
 | 7 | both, per decision | `reveal` | `turn`, `action` ([data-formats § Action](data-formats.md#catch-evidence)), `nonce` (bytes(16)) |
-| 8 | both, per turn | `state` | `turn`, `hash`: SHA-256 of the battle state after the turn |
-| 9 | both | `end` | `result`, `winner` |
+| 8 | both, per turn | `state` | `turn`, `hash`: SHA-256 of the battle state after the turn, `sig`: state signature (below) |
+| 9 | both | `end` | `result` (`"win"` \| `"void"` \| `"forfeit"`), `winner` (player ID or null), `turn` (the last resolved turn), `hash` (the battle-state hash after it), `sig`: end signature (below) |
 
 - Step 3: each side verifies the other's team (origin and ownership,
   [player-data § Verified Peerlings](player-data.md#verified-peerlings)) before
@@ -137,6 +138,15 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 - Replacing a fainted Peerling is also a commit/reveal decision (`replace`
   action), so neither side sees the other's choice first.
 - A `state` hash that differs from one's own → `end` with result `"void"`.
+- **Signatures for the win record** ([accepted] 2026-10-06,
+  [pvp-battles § Win record](../gameplay/pvp-battles.md#win-record)), Ed25519
+  with the sender's player key:
+  - state signature over `"peerlings/pvp-state/v1"` ‖ battle ID (32 bytes) ‖
+    turn (8-byte big-endian) ‖ hash;
+  - end signature over `"peerlings/pvp-end/v1"` ‖ battle ID ‖
+    DAG-CBOR(`{ "result", "winner", "turn", "hash" }`).
+  A side that receives a `state` or `end` with a bad signature sends `error`
+  with code `"bad-signature"` and ends the battle as void.
 - **Battle state** (exact, [accepted] 2026-10-06): the hashed value is the
   DAG-CBOR map
   `{ "turn": uint, "sides": [side, side] }` with the lower player ID's side

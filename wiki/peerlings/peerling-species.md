@@ -1,7 +1,7 @@
 ---
 title: Peerling Species and Instances (Data Model)
 type: data
-status: draft
+status: accepted
 req_prefix: SPC
 tags: [peerlings, data-model, ipfs]
 sources:
@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -217,11 +218,10 @@ worth up to ±10%. [accepted] Details (approved 2026-10-05):
   shimmer appears in battle. It's done with a shader on the existing static
   model, so it needs no extra generated assets.
 - No effect on stats or battles.
-- [proposed] Exact angle, so every client draws the same colors: with h =
+- [accepted] Exact angle, so every client draws the same colors: with h =
   SHA-256 of the species CID's bytes (the same hash the
   [cry](../world/audio.md#peerling-cries) uses), hue shift =
-  90 + (h[6] × 256 + h[7]) mod 181 degrees (90°–270°). Awaiting approval:
-  [Q-051](../open-questions.md#q-051).
+  90 + (h[6] × 256 + h[7]) mod 181 degrees (90°–270°).
 
 ### Where the randomness comes from
 
@@ -252,7 +252,7 @@ Peerlings, the server draws them and includes them in the origin attestation
 
 ## Open questions
 
-- [Q-051](../open-questions.md#q-051) — exact shimmer hue formula
+_None at the moment._
 
 ## See also
 

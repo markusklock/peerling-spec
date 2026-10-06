@@ -1,7 +1,7 @@
 ---
 title: Battle System
 type: system
-status: draft
+status: accepted
 req_prefix: BTL
 tags: [gameplay, battle, balance]
 sources:
@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -267,14 +268,13 @@ PvP battles use the commit-reveal seed ([pvp-battles](pvp-battles.md)).
 
 ### Deterministic arithmetic
 
-[proposed] Replays only agree if every browser computes exactly the same
+[accepted] Replays only agree if every browser computes exactly the same
 numbers, so all battle, catch and encounter maths uses **integers only**
 ([data-formats](../tech/data-formats.md) already bans floats in signed data).
 `div` is integer division rounding down; `rand_int(n)` is an integer in
 [0, n) from the [random number generator](#random-number-generator). The
 formulas below are the integer form of the rules above; where they differ by
-a rounding step, this section wins. Awaiting approval:
-[Q-049](../open-questions.md#q-049).
+a rounding step, this section wins (approved 2026-10-06).
 
 **Stats**
 - HP = 2 × base × L div 100 + L + 10; other stats = 2 × base × L div 100 + 5.
@@ -387,12 +387,12 @@ so a large Peerling looms over a small one; size has no effect on the rules.
 - **BTL-009** [accepted] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
 - **BTL-010** [accepted] There MUST NOT be critical hits or status conditions in v1.
 - **BTL-011** [accepted] A battle MUST use the rules version active in its epoch, and the client MUST keep every past rules version so it can verify older catches ([Rules versions](#rules-versions)).
-- **BTL-012** [proposed] Battle, catch and encounter maths MUST use only the integer formulas and the draw order in [Deterministic arithmetic](#deterministic-arithmetic).
+- **BTL-012** [accepted] Battle, catch and encounter maths MUST use only the integer formulas and the draw order in [Deterministic arithmetic](#deterministic-arithmetic).
 - **BTL-013** [accepted] Every Peerling MUST start a PvP battle at full HP, and a PvP battle MUST NOT change any Peerling's HP afterwards or move the player to a rest point.
 
 ## Open questions
 
-- [Q-049](../open-questions.md#q-049) — approve the exact integer battle maths
+_None at the moment._
 
 ## See also
 

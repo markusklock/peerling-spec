@@ -1,7 +1,7 @@
 ---
 title: "Player Data: Saves, Identity and Ownership"
 type: system
-status: draft
+status: accepted
 req_prefix: SAVE
 tags: [tech, saves, identity, orbitdb, ipns, security]
 sources:
@@ -25,6 +25,7 @@ sources:
   - raw/conversations/2026-10-05-world-details-approved.md
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-proposals-approved.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -455,9 +456,12 @@ instead:
 the battle, each side verifies the other's team (origin and ownership chain),
 using cached results where possible. No server is needed.
 
-[proposed] PvP results could be recorded as signed `pvp-result` events for a
-"PvP wins" stat ([pvp-battles § Win record](../gameplay/pvp-battles.md#win-record),
-[Q-050](../open-questions.md#q-050)).
+[accepted] PvP results are recorded as signed `pvp-result` events for the PvP
+win counter ([pvp-battles § Win record](../gameplay/pvp-battles.md#win-record),
+[D-0021](../decisions/D-0021-pvp-win-counter.md)). A `pvp-result` counts only
+if its signatures verify as defined in
+[data-formats § Save-log events](data-formats.md#save-log-events), and only
+once per battle ID.
 
 ## Known gaps (accepted risks)
 
