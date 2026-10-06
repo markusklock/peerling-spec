@@ -1,7 +1,7 @@
 ---
 title: Creator Feedback
 type: system
-status: draft
+status: accepted
 req_prefix: CFB
 tags: [gameplay, social, orbitdb, pubsub, showcase]
 sources:
@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
@@ -80,13 +81,14 @@ feed announces it ([D-0022](../decisions/D-0022-v1-fun-features.md)). The
 wording makes clear that this player found it in the wild, not created it.
 Every new species becomes a small race.
 
-[proposed] Details, awaiting approval ([Q-055](../open-questions.md#q-055)):
+[accepted] Details (approved 2026-10-06):
 - **Who decides:** the server, which already verifies every catch for the
   species stats. It records the finder in the species stats (`firstWild`,
   [data-formats § Species stats](../tech/data-formats.md#species-stats--peerlingsspecies-stats)).
 - **What counts:** only wild catches (not starters, shrine creations or
-  trades), and not the creator's own catches: the credit is for finding
-  someone else's creation.
+  trades). [accepted] A species' creator can never earn its credit, even by
+  catching it in the wild (confirmed by the designer): the credit is for
+  finding someone else's creation.
 - **First** = the verified catch with the lowest epoch; ties go to the lower
   CID of the `catch` save-log entry. A catch made offline and synced later
   can still take the title if its epoch is earlier; this is rare and
@@ -113,11 +115,12 @@ Every new species becomes a small race.
 - **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught, traded or delisted.
 - **CFB-004** [accepted] The client MUST show creators a summary of changes since their last session.
 - **CFB-005** [accepted] Each species card MUST show "First found in the wild by …" naming the first player with a verified wild catch of it, and the world feed MUST announce it.
-- **CFB-006** [proposed] The first wild finder MUST be determined and announced as in [First found in the wild](#first-found-in-the-wild).
+- **CFB-006** [accepted] The first wild finder MUST be determined and announced as in [First found in the wild](#first-found-in-the-wild).
+- **CFB-007** [accepted] A species\' creator MUST NOT be credited as its first wild finder.
 
 ## Open questions
 
-- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features
+_None at the moment._
 
 ## See also
 

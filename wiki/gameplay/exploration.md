@@ -1,7 +1,7 @@
 ---
 title: Exploration
 type: system
-status: draft
+status: accepted
 req_prefix: EXP
 tags: [gameplay, world]
 sources:
@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -100,7 +101,7 @@ players see it too ([D-0022](../decisions/D-0022-v1-fun-features.md)). It
 makes the world feel alive, and every walk past another player shows off
 someone's creation.
 
-[proposed] Details, awaiting approval ([Q-055](../open-questions.md#q-055)):
+[accepted] Details (approved 2026-10-06):
 - **Which one:** the first team member that hasn't fainted. It is shown as a
   shimmer if it is one.
 - **Where:** it always stands on the tile the player last left, one step
@@ -174,8 +175,8 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
 - **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll.
 - **EXP-012** [accepted] The first Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it.
-- **EXP-013** [proposed] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
+- **EXP-013** [accepted] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
 
 ## Open questions
 
-- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features
+_None at the moment._

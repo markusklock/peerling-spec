@@ -1,7 +1,7 @@
 ---
 title: Procedural World Generation
 type: system
-status: draft
+status: accepted
 req_prefix: WGN
 tags: [world, procedural]
 sources:
@@ -21,6 +21,7 @@ sources:
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -109,7 +110,7 @@ a glance; [visual-style](visual-style.md)):
 | Gloomwood | Shadow | Dark twisted forest in mist; deep purple | Dark brambles |
 | Haunted Marsh | Spirit | Foggy marsh, will-o'-wisps, old standing stones; teal | Misty marsh grass |
 
-[proposed] The **biome index** (0–11) is a biome's row in this table (Plains = 0 … Haunted Marsh = 11); hashes and data formats use it ([Q-055](../open-questions.md#q-055)).
+[accepted] The **biome index** (0–11) is a biome's row in this table (Plains = 0 … Haunted Marsh = 11); hashes and data formats use it.
 
 ### Layout
 
@@ -312,4 +313,4 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 
 ## Open questions
 
-- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features (biome index, guardian sites)
+_None at the moment._

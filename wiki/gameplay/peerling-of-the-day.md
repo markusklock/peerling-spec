@@ -1,11 +1,12 @@
 ---
 title: Peerling of the Day
 type: system
-status: draft
+status: accepted
 req_prefix: POD
 tags: [gameplay, encounters, social, world]
 sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/encounters.md
@@ -16,11 +17,11 @@ updated: 2026-10-06
 
 # Peerling of the Day
 
-> Each in-game day one species is the Peerling of the Day: it appears more
+> Each day (24 hours) one species is the Peerling of the Day: it appears more
 > often everywhere, the world feed announces it, its creator is told, and a
 > pedestal near the spawn shows it.
 
-[accepted] Each in-game day, the shared randomness picks one species that
+[accepted] Each day, the shared randomness picks one species that
 appears more often across the whole world. The world feed announces it and its
 creator is notified. No server is needed
 ([D-0022](../decisions/D-0022-v1-fun-features.md)).
@@ -34,13 +35,14 @@ Peerling yet?") and gives every creator a chance at a moment in the spotlight.
 
 ## Choosing it
 
-[proposed] Details below await approval ([Q-055](../open-questions.md#q-055)).
+[accepted] Details approved 2026-10-06.
 
-- **Day** D = floor(E ÷ 24), where E is the epoch number. This is the in-game
-  day of [procedural-generation § Day and night](../world/procedural-generation.md#day-and-night)
-  (2 hours, starting at in-game midnight).
+- **Day** D = floor(E ÷ 288), where E is the epoch number: a full 24-hour day
+  (288 epochs of 5 minutes) from 00:00 to 24:00 UTC. The designer chose a real
+  day over the 2-hour in-game day, so each Peerling of the Day is an event that
+  lasts long enough for everyone to join.
 - The choice uses the [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch)
-  of epoch 24 × D (signed or client-derived): one species drawn uniformly from
+  of epoch 288 × D (signed or client-derived): one species drawn uniformly from
   the eligible species at its `registryHeight`
   ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)),
   sorted by registry `seq`, with the
@@ -51,7 +53,7 @@ Peerling yet?") and gives every creator a chance at a moment in the spotlight.
 
 ## In encounters
 
-[proposed] During its day, in every biome, the Peerling of the Day gets the
+[accepted] During its day, in every biome, the Peerling of the Day gets the
 selection weight max(1, W div 19), where W is the total weight of all other
 eligible species ([encounters § Selection](encounters.md#selection)). It is
 then about 1 in 20 of all draws, wherever the player is. Its biome and novelty
@@ -59,7 +61,7 @@ multipliers don't apply. Encounters use the day of the epoch record they use.
 
 ## In the world
 
-[proposed]
+[accepted]
 - **Pedestal:** in the [spawn hub](../world/procedural-generation.md#spawn-hub),
   next to the New Peerlings gallery: a larger raised pedestal with a sun
   emblem and a soft light beam visible from afar. The species' 3D model stands
@@ -72,7 +74,7 @@ multipliers don't apply. Encounters use the day of the epoch record they use.
 
 ## Announcements
 
-[proposed]
+[accepted]
 - **World feed:** at the start of each day every client adds *"Peerling of
   the Day: Mossnap (by Mia)"* to its own feed ticker. It is worked out
   locally, so nothing is published on the feed topic.
@@ -83,14 +85,14 @@ multipliers don't apply. Encounters use the day of the epoch record they use.
 
 ## Requirements
 
-- **POD-001** [accepted] Each in-game day, every client MUST derive the same Peerling of the Day from the shared epoch randomness, and that species MUST appear more often in encounters everywhere during that day.
+- **POD-001** [accepted] Each day (24 hours, from 00:00 UTC), every client MUST derive the same Peerling of the Day from the shared epoch randomness, and that species MUST appear more often in encounters everywhere during that day.
 - **POD-002** [accepted] The spawn area MUST have a pedestal showing the Peerling of the Day's 3D model, with a hover explanation.
 - **POD-003** [accepted] The world feed MUST announce the Peerling of the Day, and its creator MUST be notified.
-- **POD-004** [proposed] The choice, encounter weight, pedestal and announcements MUST follow the rules on this page.
+- **POD-004** [accepted] The choice, encounter weight, pedestal and announcements MUST follow the rules on this page.
 
 ## Open questions
 
-- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features
+_None at the moment._
 
 ## See also
 

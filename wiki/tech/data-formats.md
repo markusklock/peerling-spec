@@ -1,7 +1,7 @@
 ---
 title: Data Formats
 type: data
-status: draft
+status: accepted
 req_prefix: FMT
 tags: [tech, formats, ipld, orbitdb, signatures]
 sources:
@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
@@ -246,7 +247,7 @@ Part of a `catch` save-log event. Meaning:
 `{ "kind": "flee" }`, and in PvP only `{ "kind": "timeout" }`
 ([protocols § PvP battle](protocols.md#peerlingsbattle100--pvp-battle)).
 
-**Guardian evidence** ([proposed], part of a `badge` event; meaning:
+**Guardian evidence** ([accepted], part of a `badge` event; meaning:
 [guardians](../gameplay/guardians.md)): the catch evidence fields `encounter`,
 `epochRecord` (used for the battle seed), `team` and `actions`, plus
 `weekRecord` (the epoch record of the week's first epoch, which defines the
@@ -266,7 +267,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `created` | `instance`, `attestation` (origin attestation) |
 | `release` | `instances` ([instance ID]), `transferEntry` (CID) |
 | `catch` | `instance`, `evidence` (catch evidence) |
-| `battle-result` | `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle; [proposed]) |
+| `battle-result` | `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle; [accepted]) |
 | `team` | `instances` ([instance ID], ≤ 4) |
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
@@ -274,7 +275,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
-| `badge` | [proposed] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
+| `badge` | [accepted] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
 | `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid if: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles are not recorded |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
 
@@ -297,7 +298,7 @@ save log).
 | `explored` | bytes: bit set of 63 × 63 chunks, row-major, bit 1 = revealed |
 | `nextEncounter` | uint |
 | `pvp` | PvP counters, as in the profile document |
-| `badges` | [uint]: biome indices of the badges held ([proposed]) |
+| `badges` | [uint]: biome indices of the badges held ([accepted]) |
 
 ### Transfer and transfer-log entry — `peerlings/transfer`
 
@@ -335,7 +336,7 @@ Signed envelope; signer: **operator**; stored under the species CID. Meaning:
 |------------|------|
 | `species` | CID |
 | `encounters`, `catches`, `owners`, `trades`, `providers` | uint |
-| `firstWild` | null, or map: `player` (player ID), `name` (display name at the time), `catch` (CID of the `catch` save-log entry), `epoch` (uint). [proposed] ([creator-feedback § First found in the wild](../gameplay/creator-feedback.md#first-found-in-the-wild)) |
+| `firstWild` | null, or map: `player` (player ID), `name` (display name at the time), `catch` (CID of the `catch` save-log entry), `epoch` (uint). [accepted] ([creator-feedback § First found in the wild](../gameplay/creator-feedback.md#first-found-in-the-wild)) |
 | `updatedEpoch` | uint |
 
 ### Player profile document — `peerlings/profile`
@@ -351,7 +352,7 @@ record points to `/ipfs/<CID of this envelope>`. Meaning:
 | `team` | [map: `species`, `level`, `traits`, `shimmer`, `nickname`] |
 | `created` | [CID] |
 | `peerdex` | map: `seen` uint, `caught` uint |
-| `badges` | [uint]: biome indices of the badges held ([proposed]) |
+| `badges` | [uint]: biome indices of the badges held ([accepted]) |
 | `pvp` | map: `fairWins`, `fairLosses`, `realWins`, `realLosses`, `forfeitWins` (included in the win counts), `opponentsBeaten` (different players beaten): all uint, counted from valid `pvp-result` events |
 | `saveLog` | string: the save log's OrbitDB address |
 | `updated` | time |

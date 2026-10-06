@@ -17,19 +17,7 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-055
-**Approve the exact rules for the v1 fun features?**
-- Affects: [exploration § Following Peerling](gameplay/exploration.md#following-peerling) (EXP-013), [guardians](gameplay/guardians.md) (GRD-003), [peerling-of-the-day](gameplay/peerling-of-the-day.md) (POD-004), [creator-feedback § First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild) (CFB-006), [procedural-generation § Biomes](world/procedural-generation.md#biomes) (biome index), [data-formats](tech/data-formats.md), [protocols](tech/protocols.md)
-- Context: the designer approved four features ([D-0022](decisions/D-0022-v1-fun-features.md));
-  the LLM filled in the exact rules.
-- Proposal: follower on the tile the player last left, with petting and
-  settings toggles; one guardian site per sector, spiralling outward from
-  350 m (Plains) to 2,000 m (Volcano), weekly teams of 4 at the local base
-  level + 3, badges verified by replay; Peerling of the Day as about 1 in 20
-  encounters everywhere, chosen per 2-hour in-game day, with the pedestal in
-  the spawn hub; first wild finder decided by the server from verified
-  catches (lowest epoch), the creator's own catches excluded.
-- Raised: 2026-10-06
+_None at the moment._
 
 ## Resolved
 
@@ -328,3 +316,11 @@ biome sectors reaching to the border. Resolved 2026-10-06 →
 **Exact geometry of the spawn hexagon and biome sectors.** Approved as
 proposed. Resolved 2026-10-06 →
 [procedural-generation § Layout](world/procedural-generation.md#layout) (WGN-018).
+
+### Q-055
+**Exact rules for the v1 fun features.** Approved, with the Peerling of the
+Day lasting a full 24-hour day and creators excluded from first-finder
+credit. Resolved 2026-10-06 → [D-0022](decisions/D-0022-v1-fun-features.md),
+[guardians](gameplay/guardians.md), [peerling-of-the-day](gameplay/peerling-of-the-day.md),
+[exploration § Following Peerling](gameplay/exploration.md#following-peerling),
+[creator-feedback § First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild).

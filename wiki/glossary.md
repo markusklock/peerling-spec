@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 updated: 2026-10-06
 ---
 
@@ -267,7 +268,7 @@ instances can exist of the same species. See
 [peerling-species](peerlings/peerling-species.md).
 
 ### Peerling of the Day
-The species picked each in-game day by the shared randomness; it appears more often everywhere and stands on a pedestal near the spawn. See
+The species picked each day (24 hours) by the shared randomness; it appears more often everywhere and stands on a pedestal near the spawn. See
 [peerling-of-the-day](gameplay/peerling-of-the-day.md).
 
 ### Peerlings Viewer

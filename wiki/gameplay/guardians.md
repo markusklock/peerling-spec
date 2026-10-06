@@ -1,11 +1,12 @@
 ---
 title: Landmark Guardians and Badges
 type: system
-status: draft
+status: accepted
 req_prefix: GRD
 tags: [gameplay, battle, progression, world]
 sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/battle.md
@@ -32,7 +33,7 @@ guard somewhere in the world.
 
 ## Guardian sites
 
-[proposed] Details below await approval ([Q-055](../open-questions.md#q-055)).
+[accepted] Details approved 2026-10-06.
 
 - **One site per [biome sector](../glossary.md#biome-sector)**
   ([procedural-generation § Layout](../world/procedural-generation.md#layout)).
@@ -69,7 +70,7 @@ guard somewhere in the world.
 
 ## The weekly team
 
-[proposed]
+[accepted]
 - **Week** W = floor(E ÷ 2016), where E is the epoch number (2016 epochs =
   7 days). The team for week W is defined by the
   [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch) of
@@ -92,7 +93,7 @@ guard somewhere in the world.
 
 ## The battle
 
-[proposed]
+[accepted]
 - The player faces the statue and presses interact. A preview shows the
   guardian level and the four species (names, types); the player can then
   accept the challenge.
@@ -116,7 +117,7 @@ guard somewhere in the world.
 
 ## Badges
 
-[proposed]
+[accepted]
 - A won guardian battle is logged as a `battle-result` with the biome; the
   first win per biome also writes a `badge` event with the evidence needed to
   replay it ([data-formats § Save-log events](../tech/data-formats.md#save-log-events)).
@@ -131,11 +132,11 @@ guard somewhere in the world.
 
 - **GRD-001** [accepted] Each biome MUST have one guardian whose team is drawn each week from that biome's Peerlings using the shared epoch randomness, without a server.
 - **GRD-002** [accepted] Beating a guardian MUST earn that biome's badge (12 badges in all), and a badge MUST only count if its battle verifies by replay.
-- **GRD-003** [proposed] Guardian sites, weekly teams, the battle and badges MUST follow the rules on this page.
+- **GRD-003** [accepted] Guardian sites, weekly teams, the battle and badges MUST follow the rules on this page.
 
 ## Open questions
 
-- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features
+_None at the moment._
 
 ## See also
 

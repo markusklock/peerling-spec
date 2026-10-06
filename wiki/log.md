@@ -432,3 +432,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
   landmark guardians with 12 badges (GRD), Peerling of the Day with a spawn
   pedestal (POD, WGN-019), "First found in the wild by …" (CFB-005).
   Registered prefixes GRD and POD. Exact rules proposed (Q-055).
+
+## [2026-10-06] design | Fun-feature rules approved
+- Source: raw/conversations/2026-10-06-fun-features-approved.md
+- Changed: gameplay/peerling-of-the-day.md, guardians.md, exploration.md,
+  creator-feedback.md, world-feed.md; world/procedural-generation.md;
+  tech/data-formats.md, protocols.md, player-data.md;
+  decisions/D-0022-v1-fun-features.md, glossary.md, open-questions.md, index.md
+- Notes: Resolved Q-055. Peerling of the Day now lasts a full 24-hour day
+  (288 epochs from 00:00 UTC) instead of a 2-hour in-game day. Creators
+  can't earn first-finder credit for their own species (CFB-007). No
+  proposals or open questions remain.

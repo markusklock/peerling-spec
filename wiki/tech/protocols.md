@@ -1,7 +1,7 @@
 ---
 title: Network Protocols
 type: data
-status: draft
+status: accepted
 req_prefix: PRT
 tags: [tech, libp2p, pubsub, protocols, formats]
 sources:
@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -66,7 +67,7 @@ most 4 per second), a heartbeat every 5 s when idle. Meaning:
 | `emote` | string, optional | emote ID: `wave`, `heart`, `laugh`, `wow`, `thumbs-up`, `thumbs-down`, `challenge` or `trade` ([multiplayer § Communication](../gameplay/multiplayer.md#communication)) |
 | `session` | bytes(16) | device ID of the active session ([SAVE-023](player-data.md#requirements)) |
 | `battle` | bytes(32), optional | battle ID while in a PvP battle that allows spectators |
-| `follower` | map, optional | [proposed] `species` (CID), `shimmer` (bool): the player's [following Peerling](../gameplay/exploration.md#following-peerling); omitted when hidden |
+| `follower` | map, optional | [accepted] `species` (CID), `shimmer` (bool): the player's [following Peerling](../gameplay/exploration.md#following-peerling); omitted when hidden |
 | `t` | time | |
 
 ### `peerlings/v1/epoch` — epoch records
@@ -79,7 +80,7 @@ Rate: receivers accept at most 1 per player per minute. Meaning:
 
 | Field | Type | Notes |
 |-------|------|-------|
-| `kind` | `"species-published"` \| `"shimmer-caught"` \| `"shrine-creation"` \| `"first-found"` \| `"all-badges"` ([proposed]) | |
+| `kind` | `"species-published"` \| `"shimmer-caught"` \| `"shrine-creation"` \| `"first-found"` \| `"all-badges"` ([accepted]) | |
 | `species` | CID | omitted for `all-badges` |
 | `ref` | CID | the registry listing (published / shrine), the `catch` save-log entry (shimmer, first-found) or the 12th `badge` entry (all-badges) |
 | `name` | string ≤ 20 | the player's display name |

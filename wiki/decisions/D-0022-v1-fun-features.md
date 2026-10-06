@@ -5,6 +5,7 @@ status: accepted
 tags: [gameplay, world, social]
 sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-fun-features-approved.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/guardians.md
@@ -30,7 +31,7 @@ The LLM suggested seven; the designer chose four.
    badge (12 badges); the guardian team is drawn each week from that biome's
    Peerlings with the shared epoch randomness; badge wins are verified by
    replay; no server needed ([guardians](../gameplay/guardians.md)).
-3. **Peerling of the Day:** each in-game day the shared randomness picks one
+3. **Peerling of the Day:** each day (24 hours) the shared randomness picks one
    species that appears more often everywhere; the world feed announces it,
    its creator is told, and a pedestal near the spawn shows its 3D model,
    explained on hover ([peerling-of-the-day](../gameplay/peerling-of-the-day.md)).
@@ -38,7 +39,10 @@ The LLM suggested seven; the designer chose four.
    catch of a species is credited on its card, and the world feed announces
    it ([creator-feedback § First found in the wild](../gameplay/creator-feedback.md#first-found-in-the-wild)).
 
-The exact rules on those pages are [proposed] until approved.
+[accepted] The exact rules on those pages were approved on 2026-10-06, with two
+choices by the designer: the Peerling of the Day lasts a full 24-hour day
+rather than a 2-hour in-game day, and creators can't earn the first-finder
+credit for their own species.
 
 ## Consequences
 - New save events (`badge`), presence and species-stats fields, and a feed
