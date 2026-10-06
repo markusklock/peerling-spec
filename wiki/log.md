@@ -482,3 +482,14 @@ List all entries with `grep "^## \[" wiki/log.md`.
   client-derived records, novelty seen-set, trade integrity, PvP edge cases,
   shrine limits, guardian and Peerling of the Day edge cases, all-fainted
   team, world border) collected for the designer.
+
+## [2026-10-06] design | Second review: design decisions applied
+- Source: raw/conversations/2026-10-06-review-2-decisions.md
+- Changed: decisions/D-0024 (new), world/procedural-generation.md,
+  tech/player-data.md, data-formats.md, protocols.md, creation-api.md,
+  network-performance.md; gameplay/encounters.md, peerling-of-the-day.md,
+  trading.md, battle.md, pvp-battles.md, creator-feedback.md, guardians.md,
+  exploration.md, catching.md, creation-shrine.md; index.md
+- Notes: 14 decisions (D-0024). New requirements WGN-021, ENC-009, TRD-005,
+  BTL-014, CAT-009, SHR-006; SAVE-015 and SHR-005 reworded. drand quicknet
+  parameters pinned. No proposals or open questions remain.

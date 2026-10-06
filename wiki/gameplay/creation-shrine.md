@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
@@ -63,6 +64,17 @@ offering is never refunded.
 **shrine credit** for 30 days: they can start a new shrine job without a new
 offering. After 30 days the credit is gone.
 
+[accepted] Further rules (2026-10-06):
+- A player has at most **one open shrine job or one shrine credit** at a time,
+  so two jobs can't run in parallel to get around the 7-day limit.
+- A job that ends in `FAILED` (e.g. a generation or publishing error) also
+  gives a shrine credit.
+- The client can ask the server for the player's shrine status: an open job,
+  a credit and when it expires, and when the 7-day limit ends
+  ([creation-api](../tech/creation-api.md#creating-a-peerling)).
+- The offered Peerlings' levels can't be verified (no levels are); this is an
+  accepted gap ([player-data § Known gaps](../tech/player-data.md#known-gaps-accepted-risks)).
+
 The server must be online to use the shrine.
 
 ## Requirements
@@ -71,7 +83,8 @@ The server must be online to use the shrine.
 - **SHR-002** [accepted] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (signed transfers to `released` in the transfer log) when the creation starts.
 - **SHR-003** [accepted] A player MUST be limited to one shrine creation per 7 days, counted from the publishing of their previous shrine creation.
 - **SHR-004** [accepted] The new Peerling MUST start at the average level of the offered Peerlings, rounded down.
-- **SHR-005** [accepted] When a shrine job is abandoned or expires, the server MUST keep a shrine credit for the player for 30 days, which lets them start one new shrine job without an offering.
+- **SHR-005** [accepted] When a shrine job is abandoned, expires or fails, the server MUST keep a shrine credit for the player for 30 days, which lets them start one new shrine job without an offering.
+- **SHR-006** [accepted] A player MUST have at most one open shrine job or shrine credit at a time.
 
 ## Open questions
 

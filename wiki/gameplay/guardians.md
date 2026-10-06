@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/battle.md
@@ -46,7 +47,9 @@ guard somewhere in the world.
   badge.
 - **Placement:** sector *i* (in the clockwise sector order, Plains = 0) has
   its site in the biome area nearest to the point at distance
-  d = 350 + 150 × i metres from the world centre, on the sector's middle line.
+  d = 350 + 150 × i metres from the world centre, on the sector's middle line,
+  counting only areas with walkable land (the far sites could otherwise fall
+  in the border ocean); the platform stands on walkable tiles.
   Going round the compass clockwise, the guardians get stronger, ending at
   the world's edge:
 
@@ -85,7 +88,12 @@ guard somewhere in the world.
   SHA-256(`"peerlings/guardian/v1"` ‖ the record's randomness ‖ the
   [biome index](../world/procedural-generation.md#biomes) as one byte). If
   fewer than 4 have the type, the rest are drawn the same way from all other
-  eligible species.
+  eligible species. [accepted] If there are fewer than 4 eligible species in
+  all, the team is smaller (all of them); with none, the site is quiet.
+- [accepted] **Delisted during the week:** the team stays fixed for the whole
+  week, so badges stay verifiable (a delisted species' record stays pinned,
+  [REG-010](../tech/orbitdb-registry.md#requirements)). Its plinth shows a
+  silhouette instead of the model, which may no longer be available.
 - **Individuals:** every member is at the guardian level, with all traits 0
   and no shimmer. Team order is the draw order.
 - **Guardian level** = min(50, the base level at the site's statue tile + 3)
@@ -105,8 +113,10 @@ guard somewhere in the world.
   - each guardian Peerling chooses moves like a
     [wild Peerling](battle.md#wild-peerling-behaviour) and never switches;
   - the player can't catch; fleeing ends the challenge with no penalty.
-- **XP:** each guardian Peerling defeated gives XP as a wild Peerling of its
-  level ([battle § Experience and levelling](battle.md#experience-and-levelling)).
+- **XP:** [accepted] only for a win, awarded at the end of the battle: each
+  guardian Peerling defeated gives XP as a wild Peerling of its level
+  ([battle § Experience and levelling](battle.md#experience-and-levelling)).
+  Fleeing or losing gives none, and levels never change mid-battle.
 - **Losing** works like losing a wild battle: back to the last rest point,
   fully healed. HP carries over afterwards, as after any wild battle.
 - **Randomness:** the battle's rolls use the

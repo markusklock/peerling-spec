@@ -21,6 +21,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -116,7 +117,9 @@ someone's creation.
   small glowing orb until it loads. Followers are drawn only for the players
   drawn ([multiplayer § Scale and visibility](multiplayer.md#scale-and-visibility)).
 - **Settings:** "Show my follower" and "Show other players' followers", both
-  on by default ([ui § Settings](ui.md#settings)).
+  on by default ([ui § Settings](ui.md#settings)). [accepted] Turning off "Show
+  my follower" hides it for other players too (the presence message then
+  leaves it out).
 
 ## Map
 
@@ -175,7 +178,7 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-009** [accepted] There MUST NOT be fast travel.
 - **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
 - **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll; the guarantee lasts until encounter 0 has been logged.
-- **EXP-012** [accepted] The first non-fainted Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it.
+- **EXP-012** [accepted] The first non-fainted Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it unless the player has turned it off.
 - **EXP-013** [accepted] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
 
 ## Open questions

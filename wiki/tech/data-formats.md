@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
@@ -195,7 +196,7 @@ and in the epoch log. Meaning:
 | Body field | Type | Rules |
 |------------|------|-------|
 | `epoch` | uint | floor(Unix seconds ÷ 300) |
-| `drandRound` | uint | the drand round used |
+| `drandRound` | uint | the drand quicknet round for this epoch ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | `randomness` | bytes(32) | that round's randomness |
 | `drandSignature` | bytes | that round's signature, for verification |
 | `registryHeight` | uint | |
@@ -208,9 +209,10 @@ and in the epoch log. Meaning:
 A **client-derived** epoch record has the same body, `"signer": null`, no
 `sig`, and an extra top-level field `"derivedBy": "client"`. Its
 `registryHeight`, `generator`, `rules`, `registryIndex`, `statsRoot` and
-`ownersRoot` are copied from the latest
-server-signed epoch record in the epoch log whose `epoch` is lower than its own
-([player-data § Encounter seeds](player-data.md#encounter-seeds)).
+`ownersRoot` are copied from its **base record**: a server-signed epoch record
+at least 2 epochs older, which evidence carries alongside it
+([player-data § Encounter seeds](player-data.md#encounter-seeds)), and its
+`drandRound` follows the round formula there.
 
 ### Peerling instance
 
@@ -261,6 +263,7 @@ Part of a `catch` save-log event. Meaning:
 | `team` | [map] | battle-start state of each team member: `instanceId`, `species`, `level`, `hp`, `traits` |
 | `actions` | [Action] | every action, in order |
 | `baseRecord` | epoch record, optional | only when `epochRecord` is client-derived: the server-signed record its copied fields come from, so verifiers needn't search the epoch log ([network-performance § Epoch records by number](network-performance.md#4-epoch-records-by-number)) |
+| `dayRecord`, `dayBaseRecord` | epoch record, optional | the record of epoch 288 × D for the encounter's day D, which decides the [Peerling of the Day](../gameplay/peerling-of-the-day.md) and so the selection weights; `dayBaseRecord` only if `dayRecord` is client-derived. Omitted when `epochRecord` is itself that record |
 
 **Action** (also used in PvP): `{ "kind": "move", "slot": "quick" | "strong" |
 "signature" }`, `{ "kind": "switch", "to": <instance ID> }`, `{ "kind":
@@ -300,7 +303,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
 | `badge` | [accepted] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
-| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles are not recorded |
+| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles and draws are not recorded. [accepted] Conflicting results for the same battle ID: a valid `win` always beats a `forfeit` claim, and two `forfeit` claims naming different winners are both void |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
 | `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log; its `player` must be the log's owner) |
 
@@ -334,7 +337,7 @@ A **transfer** is a signed envelope; signer: the `from` player.
 | `instanceId` | instance ID | |
 | `from` | player ID | the current owner |
 | `to` | player ID or `"released"` | |
-| `prev` | CID or `"origin"` | the CID of this Peerling's previous transfer envelope |
+| `prev` | CID or `"origin"` | the CID of a transfer-log entry (the OrbitDB entry, which can be fetched by CID) that holds this Peerling's previous transfer |
 | `trade` | bytes(16) or absent | shared random ID tying the two sides of one trade together |
 | `offers` | bytes(32) or absent | trades only: SHA-256 of both confirmed offers (the `confirm` value, [protocols § trade](protocols.md#peerlingstrade100--trade)) |
 
@@ -349,8 +352,15 @@ transfers for both confirmed offers: every instance in both offers, each
 signed by its owner, all with the same `trade` and `offers` values. The
 transfer-log access controller rejects any entry that breaks this, and readers
 ignore such transfers. So neither player can record only the other side's
-half. Conflict rule: two transfers with the same `prev` → the one whose
-**log entry** CID is lower wins ([SAVE-015](player-data.md#requirements)).
+half.
+
+[accepted] **Conflicts** (2026-10-06): the same transfer envelope may appear
+in several entries (e.g. both trade partners appended it, or someone re-posted
+it); copies with the same envelope CID count once. A **double trade** is two
+*different* transfer envelopes for the same instance with the same previous
+transfer (their `prev` entries hold the same envelope). The one whose
+**envelope CID** is lower wins ([SAVE-015](player-data.md#requirements)), and
+its signer is flagged.
 
 ### Species stats — `peerlings/species-stats`
 
@@ -403,6 +413,7 @@ Signed envelope; signer: **operator**. Meaning:
 | `upTo` | CID | the last save-log entry covered |
 | `nextEncounter` | uint | the next encounter number after `upTo` |
 | `lastEpoch` | uint | the highest epoch used up to `upTo` |
+| `state` | CID | a [save snapshot](#save-snapshot--peerlingssave) the server computed for the state at `upTo` (it holds the Peerdex, which verifiers need for the novelty rule) |
 | `invalid` | [instance ID] | Peerlings in the covered part whose origin failed verification |
 | `t` | time | |
 

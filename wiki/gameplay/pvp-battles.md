@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -123,6 +124,11 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
   appear on the player profile (in game and in the shared
   [profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile)),
   with wins by forfeit and the number of different opponents beaten.
+- [accepted] **Conflicting claims** (2026-10-06): a win the loser signed always
+  beats a forfeit claim for the same battle, and two forfeit claims naming
+  different winners cancel each other. The **in-game profile screen** counts
+  only `pvp-result` events that verify, from the save log it fetches; the
+  numbers in the shared profile document are the player's own claim.
 - **No rewards.** It is a stat only; there are still no XP or items for PvP.
 - **Known gap:** two friends (or one person with two accounts) can still
   play fixed battles to raise a win count. Since it gives no reward, this is

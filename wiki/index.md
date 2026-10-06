@@ -102,12 +102,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted | PvP win counter on the player profile |
 | [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
 | [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
+| [D-0024](decisions/D-0024-review-2-decisions.md) | accepted | Determinism, verification and edge-case rules from the second review |
 
 ## Registered requirement prefixes
 
 API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PERF, POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0024. Next free question ID: Q-057.
+D-0025. Next free question ID: Q-057.
 
 ## Sources
 
@@ -151,3 +152,4 @@ D-0024. Next free question ID: Q-057.
 | [2026-10-06-network-performance](../raw/conversations/2026-10-06-network-performance.md) | 2026-10-06 | Network performance, scale and timeouts reviewed; failsafes proposed |
 | [2026-10-06-network-performance-approved](../raw/conversations/2026-10-06-network-performance-approved.md) | 2026-10-06 | Network performance design approved |
 | [2026-10-06-review-2-fixes](../raw/conversations/2026-10-06-review-2-fixes.md) | 2026-10-06 | Second full review; mechanical fixes applied, design questions collected |
+| [2026-10-06-review-2-decisions](../raw/conversations/2026-10-06-review-2-decisions.md) | 2026-10-06 | 14 design decisions from the second review approved |

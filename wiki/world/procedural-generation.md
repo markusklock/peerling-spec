@@ -23,6 +23,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -44,7 +45,9 @@ world for all players ([D-0008](../decisions/D-0008-shared-multiplayer-world.md)
 ## Generation basics
 
 [accepted]
-- Generation is **deterministic from one global seed**, so every client
+- Generation is **deterministic from one global seed** (a fixed 32-byte seed
+  per generator version, computed with integer maths:
+  [Deterministic world maths](#deterministic-world-maths)), so every client
   generates the identical world locally without transferring world data. This
   is what makes the shared world possible with no world server.
 - The world is divided into **chunks** generated on demand. [accepted] A chunk
@@ -71,6 +74,36 @@ heights are separated by a cliff unless one of them is a slope or stairs.
 About 20–30% of walkable tiles in a biome area are foliage, in patches of 10–60
 tiles, with paths of plain ground around and between them. Rest points and the
 Creation Shrine are never surrounded by foliage.
+
+## Deterministic world maths
+
+[accepted] (2026-10-06) Every client and every verifier must compute exactly
+the same world, because catches are checked against it: the encounter tile
+must be encounter foliage, and its biome sets the encounter weights. Browsers
+don't all compute floating-point functions (`sin`, `atan2`, `pow`, …) to the
+same last bit, so:
+
+- **World seed:** each world-generator version has a fixed 32-byte seed,
+  shipped in the game app together with that version's generator.
+- **Integers only** for everything that decides a tile's kind (ground,
+  foliage, water, blocked), its height level and its biome: hash-based value
+  noise in fixed-point integer maths, with random values taken from SHA-256 of
+  the world seed, a purpose string and the coordinates. No floating point and
+  no transcendental functions on this path.
+- **Biome test:** the spawn hexagon test and the sector test compare the
+  (noise-moved) tile position with integer cross products against fixed
+  integer direction vectors for the 12 sector borders, shipped as constants.
+- **Areas:** biome areas are Voronoi cells compared by integer squared
+  distance; ties go to the lower cell index.
+- **One biome per tile:** every tile has exactly one biome. The "blending"
+  between areas is visual only (colours, props) and never changes a tile's
+  kind or biome.
+- **Visuals may use floating point:** prop jitter, colour blending, lighting
+  and animation, which no verifier checks.
+
+The exact algorithm of a generator version is defined by that version's
+implementation, which every client ships; the rules above are what make it
+give identical results in every browser.
 
 ## Size and shape
 
@@ -133,7 +166,8 @@ it replaces the earlier ring layout):
   distance picks the level, so the world map works like a compass.
 - [accepted] (approved 2026-10-04) Each sector is split into biome **areas**
   about 300–500 m across (e.g. Voronoi cells around points scattered by the
-  seed, clipped to the sector); the hexagon is one area. That gives roughly
+  seed, clipped to the sector); the hexagon is one area, whose landmark and
+  rest point are the spawn hub's. That gives roughly
   80–150 areas.
 - Borders between areas and sectors blend over a short distance, so biomes
   flow into each other rather than switching abruptly.
@@ -162,7 +196,8 @@ Levels inside the hexagon are 2 to about 9.
   Heights are whole levels per tile, with cliffs between tiles
   ([Tiles](#tiles)).
 - **Border:** the world is surrounded by an ocean ring, with mountains in
-  places.
+  places. [accepted] The ocean is 60 m (30 tiles) wide along every edge of the
+  world square (2026-10-06).
 - **Props** (trees, rocks, ruins, crystals, scrap) come from a per-biome kit
   and are placed deterministically from the world seed. The art is a
   hand-made low-poly kit shipped with the game app
@@ -311,6 +346,7 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-018** [accepted] The hexagon, sectors and sector order MUST follow the exact geometry in [Layout](#layout).
 - **WGN-019** [accepted] The spawn hub MUST have a Peerling of the Day pedestal ([POD-002](../gameplay/peerling-of-the-day.md#requirements)).
 - **WGN-020** [accepted] Each biome sector MUST have one guardian site ([guardians](../gameplay/guardians.md)).
+- **WGN-021** [accepted] Tile kind, height level and biome MUST be computed with integer maths only, from a fixed 32-byte world seed per generator version, as in [Deterministic world maths](#deterministic-world-maths).
 
 ## Open questions
 

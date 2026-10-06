@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-06-network-performance.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -240,7 +241,7 @@ formats: [data-formats § Snapshots and indexes](data-formats.md#snapshots-and-i
 A shimmer-catch feed message makes every online client verify one catch.
 Receivers do a **light check**: fetch the single `catch` entry by its CID and
 replay its battle from the evidence, plus the checkpoint if there is one. They
-skip the full encounter-number history, verify at most 2 feed messages at a
+skip the full encounter-number history and the candidate-list check, verify at most 2 feed messages at a
 time, and drop a message that isn't verified within 30 s. A feed message is
 shown only, never trusted for ownership, so a light check is enough.
 

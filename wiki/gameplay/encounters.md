@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -63,6 +64,18 @@ Every eligible species starts with weight 1, then:
 [accepted] The [Peerling of the Day](peerling-of-the-day.md#in-encounters)
 appears more often everywhere during its day; its exact weight is defined on
 that page.
+
+[accepted] **What counts as seen** (2026-10-06): candidates must come out the
+same for the player and every verifier, so "never seen" has an exact meaning.
+For encounter n, a species counts as seen if it appears in a `seen`,
+`starter`, `created`, `catch` or `trade` (incoming) event that comes **before
+the `battle-result` of encounter n** in the save log. When a battle ends the
+client writes, in this order: `battle-result`, then `catch` (if caught), then
+`seen` (if this is a first sighting), so an encounter never counts its own
+species as seen. A verifier starting from a
+[verification checkpoint](../tech/network-performance.md#5-verification-checkpoints)
+takes the seen species up to `upTo` from the checkpoint's server-computed
+snapshot.
 
 The candidates (below) are drawn with these weights using the encounter
 seed. The wild level depends on where it is met ([Wild level](#wild-level)),
@@ -176,6 +189,7 @@ one is almost always ready when an encounter triggers.
 - **ENC-006** [accepted] Each encounter MUST have up to 5 candidate species, and the encounter MUST use a candidate that was successfully fetched via IPFS.
 - **ENC-007** [accepted] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
 - **ENC-008** [accepted] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
+- **ENC-009** [accepted] The novelty weight MUST use the seen species defined in [What counts as seen](#selection), and the client MUST write an encounter's events in the order `battle-result`, `catch`, `seen`.
 
 ## Open questions
 _None at the moment._

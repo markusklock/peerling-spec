@@ -22,6 +22,7 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -96,7 +97,9 @@ How each [move template](../peerlings/moves.md#template-table) behaves in battle
 - **Two hits** (`quick-flurry`): one accuracy roll, then two hits, each with its
   own damage roll.
 - **Recoil** (`strong-recoil`): after hitting, the user loses 33% of the damage
-  dealt (at least 1 HP). The user can faint from recoil.
+  dealt (at least 1 HP). The user can faint from recoil. [accepted] Recoil
+  isn't applied when the hit ended the battle (it knocked out the opponent's
+  last Peerling), so a battle can never end with both sides out at once.
   [accepted] "Damage dealt" here and for drain means the HP actually removed
   from the target (never more than it had left); the result is rounded down,
   minimum 1.
@@ -152,6 +155,7 @@ opponent.
 | Player flees | Battle ends; no XP | — |
 | All the player's Peerlings faint | Loss; return to the last rest point, fully healed ([EXP-003](exploration.md#requirements)) | Loss; the player stays where they are |
 | Forfeit / timeout | — | Loss ([pvp-battles](pvp-battles.md)) |
+| 200 turns have been played [accepted] | — | Draw: no winner, nothing recorded; stops endless switching |
 
 After a wild battle, HP carries over; stat stages reset.
 
@@ -411,6 +415,7 @@ so a large Peerling looms over a small one; size has no effect on the rules.
 - **BTL-011** [accepted] A battle MUST use the rules version defined in [Rules versions](#rules-versions), and the client MUST keep every past rules version so it can verify older catches ([Rules versions](#rules-versions)).
 - **BTL-012** [accepted] Battle, catch and encounter maths MUST use only the integer formulas and the draw order in [Deterministic arithmetic](#deterministic-arithmetic).
 - **BTL-013** [accepted] Every Peerling MUST start a PvP battle at full HP, and a PvP battle MUST NOT change any Peerling's HP afterwards or move the player to a rest point.
+- **BTL-014** [accepted] Recoil MUST NOT be applied when the hit ended the battle, and a PvP battle MUST end as a draw after 200 turns.
 
 ## Open questions
 

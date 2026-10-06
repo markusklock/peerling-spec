@@ -7,6 +7,7 @@ tags: [gameplay, encounters, social, world]
 sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/encounters.md
@@ -42,7 +43,8 @@ Peerling yet?") and gives every creator a chance at a moment in the spotlight.
   day over the 2-hour in-game day, so each Peerling of the Day is an event that
   lasts long enough for everyone to join.
 - The choice uses the [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch)
-  of epoch 288 × D (signed or client-derived): one species drawn uniformly from
+  of epoch 288 × D (the server-signed one if it exists, otherwise
+  client-derived: [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)): one species drawn uniformly from
   the eligible species at its `registryHeight`
   ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)),
   sorted by registry `seq`, with the
@@ -58,6 +60,12 @@ selection weight max(1, W div 19), where W is the total weight of all other
 eligible species ([encounters § Selection](encounters.md#selection)). It is
 then about 1 in 20 of all draws, wherever the player is. Its biome and novelty
 multipliers don't apply. Encounters use the day of the epoch record they use.
+
+[accepted] If the Peerling of the Day is delisted during its day, its boost
+stops (it is no longer eligible at the encounter's registry height,
+[ENC-004](encounters.md#requirements)), and the pedestal stays empty until the
+next day. A catch's evidence includes the day's record
+([data-formats § Catch evidence](../tech/data-formats.md#catch-evidence)).
 
 ## In the world
 

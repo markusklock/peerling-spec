@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
@@ -56,9 +57,15 @@ Exact messages: [protocols](../tech/protocols.md).
    entry to the open **transfer log**
    ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
    No server is involved.
+   [accepted] Once both sides have exchanged their signed transfers, the trade
+   can no longer be cancelled: either side may write the entry, and does so if
+   it hasn't appeared, even if the session dropped (2026-10-06).
 5. Each side then appends a `trade` event to its save, removing the outgoing
    instances and adding the incoming ones (their `origin` stays as it was;
-   trades don't change it).
+   trades don't change it). A client keeps the received offer data until it
+   has written this event, and at every session start it checks the transfer
+   log (or the ownership index) for its own Peerlings and writes any `trade`
+   event that is missing.
 6. After the trade, the receiving player's node fetches and keeps
    ([NODE-004](../tech/ipfs-helia.md#requirements)) the species content of what
    it received.
@@ -72,7 +79,9 @@ without the operator server.
 A modified client that "keeps a copy" can't trade it again: the transfer log
 shows it already belongs to someone else. A player who gives the same Peerling
 to two people at once is detected by their two conflicting signatures and
-flagged; one transfer stays valid and the other is void
+flagged; one transfer stays valid and the other is void. Re-posting someone's
+old, identical transfer is never a conflict, so it can't get an honest player
+flagged
 ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
 
 ## Requirements
@@ -81,6 +90,7 @@ flagged; one transfer stays valid and the other is void
 - **TRD-002** [accepted] A trade MUST complete only after both players confirm the final offers; changing an offer MUST clear both confirmations.
 - **TRD-003** [accepted] A completed trade MUST produce a trade record signed by both players.
 - **TRD-004** [accepted] Trades MUST NOT require the operator server; each side MUST verify the other's offered Peerlings before signing.
+- **TRD-005** [accepted] A trade MUST NOT be cancellable once both sides have exchanged signed transfers; either side MUST append the entry if it is missing, and each client MUST at session start write any `trade` event missing for its own Peerlings.
 
 ## Open questions
 

@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-06-formats-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/generation-server.md
@@ -52,7 +53,9 @@ updated: 2026-10-06
 - **Errors:** status code plus `{ "error": "<code>", "message": "<text>" }`.
   Codes include `rate-limited` (with `Retry-After`), `cooldown`, `name-taken`,
   `invalid`, `not-found`, `job-expired`, `verification-failed`,
-  `starter-taken` (the player already has a starter).
+  `starter-taken` (the player already has a starter), `shrine-limit` (the
+  7-day limit hasn't ended, or a shrine job or credit is already open; with
+  `Retry-After` when it is the time limit).
 - **Progress:** `GET /v1/jobs/{id}/events` is a Server-Sent Events stream that
   sends the job object again whenever it changes. Clients may poll
   `GET /v1/jobs/{id}` instead.
@@ -99,6 +102,7 @@ transfer-log entry that released the offering.
 |-----------------|------|------|
 | `POST /v1/jobs` | `kind` (`"starter"` \| `"shrine"`), `wish` (≤ 300 characters), `release` (shrine only: the 3 signed transfers to `"released"`; omitted when using a kept shrine credit) | Starts a job. For `starter`, fails with `starter-taken` if the player already has a starter. For `shrine`, checks the offering or the player's shrine credit first ([creation-shrine](../gameplay/creation-shrine.md)) |
 | `GET /v1/jobs/{id}` | — | The job object |
+| `GET /v1/shrine` | — | The player's shrine status: `{ "openJob": <job ID or null>, "credit": { "expiresAt": <time> } or null, "nextShrineAt": <time or null: when the 7-day limit ends> }` |
 | `GET /v1/jobs/{id}/events` | — | Server-Sent Events, as above |
 | `POST /v1/jobs/{id}/regenerate` | `wish` (optional: an edited wish) | New image; respects the 30 s cooldown (`nextImageAt`) |
 | `POST /v1/jobs/{id}/accept-image` | — | Starts 3D generation, then stats and moves |

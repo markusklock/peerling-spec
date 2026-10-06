@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -102,7 +103,7 @@ by both fighters. Meaning: [spectating](../gameplay/spectating.md).
 |--------|--------|
 | `"start"` | `players` [2 player IDs], `mode` (`"fair"` \| `"real"`), `rules` (uint), `teams` (two lists of team members, as in the battle `team` message) |
 | `"turn"` | `turn` (uint), `seed` (bytes(32), once revealed), `actions` (all revealed decisions so far, in order: [map: `player` (0 or 1), `turn`, `action`]), `state` (bytes(32), state hash after this turn) |
-| `"end"` | `result` (`"win"` \| `"void"` \| `"forfeit"`), `winner` (player ID or null) |
+| `"end"` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null) |
 
 ### `peerlings/v1/session/<player ID>` — active session
 Published by the computer that is currently playing, every 15 s:
@@ -137,7 +138,7 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 | 6 | each deciding side, per decision | `commit` | `turn` (uint), `hash`: SHA-256(DAG-CBOR bytes of the action ‖ nonce) |
 | 7 | each deciding side, per decision | `reveal` | `turn`, `action` ([data-formats § Action](data-formats.md#catch-evidence)), `nonce` (bytes(16)) |
 | 8 | both, per turn | `state` | `turn`, `hash`: SHA-256 of the battle state after the turn, `sig`: state signature (below) |
-| 9 | both | `end` | `result` (`"win"` \| `"void"` \| `"forfeit"`), `winner` (player ID or null), `turn` (the last resolved turn), `hash` (the battle-state hash after it), `sig`: end signature (below) |
+| 9 | both | `end` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null), `turn` (the last resolved turn), `hash` (the battle-state hash after it), `sig`: end signature (below) |
 
 - Step 3: each side verifies the other's team (origin and ownership,
   [player-data § Verified Peerlings](player-data.md#verified-peerlings)) before
@@ -206,7 +207,11 @@ Meaning: [trading](../gameplay/trading.md).
 | 4 | either | `confirm` | `offers`: the offers hash (below) |
 | 5 | both, after both confirmed | `transfers` | the sender's signed transfer envelopes, carrying the `trade` ID from `propose` and the `offers` hash ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer): trades are all or nothing) |
 | 6 | A | `done` | `entry`: CID of the transfer-log entry A appended (both sides' transfers) |
-| — | either, before 6 | `cancel` | — |
+| — | either, before 5 | `cancel` | — |
+
+After step 5 the trade can't be cancelled. If B doesn't receive `done` (or
+the stream drops), B appends the entry itself; both entries hold identical
+transfers, which never count as a conflict.
 
 - **Offers hash** = SHA-256 of the DAG-CBOR list `[offer of the lower player
   ID, offer of the higher player ID]`, where each offer is the list of its

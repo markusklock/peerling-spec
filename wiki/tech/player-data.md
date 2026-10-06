@@ -30,6 +30,7 @@ sources:
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-06-review-2-decisions.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -336,14 +337,27 @@ without the server, and the server can check everything afterwards.
 
 - `randomness` is taken from **[drand](../glossary.md#drand)**, the public
   randomness beacon run by the League of Entropy (Protocol Labs, the company
-  behind IPFS, is one of its main contributors). It is the value of the drand round that
-  starts at or just after the epoch's start time. drand values can be verified
+  behind IPFS, is one of its main contributors). drand values can be verified
   with drand's public key, so clients don't have to trust the server not to
   bias the randomness. Clients get drand values through the server's epoch
-  record and verify the drand signature locally, so they never contact drand
-  directly. Fallback if drand is unavailable or not wanted: the server
-  generates the value itself, and players trust it like they trust the
-  registry.
+  record and verify the drand signature locally, so they normally never
+  contact drand directly.
+- [accepted] **The drand network** (2026-10-06) is **quicknet**:
+
+  | Parameter | Value |
+  |-----------|-------|
+  | Chain hash | `52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971` |
+  | Scheme | `bls-unchained-g1-rfc9380` (each round is verifiable on its own) |
+  | Period | 3 s |
+  | Genesis time | 1692803367 (Unix seconds) |
+  | Public key | `83cf0f2896adee7eb8b5f01fcad3912212c437e0073e911fb90022d3e760183c8c4b450b6a0a6c3ac6a5776a2d1064510d1fec758c921cc22b0e17e63aaf4bcb5ed66304de9cf809bd274ca73bab4af5a6e9c76a4bc09e76eae8991ef5ece45a` |
+
+  The round for epoch E is **(E × 300 − 1692803367) ÷ 3 + 1**. It is a whole
+  number, because both terms are divisible by 3, and that round is emitted
+  exactly at the epoch's start. `randomness` is that round's randomness. There
+  is no fallback where the server makes up its own value: nobody could verify
+  it. If drand is down, no new epoch records appear and players keep using the
+  last one, as in offline play.
 - `generator` announces the current world-generator version and the epoch it
   takes effect ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)).
 - `registryHeight` fixes which species are eligible during that epoch (see
@@ -388,24 +402,31 @@ without the server, and the server can check everything afterwards.
 
 **When the server is offline.** [accepted] If no new server-signed epoch
 record has arrived for 10 minutes (two epochs), the client derives epoch
-records itself:
+records itself (rules tightened 2026-10-06):
 - `randomness` is the drand value for the epoch, fetched directly from public
   drand endpoints (run by League of Entropy members) and checked against
   drand's public key as usual.
 - `registryHeight` (and the `generator` and `rules` versions and the snapshot
-  roots) are copied from
-  the latest server-signed epoch record in the epoch log whose epoch is lower
-  than the derived record's ([accepted] 2026-10-06). Any verifier can look that
-  record up, so a client can't pick an older, smaller registry state. While the
-  server is down nothing can be added to the registry (only the server can sign
-  listings), so nothing is missed.
-- The record is marked as client-derived and has no server signature.
+  roots) are copied from the latest server-signed epoch record the client has
+  (its **base record**). While the server is down nothing can be added to the
+  registry (only the server can sign listings), so nothing is missed.
+- The record is marked as client-derived and has no server signature. Evidence
+  that uses it also carries its base record (`baseRecord`), so verifiers never
+  search the epoch log.
+- [accepted] **Validity:** verifiers accept a client-derived record for epoch
+  E if its drand value is genuine for E, its base record is validly
+  server-signed with an epoch of at most E − 2, and the copied fields equal
+  the base record's. A cheater could choose an older base record during an
+  outage; that is accepted (see [Known gaps](#known-gaps-accepted-risks)).
+- [accepted] **Day and week records** (Peerling of the Day, guardian teams):
+  the server-signed record for that epoch always wins if it exists. A client
+  that doesn't have it tries `GET /v1/epochs/{E}` and the epoch log; if it
+  still has none, it derives the record for that epoch at once (without the
+  10-minute wait), and switches to the signed record if one turns up later.
 
 This keeps wild encounters working with nothing from the operator server.
-Verifiers accept client-derived records whose drand value is genuine and whose
-height matches the client's latest signed record. Because
-the randomness still comes from drand, a client-derived record gives the player
-no extra choice. See [resilience](resilience.md).
+Because the randomness still comes from drand, a client-derived record gives
+the player almost no extra choice. See [resilience](resilience.md).
 
 **Offline play.** Without network access, the client keeps using the last epoch
 record it has. That gives no extra choice (same epoch and same n give the same
@@ -414,7 +435,7 @@ verified like any other: by whoever needs to check them, from the save log.
 
 **What a verifier checks for a catch.**
 1. The epoch record is genuine: drand signature, plus either the server's
-   signature or the client-derived rules above.
+   signature or the client-derived validity rule above.
 2. Encounter numbers run from 0 with no gaps and appear only once (counting
    `battle-result` events; a `catch` repeats the number of its own
    `battle-result`); epochs never decrease (from the newest verification checkpoint on, if there is one: the
@@ -470,10 +491,14 @@ from the start.
 can't be prevented: a cheater could give the same Peerling to two players at
 once, e.g. while they are not connected to each other. They are detected
 instead:
-- Two transfers with the same `prev` are a **double trade**. Both are signed
-  by the same player, so the pair is cryptographic proof of cheating.
-- **Resolution:** the transfer whose log-entry CID sorts lower is the valid one;
-  the other is void. Every node reaches the same result from the same data.
+- Two *different* transfers of the same Peerling that follow the same previous
+  transfer are a **double trade**. Both are signed by the same player, so the
+  pair is cryptographic proof of cheating. Identical copies of one transfer
+  (re-posted, or appended by both trade partners) count once and are never a
+  conflict ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
+- **Resolution:** the transfer whose envelope CID sorts lower is the valid
+  one; the other is void. Every node reaches the same result from the same
+  data.
 - **Flagging:** the cheating player ID is flagged. Clients refuse trades and
   PvP battles with flagged players.
 - The player who received the void transfer loses that Peerling. This is
@@ -513,6 +538,14 @@ once per battle ID.
   (the receiver gets the level shown), and in Real-levels PvP, which both
   players opt into ([D-0015](../decisions/D-0015-pvp-level-modes.md)).
 - **Double trades** are detected, not prevented ([Transfer log and trades](#transfer-log-and-trades)).
+- **Base record choice during outages.** A client-derived epoch record may copy
+  any server-signed record at least 2 epochs older, so a cheater could pick an
+  older registry state (fewer species). It only changes which species can
+  appear, and only while the server is offline.
+- **Shrine offering levels aren't verified** (levels in general aren't, see
+  above). An edited level lets a player meet the level-20 rule early, and the
+  new Peerling's level comes from the offered levels. Accepted: the offering is
+  still given up, and the 7-day limit still applies.
 - **Choice among encounter candidates.** A modified client could claim the first
   candidates failed to download and pick a later one: at most a choice of 1 in
   5. Only the species differs between candidates: level, traits and shimmer
@@ -555,7 +588,7 @@ D-0013, mostly checks any player can run).
 - **SAVE-012** [accepted] Starters and shrine-created Peerlings MUST receive a server origin attestation when they are created.
 - **SAVE-013** [accepted] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand, copying the registry height and versions from the latest server-signed epoch record before that epoch; verifiers MUST accept such records.
 - **SAVE-014** [accepted] Ownership MUST be a chain of transfers signed by the current owner and stored in an open OrbitDB transfer log; a trade MUST be a single entry holding both players' signed transfers.
-- **SAVE-015** [accepted] Conflicting transfers of the same Peerling MUST be detected; [accepted] the transfer with the lower log-entry CID wins, and the signer MUST be flagged and refused for trades and PvP.
+- **SAVE-015** [accepted] Conflicting (different) transfers of the same Peerling MUST be detected, while identical copies of one transfer MUST NOT count as a conflict; [accepted] the transfer with the lower envelope CID wins, and the signer MUST be flagged and refused for trades and PvP.
 - **SAVE-016** [accepted] Any client MUST be able to verify a catch by replaying it from the catcher's save log; no server signature is required.
 - **SAVE-017** [accepted] A caught Peerling's instance ID MUST be SHA-256(player ID ‖ encounter number).
 - **SAVE-018** [accepted] A save log's OrbitDB address MUST be derivable from the player ID alone, so a recovered key can find its save on any node that holds it.
