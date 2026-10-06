@@ -349,3 +349,8 @@ List all entries with `grep "^## \[" wiki/log.md`.
   `seen` event and the snapshot's Peerdex now record the biome and shimmer
   sightings. Cry parameter details proposed (Q-048). Added DEX, UI, AUD,
   EXP-008/009.
+
+## [2026-10-06] design | Peerling cry details approved
+- Source: raw/conversations/2026-10-06-cry-details-approved.md
+- Changed: world/audio.md, open-questions.md, index.md
+- Notes: Resolved Q-048. No open questions or proposals remain.

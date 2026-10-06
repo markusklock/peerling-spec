@@ -1,11 +1,12 @@
 ---
 title: Music, Sound Effects and Peerling Cries
 type: system
-status: draft
+status: accepted
 req_prefix: AUD
 tags: [world, audio, presentation]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+  - raw/conversations/2026-10-06-cry-details-approved.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/world/visual-style.md
@@ -46,7 +47,7 @@ Audio API, so no audio files are generated or downloaded.
 - **Deterministic:** all cry parameters are derived from SHA-256 of the
   species CID's bytes and from its primary type, so every player hears the
   same cry for the same species.
-- **Parameters** [proposed] ([Q-048](../open-questions.md#q-048)) from the hash bytes, in this order:
+- **Parameters** (approved 2026-10-06) from the hash bytes, in this order:
 
   | Byte | Parameter | Range |
   |------|-----------|-------|
@@ -57,7 +58,7 @@ Audio API, so no audio files are generated or downloaded.
   | 4 | Vibrato depth | 0–1 semitone |
   | 5 | Noise mix | 0–40% |
 
-- **Type flavour** [proposed] (the timbre each type adds; the exact sound design is the
+- **Type flavour** [accepted] (the timbre each type adds; the exact sound design is the
   implementer's choice, as long as it depends only on the parameters above and
   the type):
 
@@ -76,18 +77,18 @@ Audio API, so no audio files are generated or downloaded.
   | Shadow | Low, distorted |
   | Spirit | Echoing, reverberant |
 
-- **When it plays** [proposed]: when a Peerling enters a battle, when its card is opened,
+- **When it plays** [accepted]: when a Peerling enters a battle, when its card is opened,
   and when the player's own Peerling is chosen as starter.
 
 ## Requirements
 
 - **AUD-001** [accepted] Music and sound effects MUST be hand-made or licensed assets shipped with the game app, including one theme per biome, a hub theme and wild and PvP battle music.
 - **AUD-002** [accepted] Every species MUST have a cry synthesized in the browser, derived deterministically from the species CID and its primary type.
-- **AUD-003** [proposed] Cry parameters and type flavours MUST follow the tables on this page.
+- **AUD-003** [accepted] Cry parameters and type flavours MUST follow the tables on this page.
 
 ## Open questions
 
-[Q-048](../open-questions.md#q-048)
+_None at the moment._
 
 ## See also
 

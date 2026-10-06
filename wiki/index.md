@@ -52,7 +52,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
 | [procedural-generation](world/procedural-generation.md) | draft | WGN | Shared 4 × 4 km world: tiles, 12 biomes, terrain, spawn hub, landmarks, paths, day/night, weather, generator updates |
-| [audio](world/audio.md) | draft | AUD | Music, sound effects, Peerling cries synthesized from the CID |
+| [audio](world/audio.md) | accepted | AUD | Music, sound effects, Peerling cries synthesized from the CID |
 | [visual-style](world/visual-style.md) | draft | VIS | Top-down tilted camera, battle camera, colorful stylized look, environment art kit |
 
 ## Tech
@@ -135,3 +135,4 @@ D-0020. Next free question ID: Q-049.
 | [2026-10-05-formats-request](../raw/conversations/2026-10-05-formats-request.md) | 2026-10-05 | Designer asked for the exact data and message formats |
 | [2026-10-06-formats-approved](../raw/conversations/2026-10-06-formats-approved.md) | 2026-10-06 | Formats approved; one key per player kept after weighing pros and cons |
 | [2026-10-06-peerdex-ui-audio-restpoints](../raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md) | 2026-10-06 | Peerdex, menus/HUD/controls, audio with CID-synthesized cries, rest points; no fast travel |
+| [2026-10-06-cry-details-approved](../raw/conversations/2026-10-06-cry-details-approved.md) | 2026-10-06 | Peerling cry details approved |
