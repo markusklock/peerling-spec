@@ -443,3 +443,13 @@ List all entries with `grep "^## \[" wiki/log.md`.
   (288 epochs from 00:00 UTC) instead of a 2-hour in-game day. Creators
   can't earn first-finder credit for their own species (CFB-007). No
   proposals or open questions remain.
+
+## [2026-10-06] design | Network performance, scale and timeouts (proposal)
+- Source: raw/conversations/2026-10-06-network-performance.md
+- Changed: tech/network-performance.md (new), open-questions.md, index.md;
+  Q-056 linked from ipfs-helia, orbitdb-registry, player-data, resilience,
+  realtime-networking, creator-feedback, encounters
+- Notes: Whole-spec review of slow network requests and data growth. New page
+  with all-[proposed] failsafes (PERF prefix registered). Would change
+  CFB-002 (species stats as an OrbitDB database) and the full-registry-sync
+  rule before encounters; awaiting approval (Q-056).

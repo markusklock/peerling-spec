@@ -72,6 +72,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [creation-api](tech/creation-api.md) | accepted | API | HTTP/3 API between client and operator server |
 | [tech-stack](tech/tech-stack.md) | accepted | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | accepted | RES | What works without the operator server, and how |
+| [network-performance](tech/network-performance.md) | draft | PERF | Slow requests, data growth, retrieval ladder, timeouts, waiting states, snapshots and indexes |
 | [ipfs-showcase](tech/ipfs-showcase.md) | accepted | SHOW | Making IPFS visible and meaningful to players |
 
 ## Decisions
@@ -104,8 +105,8 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 ## Registered requirement prefixes
 
 API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
-POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0023. Next free question ID: Q-056.
+PERF, POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
+D-0023. Next free question ID: Q-057.
 
 ## Sources
 
@@ -146,3 +147,4 @@ D-0023. Next free question ID: Q-056.
 | [2026-10-06-proposals-approved](../raw/conversations/2026-10-06-proposals-approved.md) | 2026-10-06 | Battle maths, PvP win record, presentation formulas and hexagon geometry approved |
 | [2026-10-06-v1-fun-features](../raw/conversations/2026-10-06-v1-fun-features.md) | 2026-10-06 | Following Peerling, guardians, Peerling of the Day (with spawn pedestal), "First found in the wild by …" |
 | [2026-10-06-fun-features-approved](../raw/conversations/2026-10-06-fun-features-approved.md) | 2026-10-06 | Fun-feature rules approved; Peerling of the Day lasts 24 h; creators excluded from first-finder credit |
+| [2026-10-06-network-performance](../raw/conversations/2026-10-06-network-performance.md) | 2026-10-06 | Network performance, scale and timeouts reviewed; failsafes proposed |

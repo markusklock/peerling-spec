@@ -114,7 +114,7 @@ The registry is one of five kinds of OrbitDB database in the game:
 
 ## Open questions
 
-_None at the moment._
+- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
 
 ## See also
 

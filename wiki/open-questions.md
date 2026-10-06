@@ -17,7 +17,20 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-_None at the moment._
+### Q-056
+**Approve the network performance, scale and timeout design?**
+- Affects: [network-performance](tech/network-performance.md) (PERF), [ipfs-helia](tech/ipfs-helia.md), [orbitdb-registry](tech/orbitdb-registry.md), [player-data](tech/player-data.md), [creator-feedback](gameplay/creator-feedback.md) (CFB-002), [encounters](gameplay/encounters.md), [creation-pipeline](peerlings/creation-pipeline.md), [data-formats](tech/data-formats.md)
+- Context: the designer asked for failsafes against slow IPFS/OrbitDB
+  requests (2026-10-06). The review found several requests that can take
+  minutes and databases that grow too fast for browsers.
+- Proposal: local-first play; a retrieval ladder racing peers and gateways;
+  request classes with timeouts; waiting states and placeholders; operator
+  fast paths (latest epoch, log export, IPNS, creation upload) with P2P
+  fallbacks; signed snapshots and indexes (registry index, species stats
+  snapshot replacing the OrbitDB stats database, ownership index, epoch
+  records by number, verification checkpoints); one-at-a-time candidate model
+  prefetching; raised operator relay limits; early dialling.
+- Raised: 2026-10-06
 
 ## Resolved
 
