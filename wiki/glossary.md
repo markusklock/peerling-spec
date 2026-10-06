@@ -59,6 +59,10 @@ for creating a new species. See [creation-shrine](gameplay/creation-shrine.md).
 The player who designed a Peerling [species](#species). The creator is recorded
 in the species record and credited in-game.
 
+### Cry
+The sound a Peerling makes, synthesized in the browser from its species CID and
+type. See [audio § Peerling cries](world/audio.md#peerling-cries).
+
 ### drand
 A public, verifiable randomness beacon run by the League of Entropy. The
 [epoch record](#epoch-record) takes its randomness from drand. See
@@ -137,6 +141,10 @@ A peer-to-peer database built on IPFS and libp2p. The game's
 The server's signature on a starter or a Creation Shrine Peerling, proving
 where it came from (these don't come from a catch, so there's nothing to
 replay). See [player-data](tech/player-data.md#starters-and-shrine-creations).
+
+### Peerdex
+The player's index of species they have seen and caught, plus their own
+creations. See [peerdex](gameplay/peerdex.md).
 
 ### Peerling
 A creature in the game. The word is ambiguous between a *species* and an

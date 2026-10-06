@@ -13,10 +13,11 @@ sources:
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Catching
@@ -88,8 +89,8 @@ retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).
 Caught Peerlings can later be [traded](trading.md).
 
 Creators are notified when their species is caught
-([creator-feedback](creator-feedback.md)). Still to be specified: the Peerdex
-screen.
+([creator-feedback](creator-feedback.md)). Caught species appear in full in
+the [Peerdex](peerdex.md).
 
 [accepted] Any player can verify a catch by replaying the battle from the
 catcher's save log ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)). A catch that fails verification can never

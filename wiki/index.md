@@ -22,7 +22,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [core-loop](gameplay/core-loop.md) | draft | — | Explore → encounter → battle → catch; player motivations |
 | [onboarding](gameplay/onboarding.md) | draft | ONB | New player creates a character and creates or chooses a starter Peerling |
 | [player-character](gameplay/player-character.md) | stub | PLR | Avatar options (recommended: parts-based customizer), identity keypair |
-| [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, map, encounters in foliage, rest points and healing |
+| [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, map, encounters in foliage, rest points, no fast travel |
 | [encounters](gameplay/encounters.md) | draft | ENC | Choosing wild Peerlings: weights, 5 ordered candidates, wild levels, prefetching |
 | [battle](gameplay/battle.md) | draft | BTL | Turns, action order, move mechanics, stat stages, damage model, XP, RNG, battle screen |
 | [catching](gameplay/catching.md) | draft | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
@@ -33,6 +33,8 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [creator-feedback](gameplay/creator-feedback.md) | draft | CFB | Species stats in OrbitDB, live creator notifications |
 | [spectating](gameplay/spectating.md) | draft | SPT | Watching PvP battles live over pubsub |
 | [sharing](gameplay/sharing.md) | draft | LNK | Shareable Peerling cards and IPNS player profiles, Peerlings Viewer |
+| [peerdex](gameplay/peerdex.md) | accepted | DEX | Index of seen and caught species, own creations |
+| [ui](gameplay/ui.md) | accepted | UI | Title screen, pause menu, HUD, controls, settings |
 | [world-feed](gameplay/world-feed.md) | draft | FED | Live ticker of notable world events over pubsub |
 
 ## Peerlings
@@ -50,6 +52,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
 | [procedural-generation](world/procedural-generation.md) | draft | WGN | Shared 4 × 4 km world: tiles, 12 biomes, terrain, spawn hub, landmarks, paths, day/night, weather, generator updates |
+| [audio](world/audio.md) | draft | AUD | Music, sound effects, Peerling cries synthesized from the CID |
 | [visual-style](world/visual-style.md) | draft | VIS | Top-down tilted camera, battle camera, colorful stylized look, environment art kit |
 
 ## Tech
@@ -91,12 +94,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, phone backup and a world feed |
 | [D-0017](decisions/D-0017-world-features.md) | accepted | World features: spawn hub, landmarks, map, day/night, weather |
 | [D-0018](decisions/D-0018-one-key-per-player.md) | accepted | One key per player for every identity |
+| [D-0019](decisions/D-0019-peerdex-ui-audio.md) | accepted | Peerdex, menus, audio and rest points |
 
 ## Registered requirement prefixes
 
-API, ARC, BTL, CAT, CFB, CRE, ENC, EXP, FED, FMT, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
-PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, VIS, WGN. Next free decision ID:
-D-0019. Next free question ID: Q-048.
+API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
+PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
+D-0020. Next free question ID: Q-049.
 
 ## Sources
 
@@ -130,3 +134,4 @@ D-0019. Next free question ID: Q-048.
 | [2026-10-05-world-details-approved](../raw/conversations/2026-10-05-world-details-approved.md) | 2026-10-05 | Smaller world details approved |
 | [2026-10-05-formats-request](../raw/conversations/2026-10-05-formats-request.md) | 2026-10-05 | Designer asked for the exact data and message formats |
 | [2026-10-06-formats-approved](../raw/conversations/2026-10-06-formats-approved.md) | 2026-10-06 | Formats approved; one key per player kept after weighing pros and cons |
+| [2026-10-06-peerdex-ui-audio-restpoints](../raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md) | 2026-10-06 | Peerdex, menus/HUD/controls, audio with CID-synthesized cries, rest points; no fast travel |

@@ -17,6 +17,18 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
+### Q-048
+**Peerling cry details: approve?**
+- Affects: [audio § Peerling cries](world/audio.md#peerling-cries)
+- Context: Cries synthesized from the species CID were chosen (D-0019); the
+  parameter table and type flavours are LLM details.
+- Proposal: 6 hash bytes set base pitch (110–880 Hz), syllables (1–3),
+  syllable length (80–250 ms), pitch contour, vibrato and noise mix; each type
+  adds a timbre (crackling Fire, bubbly Water, metallic Metal, …); cries play
+  when a Peerling enters battle, when its card opens, and when a starter is
+  chosen.
+- Raised: 2026-10-06
+
 ## Resolved
 
 ### Q-002

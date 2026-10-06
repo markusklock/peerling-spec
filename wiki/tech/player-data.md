@@ -23,6 +23,7 @@ sources:
   - raw/conversations/2026-10-05-phone-backup-approved.md
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
+  - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -33,7 +34,7 @@ related:
   - wiki/peerlings/peerling-species.md
   - wiki/tech/architecture.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Player Data: Saves, Identity and Ownership
@@ -104,7 +105,7 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 | `seen` | First sighting of a species | species CID |
 | `position` | Every 30 s while moving, and on exit | position, facing |
 | `explored` | The player enters a chunk for the first time | the newly revealed chunks ([exploration § Map](../gameplay/exploration.md#map)) |
-| `snapshot` | Every 50 events, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
+| `snapshot` | Every 50 events, at every rest point visit, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
 
 Loading a save means reading the latest `snapshot` and applying the events
 after it. The server replicates every player's log and pins the snapshots.
@@ -235,7 +236,8 @@ to make saves more durable are in [Keeping saves available](#keeping-saves-avail
 **2. Save snapshot in the backup file**
 
 The backup file holds the key *and* the latest save snapshot. The game reminds
-the player to refresh it now and then (e.g. after each level-up milestone).
+the player to refresh it now and then (at rest points,
+[exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
 This works even if every network copy is gone.
 
 Not recommended: buddy pinning of assigned saves (browsers are offline most of

@@ -15,12 +15,13 @@ sources:
   - raw/conversations/2026-10-05-pvp-level-modes.md
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
+  - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/world/visual-style.md
-updated: 2026-10-05
+updated: 2026-10-06
 ---
 
 # Exploration
@@ -57,7 +58,7 @@ with it.
 - **Interacting:** the player interacts with the tile they're facing (another
   player, a rest point, the Creation Shrine).
 - **Controls:** arrow keys or WASD to move; one key to interact; mouse for
-  menus and the battle UI.
+  menus and the battle UI. Full key list: [ui § Controls](ui.md#controls).
 - **Other players** share the same grid; two players can stand on the same tile
   (no blocking), so crowds at the spawn never get stuck.
 
@@ -98,11 +99,23 @@ The spawn hub and the paths leading out of it are revealed from the start.
 [accepted] There are no healing items. A Peerling's HP carries over between
 battles and is restored at **rest points**:
 - Every biome area has a rest point
-  ([procedural-generation § Layout](../world/procedural-generation.md#layout)).
+  ([procedural-generation § Points of interest](../world/procedural-generation.md#points-of-interest)).
   Visiting it fully heals the whole team, and it becomes the player's *last
   rest point*.
 - If the player's whole team faints, the player returns to their last rest
   point with the team fully healed. Nothing is lost.
+
+[accepted] Up close ([D-0019](../decisions/D-0019-peerdex-ui-audio.md)):
+- The player faces the beacon and presses interact. The beacon flares, the
+  team gets a healing sparkle, the rest-point jingle plays
+  ([audio](../world/audio.md#sound-effects)), and a message says: *"Your team is
+  fully healed. This is now your rest point."*
+- Visiting a rest point also writes a save **snapshot**
+  ([player-data § Save log](../tech/player-data.md#save-log)), and now and then
+  reminds the player to refresh their backup (file or phone).
+- The beacon shows the area's landmark name, biome and level range, and marks
+  the landmark on the player's map.
+- **No fast travel:** players walk everywhere.
 
 [accepted] The game targets desktop browsers only
 ([STK-010](../tech/tech-stack.md#requirements)), so controls are designed for
@@ -120,6 +133,8 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-005** [accepted] Wild encounters MUST only be triggered by walking through biome-specific encounter foliage.
 - **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle.
 - **EXP-007** [accepted] The game MUST have a minimap and a world map that reveal explored areas and mark discovered rest points and landmarks.
+- **EXP-008** [accepted] Interacting with a rest point MUST heal the team, set it as the last rest point, and write a save snapshot.
+- **EXP-009** [accepted] There MUST NOT be fast travel.
 
 ## Open questions
 

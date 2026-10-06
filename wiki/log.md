@@ -335,3 +335,17 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Notes: Resolved Q-047. The three format pages are accepted. Kept one Ed25519
   key per player for all identities after weighing pros and cons (D-0018).
   No open questions remain.
+
+## [2026-10-06] design | Peerdex, menus, audio, rest points; no fast travel
+- Source: raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
+- Changed: decisions/D-0019 (new), gameplay/peerdex.md (new), gameplay/ui.md
+  (new), world/audio.md (new), gameplay/exploration.md, gameplay/catching.md,
+  tech/data-formats.md, tech/player-data.md, glossary.md, open-questions.md,
+  index.md
+- Notes: Accepted the Peerdex (seen/caught, filters, shimmer badges, My
+  creations), menus/HUD/controls/settings (English only), hand-made or licensed
+  music and effects, Peerling cries synthesized from the CID, rest-point
+  behaviour (heal, respawn, snapshot, backup reminder), and no fast travel. The
+  `seen` event and the snapshot's Peerdex now record the biome and shimmer
+  sightings. Cry parameter details proposed (Q-048). Added DEX, UI, AUD,
+  EXP-008/009.

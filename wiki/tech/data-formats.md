@@ -7,6 +7,7 @@ tags: [tech, formats, ipld, orbitdb, signatures]
 sources:
   - raw/conversations/2026-10-05-formats-request.md
   - raw/conversations/2026-10-06-formats-approved.md
+  - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
@@ -243,7 +244,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `team` | `instances` ([instance ID], ≤ 4) |
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
-| `seen` | `species` (CID) |
+| `seen` | `species` (CID), `biome` (biome name where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer |
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
@@ -262,7 +263,7 @@ save log).
 | `instances` | [instance] (whole collection) |
 | `team` | [instance ID] |
 | `created` | [CID] |
-| `peerdex` | map: `seen` [CID], `caught` [CID] |
+| `peerdex` | map: `seen` [map: `species`, `biome`, `shimmerSeen` bool], `caught` [map: `species`, `shimmerCaught` bool] |
 | `position` | map: `tile`, `facing` |
 | `lastRestPoint` | tile |
 | `explored` | bytes: bit set of 63 × 63 chunks, row-major, bit 1 = revealed |
