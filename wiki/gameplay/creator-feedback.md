@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
@@ -36,7 +37,7 @@ can check them:
 - Every **trade** is in the open transfer log.
 
 So the server can keep trustworthy counters per species and publish them with
-OrbitDB and pubsub. Counters can't be inflated by fake clients, because only
+IPFS snapshots and pubsub. Counters can't be inflated by fake clients, because only
 events that pass verification count. That answers the spam worry raised in
 Q-021.
 
@@ -46,9 +47,15 @@ Q-021.
 
 [accepted]
 
-### Species stats database
-An OrbitDB keyvalue database written only by the server, keyed by species CID.
-It is updated at most once per epoch (5 minutes). Each entry:
+### Species stats snapshot
+[accepted] (2026-10-06, [D-0023](../decisions/D-0023-network-performance.md);
+replaces the earlier OrbitDB keyvalue database, whose op-log would grow far too
+fast for browsers.) The server publishes the stats every 12 epochs (1 hour) as
+a signed, sharded snapshot; the epoch record names its root (`statsRoot`), and
+a species card fetches only the shard holding its species
+([network-performance § Species stats snapshot](../tech/network-performance.md#2-species-stats-snapshot),
+[data-formats § Snapshots and indexes](../tech/data-formats.md#snapshots-and-indexes)).
+Each species' stats:
 
 | Field | Meaning |
 |-------|---------|
@@ -59,7 +66,6 @@ It is updated at most once per epoch (5 minutes). Each entry:
 | `providers` | Approximate number of IPFS nodes currently providing the species (from content-routing lookups) |
 
 Any client can read any species' stats, so every species card can show them.
-This is another way the game shows off OrbitDB.
 
 ### Live notifications
 The server publishes a short message on the pubsub topic
@@ -111,16 +117,17 @@ Every new species becomes a small race.
 ## Requirements
 
 - **CFB-001** [accepted] Creators MUST be able to see how their species are doing in the world.
-- **CFB-002** [accepted] Species statistics MUST be published in a server-written OrbitDB database and MUST only count events that pass verification.
+- ~~**CFB-002**~~ (removed 2026-10-06, replaced by CFB-008; see D-0023)
 - **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught, traded or delisted.
 - **CFB-004** [accepted] The client MUST show creators a summary of changes since their last session.
 - **CFB-005** [accepted] Each species card MUST show "First found in the wild by …" naming the first player with a verified wild catch of it, and the world feed MUST announce it.
 - **CFB-006** [accepted] The first wild finder MUST be determined and announced as in [First found in the wild](#first-found-in-the-wild).
 - **CFB-007** [accepted] A species\' creator MUST NOT be credited as its first wild finder.
+- **CFB-008** [accepted] Species statistics MUST be published by the server as the hourly species stats snapshot and MUST only count events that pass verification.
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._
 
 ## See also
 

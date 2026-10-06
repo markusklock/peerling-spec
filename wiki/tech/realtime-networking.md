@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
@@ -44,7 +45,7 @@ updated: 2026-10-06
 | Creator notifications | Pubsub topic `peerlings/v1/creator/<player ID>`, published by the server ([creator-feedback](../gameplay/creator-feedback.md)) |
 | Save recovery requests | Pubsub topic `peerlings/v1/save-wanted` ([player-data](player-data.md#keeping-saves-available)) |
 | Epoch records | Pubsub topic `peerlings/v1/epoch`, published by the server ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
-| Reaching other browsers | Circuit relay via the operator server, upgraded to direct **WebRTC** connections (preferring IPv6) when possible ([ipfs-helia § Connectivity](ipfs-helia.md#connectivity)) |
+| Reaching other browsers | Circuit relay via the operator server, upgraded to direct **WebRTC** connections (preferring IPv6) when possible ([ipfs-helia § Connectivity](ipfs-helia.md#connectivity)); dialled early when an interaction is likely, with raised relay limits ([network-performance § Connections](network-performance.md#connections)) |
 
 ## Presence
 
@@ -98,7 +99,7 @@ Exact message formats: [protocols](protocols.md).
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._
 
 ## See also
 

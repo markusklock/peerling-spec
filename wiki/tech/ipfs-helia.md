@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-asset-budgets-request.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
@@ -63,12 +64,16 @@ server. Technology choices follow
   client has met before, are also used so the game works when the server is
   offline ([resilience](resilience.md)).
 - **Relay:** [accepted] the server acts as a libp2p circuit relay, so browsers can reach
-  each other and upgrade to direct WebRTC connections.
+  each other and upgrade to direct WebRTC connections. [accepted] Its limits
+  for the game's protocols are raised well above libp2p's defaults
+  ([network-performance § Connections](network-performance.md#connections)).
 - **Content routing:** [accepted] browsers use delegated routing (the HTTP routing API) to
   find providers, since running a full DHT client in the browser is heavy.
 - **Fallback:** [accepted] if no peer delivers a block in time, the client MAY fetch from
   trustless HTTP gateways (including one run by the operator). Content is still
-  verified by CID, so the trust model doesn't change.
+  verified by CID, so the trust model doesn't change. [accepted] The exact
+  order and delays are the
+  [retrieval ladder](network-performance.md#retrieval-ladder) (2026-10-06).
 
 ## Content import parameters
 
@@ -117,7 +122,7 @@ library defaults:
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._
 
 ## See also
 

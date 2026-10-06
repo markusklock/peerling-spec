@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -242,6 +243,11 @@ appends the registry entry ([D-0007](../decisions/D-0007-players-publish-assets.
 | 7d | server | Fetches the species record and every asset by CID from the network (in practice from the player's node), checks they are byte-identical to what it generated, and pins them. |
 | 7e | server | Assigns the next registry `seq` and signs the registry listing ([orbitdb-registry](../tech/orbitdb-registry.md#design)); sends it to the client. |
 | 7f | client | Appends the signed entry to the registry. If it doesn't appear within a minute (e.g. the client disconnected), the server appends the same entry itself. Job state `PUBLISHED`. |
+
+[accepted] If the server hasn't fetched everything peer to peer within 20 s of
+7c, the client uploads the same content as a CAR file over HTTP; the server
+checks it is byte-identical as in 7d ([creation-api](../tech/creation-api.md#creating-a-peerling),
+[network-performance](../tech/network-performance.md#operation-by-operation)).
 
 If the client disconnects during 7b–7d, the job waits in `PUBLISHING` until
 the client reconnects and resumes providing (CRE-014). The species becomes

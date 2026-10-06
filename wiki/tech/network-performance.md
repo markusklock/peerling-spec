@@ -1,11 +1,12 @@
 ---
 title: Network Performance, Scale and Timeouts
 type: system
-status: draft
+status: accepted
 req_prefix: PERF
 tags: [tech, networking, performance, ipfs, orbitdb]
 sources:
   - raw/conversations/2026-10-06-network-performance.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -27,14 +28,14 @@ updated: 2026-10-06
 which probably affects OrbitDB as well. Every request that can be slow needs
 a failsafe so the game doesn't feel slow.
 
-Everything below is a **[proposed]** answer awaiting approval
-([Q-056](../open-questions.md#q-056)). Where it would change an accepted rule,
-it says so. The latency numbers are estimates and must be measured in an early
-prototype; the budgets are starting values to tune.
+[accepted] Everything below was approved on 2026-10-06
+([D-0023](../decisions/D-0023-network-performance.md)). Where it changed an
+earlier rule, it says so. The latency numbers are estimates and must be
+measured in an early prototype; the budgets are starting values to tune.
 
 ## Principles
 
-[proposed]
+[accepted]
 1. **Local first.** Walking, the world, wild battles and the player's own save
    run entirely in the browser. The network only adds things: new species,
    other players, verification. Nothing in the core loop waits for it once
@@ -59,7 +60,7 @@ prototype; the budgets are starting values to tune.
 
 ## What can be slow
 
-[proposed] Estimates for a desktop browser on broadband:
+[accepted] Estimates for a desktop browser on broadband:
 
 | Network step | Usually | Bad case | Why |
 |--------------|---------|----------|-----|
@@ -76,7 +77,7 @@ prototype; the budgets are starting values to tune.
 
 ## Scale
 
-[proposed] Sizing assumptions: up to **1,000 players online at once**,
+[accepted] Sizing assumptions: up to **1,000 players online at once**,
 100,000 players in total and about 20,000 species after the first year.
 
 How each shared database grows, and whether a browser can replicate it all:
@@ -91,7 +92,7 @@ How each shared database grows, and whether a browser can replicate it all:
 
 ## Retrieval ladder
 
-[proposed] How the client fetches any content by CID. Each step starts after
+[accepted] How the client fetches any content by CID. Each step starts after
 the delay shown unless an earlier step has already delivered; steps run in
 parallel, and the first **verified** block wins and cancels the rest.
 
@@ -111,7 +112,7 @@ parallel, and the first **verified** block wins and cancels the rest.
 
 ## Request classes
 
-[proposed] Every network request belongs to a class. Higher classes go first,
+[accepted] Every network request belongs to a class. Higher classes go first,
 and a pending interactive request pauses background work.
 
 | Class | Examples | Parallel requests | Timeout | Retries |
@@ -122,7 +123,7 @@ and a pending interactive request pauses background work.
 
 ## Waiting states
 
-[proposed] What the player sees while something loads:
+[accepted] What the player sees while something loads:
 
 | Waiting time | Shown |
 |--------------|-------|
@@ -137,8 +138,8 @@ silhouette avatar before a player's appearance has loaded, and "—" for stats.
 
 ## Fast paths through the operator
 
-[proposed] HTTP endpoints on the operator server (alongside the
-[creation API](creation-api.md)). All of them return signed or
+[accepted] HTTP endpoints on the operator server (exact requests and responses:
+[creation-api § Network](creation-api.md#network)). All of them return signed or
 content-addressed data, so clients check them exactly as they would check the
 same data from peers. Each has a peer-to-peer slow path.
 
@@ -147,6 +148,7 @@ same data from peers. Each has a peer-to-peer slow path.
 | `GET /v1/epochs/latest` | The latest server-signed epoch record | Wait for pubsub; client-derived records ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | `GET /v1/epochs/{E}` | The server-signed record for epoch E | Search the epoch log |
 | `GET /v1/logs/{address}/entries?after=<heads>` | A CAR file with the log entries after the given heads (OrbitDB entry blocks) | Normal OrbitDB sync |
+| `GET /v1/checkpoints/{player}` | The newest [verification checkpoint](#5-verification-checkpoints) for that player | Full verification |
 | `GET /v1/ipns/{name}` | The latest signed IPNS record the server republishes ([sharing § Player profile](../gameplay/sharing.md#player-profile)) | Delegated routing / DHT |
 | `POST /v1/jobs/{id}/upload` | (creation only) The client uploads its new species as a CAR when the server can't fetch it peer to peer within 20 s ([creation-pipeline § Stage 7](../peerlings/creation-pipeline.md#stage-7--publish)) | None needed: creation needs the server anyway |
 
@@ -156,10 +158,10 @@ signature before adding it to its OrbitDB storage, as OrbitDB itself would.
 
 ## Snapshots and indexes
 
-[proposed] Signed, content-addressed summaries that the server publishes so
-browsers never have to replicate the large databases. The epoch record gains
-the root CIDs, so they are as trustworthy as the epoch record itself. If
-approved, the new fields move to [data-formats](data-formats.md).
+[accepted] Signed, content-addressed summaries that the server publishes so
+browsers never have to replicate the large databases. The epoch record names
+their root CIDs, so they are as trustworthy as the epoch record itself. Exact
+formats: [data-formats § Snapshots and indexes](data-formats.md#snapshots-and-indexes).
 
 ### 1. Registry index
 - A compact, append-only list of every registry entry in `seq` order:
@@ -167,7 +169,8 @@ approved, the new fields move to [data-formats](data-formats.md).
   as today). About 45 bytes per entry.
 - Split into **chunks of 1,000 entries**. A full chunk never changes, so it is
   cached forever and served by any peer. The epoch record names the index
-  (`registryIndex`: the CIDs of all chunks, and the height).
+  manifest (`registryIndex`), which lists the chunks; a single CID keeps the
+  epoch record within the 4 KiB pubsub message limit.
 - A new player fetches about 20 small chunks (~1 MB in total for 20,000
   species) in a second or two, and can start encounters right away. It holds
   everything candidate selection needs: `seq`, types and delistings.
@@ -175,7 +178,7 @@ approved, the new fields move to [data-formats](data-formats.md).
   in the background, so names and thumbnails are available and the registry
   survives without the server. Clients check that the index matches the
   registry entries they have.
-- Changes the accepted rule that a client waits for a full registry sync
+- This replaced the earlier rule that a client waits for a full registry sync
   before starting encounters ([player-data § Encounter seeds](player-data.md#encounter-seeds)):
   the index is enough.
 
@@ -187,9 +190,10 @@ approved, the new fields move to [data-formats](data-formats.md).
   goes in the epoch record (`statsRoot`).
 - A species card fetches only its shard (a few KB).
 - Live creator notifications stay on pubsub, unchanged.
-- **Changes accepted rule CFB-002**, which says the stats are an OrbitDB
-  database. The keyvalue op-log would grow by up to ~288,000 entries a day,
-  too much for browsers and a burden for the server. OrbitDB stays showcased
+- This **replaced CFB-002**, which made the stats an OrbitDB database
+  ([creator-feedback](../gameplay/creator-feedback.md#species-stats-snapshot)).
+  The keyvalue op-log would grow by up to ~288,000 entries a day, too much
+  for browsers and a burden for the server. OrbitDB stays showcased
   by the registry, transfer log, epoch log and save logs.
 
 ### 3. Ownership index
@@ -239,7 +243,7 @@ shown only, never trusted for ownership, so a light check is enough.
 
 ## Operation by operation
 
-[proposed]
+[accepted]
 
 | Operation | Needs from the network | Failsafe | Player sees |
 |-----------|------------------------|----------|-------------|
@@ -264,7 +268,7 @@ shown only, never trusted for ownership, so a light check is enough.
 
 ## Connections
 
-[proposed]
+[accepted]
 - **The operator connection** is kept open at all times and protected from
   connection pruning. If it drops, the client reconnects with backoff (1, 2,
   4, 8, then every 30 s), trying WebTransport, then WebRTC-direct.
@@ -286,7 +290,7 @@ shown only, never trusted for ownership, so a light check is enough.
 
 ## Bandwidth and server load
 
-[proposed] Rough figures for planning:
+[accepted] Rough figures for planning:
 
 - **A player** downloads presence (up to ~24 KB/s in a crowd,
   [realtime-networking § Presence](realtime-networking.md#presence)) and new
@@ -300,24 +304,24 @@ shown only, never trusted for ownership, so a light check is enough.
 
 ## Measuring
 
-[proposed] The client records, for every fetch, the time and the source that
+[accepted] The client records, for every fetch, the time and the source that
 delivered it. The network panel shows recent ones (*"Mossnap: 180 ms from
 Mia's node"*). An early prototype must measure the numbers in
 [What can be slow](#what-can-be-slow) and tune the budgets on this page.
 
 ## Requirements
 
-- **PERF-001** [proposed] The core loop (walking, the world, wild battles with cached species, the player's own save) MUST work without waiting for the network.
-- **PERF-002** [proposed] Content fetches MUST follow the [retrieval ladder](#retrieval-ladder), and every network request MUST belong to a [request class](#request-classes) with its timeout.
-- **PERF-003** [proposed] Every wait over 300 ms MUST show a waiting state as in [Waiting states](#waiting-states), and content not yet loaded MUST use placeholders.
-- **PERF-004** [proposed] The operator MUST provide the [fast paths](#fast-paths-through-the-operator), and every fast path MUST have a peer-to-peer fallback.
-- **PERF-005** [proposed] Browsers MUST NOT need to fully replicate the epoch log, species stats or transfer log; the server MUST publish the [snapshots and indexes](#snapshots-and-indexes).
-- **PERF-006** [proposed] The operator's circuit relay MUST allow game-protocol connections of at least 60 minutes and 4 MB.
-- **PERF-007** [proposed] Encounter prefetching MUST fetch candidate models one at a time in list order, keeping at least 3 upcoming encounters ready.
+- **PERF-001** [accepted] The core loop (walking, the world, wild battles with cached species, the player's own save) MUST work without waiting for the network.
+- **PERF-002** [accepted] Content fetches MUST follow the [retrieval ladder](#retrieval-ladder), and every network request MUST belong to a [request class](#request-classes) with its timeout.
+- **PERF-003** [accepted] Every wait over 300 ms MUST show a waiting state as in [Waiting states](#waiting-states), and content not yet loaded MUST use placeholders.
+- **PERF-004** [accepted] The operator MUST provide the [fast paths](#fast-paths-through-the-operator), and every fast path MUST have a peer-to-peer fallback.
+- **PERF-005** [accepted] Browsers MUST NOT need to fully replicate the epoch log, species stats or transfer log; the server MUST publish the [snapshots and indexes](#snapshots-and-indexes).
+- **PERF-006** [accepted] The operator's circuit relay MUST allow game-protocol connections of at least 60 minutes and 4 MB.
+- **PERF-007** [accepted] Encounter prefetching MUST fetch candidate models one at a time in list order, keeping at least 3 upcoming encounters ready.
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — approve the network performance and scale design
+_None at the moment._
 
 ## See also
 

@@ -453,3 +453,17 @@ List all entries with `grep "^## \[" wiki/log.md`.
   with all-[proposed] failsafes (PERF prefix registered). Would change
   CFB-002 (species stats as an OrbitDB database) and the full-registry-sync
   rule before encounters; awaiting approval (Q-056).
+
+## [2026-10-06] design | Network performance design approved
+- Source: raw/conversations/2026-10-06-network-performance-approved.md
+- Changed: tech/network-performance.md, decisions/D-0023 (new),
+  tech/data-formats.md, creation-api.md, player-data.md, orbitdb-registry.md,
+  ipfs-helia.md, realtime-networking.md, generation-server.md,
+  ipfs-showcase.md, resilience.md; gameplay/creator-feedback.md,
+  encounters.md, world-feed.md; peerlings/creation-pipeline.md; glossary.md,
+  open-questions.md, index.md
+- Notes: Resolved Q-056. Species stats are now hourly snapshots (CFB-002
+  removed, CFB-008 added); verification checkpoints (SAVE-027); fast-path
+  endpoints and creation upload (API-006); epoch record gains registryIndex,
+  statsRoot, ownersRoot; catch evidence gains baseRecord. No proposals or
+  open questions remain.

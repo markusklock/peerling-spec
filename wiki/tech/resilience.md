@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
@@ -96,7 +97,13 @@ pinset (every CID the registry references) as an IPFS Cluster that others can
 follow with `ipfs-cluster-follow`, or as a simple list volunteers can pin. Each
 mirror is another always-on node with every Peerling.
 
-### 6. No catching up needed
+### 6. Fast paths are only shortcuts
+[accepted] The operator's HTTP fast paths, snapshots, indexes and checkpoints
+make the game fast while the server is online. Each has a peer-to-peer slow
+path, so everything in the table above still works without the server, just
+slower ([network-performance](network-performance.md#fast-paths-through-the-operator)).
+
+### 7. No catching up needed
 Catches, trades and ownership are checked by players themselves
 ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)), so
 nothing waits for the server. When it is back, it simply resumes signing new
@@ -111,7 +118,7 @@ species, publishing epoch records and updating creator stats.
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._
 
 ## See also
 

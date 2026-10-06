@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -150,6 +151,17 @@ encounters in the current and neighbouring biomes and fetches them in the
 background ([Candidates](#candidates)). With 5 candidates prefetched, at least
 one is almost always ready when an encounter triggers.
 
+[accepted] Exact prefetching (2026-10-06,
+[network-performance § Operation by operation](../tech/network-performance.md#operation-by-operation)):
+- keep at least 3 upcoming encounters ready;
+- fetch all 5 candidates' species records (tiny), but their models **one at a
+  time in list order**, moving to the next only if one fails or takes over
+  5 s. This cuts an uncached encounter from ~3 MB to ~0.6 MB, and fits the
+  "earliest ready in the list" rule;
+- if nothing is ready when an encounter triggers, the battle intro animation
+  (1.5 s) covers the wait; if nothing arrives within the 10 s of rule 4, the
+  player sees *"The wild Peerling slipped away"*.
+
 ## Requirements
 
 - **ENC-001** [accepted] Wild Peerlings MUST be chosen from the species in the registry.
@@ -162,5 +174,4 @@ one is almost always ready when an encounter triggers.
 - **ENC-008** [accepted] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
 
 ## Open questions
-
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._

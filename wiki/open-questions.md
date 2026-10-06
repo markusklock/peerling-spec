@@ -17,20 +17,7 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-### Q-056
-**Approve the network performance, scale and timeout design?**
-- Affects: [network-performance](tech/network-performance.md) (PERF), [ipfs-helia](tech/ipfs-helia.md), [orbitdb-registry](tech/orbitdb-registry.md), [player-data](tech/player-data.md), [creator-feedback](gameplay/creator-feedback.md) (CFB-002), [encounters](gameplay/encounters.md), [creation-pipeline](peerlings/creation-pipeline.md), [data-formats](tech/data-formats.md)
-- Context: the designer asked for failsafes against slow IPFS/OrbitDB
-  requests (2026-10-06). The review found several requests that can take
-  minutes and databases that grow too fast for browsers.
-- Proposal: local-first play; a retrieval ladder racing peers and gateways;
-  request classes with timeouts; waiting states and placeholders; operator
-  fast paths (latest epoch, log export, IPNS, creation upload) with P2P
-  fallbacks; signed snapshots and indexes (registry index, species stats
-  snapshot replacing the OrbitDB stats database, ownership index, epoch
-  records by number, verification checkpoints); one-at-a-time candidate model
-  prefetching; raised operator relay limits; early dialling.
-- Raised: 2026-10-06
+_None at the moment._
 
 ## Resolved
 
@@ -337,3 +324,8 @@ credit. Resolved 2026-10-06 → [D-0022](decisions/D-0022-v1-fun-features.md),
 [guardians](gameplay/guardians.md), [peerling-of-the-day](gameplay/peerling-of-the-day.md),
 [exploration § Following Peerling](gameplay/exploration.md#following-peerling),
 [creator-feedback § First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild).
+
+### Q-056
+**Network performance, scale and timeouts.** Approved as proposed. Resolved
+2026-10-06 → [D-0023](decisions/D-0023-network-performance.md),
+[network-performance](tech/network-performance.md).

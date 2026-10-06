@@ -30,7 +30,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [pvp-battles](gameplay/pvp-battles.md) | accepted | PVP | Peer-to-peer battles: Fair / Real-levels modes, verification, commit-reveal protocol |
 | [trading](gameplay/trading.md) | accepted | TRD | Peer-to-peer trades of Peerling instances |
 | [creation-shrine](gameplay/creation-shrine.md) | accepted | SHR | Giving up 3 Peerlings to create a new species |
-| [creator-feedback](gameplay/creator-feedback.md) | accepted | CFB | Species stats in OrbitDB, live creator notifications |
+| [creator-feedback](gameplay/creator-feedback.md) | accepted | CFB | Hourly species stats snapshots, live creator notifications, first wild finder |
 | [spectating](gameplay/spectating.md) | accepted | SPT | Watching PvP battles live over pubsub |
 | [sharing](gameplay/sharing.md) | accepted | LNK | Shareable Peerling cards and IPNS player profiles, Peerlings Viewer |
 | [peerdex](gameplay/peerdex.md) | accepted | DEX | Index of seen and caught species, own creations |
@@ -72,7 +72,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [creation-api](tech/creation-api.md) | accepted | API | HTTP/3 API between client and operator server |
 | [tech-stack](tech/tech-stack.md) | accepted | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | accepted | RES | What works without the operator server, and how |
-| [network-performance](tech/network-performance.md) | draft | PERF | Slow requests, data growth, retrieval ladder, timeouts, waiting states, snapshots and indexes |
+| [network-performance](tech/network-performance.md) | accepted | PERF | Slow requests, data growth, retrieval ladder, timeouts, waiting states, snapshots and indexes |
 | [ipfs-showcase](tech/ipfs-showcase.md) | accepted | SHOW | Making IPFS visible and meaningful to players |
 
 ## Decisions
@@ -101,12 +101,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md) | accepted | Central Plains spawn hexagon with 12 biome sectors |
 | [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted | PvP win counter on the player profile |
 | [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
+| [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
 
 ## Registered requirement prefixes
 
 API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PERF, POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0023. Next free question ID: Q-057.
+D-0024. Next free question ID: Q-057.
 
 ## Sources
 
@@ -148,3 +149,4 @@ D-0023. Next free question ID: Q-057.
 | [2026-10-06-v1-fun-features](../raw/conversations/2026-10-06-v1-fun-features.md) | 2026-10-06 | Following Peerling, guardians, Peerling of the Day (with spawn pedestal), "First found in the wild by …" |
 | [2026-10-06-fun-features-approved](../raw/conversations/2026-10-06-fun-features-approved.md) | 2026-10-06 | Fun-feature rules approved; Peerling of the Day lasts 24 h; creators excluded from first-finder credit |
 | [2026-10-06-network-performance](../raw/conversations/2026-10-06-network-performance.md) | 2026-10-06 | Network performance, scale and timeouts reviewed; failsafes proposed |
+| [2026-10-06-network-performance-approved](../raw/conversations/2026-10-06-network-performance-approved.md) | 2026-10-06 | Network performance design approved |

@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 updated: 2026-10-06
 ---
 
@@ -159,6 +160,10 @@ A Peerling at 0 HP faints and can't fight until healed at a rest point. See
 The default PvP level mode: every Peerling fights at level 50. See [pvp-battles
 § Fairness](gameplay/pvp-battles.md#fairness).
 
+### Fast path
+An HTTP shortcut through the operator server (latest epoch record, log download, checkpoints, IPNS records) that returns signed or content-addressed data and always has a peer-to-peer fallback. See
+[network-performance](tech/network-performance.md#fast-paths-through-the-operator).
+
 ### First found in the wild
 The credit on a species card naming the first player with a verified wild catch of it. See
 [creator-feedback § First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild).
@@ -246,6 +251,10 @@ The server's signature on a starter or a Creation Shrine Peerling, proving
 where it came from (these don't come from a catch, so there's nothing to
 replay). See [player-data](tech/player-data.md#starters-and-shrine-creations).
 
+### Ownership index
+The operator's hourly sharded map from instance ID to its latest transfer, so verifiers needn't replicate the whole transfer log. See
+[network-performance](tech/network-performance.md#3-ownership-index).
+
 ### Peerdex
 The player's index of species they have seen and caught, plus their own
 creations. See [peerdex](gameplay/peerdex.md).
@@ -325,6 +334,10 @@ for presence topics in multiplayer. See
 The OrbitDB database that lists every published Peerling species. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
+### Registry index
+A compact, chunked list of every registry entry that lets a new client start encounters within seconds. See
+[network-performance](tech/network-performance.md#1-registry-index).
+
 ### Relay
 A libp2p node (mainly the operator server) that passes traffic between browsers
 so they can find each other and set up direct WebRTC connections. See [ipfs-
@@ -334,6 +347,10 @@ helia § Connectivity](tech/ipfs-helia.md#connectivity).
 A beacon in every biome area that fully heals the player's team and becomes
 their respawn point. See
 [exploration § Healing and rest points](gameplay/exploration.md#healing-and-rest-points).
+
+### Retrieval ladder
+The order and delays in which the client asks local storage, peers, the operator's gateway and public gateways for content by CID. See
+[network-performance](tech/network-performance.md#retrieval-ladder).
 
 ### Rules version
 The version number of the battle rules. Epoch records announce it, and every battle uses the version active in its epoch, so old catches still verify. See
@@ -395,8 +412,9 @@ The document stored on IPFS that defines a species. Its CID is
 the species' identity. See [peerling-species](peerlings/peerling-species.md).
 
 ### Species stats
-Per-species counters (encounters, catches, owners, trades, providers) that the
-server publishes in an OrbitDB database for creators and species cards. See
+Per-species counters (encounters, catches, owners, trades, providers, first
+wild finder) that the server publishes as an hourly snapshot for creators and
+species cards. See
 [creator-feedback](gameplay/creator-feedback.md).
 
 ### Spectator
@@ -440,6 +458,10 @@ cheater. See [player-data](tech/player-data.md#transfer-log-and-trades).
 ### Type
 An elemental category from a predefined list that determines battle
 strengths and weaknesses. See [types](peerlings/types.md).
+
+### Verification checkpoint
+An operator-signed statement that a player's save log verifies up to a given entry; verifiers check only what comes after it. See
+[network-performance](tech/network-performance.md#5-verification-checkpoints).
 
 ### Verified Peerling
 A Peerling whose origin is genuine (its catch replays correctly, or it has a

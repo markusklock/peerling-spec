@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
@@ -85,19 +86,28 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
   3, …) when it signs the listing. Together with `removedAtSeq`, this lets every client and the server
   agree exactly on which species were eligible at a given registry height
   ([player-data § Encounter seeds](player-data.md#encounter-seeds)).
-- **Scale:** entries are small (a few hundred bytes), so even tens of thousands
-  of species replicate quickly; heavy assets are fetched by CID only when
-  needed.
+- **Scale:** entries are small (a few hundred bytes), but a first sync of tens
+  of thousands of entries still takes minutes, because OrbitDB fetches them
+  block by block. [accepted] So a new client starts from the compact
+  **registry index** and syncs the full registry in the background, or
+  downloads it in one go from the server's log endpoint
+  ([network-performance](network-performance.md#1-registry-index),
+  [D-0023](../decisions/D-0023-network-performance.md)). Heavy assets are
+  fetched by CID only when needed.
 
 ## Other OrbitDB databases
 
-The registry is one of five kinds of OrbitDB database in the game:
+The registry is one of four kinds of OrbitDB database in the game:
 - one **save log** per player, written by that player ([player-data](player-data.md));
 - the **transfer log** of ownership changes, open to every player but
   accepting only correctly signed transfers ([player-data](player-data.md#transfer-log-and-trades));
-- the **epoch log**, written only by the server ([player-data](player-data.md));
-- the **species stats** database, written only by the server
-  ([creator-feedback](../gameplay/creator-feedback.md)).
+- the **epoch log**, written only by the server ([player-data](player-data.md)).
+
+[accepted] Species stats were a fifth, but are now published as hourly
+snapshots instead ([creator-feedback](../gameplay/creator-feedback.md#species-stats-snapshot)).
+Browsers don't replicate the epoch log or the transfer log in full either;
+they read them through snapshots, indexes and the server's log endpoint
+([network-performance § Scale](network-performance.md#scale)).
 
 ## Requirements
 
@@ -114,7 +124,7 @@ The registry is one of five kinds of OrbitDB database in the game:
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._
 
 ## See also
 

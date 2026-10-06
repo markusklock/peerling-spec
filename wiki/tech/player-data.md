@@ -28,6 +28,7 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -110,6 +111,7 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 | `position` | Every 30 s while moving, and on exit | position, facing |
 | `explored` | The player enters a chunk for the first time | the newly revealed chunks ([exploration § Map](../gameplay/exploration.md#map)) |
 | `snapshot` | Every 50 events, at every rest point visit, and on exit | CID of a DAG-CBOR document with the full current save, and the last event it includes |
+| `checkpoint` | When the server has a newer verification checkpoint for this player (checked at session start and every hour) | the server-signed checkpoint |
 
 Loading a save means reading the latest `snapshot` and applying the events
 after it. The server replicates every player's log and pins the snapshots.
@@ -268,7 +270,18 @@ Who checks: [accepted] a trade partner before trading, a PvP opponent before
 battling, and the Creation Shrine before accepting an offering. The client
 caches results per Peerling and checks only the new part of an ownership chain
 later. The server also verifies catches it sees, for the species stats
-([creator-feedback](../gameplay/creator-feedback.md)), but nothing depends on it.
+([creator-feedback](../gameplay/creator-feedback.md)).
+
+[accepted] **Verification checkpoints** (2026-10-06,
+[D-0023](../decisions/D-0023-network-performance.md)): the server signs a
+checkpoint whenever it has verified a save log up to some entry, and the
+player's client appends its newest checkpoint to its own log as a `checkpoint`
+event. A verifier accepts the newest checkpoint for everything up to its
+`upTo` entry and checks only the entries after it, so verifying a long-time
+player takes seconds, not minutes. Peerlings listed as `invalid` in it fail.
+This trusts the operator's signature for the older part of the log, as players
+already trust it for species listings; without a checkpoint, verifiers check
+the whole log ([network-performance § Verification checkpoints](network-performance.md#5-verification-checkpoints)).
 
 ### Catches
 
@@ -364,8 +377,10 @@ without the server, and the server can check everything afterwards.
   ([orbitdb-registry](orbitdb-registry.md)).
 - During epoch E, the eligible species are the entries with
   seq ≤ registryHeight(E), minus those with removedAtSeq ≤ registryHeight(E).
-- A client that hasn't yet synced the registry up to that height doesn't start
-  encounters until it has. Registry entries are small, so this is brief.
+- A client that doesn't yet know the registry up to that height doesn't start
+  encounters until it does. [accepted] The compact registry index named in
+  the epoch record is enough, so this takes a second or two
+  ([network-performance § Registry index](network-performance.md#1-registry-index)).
 
 **When the server is offline.** [accepted] If no new server-signed epoch
 record has arrived for 10 minutes (two epochs), the client derives epoch
@@ -373,7 +388,8 @@ records itself:
 - `randomness` is the drand value for the epoch, fetched directly from public
   drand endpoints (run by League of Entropy members) and checked against
   drand's public key as usual.
-- `registryHeight` (and the `generator` and `rules` versions) are copied from
+- `registryHeight` (and the `generator` and `rules` versions and the snapshot
+  roots) are copied from
   the latest server-signed epoch record in the epoch log whose epoch is lower
   than the derived record's ([accepted] 2026-10-06). Any verifier can look that
   record up, so a client can't pick an older, smaller registry state. While the
@@ -396,7 +412,8 @@ verified like any other: by whoever needs to check them, from the save log.
 1. The epoch record is genuine: drand signature, plus either the server's
    signature or the client-derived rules above.
 2. Encounter numbers run from 0 with no gaps and appear only once; epochs never
-   decrease (every `battle-result` records its epoch, so this can be checked for
+   decrease (from the newest verification checkpoint on, if there is one: the
+   checkpoint covers the part before it) (every `battle-result` records its epoch, so this can be checked for
    all encounters, not just catches). (A save log with two conflicting branches shows up as duplicate
    encounter numbers, so every catch after the fork fails.)
 3. The logged tile is an encounter-foliage tile (the world is deterministic,
@@ -438,7 +455,10 @@ from the start.
   ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
 - **Current owner:** follow the Peerling's chain from its origin; the last `to`
   is the owner. A Peerling with no transfers belongs to its first owner.
-- **Before trading,** each side syncs the transfer log and checks that the
+- **Before trading,** each side looks up the current owners in the ownership
+  index and checks the transfer-log entries newer than it
+  ([network-performance § Ownership index](network-performance.md#3-ownership-index));
+  without the server it syncs the full transfer log instead. It checks that the
   other player is the current owner of what they offer and isn't flagged.
 
 **Double trades.** Without a central authority, two conflicting transfers
@@ -542,10 +562,11 @@ D-0013, mostly checks any player can run).
 - **SAVE-024** [accepted] A player MUST be able to back up the identity key and save to a phone by scanning a QR code (one-time secret, 5 minutes) shown on the computer, and restore them to a computer the same way; the phone side runs in the Peerlings Viewer.
 - **SAVE-025** [accepted] A transfer that carries a trade ID MUST only be valid inside a transfer-log entry that holds the complete set of transfers for both confirmed offers.
 - **SAVE-026** [accepted] Every `battle-result` MUST record the epoch used, and verifiers MUST check that epochs never decrease across all encounters.
+- **SAVE-027** [accepted] The client MUST append the newest server verification checkpoint to its save log, and verifiers MUST accept a valid checkpoint for the entries it covers and verify the entries after it.
 
 ## Open questions
 
-- [Q-056](../open-questions.md#q-056) — network performance, scale and timeouts ([network-performance](../tech/network-performance.md))
+_None at the moment._
 
 ## See also
 

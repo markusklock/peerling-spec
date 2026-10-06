@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/overview.md
   - wiki/tech/ipfs-helia.md
@@ -49,6 +50,10 @@ updated: 2026-10-06
 | Spectating and world feed | Battles and world events spread peer-to-peer over pubsub ([spectating](../gameplay/spectating.md), [world-feed](../gameplay/world-feed.md)) |
 | Phone backup | Scan a QR code and your phone becomes an IPFS node for a moment, carrying your save as a CAR file ([player-data](player-data.md#phone-backup)) |
 | Verified badge | A visible check that content was verified against its CID and the species attestation |
+
+[accepted] The network panel shows, for recent fetches, where the content came
+from and how long it took (*"Mossnap: 180 ms from Mia's node"*), which keeps
+the performance shortcuts honest ([network-performance § Measuring](network-performance.md#measuring)).
 
 ## Requirements
 

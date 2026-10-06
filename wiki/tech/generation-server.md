@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -48,8 +49,10 @@ updated: 2026-10-06
 | Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [accepted] ([player-data](player-data.md#starters-and-shrine-creations)) |
 | Store and republish every player's latest signed IPNS profile record | [accepted] ([sharing](../gameplay/sharing.md), LNK-003) |
 | Maintain species stats and send creator notifications | [accepted] ([creator-feedback](../gameplay/creator-feedback.md)) |
+| Publish the registry index, hourly species stats snapshots and ownership index, and sign verification checkpoints | [accepted] ([network-performance § Snapshots and indexes](network-performance.md#snapshots-and-indexes)) |
+| Serve the fast-path endpoints and a trustless HTTP gateway | [accepted] ([creation-api § Network](creation-api.md#network), [network-performance](network-performance.md#fast-paths-through-the-operator)) |
 | Validate generated battle data | [accepted] |
-| Bootstrap peer, circuit relay, delegated routing and pubsub helper for browser nodes | [accepted] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
+| Bootstrap peer, circuit relay (with raised limits for game protocols), delegated routing and pubsub helper for browser nodes | [accepted] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
 
 The specific model names are examples from the designer's brief. The spec
 treats each model as a replaceable component behind a stage interface.

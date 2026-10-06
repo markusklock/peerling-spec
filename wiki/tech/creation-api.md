@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-05-formats-request.md
   - raw/conversations/2026-10-06-formats-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/generation-server.md
@@ -98,6 +99,7 @@ transfer-log entry that released the offering.
 | `POST /v1/jobs/{id}/name` | `name` | Reserves the name for as long as the job lives; `name-taken` if not free |
 | `POST /v1/jobs/{id}/finalize` | — | [accepted] The player confirms publishing (needs a name). The server signs the species record; the job goes from `PROFILE_READY` to `PUBLISHING`, and `files/record` becomes available |
 | `GET /v1/jobs/{id}/files/{file}` | — | `image`, `model`, `thumbnail` or `record` (the signed species record, DAG-CBOR) |
+| `POST /v1/jobs/{id}/upload` | CAR file (`application/vnd.ipld.car`) with the species record and assets | [accepted] Fallback when the server can't fetch the content peer to peer within 20 s of `published` ([network-performance](network-performance.md#fast-paths-through-the-operator)). The server checks the blocks against the expected CIDs, then continues as for `published` |
 | `POST /v1/jobs/{id}/published` | `species` (CID) | Called after the client added everything to IPFS (stage 7). The server fetches, compares, pins and signs the listing; returns the job with `listing` |
 | `DELETE /v1/jobs/{id}` | — | Abandons the job (frees the name; a shrine job's offering is not refunded, but the player keeps a shrine credit for 30 days: [creation-shrine](../gameplay/creation-shrine.md)) |
 
@@ -115,6 +117,19 @@ transfer-log entry that released the offering.
 |-----------------|------|
 | `GET /v1/bootstrap` | The server's current libp2p multiaddrs, including WebTransport certificate hashes ([tech-stack § WebTransport certificates](tech-stack.md#webtransport-certificates)). Same content as the `dnsaddr` record; no signature needed |
 
+[accepted] Fast paths ([network-performance § Fast paths through the operator](network-performance.md#fast-paths-through-the-operator),
+[D-0023](../decisions/D-0023-network-performance.md)). They need no player
+signature; every response is signed or content-addressed and checked by the
+client:
+
+| Method and path | Does |
+|-----------------|------|
+| `GET /v1/epochs/latest` | The latest server-signed [epoch record](data-formats.md#epoch-record--peerlingsepoch) envelope (DAG-CBOR) |
+| `GET /v1/epochs/{E}` | The server-signed epoch record for epoch E; `not-found` if the server published none |
+| `GET /v1/logs/{address}/entries?after=<CID>,<CID>…` | A CAR file of the OrbitDB log's entry blocks newer than the given heads (all entries if `after` is empty), oldest first, at most 5,000 entries per response; the header `Peerlings-More: true` means the client should ask again with the new heads. Works for the registry, transfer log, epoch log and any save log |
+| `GET /v1/checkpoints/{player}` | The newest [verification checkpoint](data-formats.md#verification-checkpoint--peerlingscheckpoint) for that player; `not-found` if none |
+| `GET /v1/ipns/{name}` | The latest signed IPNS record the server holds for that name (`application/vnd.ipfs.ipns-record`) |
+
 ## Requirements
 
 - **API-001** [accepted] The client and operator server MUST communicate for creation, starters and names through the endpoints on this page, over HTTP/3.
@@ -122,6 +137,7 @@ transfer-log entry that released the offering.
 - **API-003** [accepted] Job progress MUST be available as a Server-Sent Events stream and by polling.
 - **API-004** [accepted] The server MUST give each player at most one starter, ever, whether created or chosen.
 - **API-005** [accepted] A creation job MUST expire after 24 h without a request from the player, and its name reservation MUST last until then.
+- **API-006** [accepted] The server MUST provide the fast-path endpoints and the creation upload fallback listed on this page.
 
 ## Open questions
 

@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-network-performance-approved.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
@@ -115,10 +116,10 @@ form.
 | Registry | `peerlings-registry-v1` | documents | Anyone; entries must carry a valid operator listing signature (custom access controller) | `_id` = species CID |
 | Transfer log | `peerlings-transfers-v1` | events | Anyone; every transfer must be signed by its `from` player (custom access controller) | — |
 | Epoch log | `peerlings-epochs-v1` | events | Operator only | — |
-| Species stats | `peerlings-species-stats-v1` | keyvalue | Operator only | species CID |
+| ~~Species stats~~ | — | — | — | Replaced 2026-10-06 by the [species stats snapshot](#snapshots-and-indexes) ([D-0023](../decisions/D-0023-network-performance.md)) |
 | Save log (one per player) | `peerlings-save-v1` | events | That player only | — |
 
-The game app ships the addresses of the first four. A save log's address is
+The game app ships the addresses of the registry, transfer log and epoch log. A save log's address is
 derived from its manifest (name `peerlings-save-v1`, type `events`, writer =
 the player ID), so anyone can compute it from a player ID ([SAVE-018](player-data.md#requirements)).
 
@@ -185,10 +186,14 @@ and in the epoch log. Meaning:
 | `registryHeight` | uint | |
 | `generator` | map | `version`: uint; `fromEpoch`: uint |
 | `rules` | map | `version`: uint; `fromEpoch`: uint: the battle-rules version ([battle § Rules versions](../gameplay/battle.md#rules-versions)) |
+| `registryIndex` | CID | the registry index manifest for `registryHeight` ([Snapshots and indexes](#snapshots-and-indexes)) |
+| `statsRoot` | CID or null | the latest species stats snapshot root (changes every 12 epochs) |
+| `ownersRoot` | CID or null | the latest ownership index root (changes every 12 epochs) |
 
 A **client-derived** epoch record has the same body, `"signer": null`, no
 `sig`, and an extra top-level field `"derivedBy": "client"`. Its
-`registryHeight`, `generator` and `rules` are copied from the latest
+`registryHeight`, `generator`, `rules`, `registryIndex`, `statsRoot` and
+`ownersRoot` are copied from the latest
 server-signed epoch record in the epoch log whose `epoch` is lower than its own
 ([player-data § Encounter seeds](player-data.md#encounter-seeds)).
 
@@ -240,6 +245,7 @@ Part of a `catch` save-log event. Meaning:
 | `candidate` | uint | 0–4, which candidate was met |
 | `team` | [map] | battle-start state of each team member: `instanceId`, `species`, `level`, `hp`, `traits` |
 | `actions` | [Action] | every action, in order |
+| `baseRecord` | epoch record, optional | only when `epochRecord` is client-derived: the server-signed record its copied fields come from, so verifiers needn't search the epoch log ([network-performance § Epoch records by number](network-performance.md#4-epoch-records-by-number)) |
 
 **Action** (also used in PvP): `{ "kind": "move", "slot": "quick" | "strong" |
 "signature" }`, `{ "kind": "switch", "to": <instance ID> }`, `{ "kind":
@@ -278,6 +284,7 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `badge` | [accepted] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
 | `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid if: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles are not recorded |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
+| `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log) |
 
 ### Save snapshot — `peerlings/save`
 
@@ -329,15 +336,56 @@ half. Conflict rule: two transfers with the same `prev` → the one whose
 
 ### Species stats — `peerlings/species-stats`
 
-Signed envelope; signer: **operator**; stored under the species CID. Meaning:
-[creator-feedback](../gameplay/creator-feedback.md).
+[accepted] One value in a [species stats snapshot](#snapshots-and-indexes)
+shard (not an envelope; trusted through the signed epoch record's
+`statsRoot`). Meaning: [creator-feedback](../gameplay/creator-feedback.md).
 
-| Body field | Type |
+| Field | Type |
 |------------|------|
 | `species` | CID |
 | `encounters`, `catches`, `owners`, `trades`, `providers` | uint |
 | `firstWild` | null, or map: `player` (player ID), `name` (display name at the time), `catch` (CID of the `catch` save-log entry), `epoch` (uint). [accepted] ([creator-feedback § First found in the wild](../gameplay/creator-feedback.md#first-found-in-the-wild)) |
 | `updatedEpoch` | uint |
+
+### Snapshots and indexes
+
+[accepted] Plain DAG-CBOR documents published by the operator
+([network-performance § Snapshots and indexes](network-performance.md#snapshots-and-indexes),
+[D-0023](../decisions/D-0023-network-performance.md)). They are trusted
+because the operator-signed epoch record names their root CIDs.
+
+**Registry index manifest** — `peerlings/registry-index`: `v`, `type`,
+`height` (uint), `chunks` ([CID], in order). **Chunk** —
+`peerlings/registry-index-chunk`: `v`, `type`, `from` (uint: the first `seq`),
+`entries`: up to 1,000 arrays, one per registry `seq`:
+`[seq, species CID, types]` for a listing, where `types` holds the type
+indices (0–11, position in [types § The type list](../peerlings/types.md#the-type-list)),
+or `[seq, species CID, null]` for a delisting. All chunks but the last hold
+exactly 1,000 entries and never change.
+
+**Sharded maps** (stats snapshot, ownership index): the root is
+`{ v, type, epoch (uint), shards: [CID × 256] }`; shard *k* holds the keys
+whose SHA-256 (of the key's bytes) starts with byte *k*, as a DAG-CBOR map
+from the key as a string to its value.
+
+| Root `type` | Key | Value | Extra root fields |
+|-------------|-----|-------|-------------------|
+| `peerlings/stats-root` | species CID (base32 string) | [species stats](#species-stats--peerlingsspecies-stats) | — |
+| `peerlings/owners-root` | instance ID (hex string) | CID of the Peerling's latest transfer-log entry | `heads` ([CID]: transfer-log heads included), `flagged` ([player ID]) |
+
+### Verification checkpoint — `peerlings/checkpoint`
+
+Signed envelope; signer: **operator**. Meaning:
+[network-performance § Verification checkpoints](network-performance.md#5-verification-checkpoints).
+
+| Body field | Type | Rules |
+|------------|------|-------|
+| `player` | player ID | whose save log was verified |
+| `upTo` | CID | the last save-log entry covered |
+| `nextEncounter` | uint | the next encounter number after `upTo` |
+| `lastEpoch` | uint | the highest epoch used up to `upTo` |
+| `invalid` | [instance ID] | Peerlings in the covered part whose origin failed verification |
+| `t` | time | |
 
 ### Player profile document — `peerlings/profile`
 
