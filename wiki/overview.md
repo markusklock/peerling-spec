@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/gameplay/core-loop.md
   - wiki/tech/architecture.md
@@ -77,6 +78,11 @@ The first playable version (v1) contains:
   the [Peerdex](gameplay/peerdex.md), [spectating](gameplay/spectating.md),
   shareable [links](gameplay/sharing.md), the [world feed](gameplay/world-feed.md)
   and [phone backup](tech/player-data.md#phone-backup).
+- [accepted] A [following Peerling](gameplay/exploration.md#following-peerling),
+  [landmark guardians](gameplay/guardians.md) with 12 badges, the
+  [Peerling of the Day](gameplay/peerling-of-the-day.md) and
+  ["First found in the wild by …"](gameplay/creator-feedback.md#first-found-in-the-wild)
+  credits ([D-0022](decisions/D-0022-v1-fun-features.md)).
 
 [accepted] Not in v1: evolution, Peerlings learning new moves, items in
 battles, critical hits and status conditions (BTL-010), fast travel (D-0019),

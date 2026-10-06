@@ -419,3 +419,16 @@ List all entries with `grep "^## \[" wiki/log.md`.
   `pvp` profile counters added to protocols and data-formats), Q-051
   (presentation formulas) and Q-054 (hexagon geometry, WGN-018). No proposals
   or open questions remain.
+
+## [2026-10-06] design | Following Peerling, guardians, Peerling of the Day, first finds
+- Source: raw/conversations/2026-10-06-v1-fun-features.md
+- Changed: gameplay/guardians.md (new), gameplay/peerling-of-the-day.md (new),
+  decisions/D-0022-v1-fun-features.md (new), gameplay/exploration.md,
+  creator-feedback.md, encounters.md, battle.md, world-feed.md, sharing.md,
+  ui.md, core-loop.md; world/procedural-generation.md; tech/data-formats.md,
+  protocols.md, player-data.md; overview.md, glossary.md, open-questions.md,
+  index.md
+- Notes: Four v1 features approved (D-0022): following Peerling (EXP-012),
+  landmark guardians with 12 badges (GRD), Peerling of the Day with a spawn
+  pedestal (POD, WGN-019), "First found in the wild by …" (CFB-005).
+  Registered prefixes GRD and POD. Exact rules proposed (Q-055).

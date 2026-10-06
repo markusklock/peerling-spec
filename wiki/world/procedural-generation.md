@@ -1,7 +1,7 @@
 ---
 title: Procedural World Generation
 type: system
-status: accepted
+status: draft
 req_prefix: WGN
 tags: [world, procedural]
 sources:
@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -108,6 +109,8 @@ a glance; [visual-style](visual-style.md)):
 | Gloomwood | Shadow | Dark twisted forest in mist; deep purple | Dark brambles |
 | Haunted Marsh | Spirit | Foggy marsh, will-o'-wisps, old standing stones; teal | Misty marsh grass |
 
+[proposed] The **biome index** (0–11) is a biome's row in this table (Plains = 0 … Haunted Marsh = 11); hashes and data formats use it ([Q-055](../open-questions.md#q-055)).
+
 ### Layout
 
 [accepted] A **central spawn hexagon** surrounded by **12 biome sectors**
@@ -173,6 +176,9 @@ and showcase heart ([D-0017](../decisions/D-0017-world-features.md)):
   Peerlings as 3D models, loaded live from IPFS and updated as new ones appear.
   Clicking one opens its card ([sharing](../gameplay/sharing.md)).
   [accepted] 12 pedestals, newest first.
+- **Peerling of the Day pedestal:** [accepted] a pedestal near the spawn with
+  the [Peerling of the Day](../gameplay/peerling-of-the-day.md#in-the-world)'s
+  3D model on top; hovering it explains what it is.
 - **Network monument:** a crystal tree whose glowing branches show live network
   activity. [accepted] Each glowing branch is a peer the player is connected
   to; the number of leaves follows how many Peerlings this computer is storing
@@ -202,6 +208,8 @@ nobody meets wild Peerlings in the crowd.
   rest point to its nearest neighbours (a minimum spanning tree plus a few
   extra links so there are loops), and paths may cross foliage only where no
   other route exists.
+- **Guardian sites:** [accepted] one per biome sector, replacing that area's
+  landmark ([guardians § Guardian sites](../gameplay/guardians.md#guardian-sites)).
 - **Signposts:** at path junctions and area borders, showing the area's landmark
   name, biome and level range (e.g. *"Gloomwood: wild Peerlings level 22–26"*).
   [accepted] The range is the lowest base level in the area minus 2 to the
@@ -299,7 +307,9 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-016** [accepted] Generator updates MUST switch at an epoch announced in the epoch records, and clients MUST keep all past generator versions for verification.
 - **WGN-017** [accepted] The world MUST consist of a central Plains spawn hexagon containing the spawn hub, surrounded by 12 wedge-shaped biome sectors, one per biome, each reaching from the hexagon to the world's border.
 - **WGN-018** [accepted] The hexagon, sectors and sector order MUST follow the exact geometry in [Layout](#layout).
+- **WGN-019** [accepted] The spawn hub MUST have a Peerling of the Day pedestal ([POD-002](../gameplay/peerling-of-the-day.md#requirements)).
+- **WGN-020** [accepted] Each biome sector MUST have one guardian site ([guardians](../gameplay/guardians.md)).
 
 ## Open questions
 
-_None at the moment._
+- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features (biome index, guardian sites)

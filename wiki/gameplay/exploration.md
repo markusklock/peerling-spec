@@ -1,7 +1,7 @@
 ---
 title: Exploration
 type: system
-status: accepted
+status: draft
 req_prefix: EXP
 tags: [gameplay, world]
 sources:
@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -90,6 +91,31 @@ never does. Each biome's foliage is listed in
 - Foliage rustles visibly when the player walks through it, so players learn
   that grass means Peerlings.
 
+## Following Peerling
+
+[accepted] The first Peerling in the player's team walks behind them in the
+world, hopping along, drawn at the height of its
+[size class](../peerlings/peerling-species.md#size-and-temperament). Other
+players see it too ([D-0022](../decisions/D-0022-v1-fun-features.md)). It
+makes the world feel alive, and every walk past another player shows off
+someone's creation.
+
+[proposed] Details, awaiting approval ([Q-055](../open-questions.md#q-055)):
+- **Which one:** the first team member that hasn't fainted. It is shown as a
+  shimmer if it is one.
+- **Where:** it always stands on the tile the player last left, one step
+  behind, and moves when the player moves. It never blocks anyone; players
+  can walk through it. After a respawn it appears behind the player.
+- **Petting:** facing it and pressing interact makes it hop, play its
+  [cry](../world/audio.md#peerling-cries) and show a heart.
+- **Other players' followers:** the presence message names the follower's
+  species and shimmer ([protocols § presence](../tech/protocols.md#peerlingsv1presencerx_ry--presence)).
+  Clients fetch its species record and model from IPFS (cached), showing a
+  small glowing orb until it loads. Followers are drawn only for the players
+  drawn ([multiplayer § Scale and visibility](multiplayer.md#scale-and-visibility)).
+- **Settings:** "Show my follower" and "Show other players' followers", both
+  on by default ([ui § Settings](ui.md#settings)).
+
 ## Map
 
 [accepted] A **minimap** and a full **world map** that fill in as the player
@@ -147,7 +173,9 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-009** [accepted] There MUST NOT be fast travel.
 - **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
 - **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll.
+- **EXP-012** [accepted] The first Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it.
+- **EXP-013** [proposed] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
 
 ## Open questions
 
-_None at the moment._
+- [Q-055](../open-questions.md#q-055) — approve the exact rules for the v1 fun features

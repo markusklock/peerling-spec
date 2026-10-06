@@ -7,6 +7,7 @@ tags: [gameplay, ui, controls]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/gameplay/exploration.md
@@ -40,7 +41,7 @@ only in v1.
 | Collection | All other owned Peerlings |
 | Peerdex | [Peerdex](peerdex.md) |
 | Map | The world map ([exploration § Map](exploration.md#map)) |
-| Profile | The player's profile, with Share ([sharing](sharing.md)) |
+| Profile | The player's profile, with its guardian badge case ([guardians](guardians.md#badges)), PvP counters and Share ([sharing](sharing.md)) |
 | My creations | The player's species and their stats ([creator-feedback](creator-feedback.md)) |
 | Network panel | Peers, data served, Peerlings stored ([ipfs-showcase](../tech/ipfs-showcase.md)) |
 | Backup | Export backup file, phone backup, show recovery phrase ([player-data](../tech/player-data.md#account-recovery)) |
@@ -73,7 +74,8 @@ All keys can be remapped in Settings.
 - Graphics quality and resolution scale.
 - Key remapping.
 - Default for "Spectators allowed" in PvP challenges ([spectating](spectating.md)).
-- Toggles: world feed, network overlay.
+- Toggles: world feed, network overlay, "Show my follower" and "Show other
+  players' followers" ([exploration § Following Peerling](exploration.md#following-peerling)).
 - Blocked players: a list with Unblock ([multiplayer § Interactions](multiplayer.md#what-players-experience)).
 
 ## Requirements

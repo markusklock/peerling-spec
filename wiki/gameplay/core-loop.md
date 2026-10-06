@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/exploration.md
@@ -65,7 +66,11 @@ Around the core loop, players meet each other, [battle](pvp-battles.md) and
 - **Collection** — catch as many different species as possible (the [Peerdex](peerdex.md)
   of everything you have seen and caught).
 - **Mastery** — build a team that handles every type matchup; reach harder
-  areas further from the start; beat other players.
+  areas further from the start; earn the 12 [guardian](guardians.md) badges;
+  beat other players.
+- **Discovery race** — be the first to find a new Peerling in the wild
+  ([creator-feedback § First found in the wild](creator-feedback.md#first-found-in-the-wild)),
+  or hunt today's [Peerling of the Day](peerling-of-the-day.md).
 - **Exchange** — trade to get species you can't find yourself, or to spread
   your own creation.
 - **Pride** — see how your own creation spreads through the world

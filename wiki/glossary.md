@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 updated: 2026-10-06
 ---
 
@@ -30,6 +31,10 @@ A `.car` file the player can export, holding their private key and latest save
 snapshot. See [data-formats § Backup file](tech/data-formats.md#backup-file-
 and-phone-backup-payload--peerlingsbackup).
 
+### Badge
+One of 12 rewards, one per biome, for beating that biome's guardian. See
+[guardians](gameplay/guardians.md).
+
 ### Biome
 One of the 12 area types of the world, one per Peerling type (e.g. Forest
 for Grass). Peerlings of a biome's type are more likely to be encountered
@@ -39,6 +44,10 @@ there. See [procedural-generation](world/procedural-generation.md#biomes).
 One area of the world (about 300–500 m across) with a single biome, its own
 rest point and its own landmark. See [procedural-generation §
 Layout](world/procedural-generation.md#layout).
+
+### Biome index
+A biome's number 0–11, its row in the biome table (Plains = 0); used in hashes and data formats. See
+[procedural-generation § Biomes](world/procedural-generation.md#biomes).
 
 ### Biome sector
 One of the 12 wedge-shaped slices of the world, one per biome, running from
@@ -149,6 +158,14 @@ A Peerling at 0 HP faints and can't fight until healed at a rest point. See
 The default PvP level mode: every Peerling fights at level 50. See [pvp-battles
 § Fairness](gameplay/pvp-battles.md#fairness).
 
+### First found in the wild
+The credit on a species card naming the first player with a verified wild catch of it. See
+[creator-feedback § First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild).
+
+### Following Peerling
+The first Peerling in the player's team, which walks behind them in the world and is visible to others. See
+[exploration § Following Peerling](gameplay/exploration.md#following-peerling).
+
 ### Generation server
 The single operator-hosted server that runs the concept LLM, the image
 generator, the image-to-3D generator, and pins all game content on IPFS. See
@@ -158,6 +175,10 @@ generator, the image-to-3D generator, and pins all game content on IPFS. See
 The version of the world generator. All clients switch at an epoch announced in
 the epoch records. See [procedural-generation § Generator
 updates](world/procedural-generation.md#generator-updates).
+
+### Guardian
+The keeper of a biome's guardian site, whose team of 4 of that biome's Peerlings changes weekly; beating it earns the biome's badge. See
+[guardians](gameplay/guardians.md).
 
 ### Helia
 A TypeScript implementation of IPFS that runs in the browser. Every game client
@@ -244,6 +265,10 @@ One individual Peerling owned by a player (e.g. the starter, or a
 caught wild Peerling), with its own level, experience, current HP, etc. Many
 instances can exist of the same species. See
 [peerling-species](peerlings/peerling-species.md).
+
+### Peerling of the Day
+The species picked each in-game day by the shared randomness; it appears more often everywhere and stands on a pedestal near the spawn. See
+[peerling-of-the-day](gameplay/peerling-of-the-day.md).
 
 ### Peerlings Viewer
 A small web app, published on IPFS, that shows shared Peerling cards and player

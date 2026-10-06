@@ -1,13 +1,14 @@
 ---
 title: Live World Feed
 type: system
-status: accepted
+status: draft
 req_prefix: FED
 tags: [social, pubsub, showcase]
 sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/realtime-networking.md
@@ -36,6 +37,9 @@ updated: 2026-10-06
   | *New Peerling published: Lanternfox (by Mia)* | The creator's client, once the registry entry is in | The entry exists in the registry |
   | *Someone caught a shimmer Mossnap!* | The catcher's client | The catch is verified by replay before it's shown ([player-data § Catches](../tech/player-data.md#catches)) |
   | *A new Peerling was created at the Creation Shrine* | The creator's client | As for new Peerlings |
+  | *Mossnap was first found in the wild by Mia!* [accepted] | The finder's client, once the species stats name them ([creator-feedback § First found in the wild](creator-feedback.md#first-found-in-the-wild)) | The species stats name this catch |
+  | *Peerling of the Day: Mossnap (by Mia)* [accepted] | Nobody: each client adds it locally ([peerling-of-the-day](peerling-of-the-day.md#announcements)) | — |
+  | *Mia earned all 12 guardian badges!* [proposed] | The player's client ([guardians § Badges](guardians.md#badges)) | All 12 badges verify by replay |
 
   [accepted] A species created at the Creation Shrine emits only the shrine
   event, not also a "new Peerling published" event.

@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -57,6 +58,9 @@ exactly.
 | Levels | Real levels | Level 50 for all (Fair mode, default) or real levels, chosen at the challenge ([PVP-010](pvp-battles.md#requirements)) |
 | Extra actions | Catch, Flee | none |
 | XP | Yes ([Experience and levelling](#experience-and-levelling)) | No |
+
+[accepted] Guardian battles ([guardians](guardians.md#the-battle)) are wild
+battles against a team of 4, with the differences listed on that page.
 
 The first team member that hasn't fainted is sent out first (the *lead*).
 

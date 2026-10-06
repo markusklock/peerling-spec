@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -56,6 +57,10 @@ Every eligible species starts with weight 1, then:
 |--------|-----------:|-----|
 | **Biome affinity:** the species has the biome's type (primary or secondary) | × 6 | If roughly 1 in 12 species has a given type, about a third of a biome's encounters are its type: clearly themed, with plenty of variety |
 | **Novelty:** the player has never seen this species (per the Peerdex in the save) | × 2 | Discovery stays fresh as the registry grows |
+
+[accepted] The [Peerling of the Day](peerling-of-the-day.md#in-encounters)
+appears more often everywhere during its day; its exact weight is defined on
+that page.
 
 The candidates (below) are drawn with these weights using the encounter
 seed. The wild level depends on where it is met ([Wild level](#wild-level)),

@@ -1,7 +1,7 @@
 ---
 title: "Player Data: Saves, Identity and Ownership"
 type: system
-status: accepted
+status: draft
 req_prefix: SAVE
 tags: [tech, saves, identity, orbitdb, ipns, security]
 sources:
@@ -26,6 +26,7 @@ sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -284,6 +285,11 @@ later. The server also verifies catches it sees, for the species stats
    the checks in [Encounter seeds](#encounter-seeds). The result is the same
    for every verifier. A catch that fails is invalid forever: the Peerling stays
    in its owner's collection but can never be traded or used in PvP.
+
+[proposed] **Guardian badges** are verified the same way: the verifier
+recomputes the week's guardian team from the `weekRecord`, replays the battle
+from the `badge` event's evidence, and checks the encounter-seed rules
+([guardians](../gameplay/guardians.md#badges)).
 
 ### Encounter seeds
 

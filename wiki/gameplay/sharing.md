@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-v1-fun-features.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/ipfs-showcase.md
@@ -52,13 +53,16 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 - Shows the rotatable 3D model, the image, name, types, base stats, moves, lore,
   creator, and, if available, the [species stats](creator-feedback.md) (met,
   caught, nodes holding it). Plus the CID and a verified badge.
+- [accepted] *"First found in the wild by …"* once someone has found it
+  ([creator-feedback § First found in the wild](creator-feedback.md#first-found-in-the-wild)).
 
 ### Player profile
 
 - Link: `https://view.<domain>/#/player/<IPNS name>`. The **IPNS name** is
   derived from the player's identity key, so it never changes.
 - The client publishes a small **profile document**: display name, appearance,
-  team summary, created species and Peerdex counts (exact fields:
+  team summary, created species, Peerdex counts, guardian badges and PvP
+  counters (exact fields:
   [data-formats § Player profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile)). It is updated with each save snapshot, and an IPNS
   record signed by the player's key points to the latest version.
 - IPNS records are published from the browser through delegated routing.

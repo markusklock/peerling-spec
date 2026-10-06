@@ -22,7 +22,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [core-loop](gameplay/core-loop.md) | accepted | — | Explore → encounter → battle → catch; player motivations |
 | [onboarding](gameplay/onboarding.md) | accepted | ONB | New player creates a character and creates or chooses a starter Peerling |
 | [player-character](gameplay/player-character.md) | accepted | PLR | Parts-based avatar, identity key (one key per player) |
-| [exploration](gameplay/exploration.md) | accepted | EXP | Tile-by-tile grid movement, map, encounters in foliage, rest points, no fast travel |
+| [exploration](gameplay/exploration.md) | draft | EXP | Tile-by-tile grid movement, map, encounters in foliage, rest points, no fast travel |
 | [encounters](gameplay/encounters.md) | accepted | ENC | Choosing wild Peerlings: weights, 5 ordered candidates, wild levels, prefetching |
 | [battle](gameplay/battle.md) | accepted | BTL | Turns, action order, move mechanics, stat stages, damage model, XP, RNG, integer maths, rules versions, battle screen |
 | [catching](gameplay/catching.md) | accepted | CAT | Catching as a battle action (no items), catch chance, team of 4, collection |
@@ -30,12 +30,14 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [pvp-battles](gameplay/pvp-battles.md) | accepted | PVP | Peer-to-peer battles: Fair / Real-levels modes, verification, commit-reveal protocol |
 | [trading](gameplay/trading.md) | accepted | TRD | Peer-to-peer trades of Peerling instances |
 | [creation-shrine](gameplay/creation-shrine.md) | accepted | SHR | Giving up 3 Peerlings to create a new species |
-| [creator-feedback](gameplay/creator-feedback.md) | accepted | CFB | Species stats in OrbitDB, live creator notifications |
+| [creator-feedback](gameplay/creator-feedback.md) | draft | CFB | Species stats in OrbitDB, live creator notifications |
 | [spectating](gameplay/spectating.md) | accepted | SPT | Watching PvP battles live over pubsub |
 | [sharing](gameplay/sharing.md) | accepted | LNK | Shareable Peerling cards and IPNS player profiles, Peerlings Viewer |
 | [peerdex](gameplay/peerdex.md) | accepted | DEX | Index of seen and caught species, own creations |
 | [ui](gameplay/ui.md) | accepted | UI | Title screen, pause menu, HUD, controls, settings |
-| [world-feed](gameplay/world-feed.md) | accepted | FED | Live ticker of notable world events over pubsub |
+| [guardians](gameplay/guardians.md) | draft | GRD | One guardian per biome with a weekly team; 12 badges verified by replay |
+| [peerling-of-the-day](gameplay/peerling-of-the-day.md) | draft | POD | A daily species that appears more often everywhere, with a pedestal at the spawn |
+| [world-feed](gameplay/world-feed.md) | draft | FED | Live ticker of notable world events over pubsub |
 
 ## Peerlings
 
@@ -51,7 +53,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
-| [procedural-generation](world/procedural-generation.md) | accepted | WGN | Shared 4 × 4 km world: tiles, 12 biomes, terrain, spawn hub, landmarks, paths, day/night, weather, generator updates |
+| [procedural-generation](world/procedural-generation.md) | draft | WGN | Shared 4 × 4 km world: tiles, 12 biomes, terrain, spawn hub, landmarks, paths, day/night, weather, generator updates |
 | [audio](world/audio.md) | accepted | AUD | Music, sound effects, Peerling cries synthesized from the CID |
 | [visual-style](world/visual-style.md) | accepted | VIS | Top-down tilted camera, battle camera, colorful stylized look, environment art kit |
 
@@ -64,9 +66,9 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [orbitdb-registry](tech/orbitdb-registry.md) | accepted | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
 | [generation-server](tech/generation-server.md) | accepted | SRV | Self-hosted AI models, pinning, listing and origin signer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | accepted | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
-| [player-data](tech/player-data.md) | accepted | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
-| [data-formats](tech/data-formats.md) | accepted | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
-| [protocols](tech/protocols.md) | accepted | PRT | Exact pubsub and libp2p stream messages |
+| [player-data](tech/player-data.md) | draft | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
+| [data-formats](tech/data-formats.md) | draft | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
+| [protocols](tech/protocols.md) | draft | PRT | Exact pubsub and libp2p stream messages |
 | [creation-api](tech/creation-api.md) | accepted | API | HTTP/3 API between client and operator server |
 | [tech-stack](tech/tech-stack.md) | accepted | STK | Platform technologies: WebTransport, WebRTC, IPv6, WebGPU, OPFS, asset formats and budgets |
 | [resilience](tech/resilience.md) | accepted | RES | What works without the operator server, and how |
@@ -97,12 +99,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0019](decisions/D-0019-peerdex-ui-audio.md) | accepted | Peerdex, menus, audio and rest points |
 | [D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md) | accepted | Central Plains spawn hexagon with 12 biome sectors |
 | [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted | PvP win counter on the player profile |
+| [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
 
 ## Registered requirement prefixes
 
-API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
-PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0022. Next free question ID: Q-055.
+API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
+POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
+D-0023. Next free question ID: Q-056.
 
 ## Sources
 
@@ -141,3 +144,4 @@ D-0022. Next free question ID: Q-055.
 | [2026-10-06-review-decisions](../raw/conversations/2026-10-06-review-decisions.md) | 2026-10-06 | Consistency-review findings approved; PvP win stat suggested; hexagon world layout suggested |
 | [2026-10-06-pvp-wins-hex-world](../raw/conversations/2026-10-06-pvp-wins-hex-world.md) | 2026-10-06 | PvP win counter; first encounter approved; hexagon + 12 biome sectors (option B) |
 | [2026-10-06-proposals-approved](../raw/conversations/2026-10-06-proposals-approved.md) | 2026-10-06 | Battle maths, PvP win record, presentation formulas and hexagon geometry approved |
+| [2026-10-06-v1-fun-features](../raw/conversations/2026-10-06-v1-fun-features.md) | 2026-10-06 | Following Peerling, guardians, Peerling of the Day (with spawn pedestal), "First found in the wild by …" |
