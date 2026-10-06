@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
@@ -87,14 +88,17 @@ them follow fixed rules:
 2. **Prefetching.** The client works out its upcoming encounters' candidate
    lists in advance and fetches them, in list order, in the background.
 3. **Choice.** When the encounter triggers, it uses the candidate **earliest
-   in the list** that has already been fetched and verified. If none has arrived
+   in the list** that has already been fetched and verified (its species
+   record, model and thumbnail are all in local storage and match their
+   CIDs). If none has arrived
    yet, it uses the first one that does arrive, as in the designer's original
    idea.
 4. **Nothing arrives.** If no candidate arrives within 10 seconds, no encounter
    happens and the encounter number isn't used up. The next encounter trigger
-   tries the same 5 candidates again.
-5. **Logging.** The save log records which candidate (1–5) was met; verifiers
-   check it is on the list.
+   reuses the same encounter number n; its candidates are worked out again for
+   that trigger's tile and epoch record (usually the same list).
+5. **Logging.** The save log records which candidate (0–4, in list order) was
+   met and its species; verifiers check it is on the list.
 
 Why "earliest in the list" instead of always "first to download": with
 prefetching, several candidates are usually already downloaded, so "first to

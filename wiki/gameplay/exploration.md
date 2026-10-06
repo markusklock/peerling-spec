@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
@@ -94,8 +95,8 @@ never does. Each biome's foliage is listed in
 
 ## Following Peerling
 
-[accepted] The first Peerling in the player's team walks behind them in the
-world, hopping along, drawn at the height of its
+[accepted] The first Peerling in the player's team (the first that hasn't
+fainted) walks behind them in the world, hopping along, drawn at the height of its
 [size class](../peerlings/peerling-species.md#size-and-temperament). Other
 players see it too ([D-0022](../decisions/D-0022-v1-fun-features.md)). It
 makes the world feel alive, and every walk past another player shows off
@@ -173,8 +174,8 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-008** [accepted] Interacting with a rest point MUST heal the team, set it as the last rest point, and write a save snapshot.
 - **EXP-009** [accepted] There MUST NOT be fast travel.
 - **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
-- **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll.
-- **EXP-012** [accepted] The first Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it.
+- **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll; the guarantee lasts until encounter 0 has been logged.
+- **EXP-012** [accepted] The first non-fainted Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it.
 - **EXP-013** [accepted] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
 
 ## Open questions

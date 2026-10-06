@@ -29,6 +29,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -221,10 +222,12 @@ to make saves more durable are in [Keeping saves available](#keeping-saves-avail
 
 - **Inspecting fetches the save.** When a player inspects a nearby player
   ([multiplayer](../gameplay/multiplayer.md): stand on a neighbouring tile,
-  face them, choose *View profile*), the client fetches that player's **full save
-  log**: the latest snapshot plus the events after it. The profile screen is
-  built from it: team (with levels, traits, shimmer and verification), created
-  species, Peerdex counts, appearance.
+  face them, choose *View profile*), the profile screen appears at once from
+  the profile stream ([protocols § profile](protocols.md#peerlingsprofile100--profile)),
+  and the client then fetches that player's **full save log** (the latest
+  snapshot plus the events after it) in the background
+  ([network-performance](network-performance.md#operation-by-operation)). The
+  verification marks on their team fill in once it has arrived.
 - **Trades and PvP fetch it too.** Verifying a trade partner's or opponent's
   Peerlings already fetches their save log; that copy is kept the same way.
 - **Kept as a backup.** The client stores these logs persistently, apart from
@@ -276,8 +279,9 @@ later. The server also verifies catches it sees, for the species stats
 [D-0023](../decisions/D-0023-network-performance.md)): the server signs a
 checkpoint whenever it has verified a save log up to some entry, and the
 player's client appends its newest checkpoint to its own log as a `checkpoint`
-event. A verifier accepts the newest checkpoint for everything up to its
-`upTo` entry and checks only the entries after it, so verifying a long-time
+event; the checkpoint's `player` must be the log's owner. A verifier accepts the newest checkpoint for everything up to its
+`upTo` entry and checks only the entries after it (those not in the causal history of
+`upTo`, so a forked log is still caught), so verifying a long-time
 player takes seconds, not minutes. Peerlings listed as `invalid` in it fail.
 This trusts the operator's signature for the older part of the log, as players
 already trust it for species listings; without a checkpoint, verifiers check
@@ -411,8 +415,9 @@ verified like any other: by whoever needs to check them, from the save log.
 **What a verifier checks for a catch.**
 1. The epoch record is genuine: drand signature, plus either the server's
    signature or the client-derived rules above.
-2. Encounter numbers run from 0 with no gaps and appear only once; epochs never
-   decrease (from the newest verification checkpoint on, if there is one: the
+2. Encounter numbers run from 0 with no gaps and appear only once (counting
+   `battle-result` events; a `catch` repeats the number of its own
+   `battle-result`); epochs never decrease (from the newest verification checkpoint on, if there is one: the
    checkpoint covers the part before it) (every `battle-result` records its epoch, so this can be checked for
    all encounters, not just catches). (A save log with two conflicting branches shows up as duplicate
    encounter numbers, so every catch after the fork fails.)
@@ -442,7 +447,7 @@ from the start.
 - **The log:** an OrbitDB *events* database that any player may append to.
   Its access controller accepts an entry only if every transfer in it is
   signed by the `from` player.
-- **A transfer:** `{ instanceId, from, to, prev, trade }`, signed by `from`
+- **A transfer:** `{ instanceId, from, to, prev, trade, offers }`, signed by `from`
   ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)). `prev` is the CID
   of the previous transfer of this Peerling, or `origin` for its first
   transfer. `to` is a player ID, or `released` for Peerlings given up at the

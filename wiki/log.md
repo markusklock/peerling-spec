@@ -467,3 +467,18 @@ List all entries with `grep "^## \[" wiki/log.md`.
   endpoints and creation upload (API-006); epoch record gains registryIndex,
   statsRoot, ownersRoot; catch evidence gains baseRecord. No proposals or
   open questions remain.
+
+## [2026-10-06] lint | Second full review (four parallel reviewers): mechanical fixes
+- Source: raw/conversations/2026-10-06-review-2-fixes.md
+- Changed: tech/data-formats.md, protocols.md, creation-api.md, player-data.md,
+  network-performance.md, tech-stack.md, ipfs-helia.md, generation-server.md,
+  architecture.md, resilience.md; gameplay/battle.md, encounters.md,
+  exploration.md, guardians.md, creation-shrine.md, trading.md, world-feed.md,
+  multiplayer.md, spectating.md, creator-feedback.md, pvp-battles.md;
+  peerlings/peerling-species.md, creation-pipeline.md; world/audio.md,
+  procedural-generation.md; overview.md, glossary.md, index.md
+- Notes: ~80 findings. Mechanical ones fixed (see the source file for the
+  list). Design questions (world-generation determinism, drand network,
+  client-derived records, novelty seen-set, trade integrity, PvP edge cases,
+  shrine limits, guardian and Peerling of the Day edge cases, all-fainted
+  team, world border) collected for the designer.

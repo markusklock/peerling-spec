@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
@@ -118,11 +119,11 @@ Every new species becomes a small race.
 
 - **CFB-001** [accepted] Creators MUST be able to see how their species are doing in the world.
 - ~~**CFB-002**~~ (removed 2026-10-06, replaced by CFB-008; see D-0023)
-- **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught, traded or delisted.
+- **CFB-003** [accepted] The server MUST notify online creators via a per-creator pubsub topic when their species is caught, traded or delisted, or first found in the wild.
 - **CFB-004** [accepted] The client MUST show creators a summary of changes since their last session.
 - **CFB-005** [accepted] Each species card MUST show "First found in the wild by …" naming the first player with a verified wild catch of it, and the world feed MUST announce it.
 - **CFB-006** [accepted] The first wild finder MUST be determined and announced as in [First found in the wild](#first-found-in-the-wild).
-- **CFB-007** [accepted] A species\' creator MUST NOT be credited as its first wild finder.
+- **CFB-007** [accepted] A species' creator MUST NOT be credited as its first wild finder.
 - **CFB-008** [accepted] Species statistics MUST be published by the server as the hourly species stats snapshot and MUST only count events that pass verification.
 
 ## Open questions

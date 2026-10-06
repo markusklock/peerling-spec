@@ -22,6 +22,7 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
@@ -302,7 +303,7 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-010** [accepted] The world MUST be a grid of tiles, and each biome MUST have its own encounter foliage on which wild encounters happen.
 - **WGN-011** [accepted] Tiles MUST be 2 m × 2 m and of one kind (ground, foliage, water, blocked) with a height level; a chunk MUST be 32 × 32 tiles.
 - **WGN-012** [accepted] The world MUST have a spawn hub with the Creation Shrine, a rest point, a New Peerlings gallery loaded live from IPFS, and a network monument showing live network activity.
-- **WGN-013** [accepted] Every biome area MUST have one landmark with a generated name; rest points MUST share one silhouette dressed per biome.
+- **WGN-013** [accepted] Every biome area MUST have one landmark with a generated name (a guardian site counts as its area's landmark); rest points MUST share one silhouette dressed per biome.
 - **WGN-014** [accepted] Paths MUST connect rest points and the spawn hub, with bridges over water and signposts showing area name, biome and level range.
 - **WGN-015** [accepted] The day/night cycle and per-biome weather MUST be the same for all players, derived from time and the epoch records. [accepted] A day lasts 24 epochs; weather changes every 3 epochs; both are purely visual in v1.
 - **WGN-016** [accepted] Generator updates MUST switch at an epoch announced in the epoch records, and clients MUST keep all past generator versions for verification.

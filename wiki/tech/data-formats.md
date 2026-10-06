@@ -56,7 +56,7 @@ updated: 2026-10-06
 | **CID** | CIDv1, SHA-256; written as base32 lower case (`bafy…`) |
 | **Time** | Unsigned integer, milliseconds since the Unix epoch, UTC |
 | **Tile** | `[x, y]`, integers, 0–1999, origin at the world's north-west corner |
-| **Instance ID** | 32 bytes, written as 64 lower-case hex characters |
+| **Instance ID** | 32 bytes. Always bytes(32) inside records, messages and hashes; written as 64 lower-case hex characters only where text is needed (map keys, topic names, URLs) |
 
 **One key per player** ([D-0018](../decisions/D-0018-one-key-per-player.md)). A player's single Ed25519 key pair is at the same time:
 their player ID, their libp2p peer ID, their OrbitDB identity, and their IPNS
@@ -95,7 +95,14 @@ concatenations ([accepted], 2026-10-06):
 - an **integer** (encounter number, time, turn, …) is 8 bytes, unsigned,
   big-endian;
 - a **string constant** (e.g. `"peerlings/pvp-seed/v1"`) is its UTF-8 bytes;
-- **bytes** values are used as they are.
+- **bytes** values are used as they are; an **instance ID** is its 32 bytes and
+  a **CID** is its binary form;
+- a **small index** that a formula says to use "as one byte" (the biome index)
+  is a single unsigned byte;
+- a **structured value** (e.g. a PvP action map) is its DAG-CBOR bytes.
+
+Hex strings anywhere in the protocol (battle IDs, instance IDs as map keys or
+in paths) are lower case.
 
 **Comparing CIDs** ("the lower CID wins"): compare the binary CIDs byte by
 byte (the shorter one is lower if it is a prefix of the other), not their text
@@ -167,9 +174,17 @@ Signed envelope; signer: **operator**.
 | `createdAt` | time | |
 | `status` | string | `"active"` or `"removed"` |
 | `removedAtSeq` | uint | only when `status` is `"removed"`: a tombstone takes the next `seq` of its own, and `removedAtSeq` is that new number |
+| `listedSeq` | uint | only when `status` is `"removed"`: the original listing's `seq` |
 
 Delisting replaces the document with a new envelope that has `status:
-"removed"`.
+"removed"`, the tombstone's own `seq` (= `removedAtSeq`), `listedSeq`, and
+all other fields copied from the original listing.
+
+Registry rules: the access controller accepts only `PUT` operations (never
+`DEL`) whose `_id` equals the envelope's `body.species` and whose envelope has
+a valid operator signature. Because anyone may append, an old envelope could be
+put again later; so readers never rely on OrbitDB's "last write wins" view.
+For each species they use the valid envelope with the **highest `seq`**.
 
 ### Epoch record — `peerlings/epoch`
 
@@ -203,12 +218,12 @@ Part of save records; not signed on its own.
 
 | Field | Type | Rules |
 |-------|------|-------|
-| `id` | instance ID | Caught: SHA-256(player ID ‖ encounter number as 8-byte big-endian). Starter / shrine: assigned by the server |
+| `id` | instance ID | Caught: SHA-256(player ID ‖ encounter number as 8-byte big-endian). Starter / shrine: 32 random bytes drawn by the server and fixed in the origin attestation |
 | `species` | CID | |
 | `nickname` | string or null | ≤ 20 |
 | `level` | uint | 1–50 |
-| `xp` | uint | |
-| `hp` | uint | current HP |
+| `xp` | uint | XP collected towards the next level (at a level-up the XP needed is subtracted and the rest carries over; at level 50 it stays 0). A starter, shrine creation or caught Peerling starts with 0 |
+| `hp` | uint | current HP. A caught Peerling keeps the HP it had when caught; a starter or shrine creation starts at full HP |
 | `traits` | map | `hp`, `attack`, `defense`, `speed`: int −10…10 |
 | `shimmer` | bool | |
 | `origin` | string | `"wild"`, `"starter"` or `"created"` (how it came into existence; trades don't change it) |
@@ -257,7 +272,10 @@ Part of a `catch` save-log event. Meaning:
 [guardians](../gameplay/guardians.md)): the catch evidence fields `encounter`,
 `epochRecord` (used for the battle seed), `team` and `actions`, plus
 `weekRecord` (the epoch record of the week's first epoch, which defines the
-guardian team) and `tile` (the statue tile). There is no `candidate`.
+guardian team), `tile` (the statue tile), and optional `baseRecord` and
+`weekBaseRecord` (the server-signed records that a client-derived
+`epochRecord` or `weekRecord` copied its fields from, as for catch evidence).
+There is no `candidate`.
 
 ### Save-log events
 
@@ -273,18 +291,18 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `created` | `instance`, `attestation` (origin attestation) |
 | `release` | `instances` ([instance ID]), `transferEntry` (CID) |
 | `catch` | `instance`, `evidence` (catch evidence) |
-| `battle-result` | `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle; [accepted]) |
+| `battle-result` | `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `candidate` (uint 0–4: which candidate was met; absent for a guardian battle), `species` (CID of the species met; absent for a guardian battle), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle; [accepted]) |
 | `team` | `instances` ([instance ID], ≤ 4) |
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
-| `seen` | `species` (CID), `biome` (biome name where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer |
+| `seen` | `species` (CID), `biome` (uint: [biome index](../world/procedural-generation.md#biomes) where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer |
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
 | `badge` | [accepted] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
-| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid if: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles are not recorded |
+| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles are not recorded |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
-| `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log) |
+| `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log; its `player` must be the log's owner) |
 
 ### Save snapshot — `peerlings/save`
 
@@ -299,10 +317,10 @@ save log).
 | `instances` | [instance] (whole collection) |
 | `team` | [instance ID] |
 | `created` | [CID] |
-| `peerdex` | map: `seen` [map: `species`, `biome`, `shimmerSeen` bool], `caught` [map: `species`, `shimmerCaught` bool] |
+| `peerdex` | map: `seen` [map: `species`, `biome` (uint biome index), `shimmerSeen` bool], `caught` [map: `species`, `shimmerCaught` bool] |
 | `position` | map: `tile`, `facing` |
 | `lastRestPoint` | tile |
-| `explored` | bytes: bit set of 63 × 63 chunks, row-major, bit 1 = revealed |
+| `explored` | bytes: bit set of 63 × 63 chunks (the last chunk row and column are 16 tiles wide, since the world is 2,000 tiles). Chunk (cx, cy) is bit number i = cy × 63 + cx: byte i div 8, bit i mod 8 counted from the least significant bit; 1 = revealed |
 | `nextEncounter` | uint |
 | `pvp` | PvP counters, as in the profile document |
 | `badges` | [uint]: biome indices of the badges held ([accepted]) |
@@ -364,9 +382,10 @@ or `[seq, species CID, null]` for a delisting. All chunks but the last hold
 exactly 1,000 entries and never change.
 
 **Sharded maps** (stats snapshot, ownership index): the root is
-`{ v, type, epoch (uint), shards: [CID × 256] }`; shard *k* holds the keys
-whose SHA-256 (of the key's bytes) starts with byte *k*, as a DAG-CBOR map
-from the key as a string to its value.
+`{ v, type, epoch (uint), shards: [CID × 256] }`. Shard *k* holds the keys
+whose SHA-256 starts with byte *k*, hashing the key's **binary** form (the
+binary species CID, or the 32 instance-ID bytes). Inside a shard the map key
+is the text form (base32 CID, or lower-case hex instance ID).
 
 | Root `type` | Key | Value | Extra root fields |
 |-------------|-----|-------|-------------------|

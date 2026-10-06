@@ -32,15 +32,23 @@ updated: 2026-10-06
 
 - **Transport:** HTTPS over HTTP/3 ([tech-stack](tech-stack.md#networking)),
   base path `/v1`. Request and response bodies are JSON (`application/json`);
-  CIDs are strings; byte values are base64url strings. Binary files (image,
-  model, thumbnail, species record) are served raw with their own media types.
+  CIDs are strings; byte values are base64url strings (no padding). Signed
+  envelopes and other DAG-CBOR records inside a JSON body (e.g. `release`,
+  `listing`, `origin`) are carried as base64url strings of their DAG-CBOR
+  bytes, so they keep their exact bytes and signatures. Binary files (image,
+  model, thumbnail, species record) are served raw with their own media types;
+  DAG-CBOR responses use `application/vnd.ipld.dag-cbor`.
 - **Who's asking:** every request that acts for a player is signed with the
   player's key:
   - headers `Peerlings-Player` (player ID), `Peerlings-Time` (time, ms) and
     `Peerlings-Signature` (base64url Ed25519 signature);
-  - the signature covers `"peerlings-api-v1\n"` ‖ method ‖ `"\n"` ‖ path ‖
-    `"\n"` ‖ time ‖ `"\n"` ‖ SHA-256 of the body;
-  - the server rejects requests more than 60 s old or replayed.
+  - the signature covers the UTF-8 bytes of `"peerlings-api-v1\n"` ‖ method
+    (upper case) ‖ `"\n"` ‖ path including any query string ‖ `"\n"` ‖ time
+    (decimal digits, the same value as the header) ‖ `"\n"` ‖ the SHA-256 of
+    the body as 64 lower-case hex characters (of zero bytes for an empty
+    body);
+  - the server rejects requests whose time is more than 60 s in the past or
+    more than 10 s in the future, and replays of a signature it has seen.
 - **Errors:** status code plus `{ "error": "<code>", "message": "<text>" }`.
   Codes include `rate-limited` (with `Retry-After`), `cooldown`, `name-taken`,
   `invalid`, `not-found`, `job-expired`, `verification-failed`,
@@ -126,8 +134,8 @@ client:
 |-----------------|------|
 | `GET /v1/epochs/latest` | The latest server-signed [epoch record](data-formats.md#epoch-record--peerlingsepoch) envelope (DAG-CBOR) |
 | `GET /v1/epochs/{E}` | The server-signed epoch record for epoch E; `not-found` if the server published none |
-| `GET /v1/logs/{address}/entries?after=<CID>,<CID>…` | A CAR file of the OrbitDB log's entry blocks newer than the given heads (all entries if `after` is empty), oldest first, at most 5,000 entries per response; the header `Peerlings-More: true` means the client should ask again with the new heads. Works for the registry, transfer log, epoch log and any save log |
-| `GET /v1/checkpoints/{player}` | The newest [verification checkpoint](data-formats.md#verification-checkpoint--peerlingscheckpoint) for that player; `not-found` if none |
+| `GET /v1/logs/{manifest CID}/entries?after=<CID>,<CID>…` | For the OrbitDB log whose address is `/orbitdb/<manifest CID>`: a CAR file (`application/vnd.ipld.car`) of its entry blocks newer than the given heads (all entries if `after` is empty), oldest first, at most 5,000 entries per response; the header `Peerlings-More: true` means the client should ask again with the new heads. Works for the registry, transfer log, epoch log and any save log |
+| `GET /v1/checkpoints/{player}` | The newest [verification checkpoint](data-formats.md#verification-checkpoint--peerlingscheckpoint) envelope (DAG-CBOR) for that player; `not-found` if none |
 | `GET /v1/ipns/{name}` | The latest signed IPNS record the server holds for that name (`application/vnd.ipfs.ipns-record`) |
 
 ## Requirements

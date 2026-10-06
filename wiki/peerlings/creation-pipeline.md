@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
@@ -197,7 +198,7 @@ generated again from the new image.
 [accepted] Names must be **unique** across all species (approved 2026-10-05). The server enforces it, which is easy
 because every species already goes through it, and only names it has
 signed reach the registry ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)):
-- **Length:** 1–20 characters.
+- **Length:** 1–20 characters, counted as Unicode code points after NFC normalization.
 - **What counts as the same name:** names are compared in a normalized form:
   Unicode-normalized (NFKC), case-folded, accents removed, and with spaces,
   hyphens and punctuation dropped. So "Mossnap", "moss-snap" and "MOSS SNAP"
@@ -242,7 +243,7 @@ appends the registry entry ([D-0007](../decisions/D-0007-players-publish-assets.
 | 7c | client | Reports the species CID to the server. The client keeps providing the content. |
 | 7d | server | Fetches the species record and every asset by CID from the network (in practice from the player's node), checks they are byte-identical to what it generated, and pins them. |
 | 7e | server | Assigns the next registry `seq` and signs the registry listing ([orbitdb-registry](../tech/orbitdb-registry.md#design)); sends it to the client. |
-| 7f | client | Appends the signed entry to the registry. If it doesn't appear within a minute (e.g. the client disconnected), the server appends the same entry itself. Job state `PUBLISHED`. |
+| 7f | client | Appends the signed entry to the registry. If it doesn't appear within a minute (e.g. the client disconnected), the server appends the same entry itself. Job state `PUBLISHED`. The client appends a `species-created` event to its save log. |
 
 [accepted] If the server hasn't fetched everything peer to peer within 20 s of
 7c, the client uploads the same content as a CAR file over HTTP; the server

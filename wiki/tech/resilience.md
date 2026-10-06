@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
@@ -50,6 +51,15 @@ doesn't block the game ([encounters § Candidates](../gameplay/encounters.md#can
 | Trades | Yes | Signed transfer chains in the open transfer log ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Creation, Creation Shrine, new players | No | GPU models and attestations live on the server |
 | Creator stats | Frozen | Resume when the server is back |
+| Guardians and badges | Yes | The week's team comes from the signed week record if there is one, otherwise a client-derived one; badges are verified by replay ([guardians](../gameplay/guardians.md)) |
+| Peerling of the Day | Yes | The same, with the day's record ([peerling-of-the-day](../gameplay/peerling-of-the-day.md)) |
+| Day/night and weather | Yes | Computed from time and epoch records |
+| World feed, spectating | Yes | Pubsub between players |
+| First wild finds | Frozen | Decided by the server when it is back ([creator-feedback](../gameplay/creator-feedback.md#first-found-in-the-wild)) |
+| Shared profile links | For up to 30 days | IPNS records stay valid 30 days, and each client republishes its own every session |
+| Account recovery | Partly | Only from peer backups and the backup file ([player-data](player-data.md#keeping-saves-available)) |
+| Verifying other players | Yes, slower | No new checkpoints: entries after the last checkpoint are checked in full |
+| Ownership checks | Yes, slower | The last known ownership index plus newer transfer-log entries ([network-performance](network-performance.md#3-ownership-index)) |
 
 ## Distributed building blocks
 

@@ -7,6 +7,7 @@ tags: [gameplay, battle, progression, world]
 sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/battle.md
@@ -49,20 +50,20 @@ guard somewhere in the world.
   Going round the compass clockwise, the guardians get stronger, ending at
   the world's edge:
 
-  | Sector *i* | Biome | Distance | Base level there |
-  |-----:|-------|-------:|------:|
-  | 0 | Plains | 350 m | 10 |
-  | 1 | Forest | 500 m | 14 |
-  | 2 | Gloomwood | 650 m | 18 |
-  | 3 | Haunted Marsh | 800 m | 21 |
-  | 4 | Lakeland | 950 m | 25 |
-  | 5 | Tundra | 1,100 m | 28 |
-  | 6 | Windy Peaks | 1,250 m | 32 |
-  | 7 | Storm Highlands | 1,400 m | 36 |
-  | 8 | Crystal Meadows | 1,550 m | 39 |
-  | 9 | Scrapyard Ruins | 1,700 m | 43 |
-  | 10 | Badlands | 1,850 m | 46 |
-  | 11 | Volcano | 2,000 m | 50 |
+  | Sector *i* | Biome | [Biome index](../world/procedural-generation.md#biomes) | Distance | Base level there |
+  |-----:|-------|-----:|-------:|------:|
+  | 0 | Plains | 0 | 350 m | 10 |
+  | 1 | Forest | 3 | 500 m | 14 |
+  | 2 | Gloomwood | 10 | 650 m | 18 |
+  | 3 | Haunted Marsh | 11 | 800 m | 21 |
+  | 4 | Lakeland | 2 | 950 m | 25 |
+  | 5 | Tundra | 7 | 1,100 m | 28 |
+  | 6 | Windy Peaks | 6 | 1,250 m | 32 |
+  | 7 | Storm Highlands | 4 | 1,400 m | 36 |
+  | 8 | Crystal Meadows | 9 | 1,550 m | 39 |
+  | 9 | Scrapyard Ruins | 8 | 1,700 m | 43 |
+  | 10 | Badlands | 5 | 1,850 m | 46 |
+  | 11 | Volcano | 1 | 2,000 m | 50 |
 
   The badges can be earned in any order; the table is only the natural route.
 - The site's biome area keeps its rest point, so a defeated player respawns
@@ -72,7 +73,8 @@ guard somewhere in the world.
 
 [accepted]
 - **Week** W = floor(E ÷ 2016), where E is the epoch number (2016 epochs =
-  7 days). The team for week W is defined by the
+  7 days). A guardian battle belongs to the week of the epoch record it uses
+  (W = floor(that record's epoch ÷ 2016)). The team for week W is defined by the
   [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch) of
   epoch 2016 × W (signed or client-derived, as for encounters).
 - **Species:** the eligible species at that record's `registryHeight`
@@ -118,7 +120,8 @@ guard somewhere in the world.
 ## Badges
 
 [accepted]
-- A won guardian battle is logged as a `battle-result` with the biome; the
+- Every guardian battle, won, lost or fled, is logged as a `battle-result`
+  with the biome index in `guardian` (it uses up an encounter number); the
   first win per biome also writes a `badge` event with the evidence needed to
   replay it ([data-formats § Save-log events](../tech/data-formats.md#save-log-events)).
 - A badge counts only if the replay verifies, like a catch

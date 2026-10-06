@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-06-cry-details-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/world/visual-style.md
@@ -47,7 +48,7 @@ Every species has its own cry, **synthesized in the browser** with the Web
 Audio API, so no audio files are generated or downloaded.
 
 - **Deterministic:** all cry parameters are derived from SHA-256 of the
-  species CID's bytes and from its primary type, so every player hears the
+  species CID's binary bytes and from its primary type, so every player hears the
   same cry for the same species.
 - **Parameters** (approved 2026-10-06) from the hash bytes, in this order:
 

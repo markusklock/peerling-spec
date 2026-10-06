@@ -7,6 +7,7 @@ tags: [tech, networking, performance, ipfs, orbitdb]
 sources:
   - raw/conversations/2026-10-06-network-performance.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -165,8 +166,8 @@ formats: [data-formats § Snapshots and indexes](data-formats.md#snapshots-and-i
 
 ### 1. Registry index
 - A compact, append-only list of every registry entry in `seq` order:
-  `[seq, species CID, type indices, removes]` (a delisting is its own entry,
-  as today). About 45 bytes per entry.
+  `[seq, species CID, type indices]`, or `[seq, species CID, null]` for a
+  delisting, which is its own entry as in the registry. About 45 bytes per entry.
 - Split into **chunks of 1,000 entries**. A full chunk never changes, so it is
   cached forever and served by any peer. The epoch record names the index
   manifest (`registryIndex`), which lists the chunks; a single CID keeps the
@@ -198,15 +199,17 @@ formats: [data-formats § Snapshots and indexes](data-formats.md#snapshots-and-i
 
 ### 3. Ownership index
 - Every 12 epochs the server publishes a sharded map of **instance ID → CID of
-  its latest transfer**, plus the list of flagged players. The root goes in
+  the transfer-log entry holding its latest transfer**, plus the list of flagged players. The root goes in
   the epoch record (`ownersRoot`).
 - A verifier looks up an instance in its shard, then walks the transfer chain
   backwards by CID to its origin (chains are short), and checks transfer-log
   entries newer than the snapshot (from the log endpoint, or live from
   pubsub).
 - Double trades are still detected by anyone who replicates the full transfer
-  log, including the server. Without the server, verifiers fall back to
-  syncing the full log (slow path).
+  log, including the server. Without the server, verifiers use the last
+  ownership index they know (client-derived epoch records copy its root) plus
+  the transfer-log entries newer than its `heads`; only without any index do
+  they sync the full log (slow path).
 
 ### 4. Epoch records by number
 - Verifiers and features that need an older epoch record (guardian weeks,
@@ -278,12 +281,15 @@ shown only, never trusted for ownership, so a light check is enough.
   interaction becomes likely (they are within 3 tiles and one faces the
   other, or the interaction menu opens). At most 5 of these early dials at a
   time.
-- **Relay limits:** the operator's circuit relay **must** allow relayed
-  connections for the game's own protocols (battle, trade, profile,
-  save-backup, phone-backup) to last at least 60 minutes and carry at least
-  4 MB. The default limits (2 minutes, 128 KB) would cut a PvP battle short.
-  Large content (models) is never fetched over a relayed connection; it comes
-  from the operator or a gateway instead.
+- **Relay limits:** a relay only sees an encrypted connection, not the
+  protocols inside it, so its limits apply per relayed connection. The
+  operator's circuit relay **must** allow each relayed connection to last at
+  least 60 minutes and carry at least 4 MB; the default limits (2 minutes,
+  128 KB) would cut a PvP battle short. To stay within that, clients use a
+  relayed connection **only** for the game's own streams (battle, trade,
+  profile, save-backup, phone-backup): never for gossipsub, Bitswap or OrbitDB
+  sync. Large content (models, save logs) comes from the operator, a gateway
+  or a direct connection instead.
 - Public relays (used while the server is offline) keep their default limits.
   So does a battle that never gets a direct connection while the server is
   offline: it may be cut off, and the resume rule then applies.
@@ -296,9 +302,14 @@ shown only, never trusted for ownership, so a light check is enough.
   [realtime-networking § Presence](realtime-networking.md#presence)) and new
   species: about 40 encounters an hour × half of them uncached × ~0.6 MB ≈
   **12 MB per hour** with one-at-a-time model prefetching.
-- **The operator**, with 1,000 players online, serves at most ~12 GB per hour
-  (~27 Mbit/s) of species content if no peer helps. In practice other
-  players' nodes serve popular species. Gossip relaying adds a few Mbit/s.
+- **The operator**, with 1,000 players online, serves about 12 GB per hour
+  (~27 Mbit/s) of encounter species content if no peer helps, plus the
+  smaller amounts for followers, galleries, guardian teams, the Peerling of the
+  Day and opponents' teams; say **15–20 GB per hour (35–45 Mbit/s)** in all.
+  In practice other players' nodes serve popular species.
+- **Gossip:** with the operator on every presence topic, 1,000 moving players
+  send it about 3,000 messages per second (~5 Mbit/s in), and it forwards each
+  to several mesh peers: roughly **25 Mbit/s out**.
 - **Optional:** species content never changes, so the operator's trustless
   gateway can sit behind a free or cheap CDN that caches it forever.
 
@@ -316,7 +327,7 @@ Mia's node"*). An early prototype must measure the numbers in
 - **PERF-003** [accepted] Every wait over 300 ms MUST show a waiting state as in [Waiting states](#waiting-states), and content not yet loaded MUST use placeholders.
 - **PERF-004** [accepted] The operator MUST provide the [fast paths](#fast-paths-through-the-operator), and every fast path MUST have a peer-to-peer fallback.
 - **PERF-005** [accepted] Browsers MUST NOT need to fully replicate the epoch log, species stats or transfer log; the server MUST publish the [snapshots and indexes](#snapshots-and-indexes).
-- **PERF-006** [accepted] The operator's circuit relay MUST allow game-protocol connections of at least 60 minutes and 4 MB.
+- **PERF-006** [accepted] The operator's circuit relay MUST allow relayed connections of at least 60 minutes and 4 MB, and clients MUST use relayed connections only for the game's own streams.
 - **PERF-007** [accepted] Encounter prefetching MUST fetch candidate models one at a time in list order, keeping at least 3 upcoming encounters ready.
 
 ## Open questions

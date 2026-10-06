@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-05-phone-backup-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
@@ -144,8 +145,9 @@ the server's copy anyway.
 [accepted] Approved 2026-10-05.
 
 **What drives the numbers:**
-- Every wild encounter prefetches up to 5 candidate species, and a PvP battle
-  downloads the opponent's team of 4, all peer-to-peer. Small files mean
+- Every wild encounter prefetches candidate species (records for all 5, models
+  one at a time, [network-performance](network-performance.md#operation-by-operation)),
+  and a PvP battle downloads the opponent's team of 4, all peer-to-peer. Small files mean
   encounters start instantly and more players can serve each species.
 - On screen, Peerlings are small: about 30–40 m of world is visible while
   exploring, and even the closer battle camera shows a Peerling at roughly
@@ -165,9 +167,9 @@ the server's copy anyway.
 | **Whole species** | **≤ 1.2 MB** | **~0.6 MB** | |
 
 What that means in practice:
-- An encounter whose 5 candidates are all uncached costs about 3 MB with
-  typical species, at most 6 MB; most species near the spawn will already be
-  cached.
+- An uncached encounter costs about 0.6 MB with typical species (one model
+  plus five small records), at most about 1.3 MB; most species near the spawn
+  will already be cached.
 - A PvP battle against an unknown team costs about 2.5 MB with typical
   species, at most 4.8 MB.
 - **Client cache:** the browser keeps up to **1 GB** of game content
@@ -195,7 +197,7 @@ oversized files.
 - **STK-010** [accepted] The game MUST target current desktop versions of Chrome/Edge, Firefox and Safari; mobile is not a target.
 - **STK-011** [accepted] The client MUST be written in TypeScript and be installable as a PWA.
 - **STK-012** [accepted] Every species asset MUST fit the [asset budgets](#asset-budgets); clients MUST refuse content that exceeds them.
-- **STK-013** [accepted] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations and collection.
+- **STK-013** [accepted] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations, team and collection.
 - **STK-014** [accepted] The client MUST request persistent storage (`navigator.storage.persist()`) and SHOULD encourage installing the PWA.
 
 ## Open questions

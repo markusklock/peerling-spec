@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/gameplay/core-loop.md
   - wiki/tech/architecture.md
@@ -58,7 +59,7 @@ trade-off in a [decision](decisions/) if one goal must yield.
 | 2 | **IPFS is the backbone, and it shows** | Peerling data and 3D models live on IPFS; the registry lives in [OrbitDB](glossary.md#orbitdb); players are nodes that download *and* serve content. The tech should be visible and celebrated in the UI (see [IPFS showcase](tech/ipfs-showcase.md)). | [accepted] |
 | 3 | **Familiar creature-collecting fun** | Explore a [procedural world](world/procedural-generation.md), encounter, battle and catch — the Pokémon formula players already understand — in one world shared with every other player, who you can battle and trade with ([multiplayer](gameplay/multiplayer.md)). | [accepted] |
 | 4 | **Fair by construction** | Generated content is constrained by predefined [types](peerlings/types.md), [move templates](peerlings/moves.md) and the same base-stat total for every species, so no player's creation is objectively stronger because of how it was described. Individual Peerlings still differ by up to ±10% per stat ([D-0014](decisions/D-0014-individual-variation.md)). | [accepted] |
-| 5 | **Minimal central infrastructure** | One operator server runs generation and pinning; everything else is peer-to-peer and client-side. See [architecture](tech/architecture.md). | [accepted] |
+| 5 | **Minimal central infrastructure** | One operator server runs generation, pinning and signing (species listings, epoch records, origin attestations), plus shortcuts that make the network fast (snapshots, indexes, checkpoints); everything else is peer-to-peer and client-side, and every shortcut has a peer-to-peer fallback. See [architecture](tech/architecture.md). | [accepted] |
 
 ## Scope of the first version
 
@@ -78,6 +79,10 @@ The first playable version (v1) contains:
   the [Peerdex](gameplay/peerdex.md), [spectating](gameplay/spectating.md),
   shareable [links](gameplay/sharing.md), the [world feed](gameplay/world-feed.md)
   and [phone backup](tech/player-data.md#phone-backup).
+- [accepted] A minimap and world map ([D-0017](decisions/D-0017-world-features.md)); menus,
+  HUD, music, sound effects and synthesized Peerling cries
+  ([D-0019](decisions/D-0019-peerdex-ui-audio.md)); a PvP win counter
+  ([D-0021](decisions/D-0021-pvp-win-counter.md)).
 - [accepted] A [following Peerling](gameplay/exploration.md#following-peerling),
   [landmark guardians](gameplay/guardians.md) with 12 badges, the
   [Peerling of the Day](gameplay/peerling-of-the-day.md) and

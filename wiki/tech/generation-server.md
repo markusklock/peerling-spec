@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -43,7 +44,7 @@ updated: 2026-10-06
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Sign species records (attestation) | [accepted] |
-| Replicate and pin every player's save log; replay catches for the species stats (optional; anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
+| Replicate and pin every player's save log; verify every save log by replay, for the species stats, first wild finds and verification checkpoints (players don't depend on it: anyone can verify catches) | [accepted] ([player-data](player-data.md#verification)) |
 | Publish the signed epoch record every 5 minutes (drand randomness + registry height) | [accepted] ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | Expose a creation API with a job queue ([creation-api](creation-api.md)) | [accepted] |
 | Sign origin attestations for starters and Creation Shrine Peerlings; check shrine offerings | [accepted] ([player-data](player-data.md#starters-and-shrine-creations)) |

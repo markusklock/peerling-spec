@@ -150,3 +150,4 @@ D-0024. Next free question ID: Q-057.
 | [2026-10-06-fun-features-approved](../raw/conversations/2026-10-06-fun-features-approved.md) | 2026-10-06 | Fun-feature rules approved; Peerling of the Day lasts 24 h; creators excluded from first-finder credit |
 | [2026-10-06-network-performance](../raw/conversations/2026-10-06-network-performance.md) | 2026-10-06 | Network performance, scale and timeouts reviewed; failsafes proposed |
 | [2026-10-06-network-performance-approved](../raw/conversations/2026-10-06-network-performance-approved.md) | 2026-10-06 | Network performance design approved |
+| [2026-10-06-review-2-fixes](../raw/conversations/2026-10-06-review-2-fixes.md) | 2026-10-06 | Second full review; mechanical fixes applied, design questions collected |

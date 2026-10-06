@@ -55,8 +55,9 @@ the possibility to create a new one
    ([player-data § Verification](../tech/player-data.md#verification)), and the
    client appends a `created` event.
 
-If the player abandons the creation job, the offering is not refunded, but the
-right to create is kept: the player can resume the job later (CRE-014).
+If the player leaves the game during the creation job, they can resume it
+later (CRE-014), as long as it hasn't expired (24 h without activity). The
+offering is never refunded.
 [accepted] If the job is abandoned or expires
 ([creation-api](../tech/creation-api.md#the-job-object)), the player keeps a
 **shrine credit** for 30 days: they can start a new shrine job without a new

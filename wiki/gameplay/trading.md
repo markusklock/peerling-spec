@@ -12,6 +12,7 @@ sources:
   - raw/conversations/2026-10-05-individual-variation.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
@@ -38,7 +39,8 @@ Exact messages: [protocols](../tech/protocols.md).
 1. A proposes a trade to B while standing next to them (MPL-006); B accepts
    the session (MPL-005).
 2. Both pick the instance(s) they offer. Each offer carries the full instance
-   data, so the other side needn't fetch the offerer's save first ([accepted]
+   data, so the other side can show it at once and only needs to check it
+   against the original owner's save log and the transfer log ([accepted]
    2026-10-06; fields in [protocols](../tech/protocols.md#peerlingstrade100--trade)).
    Both see the other's offer live,
    including each Peerling's level, stat traits and whether it is a shimmer

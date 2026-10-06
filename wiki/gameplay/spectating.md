@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/gameplay/pvp-battles.md
@@ -36,7 +37,7 @@ Exact messages: [protocols](../tech/protocols.md).
   either fighter (or clicks the indicator) and chooses *Watch*.
 - **The battle topic.** Each PvP battle has a pubsub topic
   `peerlings/v1/battle/<battleId>`, where `battleId` is the hash of both player
-  IDs and the battle start time. The fighters announce it in their presence
+  IDs and the challenge message's time `t` ([protocols](../tech/protocols.md#peerlingsv1battlebattle-id--spectating)). The fighters announce it in their presence
   messages while the battle runs.
 - **What the fighters publish.** At the start: both teams, the level mode and
   the shared RNG seed (once revealed). After each turn: both revealed actions

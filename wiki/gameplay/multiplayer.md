@@ -17,6 +17,7 @@ sources:
   - raw/conversations/2026-10-05-peer-save-backups.md
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
@@ -50,8 +51,9 @@ updated: 2026-10-06
   The player starts an interaction by facing the other player and pressing
   the interact key.
 - [accepted] Interacting with an adjacent player's character opens a menu:
-  *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (fetches their save, which also keeps a backup of it: [player-data § Keeping saves available](../tech/player-data.md#keeping-saves-available); their team, and the
-  species they created). Once a battle or trade has started, it continues even
+  *Challenge to battle* (choosing Fair or Real-levels mode, [pvp-battles](pvp-battles.md#fairness)), *Propose trade*, *View profile* (their team and the species they created; it also fetches
+  their save in the background, which keeps a backup of it:
+  [player-data § Keeping saves available](../tech/player-data.md#keeping-saves-available)). Once a battle or trade has started, it continues even
   if a player moves away.
 - [accepted] **Crowded tile:** if several players stand on the faced tile,
   the interact key first opens a list of their names to pick from.

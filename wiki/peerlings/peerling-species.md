@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -61,6 +62,7 @@ JSON for readability (exact format:
   "baseStats": { "hp": 80, "attack": 55, "defense": 70, "speed": 45 },
   "moves": [
     { "slot": "quick", "template": "quick-jab", "name": "Moss Swipe", "type": "Normal", "description": "…" },
+    { "slot": "strong", "template": "strong-recoil", "name": "Lantern Slam", "type": "Grass", "description": "…" },
     { "slot": "signature", "template": "sig-weaken", "name": "Lantern Glare", "type": "Grass", "description": "…", "stat": "defense" }
   ],
   "assets": {

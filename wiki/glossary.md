@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 updated: 2026-10-06
 ---
 
@@ -30,8 +31,7 @@ official pipeline and has not been altered. See
 
 ### Backup file
 A `.car` file the player can export, holding their private key and latest save
-snapshot. See [data-formats § Backup file](tech/data-formats.md#backup-file-
-and-phone-backup-payload--peerlingsbackup).
+snapshot. See [data-formats § Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup).
 
 ### Badge
 One of 12 rewards, one per biome, for beating that biome's guardian. See
@@ -107,10 +107,18 @@ in the species record and credited in-game.
 The sound a Peerling makes, synthesized in the browser from its species CID and
 type. See [audio § Peerling cries](world/audio.md#peerling-cries).
 
+### Day
+Two different days: the **in-game day** of the day/night cycle lasts 2 hours (24 epochs); the **Peerling of the Day** changes every real 24 hours (288 epochs, from 00:00 UTC). See
+[procedural-generation § Day and night](world/procedural-generation.md#day-and-night), [peerling-of-the-day](gameplay/peerling-of-the-day.md).
+
 ### Delisting
 The operator's emergency removal of a species from the registry with a signed
 tombstone entry; clients stop showing it. Not moderation. See [orbitdb-registry
 § Design](tech/orbitdb-registry.md#design).
+
+### Double trade
+Two different transfers of the same Peerling with the same `prev`, both signed by its owner: proof of cheating. The lower one wins and the owner is flagged. See
+[player-data § Transfer log and trades](tech/player-data.md#transfer-log-and-trades).
 
 ### drand
 A public, verifiable randomness beacon run by the League of Entropy. The
@@ -135,6 +143,10 @@ encounter uses the first one that could be fetched. See
 The biome-specific tall grass (or similar) where wild encounters happen. See
 [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage).
 
+### Encounter number
+A player's gap-free counter of wild (and guardian) encounters, 0, 1, 2, …, used in the encounter seed. See
+[player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
+
 ### Encounter seed
 The random value that determines one wild encounter (its candidates, level,
 traits, shimmer roll and battle rolls), derived from the epoch record, the
@@ -146,10 +158,17 @@ A 5-minute time slot (Unix seconds ÷ 300). The server publishes an [epoch
 record](#epoch-record) for each one. See [player-data § Encounter
 seeds](tech/player-data.md#encounter-seeds).
 
+### Epoch log
+The server-written OrbitDB events database of all signed epoch records. See
+[player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
+
 ### Epoch record
 [accepted] A record the server signs and publishes every 5 minutes (one
-*epoch*). It holds a drand random value and the current registry height, and
-encounter seeds are derived from it, so players can't choose their encounters.
+*epoch*). It holds a drand random value, the current registry height, the
+rules and world-generator versions and the roots of the server's snapshots and
+indexes; encounter seeds are derived from it, so players can't choose their
+encounters. When the server is offline, clients derive the record themselves
+(a *client-derived* epoch record).
 See [player-data](tech/player-data.md#encounter-seeds).
 
 ### Faint
@@ -168,8 +187,12 @@ An HTTP shortcut through the operator server (latest epoch record, log download,
 The credit on a species card naming the first player with a verified wild catch of it. See
 [creator-feedback § First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild).
 
+### Flagged player
+A player proven to have made a double trade; clients refuse trades and PvP battles with them. See
+[player-data § Transfer log and trades](tech/player-data.md#transfer-log-and-trades).
+
 ### Following Peerling
-The first Peerling in the player's team, which walks behind them in the world and is visible to others. See
+The first non-fainted Peerling in the player's team, which walks behind them in the world and is visible to others. See
 [exploration § Following Peerling](gameplay/exploration.md#following-peerling).
 
 ### Generation server
@@ -185,6 +208,10 @@ updates](world/procedural-generation.md#generator-updates).
 ### Guardian
 The keeper of a biome's guardian site, whose team of 4 of that biome's Peerlings changes weekly; beating it earns the biome's badge. See
 [guardians](gameplay/guardians.md).
+
+### Guardian site
+The stone platform in each biome sector where its guardian is challenged; it counts as its area's landmark. See
+[guardians § Guardian sites](gameplay/guardians.md#guardian-sites).
 
 ### Helia
 A TypeScript implementation of IPFS that runs in the browser. Every game client
@@ -206,8 +233,7 @@ A large, unique feature with a generated name in each biome area (e.g.
 
 ### Level
 A Peerling instance's level, 1–50, raised by XP. It scales its stats. See
-[battle § Experience and levelling](gameplay/battle.md#experience-and-
-levelling).
+[battle § Experience and levelling](gameplay/battle.md#experience-and-levelling).
 
 ### libp2p
 The peer-to-peer networking library under IPFS. Each client runs a libp2p node
@@ -228,13 +254,11 @@ generated moves must follow. See [moves](peerlings/moves.md).
 
 ### Network monument
 A crystal tree in the spawn hub that shows the player's live network activity.
-See [procedural-generation § Spawn hub](world/procedural-generation.md#spawn-
-hub).
+See [procedural-generation § Spawn hub](world/procedural-generation.md#spawn-hub).
 
 ### New Peerlings gallery
 Pedestals in the spawn hub showing the newest published Peerlings, loaded live
-from IPFS. See [procedural-generation § Spawn hub](world/procedural-
-generation.md#spawn-hub).
+from IPFS. See [procedural-generation § Spawn hub](world/procedural-generation.md#spawn-hub).
 
 ### Operator
 The person running the game's [generation server](#generation-server): the
@@ -300,8 +324,7 @@ The avatar a player controls in the world. See
 
 ### Player ID
 A player's identity: the libp2p peer ID of their Ed25519 key, which is also
-their OrbitDB identity and IPNS name. See [D-0018](decisions/D-0018-one-key-
-per-player.md).
+their OrbitDB identity and IPNS name. See [D-0018](decisions/D-0018-one-key-per-player.md).
 
 ### Presence
 [accepted] The live broadcast of a player's position in the shared world, sent
@@ -333,6 +356,10 @@ for presence topics in multiplayer. See
 ### Registry
 The OrbitDB database that lists every published Peerling species. See
 [orbitdb-registry](tech/orbitdb-registry.md).
+
+### Registry height
+The highest registry `seq` in force at an epoch, which fixes which species are eligible. See
+[player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
 
 ### Registry index
 A compact, chunked list of every registry entry that lets a new client start encounters within seconds. See
@@ -398,7 +425,8 @@ Layout](world/procedural-generation.md#layout).
 
 ### Spawn hub
 The centre of the world, where every player starts: Creation Shrine, rest
-point, New Peerlings gallery and network monument. See
+point, New Peerlings gallery, Peerling of the Day pedestal and network
+monument. See
 [procedural-generation § Spawn hub](world/procedural-generation.md#spawn-hub).
 
 ### Species
@@ -479,15 +507,19 @@ A modern browser API for connecting to a server over HTTP/3 (QUIC, which runs
 on UDP). Browsers use it to connect to the operator server; it replaces
 WebSockets. See [tech-stack](tech/tech-stack.md#networking).
 
+### Wild level
+A wild Peerling's level: the base level of its tile (rising with distance from the world centre) plus a random −2…+2. See
+[encounters § Wild level](gameplay/encounters.md#wild-level).
+
 ### Wild Peerling
 An unowned Peerling instance met during exploration, generated from a species
 in the registry. See [encounters](gameplay/encounters.md).
 
 ### World feed
-The live ticker of notable events (new Peerlings, shimmer catches) spread over a
-world-wide pubsub topic. See [world-feed](gameplay/world-feed.md).
+The live ticker of notable events (new Peerlings, shrine creations, shimmer
+catches, first wild finds, all 12 badges, and the Peerling of the Day) spread
+over a world-wide pubsub topic or added locally. See [world-feed](gameplay/world-feed.md).
 
 ### XP
 Experience points a Peerling earns from wild battles; enough XP raises its
-level. See [battle § Experience and levelling](gameplay/battle.md#experience-
-and-levelling).
+level. See [battle § Experience and levelling](gameplay/battle.md#experience-and-levelling).

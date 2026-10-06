@@ -21,6 +21,7 @@ sources:
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -134,7 +135,10 @@ Each turn the wild Peerling picks a move using the battle RNG:
 
 [accepted] For the expected-damage comparison, `quick-flurry` counts as power
 2 × 20 = 40 and `strong-charge` as 130 ÷ 2 = 65 (it needs two turns). Ties go
-to the quick move, then the strong move, then the signature move.
+to the quick move, then the strong move, then the signature move. In integers,
+each move scores power × accuracy (%, 100 for "never misses") × E × S, where
+E multiplies, per defender type, 4 for ×2, 2 for ×1 and 1 for ×½, and S is 3
+with the same-type bonus and 2 without; the highest score wins.
 
 It never flees or switches. This makes it a fair, slightly unpredictable
 opponent.
@@ -262,9 +266,10 @@ on the server ([BTL-002](#requirements)):
 - Input: a 32-byte seed.
 - Output block *i* (i = 0, 1, 2, …) = SHA-256(seed ‖ i as 8-byte big-endian).
 - Each block yields eight unsigned 32-bit integers (big-endian), consumed in
-  order. A uniform value in [0, 1) is the next integer ÷ 2³².
-- An integer in [0, n) is drawn by rejection sampling (discard values ≥ the
-  largest multiple of n below 2³²), so there is no bias.
+  order.
+- `rand_int(n)`, an integer in [0, n), uses rejection sampling so there is no
+  bias: limit = 2³² − (2³² mod n); take the next integer v, and draw again
+  while v ≥ limit; the result is v mod n.
 - Rolls are drawn in a fixed order that the battle rules define.
 
 Seeds: wild battles use the [encounter seed](../tech/player-data.md#encounter-seeds);
@@ -323,13 +328,20 @@ a rounding step, this section wins (approved 2026-10-06).
 4. Then, for each move in execution order: accuracy, damage roll(s) (two for
    `quick-flurry`), stat-effect roll.
 
-Rolls are only drawn when needed (no accuracy roll for a move that never
-misses, no damage roll after a miss).
+Rolls are only drawn when needed:
+- no accuracy roll for a move that never misses, no damage roll after a miss;
+- no move-choice roll for a wild Peerling whose charge strike is automatic
+  this turn;
+- a Peerling that faints before its move doesn't act and draws nothing;
+- the stat-effect roll is drawn after a hit only if the Peerling whose stat
+  would change hasn't fainted; it is drawn even if that stat is already at
+  ±3 (then it has no effect);
+- PvP timeout moves are drawn first, before step 1.
 
 **Encounter draws** (in the order of
 [encounters § Wild Peerling generation](encounters.md#wild-peerling-generation))
-- Candidates: eligible species sorted by registry `seq`; each of the 5 draws
-  takes r = rand_int(total weight) and picks the first species whose running
+- Candidates: eligible species sorted by registry `seq`; each of the
+  min(5, number of eligible species) draws takes r = rand_int(total weight) and picks the first species whose running
   weight total exceeds r, then removes it.
 - Level offset: rand_int(5) − 2.
 - Traits: rand_int(21) − 10, in the order HP, Attack, Defense, Speed.
@@ -346,7 +358,13 @@ change in a balance update. So that old catches still verify:
 - each rules set has a version number; the
   [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch) announces the current
   version and the epoch it applies from;
-- a battle (wild or PvP) uses the version active in its epoch;
+- the version active at epoch E is the record's `version` if E ≥ its
+  `fromEpoch`, otherwise `version` − 1 (versions go up by exactly 1; the
+  world `generator` field works the same way);
+- a wild or guardian battle uses the version active at the epoch of the
+  epoch record it uses; a PvP battle uses the version named in the challenge,
+  and both clients must have it
+  ([protocols § PvP battle](../tech/protocols.md#peerlingsbattle100--pvp-battle));
 - the game keeps every past rules version, so it can replay and verify catches
   made under any of them.
 
@@ -390,7 +408,7 @@ so a large Peerling looms over a small one; size has no effect on the rules.
 - **BTL-008** [accepted] Every stat MUST be multiplied by the individual's trait factor after the level formula.
 - **BTL-009** [accepted] Battles MUST follow [Rules](#rules): turn structure and resolution order, move mechanics, stat stages (−3…+3, Attack/Defense/Speed only), wild Peerling behaviour, battle endings and the PvP turn timer.
 - **BTL-010** [accepted] There MUST NOT be critical hits or status conditions in v1.
-- **BTL-011** [accepted] A battle MUST use the rules version active in its epoch, and the client MUST keep every past rules version so it can verify older catches ([Rules versions](#rules-versions)).
+- **BTL-011** [accepted] A battle MUST use the rules version defined in [Rules versions](#rules-versions), and the client MUST keep every past rules version so it can verify older catches ([Rules versions](#rules-versions)).
 - **BTL-012** [accepted] Battle, catch and encounter maths MUST use only the integer formulas and the draw order in [Deterministic arithmetic](#deterministic-arithmetic).
 - **BTL-013** [accepted] Every Peerling MUST start a PvP battle at full HP, and a PvP battle MUST NOT change any Peerling's HP afterwards or move the player to a rest point.
 

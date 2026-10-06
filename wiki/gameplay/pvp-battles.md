@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
@@ -106,11 +107,13 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
 - **Signed states.** Each `state` message (the per-turn battle-state hash) is
   signed by its sender with the player key. The `end` message names the
   result, the winner and the final state hash, also signed.
-- **Proof of a result.** A result counts when both players signed the same
-  final state, or when the loser did (the loser has no reason to fake their
-  own loss). A forfeit by timeout or disconnect needs the loser's last signed
-  state plus the winner's signed claim; it counts as a win, but is shown
-  separately as "won by forfeit".
+- **Proof of a result.** A normal win counts when the **loser** signed an
+  `end` naming the winner (the loser has no reason to fake their own loss).
+  A forfeit by timeout or disconnect needs the winner's signed `end` plus the
+  loser's last signed state; it counts as a win, but is shown separately as
+  "won by forfeit". A loser who closes the game instead of sending `end`
+  therefore turns a normal win into a win by forfeit. Exact rules:
+  [data-formats § Save-log events](../tech/data-formats.md#save-log-events).
 - **Recording.** Each player, winner and loser, appends a `pvp-result` event
   to their own [save log](../tech/player-data.md#save-log) with the battle
   ID, both player IDs, the mode, the winner and the signatures that prove it.
@@ -136,7 +139,7 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
 - **PVP-006** [accepted] Clients MUST compare battle-state hashes after each turn and void the battle on mismatch.
 - ~~**PVP-007**~~ (removed 2026-10-05, replaced by PVP-010; see D-0015)
 - ~~**PVP-008**~~ (removed 2026-10-04, replaced by PVP-009; see D-0013)
-- **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)).
+- **PVP-009** [accepted] Each client MUST reject an opposing Peerling that is not verified or not owned by the opponent ([SAVE-003](../tech/player-data.md#requirements)), and MUST refuse a battle with a player flagged for a double trade ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
 - **PVP-010** [accepted] A PvP challenge MUST state a level mode, Fair (all Peerlings at level 50, the default) or Real levels (actual levels, unverified), and both players MUST agree to it.
 - **PVP-011** [accepted] The game MUST count each player's PvP wins and show the count on their profile.
 - **PVP-012** [accepted] Only wins proven as in [Win record](#win-record) MUST be counted.

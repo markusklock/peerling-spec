@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-06-review-2-fixes.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -79,8 +80,9 @@ flowchart LR
    [creation pipeline](../peerlings/creation-pipeline.md). The client publishes
    the result to IPFS; the server pins it and signs its registry listing, which
    the client appends.
-2. **Registry sync**: every client replicates the registry from peers and the
-   server via OrbitDB.
+2. **Registry sync**: a new client starts from the compact registry index, then
+   replicates the full registry from peers and the server via OrbitDB in the
+   background ([network-performance](network-performance.md#1-registry-index)).
 3. **Asset fetch**: when a species is needed (encounter, collection, an
    opponent's team), the client fetches its record and assets by CID via Helia,
    from whichever peers have them, and verifies them.
@@ -104,6 +106,11 @@ flowchart LR
 - [accepted] What can't be prevented without global agreement is detected
   instead: a player who gives the same Peerling to two others is exposed by
   their own two signatures and flagged.
+- [accepted] As a speed-up, the server is also trusted for its published
+  summaries: verification checkpoints, the registry index, species stats, the
+  ownership index (including its list of flagged players) and the first wild
+  finder of each species ([D-0023](../decisions/D-0023-network-performance.md)).
+  Anyone can still check the underlying data in full.
 
 ## Requirements
 
