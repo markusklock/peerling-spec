@@ -15,13 +15,14 @@ sources:
   - raw/conversations/2026-10-05-phone-backup-approved.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/generation-server.md
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # Tech Stack
@@ -160,9 +161,9 @@ the server's copy anyway.
 | 3D model (`.glb`) | **≤ 1 MB** | ~500 KB | Meshopt-compressed geometry, KTX2 texture |
 | Triangles | **≤ 20,000** | 10,000–15,000 | Image-to-3D output is decimated to fit ([CRE-013](../peerlings/creation-pipeline.md#requirements)) |
 | Materials and textures | **1 material, 1 base-color texture, 1024 × 1024** | | No normal or roughness maps; the stylized shading doesn't need them. Power-of-two size, mipmapped |
-| 2D image (species card) | **≤ 150 KB**, 1024 × 1024 AVIF | ~80 KB | The image the player accepted in creation |
+| 2D image (species card) | **≤ 150 KB**, 1024 × 1024 AVIF with alpha | ~80 KB | The image the player accepted in creation, on a transparent background ([image-prompting](../peerlings/image-prompting.md#image-checks-and-clean-up)) |
 | Thumbnail | **≤ 15 KB**, 256 × 256 AVIF | ~8 KB | Rendered from the 3D model; used in lists and the registry |
-| Species record (DAG-CBOR) | **≤ 16 KB** | ~4 KB | Lore and descriptions have length limits |
+| Species record (DAG-CBOR) | **≤ 16 KB** | ~8 KB | Lore and descriptions have length limits; about half is the image prompts kept for provenance |
 | Registry entry | **≤ 1 KB** | ~400 B | |
 | **Whole species** | **≤ 1.2 MB** | **~0.6 MB** | |
 

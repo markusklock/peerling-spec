@@ -18,7 +18,10 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
+  - wiki/peerlings/image-prompting.md
+  - wiki/decisions/D-0025-prompt-enhancer-and-three-views.md
   - wiki/peerlings/peerling-species.md
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
@@ -29,7 +32,7 @@ related:
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
   - wiki/decisions/D-0007-players-publish-assets.md
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # Peerling Creation Pipeline
@@ -75,9 +78,9 @@ updated: 2026-10-06
 |---|-------|---------|-------|--------|------------|
 | 1 | Wish | client | player text | wish text | [accepted] |
 | 2 | Concept | server: concept LLM | wish | [concept](../glossary.md#concept) JSON, including type(s) | [accepted] |
-| 3 | Image | server: image generator | concept → structured (JSON) image prompt | 2D image | [accepted] |
+| 3 | Image | server: [prompt enhancer](../glossary.md#prompt-enhancer) (GPT-6 Luna, OpenAI API), then image generator (Qwen-Image-2.1) | wish + concept → enhanced prompt | [hero image](../glossary.md#hero-image), transparent background | [accepted] |
 | 4 | Review | client | image | accept / regenerate | [accepted] |
-| 5 | 3D model | server: image-to-3D | accepted image | static 3D model (GLB) | [accepted] |
+| 5 | 3D model | server: image generator, then image-to-3D (TRELLIS.2 or Pixal3D) | accepted hero image → 2 more [reference views](../glossary.md#reference-views) | static 3D model (GLB) | [accepted] |
 | 6 | Stats & moves | server: concept LLM + validator | concept | base stats, moves | [accepted] |
 | 7 | Publish | client adds to IPFS; server verifies, pins, signs the listing; client appends it | everything above | species on IPFS + registry entry | [accepted] |
 | 8 | Starter | client | published species CID | [starter](../glossary.md#starter) instance in the player's save | [accepted] |
@@ -90,11 +93,11 @@ sequenceDiagram
   P->>S: 1. wish text
   S->>S: 2. concept LLM → concept JSON (incl. types)
   loop until accepted (no limit; cooldown CRE-021)
-    S->>S: 3. image prompt JSON → image generator
+    S->>S: 3. prompt enhancer → prompt → image generator (RGBA)
     S-->>P: image + concept summary
     P->>S: 4. accept / regenerate
   end
-  S->>S: 5. image-to-3D → GLB, post-process
+  S->>S: 5. side + back views → image-to-3D → GLB, post-process
   S->>S: 6. LLM → stats, moves → validator
   S-->>P: 7a. assets + signed species record
   P->>P: 7b. add all to own Helia node → CIDs
@@ -132,19 +135,34 @@ The concept must stay faithful to the wish; the LLM elaborates, it does not
 replace the player's idea. [accepted] The validator checks `types` against the
 type list right away, so the image is never generated for an invalid concept.
 
-### Stage 3 — Image
-The concept's `appearance` is converted to a structured (JSON) prompt for the
-image generator (the brief names FLUX.2 or similar models that accept JSON
-prompts for precise control). [accepted] The prompt has two parts:
+[accepted] A concept must not copy an existing Pokémon or other existing
+character. [proposed] The concept LLM follows the same
+[originality rules](image-prompting.md#originality-rules) as the prompt
+enhancer and gets the same franchise-name hints. Its name suggestions are
+checked against the franchise name list before they are shown.
 
-- **House-style block (fixed by the system):** art style matching the game's
+### Stage 3 — Image
+[accepted] The wish and the concept go to the
+[prompt enhancer](../glossary.md#prompt-enhancer), GPT-6 Luna called through
+OpenAI's API. It writes an original description of the creature, steering
+away from existing characters such as Pokémon. Qwen-Image-2.1 then draws the
+[hero image](../glossary.md#hero-image) on a **transparent background**
+([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
+
+[accepted] The prompt has two parts:
+
+- **House-style text (fixed by the system):** art style matching the game's
   colorful, stylized world ([visual-style](../world/visual-style.md#visual-style)), lighting, camera,
   and constraints that make the image a good input for image-to-3D: exactly one
-  creature, full body visible, centered, three-quarter front view, plain
-  neutral background, no text, no ground shadows or props cut by the frame.
-- **Subject block (from the concept):** the creature itself.
+  creature, full body visible, centered, three-quarter front view,
+  transparent background, no text, no ground, shadows or props.
+- **Subject (from the enhancer):** the creature itself.
 
-The seed and the full prompt are recorded for provenance.
+The system prompt, the templates, the
+[originality rules](../glossary.md#originality-rules), the image settings
+and the automatic image checks are canonical in
+[image-prompting](image-prompting.md). The seed and the full prompt are
+recorded for provenance.
 
 ### Stage 4 — Review
 The player sees the image and either **accepts** it or **regenerates**.
@@ -159,13 +177,20 @@ seconds per player, counted from when the previous image was delivered, and
 the server's job queue keeps GPU time fair between players.
 
 ### Stage 5 — 3D model
-The accepted image goes to the self-hosted image-to-3D generator (the brief
-names TRELLIS.2 or similar). [accepted] The output is a **static** 3D asset,
+[accepted] The accepted image and two more views of the creature from other
+angles (three images in all) go to the self-hosted image-to-3D generator,
+TRELLIS.2 or Pixal3D ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
+[accepted] The output is a **static** 3D asset,
 with no rigging or skeletal animation. Motion in battles comes from simple
 procedural animation ([battle § Presentation](../gameplay/battle.md#presentation)).
 [accepted] Steps:
-1. Background removal / subject matting of the image.
-2. Image-to-3D generation → textured mesh.
+1. [accepted] The image generator draws the [reference views](../glossary.md#reference-views)
+   from the accepted image. [proposed] These are the right side and the
+   back; the views, their checks and the single-view fallback are canonical
+   in [image-prompting § Views](image-prompting.md#views-and-the-3d-model).
+2. Image-to-3D generation → textured mesh. [proposed] The images already
+   have transparent backgrounds, so background removal is only a fallback
+   ([image-prompting § Image checks](image-prompting.md#image-checks-and-clean-up)).
 3. Post-processing: normalize scale (fits a unit bounding box), orientation
    (faces +Z, up is +Y), place the lowest point at y = 0, decimate and compress
    to the [asset budget](../tech/tech-stack.md#asset-budgets), export as binary
@@ -174,7 +199,7 @@ procedural animation ([battle § Presentation](../gameplay/battle.md#presentatio
 
 [accepted] There is no separate approval or retry of the 3D model: the
 image-to-3D generator gives essentially the same result every time for the same
-image. The player judges the model in the [final review](#final-review).
+images. The player judges the model in the [final review](#final-review).
 
 ### Stage 6 — Stats & moves
 [accepted] The LLM spreads the base stats to fit the concept, within the
@@ -220,6 +245,9 @@ signed reach the registry ([D-0013](../decisions/D-0013-peer-verified-registry-c
   a short suffix from its species CID (its last 4 characters, e.g.
   *"Mossnap·k3x9"*), so the two can be told apart.
 - Seed species created by the operator follow the same rule.
+- [proposed] **Existing characters' names:** a name on the franchise name
+  list (e.g. "Pikachu", in any official language) is refused with
+  `name-reserved` ([image-prompting § Originality rules](image-prompting.md#originality-rules)).
 
 Not covered: near-identical names such as "Pikachu2" or "Pikachuu". Blocking
 those too would reject many fair names as the registry grows, so it isn't
@@ -287,13 +315,13 @@ creation runs while the 3D model generates) — see
 - **CRE-001** [accepted] Every Peerling species MUST be created through this pipeline; there are no hand-authored species. This includes the operator's seed species.
 - **CRE-002** [accepted] The player MUST describe the Peerling in free text; the concept MUST be generated from that description by the self-hosted LLM.
 - **CRE-003** [accepted] The image MUST be generated from the concept by the image generator, and the player MUST be able to accept it or request a regeneration.
-- **CRE-004** [accepted] The 3D model MUST be generated from the accepted image by the image-to-3D generator, and MUST be the asset used to show the Peerling in-game.
+- **CRE-004** [accepted] The 3D model MUST be generated from the accepted image and its reference views by the image-to-3D generator, and MUST be the asset used to show the Peerling in-game.
 - **CRE-005** [accepted] Each species' type(s) MUST come from the predefined type list in [types](types.md).
 - **CRE-006** [accepted] Each move MUST conform to a move template in [moves](moves.md).
 - **CRE-007** [accepted] The species data and 3D model MUST be stored on IPFS and the species MUST be added to the OrbitDB registry.
 - **CRE-008** [accepted] All LLM outputs MUST be requested as JSON and validated against a schema; invalid output MUST be retried, never passed on.
 - **CRE-009** [accepted] A deterministic server-side validator MUST check types, stats and moves against the rules before publishing; LLM output alone MUST NOT be trusted for balance.
-- **CRE-010** [accepted] The image prompt MUST include the fixed house-style block so all Peerlings share one art style and produce clean image-to-3D input.
+- **CRE-010** [accepted] The image prompt MUST include the fixed house-style text ([image-prompting § Prompt templates](image-prompting.md#prompt-templates)) so all Peerlings share one art style and produce clean image-to-3D input.
 - ~~**CRE-011**~~ (removed 2026-10-04: no content moderation, see [D-0010](../decisions/D-0010-no-content-moderation.md))
 - **CRE-012** [accepted] Every species record MUST include provenance: wish text, concept, image prompt, seeds, and model names/versions used at each stage.
 - **CRE-013** [accepted] The 3D model MUST be post-processed to a normalized scale, orientation and ground position, and MUST fit the [asset budgets](../tech/tech-stack.md#asset-budgets).

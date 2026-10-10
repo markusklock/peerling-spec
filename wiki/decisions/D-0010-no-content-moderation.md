@@ -6,16 +6,20 @@ tags: [peerlings, generation, policy]
 sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
   - wiki/peerlings/moderation.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-04
+updated: 2026-10-10
 ---
 
 # D-0010: No content moderation
 
-**Status:** accepted (2026-10-04, resolves [Q-007](../open-questions.md#q-007))
+**Status:** accepted (2026-10-04, resolves [Q-007](../open-questions.md#q-007)),
+partly superseded by [D-0025](D-0025-prompt-enhancer-and-three-views.md):
+wishes and designs are steered away from existing characters such as
+Pokémon ([originality rules](../peerlings/image-prompting.md#originality-rules)).
 
 ## Context
 Earlier drafts proposed moderating players' wishes, generated images, names and

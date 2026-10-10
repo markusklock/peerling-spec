@@ -15,13 +15,14 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/generation-server.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/ipfs-showcase.md
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # System Architecture
@@ -52,10 +53,12 @@ flowchart LR
     SN[Server IPFS node<br/>pins everything,<br/>bootstrap + relay]
     SO[OrbitDB registry<br/>listing signer + replica]
     API --> LLM & IMG & T3D
+    API --> PE
     API --> SN
     API --> SO
     SO --- SN
   end
+  PE[Prompt enhancer<br/>GPT-6 Luna, OpenAI API]
   NET((IPFS / libp2p network))
   H <--> NET
   SN <--> NET
@@ -69,6 +72,7 @@ flowchart LR
 | Helia node | Each player is an IPFS node that downloads, serves and publishes content | [ipfs-helia](ipfs-helia.md) | [accepted] |
 | OrbitDB registry | Database of all Peerling species; players append entries signed by the server | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
 | Generation server | LLM, image gen, image-to-3D, pinning, listing signer | [generation-server](generation-server.md) | [accepted] |
+| Prompt enhancer | External LLM (GPT-6 Luna) that writes the image prompts; called only by the server | [image-prompting](../peerlings/image-prompting.md) | [accepted] |
 | Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [accepted]) |
 | Player data | Per-player OrbitDB save log, identity key recovery, transfer log, peer verification | [player-data](player-data.md) | [accepted] |
 | Data and message formats | Exact records, pubsub and stream messages, HTTP API | [data-formats](data-formats.md), [protocols](protocols.md), [creation-api](creation-api.md) | [accepted] |

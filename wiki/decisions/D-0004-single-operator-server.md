@@ -5,14 +5,17 @@ status: accepted
 tags: [tech, server]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
   - wiki/tech/generation-server.md
-updated: 2026-10-03
+updated: 2026-10-10
 ---
 
 # D-0004: One operator server for generation and pinning
 
-**Status:** accepted (2026-10-03)
+**Status:** accepted (2026-10-03), partly superseded by
+[D-0025](D-0025-prompt-enhancer-and-three-views.md): the prompt enhancer
+(GPT-6 Luna) is called through OpenAI's API, not self-hosted.
 
 ## Context
 Creature generation needs GPU models (LLM, image, image-to-3D) that can't run in

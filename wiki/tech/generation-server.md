@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -25,7 +26,8 @@ related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-06
+  - wiki/peerlings/image-prompting.md
+updated: 2026-10-10
 ---
 
 # Generation Server
@@ -39,8 +41,9 @@ updated: 2026-10-06
 | Responsibility | Provenance |
 |----------------|------------|
 | Run a small LLM for concepts (including type), stats and moves | [accepted] |
-| Run an image generator with structured (JSON) prompting, e.g. FLUX.2 | [accepted] (model choice open) |
-| Run an image-to-3D generator, e.g. TRELLIS.2 | [accepted] (model choice open) |
+| Call the [prompt enhancer](../glossary.md#prompt-enhancer), GPT-6 Luna, through OpenAI's API ([image-prompting](../peerlings/image-prompting.md)) | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
+| Run the image generator, Qwen-Image-2.1 (hero image and reference views, transparent background) | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
+| Run an image-to-3D generator: TRELLIS.2 or Pixal3D | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)); [proposed] Pixal3D by default, for its multi-view input |
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Sign species records (attestation) | [accepted] |
@@ -55,7 +58,7 @@ updated: 2026-10-06
 | Validate generated battle data | [accepted] |
 | Bootstrap peer, circuit relay (with raised limits for game protocols), delegated routing and pubsub helper for browser nodes | [accepted] ([ipfs-helia](ipfs-helia.md), [realtime-networking](realtime-networking.md)) |
 
-The specific model names are examples from the designer's brief. The spec
+[accepted] The designer chose these models on 2026-10-10. The spec still
 treats each model as a replaceable component behind a stage interface.
 
 ## Pinning
@@ -77,7 +80,7 @@ it generated, is canonical in
 
 ## Requirements
 
-- **SRV-001** [accepted] The server MUST host the concept LLM, image generator and image-to-3D generator itself.
+- **SRV-001** [accepted] The server MUST host the concept LLM, image generator and image-to-3D generator itself. [accepted] The prompt enhancer is the one exception: it is called through OpenAI's API ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
 - **SRV-002** [accepted] The server MUST pin every game asset and species record so each CID is always available from at least one node.
 - **SRV-003** [accepted] Each AI model MUST be behind a stage interface so it can be swapped without changing the species record format.
 - **SRV-004** [accepted] GPU work MUST go through a job queue; the client MUST be able to see job status and queue position.
@@ -86,7 +89,7 @@ it generated, is canonical in
 
 ## Open questions
 
-_None at the moment._
+- [Q-057](../open-questions.md#q-057) — Licences of the chosen models.
 
 ## See also
 

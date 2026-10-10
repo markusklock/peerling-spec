@@ -493,3 +493,16 @@ List all entries with `grep "^## \[" wiki/log.md`.
 - Notes: 14 decisions (D-0024). New requirements WGN-021, ENC-009, TRD-005,
   BTL-014, CAT-009, SHR-006; SAVE-015 and SHR-005 reworded. drand quicknet
   parameters pinned. No proposals or open questions remain.
+
+## [2026-10-10] design | Prompt enhancer, transparent images, three views, originality
+- Source: raw/conversations/2026-10-10-image-prompt-enhancer.md
+- Changed: peerlings/image-prompting.md (new, IMG), decisions/D-0025 (new),
+  peerlings/creation-pipeline.md, peerling-species.md; tech/generation-server.md,
+  creation-api.md, data-formats.md, tech-stack.md, architecture.md;
+  world/visual-style.md; decisions/D-0004, D-0010 (partly superseded);
+  glossary.md, open-questions.md, index.md
+- Notes: The designer chose GPT-6 Luna (API) as prompt enhancer, Qwen-Image-2.1
+  with transparent backgrounds, TRELLIS.2 or Pixal3D, no Pokémon clones and
+  three views for 3D (accepted). Research-based system prompt, templates,
+  layered originality rules, image checks and view layout are [proposed].
+  SRV-001 amended. Q-057 (model licences) opened.

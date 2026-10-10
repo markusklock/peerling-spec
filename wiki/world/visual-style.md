@@ -11,12 +11,13 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-2.md
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/battle.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # Camera and Visual Style
@@ -30,8 +31,9 @@ updated: 2026-10-06
 
 [accepted] Details:
 - **Tilted, not straight down.** The camera looks down at about 55° below the
-  horizon. Peerling models are generated from three-quarter front images
-  ([creation-pipeline § Stage 3](../peerlings/creation-pipeline.md#stage-3--image)),
+  horizon. Peerling models are generated mostly from eye-level images (a
+  three-quarter front view plus side and back views,
+  [image-prompting § Views](../peerlings/image-prompting.md#views-and-the-3d-model)),
   so a straight-down view would mostly show the tops of their heads.
 - **Fixed orientation.** North is always up and the camera doesn't rotate,
   like classic top-down creature games. This keeps controls simple.
@@ -54,9 +56,10 @@ updated: 2026-10-06
   enough to render in any browser.
 - Each of the 12 [biomes](procedural-generation.md#biomes) has its own dominant
   colors, so players can tell where they are at a glance.
-- **Peerlings must fit in.** The fixed house-style block of the image prompt
-  ([CRE-010](../peerlings/creation-pipeline.md#requirements)) uses the same
-  look: colorful, soft-shaded, stylized 3D-render style. Generated models then
+- **Peerlings must fit in.** The fixed house-style text of the image prompt
+  ([CRE-010](../peerlings/creation-pipeline.md#requirements),
+  [image-prompting § Prompt templates](../peerlings/image-prompting.md#prompt-templates))
+  uses the same look: colorful, soft-shaded, stylized 3D-render style. Generated models then
   match the world instead of looking pasted in.
 - Player characters use the same stylized look.
 

@@ -14,7 +14,8 @@ sources:
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
-updated: 2026-10-06
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
+updated: 2026-10-10
 ---
 
 # Glossary
@@ -197,7 +198,8 @@ The first non-fainted Peerling in the player's team, which walks behind them in 
 
 ### Generation server
 The single operator-hosted server that runs the concept LLM, the image
-generator, the image-to-3D generator, and pins all game content on IPFS. See
+generator, the image-to-3D generator, calls the prompt enhancer, and pins all
+game content on IPFS. See
 [generation-server](tech/generation-server.md).
 
 ### Generator version
@@ -216,6 +218,12 @@ The stone platform in each biome sector where its guardian is challenged; it cou
 ### Helia
 A TypeScript implementation of IPFS that runs in the browser. Every game client
 runs a Helia node. See [ipfs-helia](tech/ipfs-helia.md).
+
+### Hero image
+The main picture of a new Peerling: a three-quarter front view on a
+transparent background, which the player accepts or regenerates. It becomes
+the species card image and the main input of the 3D stage. See
+[image-prompting](peerlings/image-prompting.md).
 
 ### IPFS
 The InterPlanetary File System — a peer-to-peer network for storing and sharing
@@ -275,6 +283,12 @@ The server's signature on a starter or a Creation Shrine Peerling, proving
 where it came from (these don't come from a catch, so there's nothing to
 replay). See [player-data](tech/player-data.md#starters-and-shrine-creations).
 
+### Originality rules
+The rules that keep every Peerling an original design: a wish that names or
+describes an existing character (e.g. a Pokémon) is turned into a creature
+of its own, never copied. See
+[image-prompting § Originality rules](peerlings/image-prompting.md#originality-rules).
+
 ### Ownership index
 The operator's hourly sharded map from instance ID to its latest transfer, so verifiers needn't replicate the whole transfer log. See
 [network-performance](tech/network-performance.md#3-ownership-index).
@@ -331,6 +345,11 @@ their OrbitDB identity and IPNS name. See [D-0018](decisions/D-0018-one-key-per-
 to nearby players over libp2p pubsub. See
 [realtime-networking](tech/realtime-networking.md#presence).
 
+### Prompt enhancer
+The LLM (GPT-6 Luna, called through OpenAI's API) that turns a wish and its
+concept into the creature description the image generator draws. See
+[image-prompting](peerlings/image-prompting.md).
+
 ### Pubsub
 Publish/subscribe messaging (libp2p gossipsub): messages on a topic reach
 everyone subscribed. Used for presence, epoch records, the world feed,
@@ -347,6 +366,12 @@ levels. See [pvp-battles § Fairness](gameplay/pvp-battles.md#fairness).
 ### Recovery phrase
 A list of words shown to the player once, from which their identity key can
 be restored on another device. See [player-data](tech/player-data.md#account-recovery).
+
+### Reference views
+The two extra images of a new Peerling, from its right side and from behind,
+drawn from the accepted hero image so the image-to-3D generator has less to
+guess. They are not published. See
+[image-prompting § Views](peerlings/image-prompting.md#views-and-the-3d-model).
 
 ### Region
 [accepted] A 64 m × 64 m square of the world (one chunk of 32 × 32 tiles). It is the unit

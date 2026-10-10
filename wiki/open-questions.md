@@ -3,7 +3,7 @@ title: Open Questions
 type: reference
 status: draft
 tags: [questions, backlog]
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # Open Questions
@@ -17,7 +17,31 @@ Each entry: the question, the pages it affects, context, and an LLM proposal
 
 ## Open
 
-_None at the moment._
+### Q-057
+**Are the licences of the chosen models acceptable for Peerlings?**
+Affects: [image-prompting](peerlings/image-prompting.md#model-licences),
+[generation-server](tech/generation-server.md).
+Context (checked 2026-10-10; this is not legal advice):
+- **Qwen-Image-2.1** is under the *Qwen Research License*, which is
+  non-commercial; commercial use needs a separate licence from Alibaba.
+  Earlier Qwen-Image releases were Apache 2.0.
+- **TRELLIS.2 and Pixal3D** are MIT, but they use other components with
+  their own licences:
+  - **RMBG-2.0** (background removal, CC BY-NC 4.0): avoided, since our
+    images already have alpha and the spec bans it (IMG-013).
+  - **nvdiffrast** (texture baking during GLB export): NVIDIA's licence
+    allows only non-commercial research or evaluation use.
+  - **DINOv3** (image encoder): free to use, but requires showing "Built with
+    DINOv3".
+- **GPT-6 Luna** is a paid API under OpenAI's terms.
+
+Proposal [proposed]:
+- Keep Qwen-Image-2.1 as chosen, and keep Peerlings non-commercial, or get
+  Alibaba's commercial licence if that changes.
+- Have the designer read the Qwen and nvdiffrast licences to decide
+  whether a free public game is within them. If not, replace nvdiffrast
+  with a rasterizer under an open licence for texture baking.
+- Show "Built with DINOv3" in the game's credits.
 
 ## Resolved
 

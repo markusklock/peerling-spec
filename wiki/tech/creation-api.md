@@ -10,13 +10,15 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-10-image-prompt-enhancer.md
 related:
+  - wiki/peerlings/image-prompting.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/generation-server.md
   - wiki/tech/data-formats.md
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # Creation API
@@ -52,6 +54,7 @@ updated: 2026-10-06
     more than 10 s in the future, and replays of a signature it has seen.
 - **Errors:** status code plus `{ "error": "<code>", "message": "<text>" }`.
   Codes include `rate-limited` (with `Retry-After`), `cooldown`, `name-taken`,
+  `name-reserved` ([proposed] the name of an existing character, [IMG-015](../peerlings/image-prompting.md#requirements)),
   `invalid`, `not-found`, `job-expired`, `verification-failed`,
   `starter-taken` (the player already has a starter), `shrine-limit` (the
   7-day limit hasn't ended, or a shrine job or credit is already open; with
@@ -71,7 +74,9 @@ updated: 2026-10-06
   "wish": "a small sleepy fox made of moss that carries a lantern",
   "concept": { "summary": "…", "lore": "…", "types": ["Grass"], "nameSuggestions": ["Mossnap", "Lumifox", "Glowtail"] },
   "image": "/v1/jobs/job_7f3a…/files/image",
+  "originalityChanged": false,
   "nextImageAt": 1791234567000,
+  "views": null,
   "model": null,
   "profile": null,
   "name": null,
@@ -88,6 +93,12 @@ the player; `expiresAt` moves forward with every request.
 
 `state` follows the job state machine in
 [creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling).
+[proposed] `originalityChanged` is true when the prompt enhancer steered the
+design away from an existing character; the client then shows the fixed
+notice from [image-prompting § Originality rules](../peerlings/image-prompting.md#originality-rules).
+[proposed] `views` (once the [reference views](../glossary.md#reference-views)
+exist, stage 5) is `{ "side": <URL>, "back": <URL> }`, so the client can
+show a turnaround preview while the model generates.
 `profile` (once `PROFILE_READY`) holds the types, base stats and moves.
 `listing` (once signed at stage 7e) is the registry listing envelope.
 `origin` (once the new Peerling exists) is its origin attestation, for starters
@@ -108,9 +119,9 @@ transfer-log entry that released the offering.
 | `POST /v1/jobs/{id}/accept-image` | — | Starts 3D generation, then stats and moves |
 | `POST /v1/jobs/{id}/back-to-image` | — | From the final review, back to image generation; keeps the name |
 | `GET /v1/names/{name}` | — | `{ "available": bool, "nameKey": "…" }` |
-| `POST /v1/jobs/{id}/name` | `name` | Reserves the name for as long as the job lives; `name-taken` if not free |
+| `POST /v1/jobs/{id}/name` | `name` | Reserves the name for as long as the job lives; `name-taken` if not free; [proposed] `name-reserved` for an existing character's name |
 | `POST /v1/jobs/{id}/finalize` | — | [accepted] The player confirms publishing (needs a name). The server signs the species record; the job goes from `PROFILE_READY` to `PUBLISHING`, and `files/record` becomes available |
-| `GET /v1/jobs/{id}/files/{file}` | — | `image`, `model`, `thumbnail` or `record` (the signed species record, DAG-CBOR) |
+| `GET /v1/jobs/{id}/files/{file}` | — | `image`, `model`, `thumbnail` or `record` (the signed species record, DAG-CBOR); [proposed] also `view-side` and `view-back` (PNG with alpha, not published) |
 | `POST /v1/jobs/{id}/upload` | CAR file (`application/vnd.ipld.car`) with the species record and assets | [accepted] Fallback when the server can't fetch the content peer to peer within 20 s of `published` ([network-performance](network-performance.md#fast-paths-through-the-operator)). The server checks the blocks against the expected CIDs, then continues as for `published` |
 | `POST /v1/jobs/{id}/published` | `species` (CID) | Called after the client added everything to IPFS (stage 7). The server fetches, compares, pins and signs the listing; returns the job with `listing` |
 | `DELETE /v1/jobs/{id}` | — | Abandons the job (frees the name; a shrine job's offering is not refunded, but the player keeps a shrine credit for 30 days: [creation-shrine](../gameplay/creation-shrine.md)) |

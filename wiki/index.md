@@ -44,6 +44,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
 | [creation-pipeline](peerlings/creation-pipeline.md) | accepted | CRE | Wish → concept (+type) → image (no limit, cooldown) → 3D → stats & moves → final review and naming → player publishes, server pins |
+| [image-prompting](peerlings/image-prompting.md) | draft | IMG | Prompt enhancer (GPT-6 Luna) system prompt, originality rules against cloning Pokémon, Qwen-Image-2.1 templates (transparent background), image checks, three views for 3D |
 | [peerling-species](peerlings/peerling-species.md) | accepted | SPC | Species record (DAG-CBOR on IPFS), stats (total 320, 40–130), instance data model, individual traits and shimmers |
 | [types](peerlings/types.md) | accepted | TYP | The 12 types, primary/secondary type, effectiveness chart |
 | [moves](peerlings/moves.md) | accepted | MOV | Three move slots (quick/strong/signature), unlimited use, templates, how Pokémon-like games do it |
@@ -82,13 +83,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0001](decisions/D-0001-spec-only-llm-wiki.md) | accepted | Spec-only repository maintained as an LLM Wiki |
 | [D-0002](decisions/D-0002-all-peerlings-user-generated.md) | accepted | All Peerlings are user-generated |
 | [D-0003](decisions/D-0003-browser-client-is-ipfs-node.md) | accepted | Every browser client is a Helia IPFS node |
-| [D-0004](decisions/D-0004-single-operator-server.md) | accepted | One operator server for generation and pinning |
+| [D-0004](decisions/D-0004-single-operator-server.md) | accepted (partly superseded by D-0025) | One operator server for generation and pinning |
 | [D-0005](decisions/D-0005-server-sole-registry-writer.md) | superseded by D-0013 | The generation server is the only registry writer |
 | [D-0006](decisions/D-0006-species-vs-instance.md) | accepted | Separate immutable species from owned instances |
 | [D-0007](decisions/D-0007-players-publish-assets.md) | accepted | The player's browser publishes their Peerling to IPFS |
 | [D-0008](decisions/D-0008-shared-multiplayer-world.md) | accepted | One shared world with PvP battles and trading |
 | [D-0009](decisions/D-0009-player-data-on-orbitdb.md) | accepted (partly superseded by D-0013, D-0015) | Player saves on OrbitDB, with server-verified catches and trades |
-| [D-0010](decisions/D-0010-no-content-moderation.md) | accepted | No content moderation |
+| [D-0010](decisions/D-0010-no-content-moderation.md) | accepted (partly superseded by D-0025) | No content moderation |
 | [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first |
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
 | [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
@@ -103,12 +104,13 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
 | [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
 | [D-0024](decisions/D-0024-review-2-decisions.md) | accepted | Determinism, verification and edge-case rules from the second review |
+| [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed) | Prompt enhancer (GPT-6 Luna), Qwen-Image-2.1 with transparency, originality rules, three views for 3D |
 
 ## Registered requirement prefixes
 
-API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
+API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, IMG, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PERF, POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0025. Next free question ID: Q-057.
+D-0026. Next free question ID: Q-058.
 
 ## Sources
 
@@ -153,3 +155,4 @@ D-0025. Next free question ID: Q-057.
 | [2026-10-06-network-performance-approved](../raw/conversations/2026-10-06-network-performance-approved.md) | 2026-10-06 | Network performance design approved |
 | [2026-10-06-review-2-fixes](../raw/conversations/2026-10-06-review-2-fixes.md) | 2026-10-06 | Second full review; mechanical fixes applied, design questions collected |
 | [2026-10-06-review-2-decisions](../raw/conversations/2026-10-06-review-2-decisions.md) | 2026-10-06 | 14 design decisions from the second review approved |
+| [2026-10-10-image-prompt-enhancer](../raw/conversations/2026-10-10-image-prompt-enhancer.md) | 2026-10-10 | Prompt enhancer (GPT-6 Luna) → Qwen-Image-2.1 with transparent background → TRELLIS.2/Pixal3D; no Pokémon clones; three views for 3D; research findings |
