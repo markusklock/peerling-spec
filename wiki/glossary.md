@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 updated: 2026-10-10
 ---
 
@@ -92,9 +93,10 @@ suggestions, summary, lore, types, appearance and temperament. See
 [creation-pipeline § Stage 2](peerlings/creation-pipeline.md#stage-2--concept).
 
 ### Concept LLM
-The small, self-hosted language model on the generation server. It turns
-player wishes into concepts (including the Peerling's types) and later spreads
-the stats and writes the moves.
+The language model that turns player wishes into concepts (including the
+Peerling's types) and later spreads the stats and writes the moves. It is
+GPT-6 Luna, called by the generation server through OpenAI's API; the
+[prompt enhancer](#prompt-enhancer) uses the same model.
 
 ### Creation Shrine
 A place at the world's spawn where a player gives up 3 Peerlings in exchange
@@ -197,9 +199,9 @@ The first non-fainted Peerling in the player's team, which walks behind them in 
 [exploration § Following Peerling](gameplay/exploration.md#following-peerling).
 
 ### Generation server
-The single operator-hosted server that runs the concept LLM, the image
-generator, the image-to-3D generator, calls the prompt enhancer, and pins all
-game content on IPFS. See
+The single operator-hosted server that runs the image generator and the
+image-to-3D generator, calls GPT-6 Luna (concept LLM, prompt enhancer), and
+pins all game content on IPFS. See
 [generation-server](tech/generation-server.md).
 
 ### Generator version

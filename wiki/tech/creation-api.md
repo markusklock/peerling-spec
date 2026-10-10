@@ -11,6 +11,7 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/peerlings/creation-pipeline.md
@@ -55,6 +56,8 @@ updated: 2026-10-10
 - **Errors:** status code plus `{ "error": "<code>", "message": "<text>" }`.
   Codes include `rate-limited` (with `Retry-After`), `cooldown`, `name-taken`,
   `name-reserved` ([proposed] the name of an existing character, [IMG-015](../peerlings/image-prompting.md#requirements)),
+  `wish-refused` ([proposed] GPT-6 Luna declined the wish; the player edits it,
+  [creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling)),
   `invalid`, `not-found`, `job-expired`, `verification-failed`,
   `starter-taken` (the player already has a starter), `shrine-limit` (the
   7-day limit hasn't ended, or a shrine job or credit is already open; with

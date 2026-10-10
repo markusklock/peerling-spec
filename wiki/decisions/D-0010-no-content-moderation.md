@@ -7,6 +7,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-5.md
   - raw/conversations/2026-10-04-tech-stack-1.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/peerlings/moderation.md
   - wiki/peerlings/creation-pipeline.md
@@ -42,7 +43,9 @@ backlash, and unusual or meme Peerlings may even help the game's popularity.
 ## Consequences
 - The creation pipeline has no moderation stage and no `REJECTED` state.
 - Self-hosted image models may have their own built-in safety behaviour; the
-  spec neither requires nor relies on it.
+  spec neither requires nor relies on it. Since 2026-10-10 the LLM steps use
+  GPT-6 Luna through OpenAI's API, whose usage policies apply and which may
+  refuse a wish (`wish-refused`, [D-0025](D-0025-prompt-enhancer-and-three-views.md)).
 - The operator is responsible for what their server generates and hosts.
   Even a non-commercial project may receive legal requests to remove clearly
   illegal content, which is the reason for the delisting tool above.

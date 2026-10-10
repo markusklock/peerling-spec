@@ -506,3 +506,15 @@ List all entries with `grep "^## \[" wiki/log.md`.
   three views for 3D (accepted). Research-based system prompt, templates,
   layered originality rules, image checks and view layout are [proposed].
   SRV-001 amended. Q-057 (model licences) opened.
+
+## [2026-10-10] design | No self-hosted LLM: GPT-6 Luna for every LLM step
+- Source: raw/conversations/2026-10-10-no-self-hosted-llm.md
+- Changed: tech/generation-server.md (SRV-001 reworded, SRV-007 added),
+  architecture.md, creation-api.md, resilience.md; peerlings/creation-pipeline.md
+  (CRE-002 reworded, API outage and refusal handling), image-prompting.md
+  (IMG-007 removed into SRV-007; Pixal3D accepted); decisions/D-0025, D-0004,
+  D-0010; glossary.md, index.md
+- Notes: Concept, prompt enhancer, stats and moves all use GPT-6 Luna via
+  OpenAI's API; the GPU runs only Qwen-Image-2.1 and Pixal3D. New proposals:
+  outage wait-and-retry, `wish-refused`, SRV-007 (no player identity in
+  requests).

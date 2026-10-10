@@ -65,7 +65,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [architecture](tech/architecture.md) | accepted | ARC | Components, data flows, trust model |
 | [ipfs-helia](tech/ipfs-helia.md) | accepted | NODE | Browser IPFS node: connectivity, publishing, CID import parameters, caching |
 | [orbitdb-registry](tech/orbitdb-registry.md) | accepted | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
-| [generation-server](tech/generation-server.md) | accepted | SRV | Self-hosted AI models, pinning, listing and origin signer, job queue, relay |
+| [generation-server](tech/generation-server.md) | accepted | SRV | Self-hosted image and 3D models (Qwen-Image-2.1, Pixal3D), GPT-6 Luna for LLM steps, pinning, listing and origin signer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | accepted | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | accepted | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [data-formats](tech/data-formats.md) | accepted | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
@@ -104,7 +104,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
 | [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
 | [D-0024](decisions/D-0024-review-2-decisions.md) | accepted | Determinism, verification and edge-case rules from the second review |
-| [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed) | Prompt enhancer (GPT-6 Luna), Qwen-Image-2.1 with transparency, originality rules, three views for 3D |
+| [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed) | GPT-6 Luna for every LLM step (no self-hosted LLM), Qwen-Image-2.1 with transparency, Pixal3D, originality rules, three views for 3D |
 
 ## Registered requirement prefixes
 
@@ -156,3 +156,4 @@ D-0026. Next free question ID: Q-058.
 | [2026-10-06-review-2-fixes](../raw/conversations/2026-10-06-review-2-fixes.md) | 2026-10-06 | Second full review; mechanical fixes applied, design questions collected |
 | [2026-10-06-review-2-decisions](../raw/conversations/2026-10-06-review-2-decisions.md) | 2026-10-06 | 14 design decisions from the second review approved |
 | [2026-10-10-image-prompt-enhancer](../raw/conversations/2026-10-10-image-prompt-enhancer.md) | 2026-10-10 | Prompt enhancer (GPT-6 Luna) → Qwen-Image-2.1 with transparent background → TRELLIS.2/Pixal3D; no Pokémon clones; three views for 3D; research findings |
+| [2026-10-10-no-self-hosted-llm](../raw/conversations/2026-10-10-no-self-hosted-llm.md) | 2026-10-10 | No self-hosted LLM: GPT-6 Luna for concept, enhancer, stats and moves; GPU left to Qwen-Image-2.1 and Pixal3D |

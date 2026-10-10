@@ -6,6 +6,7 @@ tags: [tech, server]
 sources:
   - raw/conversations/2026-10-03-initial-vision.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/tech/generation-server.md
 updated: 2026-10-10
@@ -14,8 +15,9 @@ updated: 2026-10-10
 # D-0004: One operator server for generation and pinning
 
 **Status:** accepted (2026-10-03), partly superseded by
-[D-0025](D-0025-prompt-enhancer-and-three-views.md): the prompt enhancer
-(GPT-6 Luna) is called through OpenAI's API, not self-hosted.
+[D-0025](D-0025-prompt-enhancer-and-three-views.md): every LLM step uses
+GPT-6 Luna through OpenAI's API; only the image and 3D models are
+self-hosted.
 
 ## Context
 Creature generation needs GPU models (LLM, image, image-to-3D) that can't run in

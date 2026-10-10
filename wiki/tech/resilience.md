@@ -12,13 +12,14 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/generation-server.md
   - wiki/tech/player-data.md
   - wiki/gameplay/encounters.md
-updated: 2026-10-06
+updated: 2026-10-10
 ---
 
 # Playing Without the Operator Server
@@ -49,7 +50,7 @@ doesn't block the game ([encounters § Candidates](../gameplay/encounters.md#can
 | PvP battles | Yes | Peer-to-peer; each side verifies the other's Peerlings itself |
 | Registry updates | No new species (creation needs the server) | The existing registry replicates between players; entries are signed, so any player can serve them |
 | Trades | Yes | Signed transfer chains in the open transfer log ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
-| Creation, Creation Shrine, new players | No | GPU models and attestations live on the server |
+| Creation, Creation Shrine, new players | No | GPU models, the OpenAI API key and attestations live on the server |
 | Creator stats | Frozen | Resume when the server is back |
 | Guardians and badges | Yes | The week's team comes from the signed week record if there is one, otherwise a client-derived one; badges are verified by replay ([guardians](../gameplay/guardians.md)) |
 | Peerling of the Day | Yes | The same, with the day's record ([peerling-of-the-day](../gameplay/peerling-of-the-day.md)) |

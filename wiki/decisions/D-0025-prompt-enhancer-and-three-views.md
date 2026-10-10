@@ -5,6 +5,7 @@ status: accepted
 tags: [peerlings, generation, ai, image, 3d, originality]
 sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/peerlings/creation-pipeline.md
@@ -36,6 +37,10 @@ details on [image-prompting](../peerlings/image-prompting.md) are
 - [accepted] Pipeline: wish → **prompt enhancer (GPT-6 Luna, OpenAI API)**
   → **Qwen-Image-2.1** → the player accepts or regenerates → **TRELLIS.2 or
   Pixal3D** make the 3D model.
+- [accepted] (later the same day) **No self-hosted LLM**: the concept and
+  the stats and moves also use GPT-6 Luna. It is very cheap, and it leaves
+  the server's GPU memory to Pixal3D and Qwen-Image-2.1. **Pixal3D** is the
+  3D model run on the server.
 - [accepted] Images have a **transparent background**.
 - [accepted] The pipeline must stop players from **cloning existing
   Pokémon** by naming or describing them.
@@ -48,13 +53,18 @@ details on [image-prompting](../peerlings/image-prompting.md) are
 
 ## Consequences
 
-- **Self-hosting:** the enhancer is the first model not hosted by the
-  operator. This partly changes [D-0004](D-0004-single-operator-server.md),
-  where all models were self-hosted.
-  - [SRV-001](../tech/generation-server.md#requirements) names the enhancer
-    as the exception.
-  - If OpenAI's API is down, creation falls back to the concept's own
-    appearance text.
+- **Self-hosting:** every LLM step now uses OpenAI's API, and only the
+  image and 3D models run on the operator's GPU. This partly changes
+  [D-0004](D-0004-single-operator-server.md), where all models were
+  self-hosted.
+  - [SRV-001](../tech/generation-server.md#requirements) is changed to
+    match. SRV-007 keeps player identities out of the requests.
+  - Creation now also depends on OpenAI's API. If only the enhancer
+    fails, the concept's own appearance text is used. If the API is down,
+    jobs wait and retry
+    ([creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling)).
+  - OpenAI's usage policies apply to wishes, so GPT-6 Luna may refuse one
+    (`wish-refused`).
 - **Moderation:** wishes are now steered away from existing characters.
   This partly changes [D-0010](D-0010-no-content-moderation.md) ("wishes …
   are not filtered"). Nothing is rejected and taste isn't judged, so the

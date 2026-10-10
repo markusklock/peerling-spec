@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -32,18 +33,18 @@ updated: 2026-10-10
 
 # Generation Server
 
-> The single operator-hosted server. It runs the self-hosted AI models of the
-> [creation pipeline](../peerlings/creation-pipeline.md), pins all game content
+> The single operator-hosted server. It runs the self-hosted image and 3D
+> models of the [creation pipeline](../peerlings/creation-pipeline.md), calls
+> GPT-6 Luna for its LLM steps, pins all game content
 > on IPFS, signs registry listings and Peerling origins, and helps browser nodes connect.
 
 ## Responsibilities
 
 | Responsibility | Provenance |
 |----------------|------------|
-| Run a small LLM for concepts (including type), stats and moves | [accepted] |
-| Call the [prompt enhancer](../glossary.md#prompt-enhancer), GPT-6 Luna, through OpenAI's API ([image-prompting](../peerlings/image-prompting.md)) | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
+| Call GPT-6 Luna through OpenAI's API for every LLM step: concepts (including type), the [prompt enhancer](../glossary.md#prompt-enhancer) ([image-prompting](../peerlings/image-prompting.md)), stats and moves. No LLM runs on the server, which leaves its GPU memory to the image and 3D models | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
 | Run the image generator, Qwen-Image-2.1 (hero image and reference views, transparent background) | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
-| Run an image-to-3D generator: TRELLIS.2 or Pixal3D | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)); [proposed] Pixal3D by default, for its multi-view input |
+| Run the image-to-3D generator, Pixal3D | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)); [proposed] TRELLIS.2 as the alternative |
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Sign species records (attestation) | [accepted] |
@@ -80,12 +81,13 @@ it generated, is canonical in
 
 ## Requirements
 
-- **SRV-001** [accepted] The server MUST host the concept LLM, image generator and image-to-3D generator itself. [accepted] The prompt enhancer is the one exception: it is called through OpenAI's API ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
+- **SRV-001** [accepted] The server MUST host the image generator and image-to-3D generator itself. [accepted] Every LLM step (concept, prompt enhancer, stats and moves) MUST use GPT-6 Luna through OpenAI's API ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
 - **SRV-002** [accepted] The server MUST pin every game asset and species record so each CID is always available from at least one node.
 - **SRV-003** [accepted] Each AI model MUST be behind a stage interface so it can be swapped without changing the species record format.
 - **SRV-004** [accepted] GPU work MUST go through a job queue; the client MUST be able to see job status and queue position.
 - **SRV-005** [accepted] The server MUST rate-limit creation requests per player identity.
 - **SRV-006** [accepted] The server MUST run a dual-stack (IPv6 + IPv4) libp2p node reachable from browsers over WebTransport and WebRTC-direct ([tech-stack](tech-stack.md#networking)), acting as bootstrap peer and circuit relay.
+- **SRV-007** [proposed] Only the server MAY call OpenAI's API (the API key never leaves it). Requests MUST carry only the game data the step needs (wish, concept, hints, generated text, or the hero image), never the player ID, keys, display name or IP address, and MUST set `store: false`.
 
 ## Open questions
 

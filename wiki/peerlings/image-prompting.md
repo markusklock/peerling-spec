@@ -6,6 +6,7 @@ req_prefix: IMG
 tags: [peerlings, generation, ai, image, 3d, originality]
 sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/decisions/D-0025-prompt-enhancer-and-three-views.md
@@ -69,9 +70,16 @@ new seed, so the player gets a new drawing of the same idea without another
 enhancer call. An **edited wish** runs the concept stage and the enhancer
 again ([creation-pipeline § Stage 4](creation-pipeline.md#stage-4--review)).
 
-[proposed] The concept stage (stage 2) stays on the self-hosted
-[concept LLM](../glossary.md#concept-llm). The enhancer only writes the
-picture's description; it never changes types, stats, moves, lore or names.
+[accepted] The server runs no LLM of its own: the
+[concept LLM](../glossary.md#concept-llm) (stages 2 and 6) is also GPT-6
+Luna. [proposed] The concept and the enhancer stay two separate calls with
+their own prompts:
+- the concept is validated (types) before any image is drawn;
+- a plain regenerate reuses the enhancer's output without either call;
+- each prompt stays focused on one job.
+
+The enhancer only writes the picture's description; it never changes types,
+stats, moves, lore or names.
 
 ## Originality rules
 
@@ -87,7 +95,7 @@ catches what the one before missed:
 | # | Layer | Runs on | On a hit |
 |---|-------|---------|----------|
 | 1 | **Franchise name list** checks the wish | server, deterministic | The names found go to the concept LLM and the enhancer as hints. The wish is never rejected |
-| 2 | **Concept LLM** follows the originality rules | self-hosted LLM | Writes an original concept (appearance, lore, name suggestions) |
+| 2 | **Concept LLM** follows the originality rules | GPT-6 Luna | Writes an original concept (appearance, lore, name suggestions) |
 | 3 | **Enhancer** follows the originality rules | GPT-6 Luna | Changes at least three signature features, and records what it changed |
 | 4 | **Resemblance check** of the hero image | GPT-6 Luna (image input) | Regenerates once automatically, telling the enhancer which features to avoid |
 | 5 | **Name check** of the chosen Peerling name | server, deterministic | The name is refused with `name-reserved` |
@@ -157,9 +165,8 @@ existing characters. Everything else stays unmoderated.
 | Timeout | 20 s per attempt |
 
 - **Privacy:** the request carries only the wish, the concept fields listed
-  below, the hints and `avoid`. It never carries the player ID, keys, display
-  name or IP address. The wish ends up public anyway, in the species
-  record's provenance.
+  below, the hints and `avoid`, as for every GPT-6 Luna call
+  ([SRV-007](../tech/generation-server.md#requirements)).
 - **Cost:** about 3,500 input tokens (mostly the system prompt, which is
   cached) and about 600 output tokens, so well under $0.001 per image at the
   published prices.
@@ -208,15 +215,17 @@ prompt and are never shown to players.
   details.
 - **Retries:** an invalid output, a timeout or a server error is retried up
   to 2 more times.
-- **Fallback:** if the enhancer still fails, or OpenAI's API can't be
-  reached, the server builds the description itself so creation never stops:
+- **Fallback:** if the enhancer still fails, the server builds the
+  description itself so the job doesn't stop at this step:
   - `subject` = the concept's `appearance`, with any franchise-list names
     removed;
   - the view details are empty;
   - `models.enhancer` is recorded as `"none"`.
 
   The concept LLM already followed the originality rules, so the fallback
-  stays within them.
+  stays within them. If OpenAI's API can't be reached at all, the concept
+  stage can't run either; see
+  [creation-pipeline § Job handling](creation-pipeline.md#job-handling).
 
 ## System prompt
 
@@ -483,16 +492,17 @@ drawn after the player accepts it:
   bounding box and scaled so that the creature's height is the same in all
   three views (80 % of a 1024 px square). The feet sit on the same line, and
   the creature is centred horizontally.
-- **Default 3D generator: Pixal3D** in its multi-view mode. (The designer's
-  "Pixel3D" is Pixal3D, from TencentARC.)
+- **3D generator:** [accepted] **Pixal3D** (from TencentARC; written
+  "Pixel3D" in the designer's first message), running on the server's GPU
+  next to Qwen-Image-2.1. [proposed] It runs in its multi-view mode.
   - It is the only one of the two with an official multi-view input. It takes
     posed views: the server writes a camera file with the nominal cameras
     above, with the hero as the first frame.
   - Post-processing then turns the model by the hero's known 45° so that it
     faces +Z ([creation-pipeline § Stage 5](creation-pipeline.md#stage-5--3d-model)).
-  - **TRELLIS.2** is the alternative. It officially takes one image, so it
-    gets the hero image only, unless a tested multi-image mode exists by
-    then.
+  - [proposed] **TRELLIS.2** stays the drop-in alternative behind the same
+    stage interface. It officially takes one image, so it would get the hero
+    image only, unless a tested multi-image mode exists by then.
 - **Silhouette check:**
   - The finished model is rendered from the hero camera, without
     perspective, and its outline is compared with the hero image's opaque
@@ -555,7 +565,7 @@ before launch. See [Q-057](../open-questions.md#q-057).
 - **IMG-004** [accepted] After the player accepts the image, the pipeline MUST produce three images of the creature from different angles and give them to the image-to-3D generator.
 - **IMG-005** [proposed] The enhancer MUST be called with the [system prompt](#system-prompt) verbatim, and its version MUST be recorded in provenance.
 - **IMG-006** [proposed] Player text MUST reach the enhancer only inside the user message, as JSON data, never inside the instructions; the output MUST use the strict [output schema](#output-schema).
-- **IMG-007** [proposed] Only the server MAY call the enhancer, and requests MUST NOT contain the player ID, keys, display name or IP address.
+- ~~**IMG-007**~~ (removed 2026-10-10: now covers every GPT-6 Luna call, see [SRV-007](../tech/generation-server.md#requirements))
 - **IMG-008** [proposed] The franchise name list MUST only add hints and MUST NOT reject a wish.
 - **IMG-009** [proposed] Enhancer output that fails the [checks](#failure-handling) MUST be retried, and if the enhancer remains unavailable, the server MUST fall back to the concept's appearance so creation continues.
 - **IMG-010** [proposed] The server SHOULD run the [resemblance check](#resemblance-check-prompt) on every hero image and regenerate once on a hit.

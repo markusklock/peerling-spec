@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -47,18 +48,17 @@ flowchart LR
   end
   subgraph Server["Operator server (single)"]
     API[Creation API + job queue]
-    LLM[Concept LLM]
     IMG[Image generator]
     T3D[Image-to-3D]
     SN[Server IPFS node<br/>pins everything,<br/>bootstrap + relay]
     SO[OrbitDB registry<br/>listing signer + replica]
-    API --> LLM & IMG & T3D
-    API --> PE
+    API --> IMG & T3D
+    API --> LUNA
     API --> SN
     API --> SO
     SO --- SN
   end
-  PE[Prompt enhancer<br/>GPT-6 Luna, OpenAI API]
+  LUNA[GPT-6 Luna, OpenAI API<br/>concept, prompt enhancer,<br/>stats & moves]
   NET((IPFS / libp2p network))
   H <--> NET
   SN <--> NET
@@ -71,8 +71,8 @@ flowchart LR
 | Game client | Runs the game in the browser | [gameplay](../gameplay/core-loop.md) | [accepted] |
 | Helia node | Each player is an IPFS node that downloads, serves and publishes content | [ipfs-helia](ipfs-helia.md) | [accepted] |
 | OrbitDB registry | Database of all Peerling species; players append entries signed by the server | [orbitdb-registry](orbitdb-registry.md) | [accepted] |
-| Generation server | LLM, image gen, image-to-3D, pinning, listing signer | [generation-server](generation-server.md) | [accepted] |
-| Prompt enhancer | External LLM (GPT-6 Luna) that writes the image prompts; called only by the server | [image-prompting](../peerlings/image-prompting.md) | [accepted] |
+| Generation server | Image gen, image-to-3D, LLM calls, pinning, listing signer | [generation-server](generation-server.md) | [accepted] |
+| GPT-6 Luna | External LLM for every LLM step: concept, prompt enhancer, stats and moves; called only by the server | [generation-server](generation-server.md), [image-prompting](../peerlings/image-prompting.md) | [accepted] |
 | Realtime networking | Presence, PvP and trades between players over libp2p | [realtime-networking](realtime-networking.md) | [accepted] (mechanism: [accepted]) |
 | Player data | Per-player OrbitDB save log, identity key recovery, transfer log, peer verification | [player-data](player-data.md) | [accepted] |
 | Data and message formats | Exact records, pubsub and stream messages, HTTP API | [data-formats](data-formats.md), [protocols](protocols.md), [creation-api](creation-api.md) | [accepted] |

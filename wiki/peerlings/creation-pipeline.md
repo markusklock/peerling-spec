@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-10-no-self-hosted-llm.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0025-prompt-enhancer-and-three-views.md
@@ -77,11 +78,11 @@ updated: 2026-10-10
 | # | Stage | Runs on | Input | Output | Provenance |
 |---|-------|---------|-------|--------|------------|
 | 1 | Wish | client | player text | wish text | [accepted] |
-| 2 | Concept | server: concept LLM | wish | [concept](../glossary.md#concept) JSON, including type(s) | [accepted] |
+| 2 | Concept | server → OpenAI API: concept LLM (GPT-6 Luna) | wish | [concept](../glossary.md#concept) JSON, including type(s) | [accepted] |
 | 3 | Image | server: [prompt enhancer](../glossary.md#prompt-enhancer) (GPT-6 Luna, OpenAI API), then image generator (Qwen-Image-2.1) | wish + concept → enhanced prompt | [hero image](../glossary.md#hero-image), transparent background | [accepted] |
 | 4 | Review | client | image | accept / regenerate | [accepted] |
 | 5 | 3D model | server: image generator, then image-to-3D (TRELLIS.2 or Pixal3D) | accepted hero image → 2 more [reference views](../glossary.md#reference-views) | static 3D model (GLB) | [accepted] |
-| 6 | Stats & moves | server: concept LLM + validator | concept | base stats, moves | [accepted] |
+| 6 | Stats & moves | server → OpenAI API: concept LLM (GPT-6 Luna), then validator | concept | base stats, moves | [accepted] |
 | 7 | Publish | client adds to IPFS; server verifies, pins, signs the listing; client appends it | everything above | species on IPFS + registry entry | [accepted] |
 | 8 | Starter | client | published species CID | [starter](../glossary.md#starter) instance in the player's save | [accepted] |
 
@@ -179,7 +180,7 @@ the server's job queue keeps GPU time fair between players.
 ### Stage 5 — 3D model
 [accepted] The accepted image and two more views of the creature from other
 angles (three images in all) go to the self-hosted image-to-3D generator,
-TRELLIS.2 or Pixal3D ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
+Pixal3D ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
 [accepted] The output is a **static** 3D asset,
 with no rigging or skeletal animation. Motion in battles comes from simple
 procedural animation ([battle § Presentation](../gameplay/battle.md#presentation)).
@@ -294,9 +295,10 @@ get no instance.
 
 ## Job handling
 
-[accepted] Stages 2, 3, 5 and 6 are GPU jobs that can take from seconds to
-minutes. The pipeline is modelled as a server-side **creation job** with a state
-machine; the client follows its progress.
+[accepted] Stages 2, 3, 5 and 6 take from seconds to minutes: stages 3 and 5
+run the GPU models, and stages 2, 3 and 6 call GPT-6 Luna. The pipeline is
+modelled as a server-side **creation job** with a state machine; the client
+follows its progress.
 
 ```
 WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
@@ -306,6 +308,16 @@ PROFILE_READY → IMAGE_READY (player restarts from image generation)
 any state → FAILED (error, retryable) | EXPIRED (24 h without activity, or abandoned)
 ```
 
+[proposed] **When OpenAI's API is down** (timeouts or server errors after
+the retries), the job keeps its state and the server tries again with
+increasing delays for up to 10 minutes; the client shows *"Waiting for the
+creation service…"*. After that the job goes to `FAILED` (retryable), and
+the player can retry later; nothing is lost. **When GPT-6 Luna refuses a
+wish** (OpenAI's own usage policies still apply, even though the game has no
+moderation of its own, [D-0010](../decisions/D-0010-no-content-moderation.md)),
+the concept stage fails with `wish-refused` and the player is asked to change
+the wish ([creation-api](../tech/creation-api.md#general-rules)).
+
 [accepted] Onboarding overlaps waiting time with other activity (e.g. character
 creation runs while the 3D model generates) — see
 [onboarding](../gameplay/onboarding.md).
@@ -313,7 +325,7 @@ creation runs while the 3D model generates) — see
 ## Requirements
 
 - **CRE-001** [accepted] Every Peerling species MUST be created through this pipeline; there are no hand-authored species. This includes the operator's seed species.
-- **CRE-002** [accepted] The player MUST describe the Peerling in free text; the concept MUST be generated from that description by the self-hosted LLM.
+- **CRE-002** [accepted] The player MUST describe the Peerling in free text; the concept MUST be generated from that description by the concept LLM (GPT-6 Luna, [SRV-001](../tech/generation-server.md#requirements)).
 - **CRE-003** [accepted] The image MUST be generated from the concept by the image generator, and the player MUST be able to accept it or request a regeneration.
 - **CRE-004** [accepted] The 3D model MUST be generated from the accepted image and its reference views by the image-to-3D generator, and MUST be the asset used to show the Peerling in-game.
 - **CRE-005** [accepted] Each species' type(s) MUST come from the predefined type list in [types](types.md).
