@@ -16,7 +16,8 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
-updated: 2026-10-10
+  - raw/conversations/2026-10-12-single-image-to-3d.md
+updated: 2026-10-12
 ---
 
 # Glossary
@@ -368,12 +369,6 @@ levels. See [pvp-battles § Fairness](gameplay/pvp-battles.md#fairness).
 ### Recovery phrase
 A list of words shown to the player once, from which their identity key can
 be restored on another device. See [player-data](tech/player-data.md#account-recovery).
-
-### Reference views
-The two extra images of a new Peerling, from its right side and from behind,
-drawn from the accepted hero image so the image-to-3D generator has less to
-guess. They are not published. See
-[image-prompting § Views](peerlings/image-prompting.md#views-and-the-3d-model).
 
 ### Region
 [accepted] A 64 m × 64 m square of the world (one chunk of 32 × 32 tiles). It is the unit

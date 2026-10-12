@@ -18,6 +18,7 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-12-single-image-to-3d.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -25,7 +26,7 @@ related:
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
   - wiki/gameplay/trading.md
-updated: 2026-10-10
+updated: 2026-10-12
 ---
 
 # Peerling Species and Instances (Data Model)
@@ -76,9 +77,9 @@ JSON for readability (exact format:
   "provenance": {
     "wish": "a small sleepy fox made of moss that carries a lantern",
     "concept": { "…": "…" },
-    "imagePrompt": { "version": "peerlings-enhancer/v1", "hero": "This is an RGBA image …", "side": "…", "back": "…", "originality": { "…": "…" }, "viewsUsed": 3 },
-    "models": { "concept": "<name@version>", "enhancer": "gpt-6-luna@<snapshot>", "image": "<name@version>", "views": "<name@version>", "to3d": "<name@version>" },
-    "seeds": { "image": 1234567, "side": 1234567, "back": 1234567 }
+    "imagePrompt": { "version": "peerlings-enhancer/v1", "hero": "This is an RGBA image …", "originality": { "…": "…" } },
+    "models": { "concept": "<name@version>", "enhancer": "gpt-6-luna@<snapshot>", "image": "<name@version>", "to3d": "<name@version>" },
+    "seeds": { "image": 1234567 }
   }
   },
   "sig": { "/": { "bytes": "<Ed25519 signature>" } }

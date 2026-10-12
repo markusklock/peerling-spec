@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
+  - raw/conversations/2026-10-12-single-image-to-3d.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -28,7 +29,8 @@ related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/image-prompting.md
-updated: 2026-10-10
+  - wiki/decisions/D-0026-single-image-to-3d.md
+updated: 2026-10-12
 ---
 
 # Generation Server
@@ -43,8 +45,8 @@ updated: 2026-10-10
 | Responsibility | Provenance |
 |----------------|------------|
 | Call GPT-6 Luna through OpenAI's API for every LLM step: concepts (including type), the [prompt enhancer](../glossary.md#prompt-enhancer) ([image-prompting](../peerlings/image-prompting.md)), stats and moves. No LLM runs on the server, which leaves its GPU memory to the image and 3D models | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
-| Run the image generator, Qwen-Image-2.1 (hero image and reference views, transparent background) | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
-| Run the image-to-3D generator, Pixal3D | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)); [proposed] TRELLIS.2 as the alternative |
+| Run the image generator, Qwen-Image-2.1 (one hero image per generation, transparent background) | [accepted] ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)) |
+| Run the image-to-3D generator, TRELLIS.2 or Pixal3D, from the accepted hero image alone | [accepted] ([D-0026](../decisions/D-0026-single-image-to-3d.md)); which one by default is [Q-058](../open-questions.md#q-058) |
 | Pin all assets players push to IPFS, so every CID is reachable from at least one node | [accepted] |
 | Sign registry listings (and append them if the player's browser doesn't) | [accepted] ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md)) |
 | Sign species records (attestation) | [accepted] |
@@ -92,6 +94,7 @@ it generated, is canonical in
 ## Open questions
 
 - [Q-057](../open-questions.md#q-057) — Licences of the chosen models.
+- [Q-058](../open-questions.md#q-058) — TRELLIS.2 or Pixal3D by default.
 
 ## See also
 

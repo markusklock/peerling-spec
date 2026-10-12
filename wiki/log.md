@@ -518,3 +518,16 @@ List all entries with `grep "^## \[" wiki/log.md`.
   OpenAI's API; the GPU runs only Qwen-Image-2.1 and Pixal3D. New proposals:
   outage wait-and-retry, `wish-refused`, SRV-007 (no player identity in
   requests).
+
+## [2026-10-12] design | One image to 3D, no reference views
+- Source: raw/conversations/2026-10-12-single-image-to-3d.md
+- Changed: peerlings/image-prompting.md (views removed, new § Image to 3D,
+  IMG-004 and IMG-014 removed, IMG-016 accepted, IMG-017 proposed),
+  creation-pipeline.md (CRE-004 reworded), peerling-species.md;
+  tech/generation-server.md, creation-api.md, data-formats.md, tech-stack.md;
+  world/visual-style.md; decisions/D-0026 (new), D-0025 (partly superseded);
+  glossary.md (Reference views removed), open-questions.md, index.md
+- Notes: After the dry run the designer dropped the side and back views:
+  the accepted hero image alone goes to TRELLIS.2 or Pixal3D. Q-058 (default
+  generator) opened. The 3D format question was answered by STK-009 (GLB,
+  meshopt, KTX2), unchanged.

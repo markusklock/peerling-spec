@@ -6,20 +6,24 @@ tags: [peerlings, generation, ai, image, 3d, originality]
 sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
+  - raw/conversations/2026-10-12-single-image-to-3d.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/generation-server.md
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0010-no-content-moderation.md
-updated: 2026-10-10
+  - wiki/decisions/D-0026-single-image-to-3d.md
+updated: 2026-10-12
 ---
 
 # D-0025: Prompt enhancer, transparent images and three views for 3D
 
 **Status:** accepted (2026-10-10) for the points the designer set; the
 details on [image-prompting](../peerlings/image-prompting.md) are
-[proposed] until the designer reviews them.
+[proposed] until the designer reviews them. Partly superseded by
+[D-0026](D-0026-single-image-to-3d.md) (2026-10-12): one image goes to the 3D generator, TRELLIS.2 or
+Pixal3D, instead of three views.
 
 ## Context
 
@@ -40,12 +44,12 @@ details on [image-prompting](../peerlings/image-prompting.md) are
 - [accepted] (later the same day) **No self-hosted LLM**: the concept and
   the stats and moves also use GPT-6 Luna. It is very cheap, and it leaves
   the server's GPU memory to Pixal3D and Qwen-Image-2.1. **Pixal3D** is the
-  3D model run on the server.
+  3D model run on the server. (Since [D-0026](D-0026-single-image-to-3d.md): TRELLIS.2 or Pixal3D.)
 - [accepted] Images have a **transparent background**.
 - [accepted] The pipeline must stop players from **cloning existing
   Pokémon** by naming or describing them.
-- [accepted] **Three images from different angles** are given to the
-  image-to-3D generator.
+- ~~[accepted] **Three images from different angles** are given to the
+  image-to-3D generator.~~ Replaced by [D-0026](D-0026-single-image-to-3d.md): the hero image alone.
 - [proposed] How: the enhancer's system prompt, fixed prompt templates,
   layered originality rules, image settings and checks, the camera layout of
   the three views and a silhouette check with a single-view fallback, as

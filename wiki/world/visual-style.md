@@ -12,12 +12,13 @@ sources:
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-12-single-image-to-3d.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/exploration.md
   - wiki/gameplay/battle.md
   - wiki/peerlings/creation-pipeline.md
-updated: 2026-10-10
+updated: 2026-10-12
 ---
 
 # Camera and Visual Style
@@ -31,9 +32,9 @@ updated: 2026-10-10
 
 [accepted] Details:
 - **Tilted, not straight down.** The camera looks down at about 55° below the
-  horizon. Peerling models are generated mostly from eye-level images (a
-  three-quarter front view plus side and back views,
-  [image-prompting § Views](../peerlings/image-prompting.md#views-and-the-3d-model)),
+  horizon. Peerling models are generated from an eye-level image (a
+  three-quarter front view,
+  [image-prompting § Image to 3D](../peerlings/image-prompting.md#image-to-3d)),
   so a straight-down view would mostly show the tops of their heads.
 - **Fixed orientation.** North is always up and the camera doesn't rotate,
   like classic top-down creature games. This keeps controls simple.

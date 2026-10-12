@@ -15,13 +15,14 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
+  - raw/conversations/2026-10-12-single-image-to-3d.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-10
+updated: 2026-10-12
 ---
 
 # Data Formats
@@ -153,7 +154,7 @@ envelope. Meaning: [peerling-species](../peerlings/peerling-species.md).
 | `createdAt` | time | |
 | `sizeClass` | string | `"small"`, `"medium"` or `"large"` ([peerling-species § Size and temperament](../peerlings/peerling-species.md#size-and-temperament)) |
 | `temperament` | string | ≤ 60 characters, from the concept |
-| `provenance` | map | `wish`: string ≤ 300; `concept`: map; `imagePrompt`: map ([proposed] `version`: string, e.g. `"peerlings-enhancer/v1"`; `hero`, `side`, `back`: the full prompts, strings ≤ 3,000 / 1,200 / 1,200; `originality`: the enhancer's `originality` output; `viewsUsed`: 1 or 3, [image-prompting](../peerlings/image-prompting.md#provenance)); `models`: map of `concept`, `enhancer`, `image`, `views`, `to3d` → string `"<name>@<version>"` (`"none"` when the step didn't use a model); `seeds`: map of stage (`image`, `side`, `back`) → uint |
+| `provenance` | map | `wish`: string ≤ 300; `concept`: map; `imagePrompt`: map ([proposed] `version`: string, e.g. `"peerlings-enhancer/v1"`; `hero`: the full image prompt, string ≤ 3,000; `originality`: the enhancer's `originality` output, [image-prompting](../peerlings/image-prompting.md#provenance)); `models`: map of `concept`, `enhancer`, `image`, `to3d` → string `"<name>@<version>"` (`"none"` when the step didn't use a model); `seeds`: map of stage (e.g. `image`) → uint |
 
 **Move:** `slot` (`"quick"` \| `"strong"` \| `"signature"`), `template` (template
 ID, [moves](../peerlings/moves.md#template-table)), `name` (≤ 24), `description`

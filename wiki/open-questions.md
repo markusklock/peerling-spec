@@ -3,7 +3,7 @@ title: Open Questions
 type: reference
 status: draft
 tags: [questions, backlog]
-updated: 2026-10-10
+updated: 2026-10-12
 ---
 
 # Open Questions
@@ -42,6 +42,25 @@ Proposal [proposed]:
   whether a free public game is within them. If not, replace nvdiffrast
   with a rasterizer under an open licence for texture baking.
 - Show "Built with DINOv3" in the game's credits.
+
+### Q-058
+**Which image-to-3D generator runs by default: TRELLIS.2 or Pixal3D?**
+Affects: [image-prompting § Image to 3D](peerlings/image-prompting.md#image-to-3d),
+[generation-server](tech/generation-server.md).
+Context:
+- Both are accepted, in single-image mode
+  ([D-0026](decisions/D-0026-single-image-to-3d.md)).
+- The designer tested TRELLIS.2 with the hero images of three test
+  creatures, with very good results. Pixal3D hasn't been tested with them.
+- Pixal3D was named on 2026-10-10 partly because it is the only one with an
+  official multi-view input, which is no longer used.
+- Both use the same licensed components ([Q-057](#q-057)), and either must
+  fit in the GPU's memory next to Qwen-Image-2.1.
+
+Proposal [proposed]: make TRELLIS.2 the default, since it is the one tested.
+Before launch, run the same test images through Pixal3D in single-image mode
+and switch if its models look better. The other stays available behind the
+same stage interface (SRV-003).
 
 ## Resolved
 

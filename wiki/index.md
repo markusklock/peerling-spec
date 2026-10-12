@@ -44,7 +44,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | Page | Status | Req prefix | Summary |
 |------|--------|-----------|---------|
 | [creation-pipeline](peerlings/creation-pipeline.md) | accepted | CRE | Wish → concept (+type) → image (no limit, cooldown) → 3D → stats & moves → final review and naming → player publishes, server pins |
-| [image-prompting](peerlings/image-prompting.md) | draft | IMG | Prompt enhancer (GPT-6 Luna) system prompt, originality rules against cloning Pokémon, Qwen-Image-2.1 templates (transparent background), image checks, three views for 3D |
+| [image-prompting](peerlings/image-prompting.md) | draft | IMG | Prompt enhancer (GPT-6 Luna) system prompt, originality rules against cloning Pokémon, Qwen-Image-2.1 templates (transparent background), image checks, one image to 3D (TRELLIS.2 or Pixal3D) |
 | [peerling-species](peerlings/peerling-species.md) | accepted | SPC | Species record (DAG-CBOR on IPFS), stats (total 320, 40–130), instance data model, individual traits and shimmers |
 | [types](peerlings/types.md) | accepted | TYP | The 12 types, primary/secondary type, effectiveness chart |
 | [moves](peerlings/moves.md) | accepted | MOV | Three move slots (quick/strong/signature), unlimited use, templates, how Pokémon-like games do it |
@@ -65,7 +65,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [architecture](tech/architecture.md) | accepted | ARC | Components, data flows, trust model |
 | [ipfs-helia](tech/ipfs-helia.md) | accepted | NODE | Browser IPFS node: connectivity, publishing, CID import parameters, caching |
 | [orbitdb-registry](tech/orbitdb-registry.md) | accepted | REG | OrbitDB database of all species, written by players with server signatures (plus the game's other OrbitDB databases) |
-| [generation-server](tech/generation-server.md) | accepted | SRV | Self-hosted image and 3D models (Qwen-Image-2.1, Pixal3D), GPT-6 Luna for LLM steps, pinning, listing and origin signer, job queue, relay |
+| [generation-server](tech/generation-server.md) | accepted | SRV | Self-hosted image and 3D models (Qwen-Image-2.1, TRELLIS.2 or Pixal3D), GPT-6 Luna for LLM steps, pinning, listing and origin signer, job queue, relay |
 | [realtime-networking](tech/realtime-networking.md) | accepted | NET | libp2p pubsub presence, emotes, direct protocols for battles/trades |
 | [player-data](tech/player-data.md) | accepted | SAVE | Save contents, per-player OrbitDB save log, account recovery (phrase, file, phone backup), who holds saves, peer verification by replay, encounter seeds (epoch records, drand), transfer log |
 | [data-formats](tech/data-formats.md) | accepted | FMT | Exact formats: encoding, identifiers, signed envelope, OrbitDB databases, every record |
@@ -104,13 +104,14 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
 | [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
 | [D-0024](decisions/D-0024-review-2-decisions.md) | accepted | Determinism, verification and edge-case rules from the second review |
-| [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed) | GPT-6 Luna for every LLM step (no self-hosted LLM), Qwen-Image-2.1 with transparency, Pixal3D, originality rules, three views for 3D |
+| [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed; partly superseded by D-0026) | GPT-6 Luna for every LLM step (no self-hosted LLM), Qwen-Image-2.1 with transparency, Pixal3D, originality rules, three views for 3D |
+| [D-0026](decisions/D-0026-single-image-to-3d.md) | accepted (details proposed) | One image (the accepted hero image) to TRELLIS.2 or Pixal3D; no reference views |
 
 ## Registered requirement prefixes
 
 API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, IMG, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PERF, POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0026. Next free question ID: Q-058.
+D-0027. Next free question ID: Q-059.
 
 ## Sources
 
@@ -157,3 +158,4 @@ D-0026. Next free question ID: Q-058.
 | [2026-10-06-review-2-decisions](../raw/conversations/2026-10-06-review-2-decisions.md) | 2026-10-06 | 14 design decisions from the second review approved |
 | [2026-10-10-image-prompt-enhancer](../raw/conversations/2026-10-10-image-prompt-enhancer.md) | 2026-10-10 | Prompt enhancer (GPT-6 Luna) → Qwen-Image-2.1 with transparent background → TRELLIS.2/Pixal3D; no Pokémon clones; three views for 3D; research findings |
 | [2026-10-10-no-self-hosted-llm](../raw/conversations/2026-10-10-no-self-hosted-llm.md) | 2026-10-10 | No self-hosted LLM: GPT-6 Luna for concept, enhancer, stats and moves; GPU left to Qwen-Image-2.1 and Pixal3D |
+| [2026-10-12-single-image-to-3d](../raw/conversations/2026-10-12-single-image-to-3d.md) | 2026-10-12 | After the dry run: one image to TRELLIS.2 or Pixal3D, no reference views; 3D format stays GLB |
