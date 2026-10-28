@@ -20,11 +20,12 @@ sources:
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # PvP Battles
@@ -85,8 +86,10 @@ Exact messages: [protocols](../tech/protocols.md).
    exchange a hash of the resulting battle state. A mismatch voids the battle.
 5. **End.** The result is shown to both players. Timeouts follow
    [battle § PvP turn timer](battle.md#pvp-turn-timer) (a random move, two in a
-   row forfeit); a player who disconnects has 60 s to resume, otherwise they
-   forfeit. Every Peerling starts at full HP and the battle changes nothing
+   row forfeit). After a disconnect either side may resume within 60 s;
+   otherwise each side counts the other as having forfeited, and two such
+   claims cancel ([accepted] 2026-10-27,
+   [protocols § PvP battle](../tech/protocols.md#peerlingsbattle100--pvp-battle)). Every Peerling starts at full HP and the battle changes nothing
    afterwards ([battle § Ending a battle](battle.md#ending-a-battle)).
 
 ## Rewards

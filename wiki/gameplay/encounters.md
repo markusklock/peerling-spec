@@ -21,13 +21,14 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/battle.md
   - wiki/tech/resilience.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Wild Encounters
@@ -69,10 +70,12 @@ that page.
 same for the player and every verifier, so "never seen" has an exact meaning.
 For encounter n, a species counts as seen if it appears in a `seen`,
 `starter`, `created`, `catch` or `trade` (incoming) event that comes **before
-the `battle-result` of encounter n** in the save log. When a battle ends the
-client writes, in this order: `battle-result`, then `catch` (if caught), then
-`seen` (if this is a first sighting), so an encounter never counts its own
-species as seen. A verifier starting from a
+the `encounter` event of encounter n** in the save log. [accepted] The client
+writes an encounter's events in this order (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)): when the
+battle starts, `encounter` and then `seen` (if this is a first sighting); when
+it ends, `catch` (if caught) and then `battle-result`
+([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)). So
+an encounter never counts its own species as seen. A verifier starting from a
 [verification checkpoint](../tech/network-performance.md#5-verification-checkpoints)
 takes the seen species up to `upTo` from the checkpoint's server-computed
 snapshot.
@@ -189,7 +192,8 @@ one is almost always ready when an encounter triggers.
 - **ENC-006** [accepted] Each encounter MUST have up to 5 candidate species, and the encounter MUST use a candidate that was successfully fetched via IPFS.
 - **ENC-007** [accepted] Candidates MUST form an ordered list drawn from the encounter seed; the encounter MUST use the earliest candidate already fetched, or else the first to arrive; if none arrives within 10 s, no encounter happens and the encounter number is not consumed.
 - **ENC-008** [accepted] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
-- **ENC-009** [accepted] The novelty weight MUST use the seen species defined in [What counts as seen](#selection), and the client MUST write an encounter's events in the order `battle-result`, `catch`, `seen`.
+- ~~**ENC-009**~~ (removed 2026-10-27, replaced by ENC-010; see D-0027)
+- **ENC-010** [accepted] The novelty weight MUST use the seen species defined in [What counts as seen](#selection), and the client MUST write an encounter's events in the order `encounter`, `seen` when the battle starts and `catch`, `battle-result` when it ends.
 
 ## Open questions
 _None at the moment._

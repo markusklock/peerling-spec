@@ -19,6 +19,7 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -26,7 +27,7 @@ related:
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
   - wiki/gameplay/trading.md
-updated: 2026-10-12
+updated: 2026-10-27
 ---
 
 # Peerling Species and Instances (Data Model)
@@ -174,7 +175,7 @@ registry). Illustrative shape (exact format:
   "obtainedAt": 1791234567000,
   "origin": "wild | starter | created",
   "originalOwner": "<player ID of whoever first obtained it>",
-  "originProof": "<CID of the catch event in the catcher's save log, or the server's origin attestation>",
+  "originProof": "<CID of the catch event in the catcher's save log (absent inside that catch event itself), or the server's origin attestation>",
   "traits": { "hp": 4, "attack": -7, "defense": 10, "speed": 0 },
   "shimmer": false
 }

@@ -9,12 +9,13 @@ sources:
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/battle.md
   - wiki/world/procedural-generation.md
   - wiki/tech/player-data.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Landmark Guardians and Badges
@@ -79,10 +80,12 @@ guard somewhere in the world.
   7 days). A guardian battle belongs to the week of the epoch record it uses
   (W = floor(that record's epoch ÷ 2016)). The team for week W is defined by the
   [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch) of
-  epoch 2016 × W (signed or client-derived, as for encounters).
+  epoch 2016 × W (signed or client-derived, as for encounters; [accepted] the
+  [genesis record](../glossary.md#genesis-record) for a week that began
+  before the game launched).
 - **Species:** the eligible species at that record's `registryHeight`
   ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)) that
-  have the biome's type (primary or secondary), sorted by registry `seq`. Four
+  have the biome's type (primary or secondary), sorted by listing `seq`. Four
   different species are drawn uniformly without replacement with the
   [random number generator](battle.md#random-number-generator), seeded with
   SHA-256(`"peerlings/guardian/v1"` ‖ the record's randomness ‖ the
@@ -130,8 +133,10 @@ guard somewhere in the world.
 ## Badges
 
 [accepted]
-- Every guardian battle, won, lost or fled, is logged as a `battle-result`
-  with the biome index in `guardian` (it uses up an encounter number); the
+- Every guardian battle, won, lost or fled, is logged like a wild encounter
+  ([accepted] 2026-10-27): an `encounter` event with the biome index in
+  `guardian` when it starts (it uses up an encounter number), and a
+  `battle-result` when it ends; the
   first win per biome also writes a `badge` event with the evidence needed to
   replay it ([data-formats § Save-log events](../tech/data-formats.md#save-log-events)).
 - A badge counts only if the replay verifies, like a catch

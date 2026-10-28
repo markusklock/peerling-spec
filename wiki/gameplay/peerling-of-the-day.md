@@ -8,12 +8,13 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/encounters.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/world-feed.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Peerling of the Day
@@ -44,10 +45,12 @@ Peerling yet?") and gives every creator a chance at a moment in the spotlight.
   lasts long enough for everyone to join.
 - The choice uses the [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch)
   of epoch 288 × D (the server-signed one if it exists, otherwise
-  client-derived: [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)): one species drawn uniformly from
+  client-derived: [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds);
+  [accepted] the [genesis record](../glossary.md#genesis-record) for a day that
+  began before the game launched): one species drawn uniformly from
   the eligible species at its `registryHeight`
   ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)),
-  sorted by registry `seq`, with the
+  sorted by listing `seq`, with the
   [random number generator](battle.md#random-number-generator) seeded with
   SHA-256(`"peerlings/spotlight/v1"` ‖ the record's randomness).
 - Every client works it out on its own, so all players agree without any
@@ -65,7 +68,9 @@ multipliers don't apply. Encounters use the day of the epoch record they use.
 stops (it is no longer eligible at the encounter's registry height,
 [ENC-004](encounters.md#requirements)), and the pedestal stays empty until the
 next day. A catch's evidence includes the day's record
-([data-formats § Catch evidence](../tech/data-formats.md#catch-evidence)).
+([data-formats § Catch evidence](../tech/data-formats.md#catch-evidence)), and
+[accepted] it is verified with that record even if a different (signed)
+record for the day turns up later (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)).
 
 ## In the world
 

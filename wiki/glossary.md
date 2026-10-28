@@ -17,7 +17,8 @@ sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
-updated: 2026-10-12
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
+updated: 2026-10-27
 ---
 
 # Glossary
@@ -121,7 +122,7 @@ tombstone entry; clients stop showing it. Not moderation. See [orbitdb-registry
 § Design](tech/orbitdb-registry.md#design).
 
 ### Double trade
-Two different transfers of the same Peerling with the same `prev`, both signed by its owner: proof of cheating. The lower one wins and the owner is flagged. See
+Two different transfers of the same Peerling with the same `prev`, both signed by its owner: proof of cheating. The lower one wins and the owner is flagged; the trade holding the losing transfer is void as a whole. See
 [player-data § Transfer log and trades](tech/player-data.md#transfer-log-and-trades).
 
 ### drand
@@ -148,7 +149,7 @@ The biome-specific tall grass (or similar) where wild encounters happen. See
 [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage).
 
 ### Encounter number
-A player's gap-free counter of wild (and guardian) encounters, 0, 1, 2, …, used in the encounter seed. See
+A player's gap-free counter of wild (and guardian) encounters, 0, 1, 2, …, used in the encounter seed. Each is used up by the `encounter` event written when the battle starts. See
 [player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
 
 ### Encounter seed
@@ -209,6 +210,11 @@ pins all game content on IPFS. See
 The version of the world generator. All clients switch at an epoch announced in
 the epoch records. See [procedural-generation § Generator
 updates](world/procedural-generation.md#generator-updates).
+
+### Genesis record
+The first epoch record the operator published; the game app ships its CID.
+Days and weeks that began before it use it as their day or week record. See
+[player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
 
 ### Guardian
 The keeper of a biome's guardian site, whose team of 4 of that biome's Peerlings changes weekly; beating it earns the biome's badge. See

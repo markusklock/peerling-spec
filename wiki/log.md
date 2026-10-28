@@ -531,3 +531,57 @@ List all entries with `grep "^## \[" wiki/log.md`.
   the accepted hero image alone goes to TRELLIS.2 or Pixal3D. Q-058 (default
   generator) opened. The 3D format question was answered by STK-009 (GLB,
   meshopt, KTX2), unchanged.
+
+## [2026-10-19] lint | Full specification implementation-readiness review
+- Source: review requested by the designer in chat; findings reported there.
+- Changed: wiki/log.md.
+- Notes: Reviewed all 72 wiki pages, decisions and relevant prior-review sources.
+  Structural checks found no broken local links or heading targets, unindexed
+  or orphan pages, duplicate requirement IDs, or unregistered requirement
+  prefixes (325 declared requirement IDs, including removed ones).
+  Reported contradictions and missing contracts for catch-record CIDs, save
+  replay and recovery, encounter verification, epoch replacement, trade
+  conflicts, PvP timers/resume/proofs, spectating, gameplay edge cases,
+  creation job recovery, image proposals, storage and networking. Confirmed
+  that a 200-turn spectator payload can exceed 16 KiB and that the example
+  species totals 250 base-stat points rather than 320. Findings are review
+  observations, not accepted design changes; question and decision IDs were
+  not allocated and game requirements were not changed.
+
+## [2026-10-27] refactor | Add specification review tracker
+- Source: raw/conversations/2026-10-27-specification-review-tracker.md.
+- Changed: wiki/specification-review.md (new), wiki/index.md, wiki/log.md.
+- Notes: Preserved all 47 review findings as REVIEW-001 through REVIEW-047,
+  grouped into 24 High, 20 Medium and 3 Low severity findings, all Open.
+  Each item includes references, needed clarification and a resolution field;
+  later statuses are Fixed or Will-Not-Fix. Findings and severity assessments
+  remain review proposals, with no changes to game rules or Q-NNN allocations.
+
+## [2026-10-27] lint | Verify specification review findings and severities
+- Source: raw/conversations/2026-10-27-specification-review-verification.md.
+- Changed: wiki/specification-review.md, wiki/index.md, wiki/log.md.
+- Notes: Re-checked all 47 findings against the current pages; all confirmed in
+  full or in part. Lowered 13 severities (8 High→Medium, 5 Medium→Low), giving
+  16 High, 23 Medium and 8 Low. Corrected finding wording that misstated the
+  spec and added a verification note to each finding. No game rules changed.
+
+## [2026-10-27] design | Resolve the high-severity review findings (D-0027)
+- Source: raw/conversations/2026-10-27-high-severity-resolutions.md.
+- Changed: wiki/decisions/D-0027-high-severity-review-fixes.md (new),
+  wiki/tech/player-data.md, wiki/tech/data-formats.md, wiki/tech/protocols.md,
+  wiki/tech/creation-api.md, wiki/tech/network-performance.md,
+  wiki/gameplay/battle.md, wiki/gameplay/encounters.md,
+  wiki/gameplay/guardians.md, wiki/gameplay/peerling-of-the-day.md,
+  wiki/gameplay/trading.md, wiki/gameplay/catching.md,
+  wiki/gameplay/creation-shrine.md, wiki/gameplay/onboarding.md,
+  wiki/gameplay/pvp-battles.md, wiki/peerlings/peerling-species.md,
+  wiki/glossary.md, wiki/decisions/D-0013-peer-verified-registry-catches-trades.md,
+  wiki/decisions/D-0024-review-2-decisions.md, wiki/specification-review.md,
+  wiki/index.md, wiki/log.md.
+- Notes: All 16 High findings marked Fixed. Designer chose a new account after
+  a lost save, server-expired trades and fled-on-interrupt; approved the rest.
+  New events `encounter`, `trade-void`; new record `peerlings/trade-expired`;
+  new endpoints `GET /v1/starter`, `POST /v1/trades/{trade}/expire`. Removed
+  SAVE-026 and ENC-009 (replaced by SAVE-028, ENC-010); added SAVE-029–038,
+  BTL-015, PRT-004, TRD-006, CAT-010, API-007–009. New glossary term: genesis
+  record. REVIEW-036 and 045 partly addressed.

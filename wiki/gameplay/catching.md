@@ -16,10 +16,11 @@ sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Catching
@@ -87,6 +88,15 @@ A fainted wild Peerling can't be caught; it gives XP
 - [accepted] Outside battle, the team always holds at least one Peerling that
   hasn't fainted: a swap or trade that would leave only fainted Peerlings in
   the team is blocked (2026-10-06).
+- [accepted] **Shrine offerings and void trades** (2026-10-27,
+  [D-0027](../decisions/D-0027-high-severity-review-fixes.md)): an offering at the [Creation Shrine](creation-shrine.md) is
+  blocked under the same rule as a trade. If a void trade
+  ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades))
+  takes away team members, they leave the team, and if it then holds no
+  non-fainted Peerling, the client moves non-fainted Peerlings from the
+  collection into it (oldest `obtainedAt` first) until it holds one. A void
+  trade always returns what the player offered, so the player never ends up
+  with no Peerlings.
 - The team is stored in the [save](../tech/player-data.md#save-contents).
 
 [accepted] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)
@@ -115,6 +125,7 @@ be traded or used in PvP. See
 - **CAT-007** [accepted] The player MUST be able to swap Peerlings between team and collection at any time outside battle.
 - **CAT-008** [accepted] The team MUST always hold at least 1 Peerling; the client MUST NOT allow the last team member to be moved to the collection or offered in a trade.
 - **CAT-009** [accepted] Outside battle, the client MUST NOT allow a swap or trade that leaves no non-fainted Peerling in the team.
+- **CAT-010** [accepted] The client MUST NOT allow a Creation Shrine offering that leaves no non-fainted Peerling in the team, and after a void trade it MUST refill the team from the collection as defined in [Team and collection](#team-and-collection).
 
 ## Open questions
 

@@ -16,13 +16,14 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-12
+updated: 2026-10-27
 ---
 
 # Data Formats
@@ -124,12 +125,14 @@ form.
 | Database | Name | Type | Who can write | Key |
 |----------|------|------|---------------|-----|
 | Registry | `peerlings-registry-v1` | documents | Anyone; entries must carry a valid operator listing signature (custom access controller) | `_id` = species CID |
-| Transfer log | `peerlings-transfers-v1` | events | Anyone; every transfer must be signed by its `from` player (custom access controller) | — |
+| Transfer log | `peerlings-transfers-v1` | events | Anyone; every transfer must be signed by its `from` player, and a [trade-expired record](#trade-expired-record--peerlingstrade-expired) by the operator (custom access controller) | — |
 | Epoch log | `peerlings-epochs-v1` | events | Operator only | — |
 | ~~Species stats~~ | — | — | — | Replaced 2026-10-06 by the [species stats snapshot](#snapshots-and-indexes) ([D-0023](../decisions/D-0023-network-performance.md)) |
 | Save log (one per player) | `peerlings-save-v1` | events | That player only | — |
 
-The game app ships the addresses of the registry, transfer log and epoch log. A save log's address is
+The game app ships the addresses of the registry, transfer log and epoch log, and
+[accepted] the CID of the **genesis record**: the first epoch record the operator
+published ([player-data § Encounter seeds](player-data.md#encounter-seeds)). A save log's address is
 derived from its manifest (name `peerlings-save-v1`, type `events`, writer =
 the player ID), so anyone can compute it from a player ID ([SAVE-018](player-data.md#requirements)).
 
@@ -188,6 +191,10 @@ Registry rules: the access controller accepts only `PUT` operations (never
 a valid operator signature. Because anyone may append, an old envelope could be
 put again later; so readers never rely on OrbitDB's "last write wins" view.
 For each species they use the valid envelope with the **highest `seq`**.
+[accepted] That gives the species' current state only. Eligibility at an older
+registry height uses the original listing's `seq` (`listedSeq` in a
+tombstone) and `removedAtSeq` ([player-data § Encounter seeds](player-data.md#encounter-seeds),
+[D-0027](../decisions/D-0027-high-severity-review-fixes.md)).
 
 ### Epoch record — `peerlings/epoch`
 
@@ -232,7 +239,7 @@ Part of save records; not signed on its own.
 | `shimmer` | bool | |
 | `origin` | string | `"wild"`, `"starter"` or `"created"` (how it came into existence; trades don't change it) |
 | `originalOwner` | player ID | |
-| `originProof` | CID | the `catch` save-log entry, or the origin attestation |
+| `originProof` | CID | the `catch` save-log entry, or the origin attestation. [accepted] Absent in the instance inside a `catch` event, which can't contain its own CID (below) |
 | `obtainedAt` | time | |
 
 ### Origin attestation — `peerlings/origin`
@@ -265,7 +272,7 @@ Part of a `catch` save-log event. Meaning:
 | `team` | [map] | battle-start state of each team member: `instanceId`, `species`, `level`, `hp`, `traits` |
 | `actions` | [Action] | every action, in order |
 | `baseRecord` | epoch record, optional | only when `epochRecord` is client-derived: the server-signed record its copied fields come from, so verifiers needn't search the epoch log ([network-performance § Epoch records by number](network-performance.md#4-epoch-records-by-number)) |
-| `dayRecord`, `dayBaseRecord` | epoch record, optional | the record of epoch 288 × D for the encounter's day D, which decides the [Peerling of the Day](../gameplay/peerling-of-the-day.md) and so the selection weights; `dayBaseRecord` only if `dayRecord` is client-derived. Omitted when `epochRecord` is itself that record |
+| `dayRecord`, `dayBaseRecord` | epoch record, optional | the record of epoch 288 × D for the encounter's day D (the genesis record for a day that began before it), which decides the [Peerling of the Day](../gameplay/peerling-of-the-day.md) and so the selection weights; `dayBaseRecord` only if `dayRecord` is client-derived. Omitted when `epochRecord` is itself that record |
 
 **Action** (also used in PvP): `{ "kind": "move", "slot": "quick" | "strong" |
 "signature" }`, `{ "kind": "switch", "to": <instance ID> }`, `{ "kind":
@@ -276,8 +283,8 @@ Part of a `catch` save-log event. Meaning:
 **Guardian evidence** ([accepted], part of a `badge` event; meaning:
 [guardians](../gameplay/guardians.md)): the catch evidence fields `encounter`,
 `epochRecord` (used for the battle seed), `team` and `actions`, plus
-`weekRecord` (the epoch record of the week's first epoch, which defines the
-guardian team), `tile` (the statue tile), and optional `baseRecord` and
+`weekRecord` (the epoch record of the week's first epoch, or the genesis
+record for a week that began before it, which defines the guardian team), `tile` (the statue tile), and optional `baseRecord` and
 `weekBaseRecord` (the server-signed records that a client-derived
 `epochRecord` or `weekRecord` copied its fields from, as for catch evidence).
 There is no `candidate`.
@@ -296,10 +303,12 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `created` | `instance`, `attestation` (origin attestation) |
 | `release` | `instances` ([instance ID]), `transferEntry` (CID) |
 | `catch` | `instance`, `evidence` (catch evidence) |
-| `battle-result` | `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `candidate` (uint 0–4: which candidate was met; absent for a guardian battle), `species` (CID of the species met; absent for a guardian battle), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle; [accepted]) |
+| `encounter` | [accepted] (2026-10-27) `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `tile` (where the encounter started; the statue tile for a guardian battle), `candidate` (uint 0–4: which candidate was met; absent for a guardian battle), `species` (CID of the species met; absent for a guardian battle), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle). Written when the battle starts; it uses up the encounter number |
+| `battle-result` | `encounter` (uint), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]). Written when the battle ends, after its `catch` if there is one; an interrupted battle is written as `"fled"` ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | `team` | `instances` ([instance ID], ≤ 4) |
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
+| `trade-void` | [accepted] (2026-10-27) `transferEntry` (CID of the void trade entry), `restored` ([instance]: the player's own Peerlings that come back, with their data from before the trade), `removed` ([instance ID]: the Peerlings received in it). Written when a trade the player took part in turns out void ([Which transfers count](#transfer-and-transfer-log-entry--peerlingstransfer)) |
 | `seen` | `species` (CID), `biome` (uint: [biome index](../world/procedural-generation.md#biomes) where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer |
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
@@ -308,6 +317,11 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles and draws are not recorded. [accepted] Conflicting results for the same battle ID: a valid `win` always beats a `forfeit` claim, and two `forfeit` claims naming different winners are both void |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
 | `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log; its `player` must be the log's owner) |
+
+[accepted] **The instance in a `catch` event** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)) has no
+`originProof`: its origin proof is the CID of that `catch` entry, which can't
+be part of the entry itself. Wherever the instance is copied (save snapshot,
+trade offer, `trade` event, backup), `originProof` is set to that CID.
 
 ### Save snapshot — `peerlings/save`
 
@@ -363,6 +377,41 @@ it); copies with the same envelope CID count once. A **double trade** is two
 transfer (their `prev` entries hold the same envelope). The one whose
 **envelope CID** is lower wins ([SAVE-015](player-data.md#requirements)), and
 its signer is flagged.
+
+[accepted] **Which transfers count** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)). Readers apply
+these rules in order, so every node reaches the same result from the same log:
+1. **Expired trades.** A trade entry is void if the transfer log holds a valid
+   [trade-expired record](#trade-expired-record--peerlingstrade-expired) for
+   its `trade` ID.
+2. **Ownership.** A transfer is invalid if its `from` didn't own the Peerling
+   at `prev`: for `"origin"`, `from` isn't the instance's original owner;
+   otherwise the `prev` entry is void, holds no transfer of this instance, or
+   its transfer of this instance doesn't name `from` as `to`.
+3. **Conflicts.** Double trades are found among the transfers that are not in
+   an entry void by rule 1 and not invalid by rule 2, as above. The transfer
+   with the higher envelope CID loses.
+4. **Whole trades.** A trade entry is void if any of its transfers is invalid
+   or loses a conflict. Every transfer in a void entry is void, so each
+   Peerling in it stays with the player who offered it. Entries whose
+   transfers name a void entry as `prev` then fail rule 2 in turn.
+5. **Releases.** The transfers in a release entry count one by one (rules 2
+   and 3 only).
+
+`prev` always names an older entry, so these rules never loop.
+
+### Trade-expired record — `peerlings/trade-expired`
+
+[accepted] (2026-10-27) Signed envelope; signer: **operator**. Stored in the
+transfer log as `{ "v": 1, "type": "peerlings/trade-expired", "record":
+<envelope> }`. Meaning: [player-data § Transfer log and trades](player-data.md#transfer-log-and-trades).
+
+| Body field | Type | Rules |
+|------------|------|-------|
+| `trade` | bytes(16) | the trade ID |
+| `t` | time | |
+
+The server writes one only if its copy of the transfer log holds no entry
+with that trade ID ([creation-api § Trades](creation-api.md#trades)).
 
 ### Species stats — `peerlings/species-stats`
 
@@ -451,9 +500,19 @@ A **CAR v1** file (`.car`) whose single root is a DAG-CBOR block:
 | `privateKey` | bytes: the libp2p protobuf encoding of the Ed25519 private key |
 | `snapshot` | CID of the latest save snapshot |
 | `saveLog` | string: OrbitDB address |
+| `saveHeads` | [CID]: [accepted] the save log's heads when the backup was made |
 | `created` | time |
 
-The CAR also contains every block of the snapshot document. The file holds the
+The CAR also contains every block of the snapshot document, and [accepted]
+(2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)):
+- every entry of the save log up to `saveHeads` (the whole log);
+- for every Peerling in the snapshot: the blocks of its origin proof (its
+  `catch` entry with the evidence, or the save-log entry holding its origin
+  attestation; for a Peerling caught by another player, that player's `catch`
+  entry) and every transfer-log entry in its ownership chain.
+
+What this guarantees after every network copy is gone is defined in
+[player-data § Keeping saves available](player-data.md#keeping-saves-available). The file holds the
 private key in the clear: the game must say so when exporting. File name:
 `peerlings-<display name>-<YYYY-MM-DD>.car`.
 

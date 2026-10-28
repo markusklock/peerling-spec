@@ -13,6 +13,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [overview](overview.md) | accepted | Vision, the two equal goals, design pillars, v1 scope |
 | [glossary](glossary.md) | accepted | Canonical definitions of all terms |
 | [open-questions](open-questions.md) | draft | All unresolved questions (Q-NNN) |
+| [specification-review](specification-review.md) | draft | 47 review findings with severity, status and resolution tracking |
 | [log](log.md) | — | Append-only change log |
 
 ## Gameplay
@@ -92,7 +93,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0010](decisions/D-0010-no-content-moderation.md) | accepted (partly superseded by D-0025) | No content moderation |
 | [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted | Modern web platform first |
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
-| [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted | Peer-verified registry, catches and trades |
+| [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted (partly superseded by D-0027) | Peer-verified registry, catches and trades |
 | [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
 | [D-0015](decisions/D-0015-pvp-level-modes.md) | accepted | PvP level modes: Fair or Real levels |
 | [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, phone backup and a world feed |
@@ -103,15 +104,16 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted | PvP win counter on the player profile |
 | [D-0022](decisions/D-0022-v1-fun-features.md) | accepted | Following Peerling, guardians, Peerling of the Day, first finds |
 | [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
-| [D-0024](decisions/D-0024-review-2-decisions.md) | accepted | Determinism, verification and edge-case rules from the second review |
+| [D-0024](decisions/D-0024-review-2-decisions.md) | accepted (partly superseded by D-0027) | Determinism, verification and edge-case rules from the second review |
 | [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed; partly superseded by D-0026) | GPT-6 Luna for every LLM step (no self-hosted LLM), Qwen-Image-2.1 with transparency, Pixal3D, originality rules, three views for 3D |
 | [D-0026](decisions/D-0026-single-image-to-3d.md) | accepted (details proposed) | One image (the accepted hero image) to TRELLIS.2 or Pixal3D; no reference views |
+| [D-0027](decisions/D-0027-high-severity-review-fixes.md) | accepted | Fixes for the 16 high-severity review findings: encounter events, backups, sessions, verification results, whole-trade voids and trade expiry, PvP deadlines and resume, battle edge cases, one starter |
 
 ## Registered requirement prefixes
 
 API, ARC, AUD, BTL, CAT, CFB, CRE, DEX, ENC, EXP, FED, FMT, GRD, IMG, LNK, MOD, MOV, MPL, NET, NODE, ONB, PLR,
 PERF, POD, PRT, PVP, REG, RES, SAVE, SHOW, SHR, SPC, SPT, SRV, STK, TRD, TYP, UI, VIS, WGN. Next free decision ID:
-D-0027. Next free question ID: Q-059.
+D-0028. Next free question ID: Q-059.
 
 ## Sources
 
@@ -159,3 +161,6 @@ D-0027. Next free question ID: Q-059.
 | [2026-10-10-image-prompt-enhancer](../raw/conversations/2026-10-10-image-prompt-enhancer.md) | 2026-10-10 | Prompt enhancer (GPT-6 Luna) → Qwen-Image-2.1 with transparent background → TRELLIS.2/Pixal3D; no Pokémon clones; three views for 3D; research findings |
 | [2026-10-10-no-self-hosted-llm](../raw/conversations/2026-10-10-no-self-hosted-llm.md) | 2026-10-10 | No self-hosted LLM: GPT-6 Luna for concept, enhancer, stats and moves; GPU left to Qwen-Image-2.1 and Pixal3D |
 | [2026-10-12-single-image-to-3d](../raw/conversations/2026-10-12-single-image-to-3d.md) | 2026-10-12 | After the dry run: one image to TRELLIS.2 or Pixal3D, no reference views; 3D format stays GLB |
+| [2026-10-27-specification-review-tracker](../raw/conversations/2026-10-27-specification-review-tracker.md) | 2026-10-27 | Track all 47 review findings as Open, with High, Medium or Low severity and later Fixed or Will-Not-Fix statuses |
+| [2026-10-27-specification-review-verification](../raw/conversations/2026-10-27-specification-review-verification.md) | 2026-10-27 | Verify all 47 review findings; lower 13 severities (16 High, 23 Medium, 8 Low) and correct finding wording |
+| [2026-10-27-high-severity-resolutions](../raw/conversations/2026-10-27-high-severity-resolutions.md) | 2026-10-27 | Resolve the 16 high-severity findings (D-0027): new account after a lost save, server-expired trades, interrupted battles count as fled, the rest approved as proposed |

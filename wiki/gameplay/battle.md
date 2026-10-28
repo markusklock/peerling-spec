@@ -23,13 +23,14 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/peerlings/types.md
   - wiki/peerlings/moves.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/catching.md
   - wiki/gameplay/pvp-battles.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Battle System
@@ -84,7 +85,9 @@ The first team member that hasn't fainted is sent out first (the *lead*).
    3. Catch attempt. On success the battle ends before the wild Peerling acts.
    4. Moves: higher move priority first (quick moves have priority +1, all
       others 0); within the same priority, higher effective Speed first; ties
-      broken by the RNG.
+      broken by the RNG. [accepted] The order is fixed before the first move
+      runs; a Speed change during the turn counts from the next turn
+      (2026-10-27).
 3. **Faints.** A Peerling at 0 HP faints. Its side picks a replacement before
    the next turn; this doesn't use a turn.
 
@@ -95,7 +98,8 @@ How each [move template](../peerlings/moves.md#template-table) behaves in battle
   miss does nothing.
 - **Damage:** the [damage model](#damage-model), once per hit.
 - **Two hits** (`quick-flurry`): one accuracy roll, then two hits, each with its
-  own damage roll.
+  own damage roll. [accepted] If the first hit makes the target faint, the
+  second hit doesn't happen and draws nothing (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)).
 - **Recoil** (`strong-recoil`): after hitting, the user loses 33% of the damage
   dealt (at least 1 HP). The user can faint from recoil. [accepted] Recoil
   isn't applied when the hit ended the battle (it knocked out the opponent's
@@ -106,7 +110,10 @@ How each [move template](../peerlings/moves.md#template-table) behaves in battle
 - **Charge** (`strong-charge`): on the first turn the user gathers power and
   does nothing else. On its next turn it strikes automatically; the player
   doesn't pick an action for that turn. If the user is switched out by fainting
-  first, the charge is lost.
+  first, the charge is lost. [accepted] The setup turn draws no rolls. The
+  strike hits whichever opposing Peerling is out at that moment (the
+  replacement, if the original target fainted), and its accuracy roll is drawn
+  on the strike turn (2026-10-27).
 - **Drain** (`sig-drain`): the user heals 50% of the damage dealt (as defined
   under Recoil), up to its max HP.
 - **Stat effects** (`sig-weaken`, `sig-empower`): after a hit, a 30% chance to
@@ -155,7 +162,7 @@ opponent.
 | Player flees | Battle ends; no XP | — |
 | All the player's Peerlings faint | Loss; return to the last rest point, fully healed ([EXP-003](exploration.md#requirements)) | Loss; the player stays where they are |
 | Forfeit / timeout | — | Loss ([pvp-battles](pvp-battles.md)) |
-| 200 turns have been played [accepted] | — | Draw: no winner, nothing recorded; stops endless switching |
+| 200 turns have been played [accepted] | — | Draw: no winner, nothing recorded; stops endless switching. [accepted] A knockout of a side's last Peerling during turn 200 is still a win; the draw applies only if the battle is undecided once turn 200 has resolved (2026-10-27) |
 
 After a wild battle, HP carries over; stat stages reset.
 
@@ -175,8 +182,13 @@ replacement after a faint. Exact messages:
   fainted.
 - Two timeouts in a row by the same player: that player forfeits.
 - The second turn of a charge move needs no decision, so it has no timer.
-- Disconnect: the player who dropped has 60 s to reconnect and resume the
-  battle; otherwise they forfeit.
+- [accepted] Each decision also has a reveal deadline of 10 s once both
+  commitments are in; a missing reveal counts as a timeout (2026-10-27).
+- Disconnect: [accepted] both sides have 60 s to reconnect and resume the
+  battle (either may reconnect, since nobody can tell who dropped); otherwise
+  each side counts the other as having forfeited, and two competing forfeit
+  claims cancel ([pvp-battles § Win record](pvp-battles.md#win-record);
+  updated 2026-10-27).
 
 ### Battle screen
 
@@ -299,7 +311,8 @@ a rounding step, this section wins (approved 2026-10-06).
 1. a = 2 × L div 5 + 2
 2. b = a × Power × Attack div Defense
 3. c = b div 50 + 2
-4. Same-type bonus: c = c × 3 div 2.
+4. Same-type bonus, only if the move's type is one of the user's types:
+   c = c × 3 div 2.
 5. Effectiveness, once per defender type, primary first: ×2 → c = c × 2;
    ×½ → c = c div 2.
 6. Random roll: r = 85 + rand_int(16) (85…100); c = c × r div 100.
@@ -334,6 +347,8 @@ a rounding step, this section wins (approved 2026-10-06).
 
 Rolls are only drawn when needed:
 - no accuracy roll for a move that never misses, no damage roll after a miss;
+- [accepted] no second `quick-flurry` damage roll after the first hit made the
+  target faint, and no rolls on a charge move's setup turn (2026-10-27);
 - no move-choice roll for a wild Peerling whose charge strike is automatic
   this turn;
 - a Peerling that faints before its move doesn't act and draws nothing;
@@ -344,7 +359,8 @@ Rolls are only drawn when needed:
 
 **Encounter draws** (in the order of
 [encounters § Wild Peerling generation](encounters.md#wild-peerling-generation))
-- Candidates: eligible species sorted by registry `seq`; each of the
+- Candidates: eligible species sorted by listing `seq`
+  ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)); each of the
   min(5, number of eligible species) draws takes r = rand_int(total weight) and picks the first species whose running
   weight total exceeds r, then removes it.
 - Level offset: rand_int(5) − 2.
@@ -416,6 +432,7 @@ so a large Peerling looms over a small one; size has no effect on the rules.
 - **BTL-012** [accepted] Battle, catch and encounter maths MUST use only the integer formulas and the draw order in [Deterministic arithmetic](#deterministic-arithmetic).
 - **BTL-013** [accepted] Every Peerling MUST start a PvP battle at full HP, and a PvP battle MUST NOT change any Peerling's HP afterwards or move the player to a rest point.
 - **BTL-014** [accepted] Recoil MUST NOT be applied when the hit ended the battle, and a PvP battle MUST end as a draw after 200 turns.
+- **BTL-015** [accepted] `quick-flurry` MUST skip its second hit and roll when the first hit made the target faint; a charge strike MUST hit the opposing Peerling that is out when it strikes, with its accuracy roll on that turn; move order MUST be fixed before the first move of a turn; and a knockout during turn 200 MUST count as a win rather than a draw.
 
 ## Open questions
 

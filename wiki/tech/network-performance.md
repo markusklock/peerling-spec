@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -16,7 +17,7 @@ related:
   - wiki/tech/resilience.md
   - wiki/tech/realtime-networking.md
   - wiki/gameplay/encounters.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Network Performance, Scale and Timeouts
@@ -179,7 +180,10 @@ formats: [data-formats § Snapshots and indexes](data-formats.md#snapshots-and-i
 - The OrbitDB registry stays the source of truth and still replicates fully
   in the background, so names and thumbnails are available and the registry
   survives without the server. Clients check that the index matches the
-  registry entries they have.
+  registry entries they have; [accepted] for which species are eligible the
+  index is authoritative (2026-10-27,
+  [player-data § Encounter seeds](player-data.md#encounter-seeds)), and a
+  client that finds a mismatch keeps using the index.
 - This replaced the earlier rule that a client waits for a full registry sync
   before starting encounters ([player-data § Encounter seeds](player-data.md#encounter-seeds)):
   the index is enough.

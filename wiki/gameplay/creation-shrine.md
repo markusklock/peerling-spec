@@ -11,12 +11,13 @@ sources:
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/player-data.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # Creation Shrine
@@ -46,6 +47,8 @@ the possibility to create a new one
 
 [accepted] Flow:
 1. The player walks to the shrine and chooses 3 Peerlings to offer.
+   [accepted] Team members may be offered, as long as a non-fainted Peerling
+   stays in the team ([CAT-010](catching.md#requirements)).
 2. The client signs a transfer to `released` for each of the 3 Peerlings and
    sends them to the server. The server verifies each Peerling (origin,
    ownership chain, not already released) and checks the rules above.
