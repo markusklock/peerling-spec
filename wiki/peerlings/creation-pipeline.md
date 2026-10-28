@@ -21,6 +21,7 @@ sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0025-prompt-enhancer-and-three-views.md
@@ -35,7 +36,7 @@ related:
   - wiki/gameplay/creation-shrine.md
   - wiki/decisions/D-0007-players-publish-assets.md
   - wiki/decisions/D-0026-single-image-to-3d.md
-updated: 2026-10-12
+updated: 2026-10-28
 ---
 
 # Peerling Creation Pipeline
@@ -73,7 +74,9 @@ updated: 2026-10-12
   [Creation Shrine](../gameplay/creation-shrine.md).
 - [accepted] The operator, who creates a handful of
   [seed species](../glossary.md#seed-species) at launch through this same
-  pipeline ([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)).
+  pipeline ([D-0002](../decisions/D-0002-all-peerlings-user-generated.md)),
+  with jobs of kind `seed` from an operator account
+  ([creation-api § Creating a Peerling](../tech/creation-api.md#creating-a-peerling)).
 
 ## Stages
 
@@ -130,16 +133,33 @@ fields [accepted]:
 | `summary` | One sentence describing the creature |
 | `lore` | 2–4 sentences of flavor text shown in-game |
 | `types` | [accepted] Type(s) from the type list, chosen to fit the description (count: [TYP-002](types.md#requirements)) |
-| `appearance` | Structured visual description: body plan, colors, materials/textures, distinctive features, pose. Reflects the chosen type(s) |
+| `appearance` | Visual description as one paragraph of plain text: body plan, colors, materials/textures, distinctive features, pose. Reflects the chosen type(s) |
 | `sizeClass` | [accepted] `small`, `medium` or `large`; sets how big the model is drawn ([peerling-species § Size and temperament](peerling-species.md#size-and-temperament)) |
 | `temperament` | [accepted] Short personality description, at most 60 characters; drives the idle animation ([peerling-species § Size and temperament](peerling-species.md#size-and-temperament)) |
+
+[accepted] **Exact schema** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). The concept is a
+map with exactly these fields; output with a missing, extra or out-of-range
+field is invalid ([CRE-008](#requirements)):
+
+| Field | Type | Rules |
+|-------|------|-------|
+| `nameSuggestions` | [string] | exactly 3, each a valid name ([Final review](#final-review)) |
+| `summary` | string | 1–200 characters |
+| `lore` | string | 1–600 characters |
+| `types` | [string] | 1–2 different types from the type list |
+| `appearance` | string | 100–1,600 characters |
+| `sizeClass` | string | `"small"`, `"medium"` or `"large"` |
+| `temperament` | string | 1–60 characters |
+
+Lengths count Unicode code points
+([data-formats § Encoding](../tech/data-formats.md#encoding)).
 
 The concept must stay faithful to the wish; the LLM elaborates, it does not
 replace the player's idea. [accepted] The validator checks `types` against the
 type list right away, so the image is never generated for an invalid concept.
 
 [accepted] A concept must not copy an existing Pokémon or other existing
-character. [proposed] The concept LLM follows the same
+character. [accepted] The concept LLM follows the same
 [originality rules](image-prompting.md#originality-rules) as the prompt
 enhancer and gets the same franchise-name hints. Its name suggestions are
 checked against the franchise name list before they are shown.
@@ -230,6 +250,19 @@ signed reach the registry ([D-0013](../decisions/D-0013-peer-verified-registry-c
   are the same name. Look-alike letters from other alphabets (a Cyrillic "а"
   in "Pikachu") are also mapped to their Latin look-alikes (the Unicode
   "confusable skeleton").
+- [accepted] **Exact normalization** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)), in this
+  order:
+  1. NFKC;
+  2. full Unicode case folding;
+  3. the confusable skeleton (Unicode UTS #39);
+  4. accents removed: decompose (NFD) and drop combining marks, but only from
+     letters of the Latin, Greek and Cyrillic scripts, so other scripts keep
+     their marks (Japanese ポ stays ポ, not ホ);
+  5. NFC;
+  6. drop every character of the Unicode categories Z (separators),
+     P (punctuation), S (symbols) and Cc (control characters).
+- [accepted] A name whose normalized form is empty (e.g. only punctuation) is
+  refused (`invalid`).
 - **Live check:** while the player types a name in the final review, the client
   asks the server whether it's free. The LLM's name suggestions are checked
   before they're shown, so they're always available.
@@ -245,7 +278,7 @@ signed reach the registry ([D-0013](../decisions/D-0013-peer-verified-registry-c
   a short suffix from its species CID (its last 4 characters, e.g.
   *"Mossnap·k3x9"*), so the two can be told apart.
 - Seed species created by the operator follow the same rule.
-- [proposed] **Existing characters' names:** a name on the franchise name
+- [accepted] **Existing characters' names:** a name on the franchise name
   list (e.g. "Pikachu", in any official language) is refused with
   `name-reserved` ([image-prompting § Originality rules](image-prompting.md#originality-rules)).
 
@@ -305,13 +338,14 @@ WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
   → (finalize) PUBLISHING → PUBLISHED
 PROFILE_READY → IMAGE_READY (player restarts from image generation)
 any state → FAILED (error, retryable) | EXPIRED (24 h without activity, or abandoned)
+FAILED → (retry) the state it failed from
 ```
 
-[proposed] **When OpenAI's API is down** (timeouts or server errors after
+[accepted] (approved 2026-10-28) **When OpenAI's API is down** (timeouts or server errors after
 the retries), the job keeps its state and the server tries again with
 increasing delays for up to 10 minutes; the client shows *"Waiting for the
 creation service…"*. After that the job goes to `FAILED` (retryable), and
-the player can retry later; nothing is lost. **When GPT-6 Luna refuses a
+the player can retry later ([creation-api § The job object](../tech/creation-api.md#the-job-object)); nothing is lost. **When GPT-6 Luna refuses a
 wish** (OpenAI's own usage policies still apply, even though the game has no
 moderation of its own, [D-0010](../decisions/D-0010-no-content-moderation.md)),
 the concept stage fails with `wish-refused` and the player is asked to change
@@ -348,6 +382,8 @@ creation runs while the 3D model generates) — see
 - **CRE-023** [accepted] The player MUST choose the name of every Peerling they create.
 - **CRE-024** [accepted] The server MUST pin the species record and all its assets before signing the registry listing.
 - **CRE-025** [accepted] Species names MUST be unique in normalized form (NFKC, case-folded, accents and punctuation removed, confusables mapped); the server MUST check and reserve names during the final review and MUST NOT sign a listing with a taken name.
+- **CRE-026** [accepted] Names MUST be normalized in the exact order in [Final review](#final-review), and a name whose normalized form is empty MUST be refused.
+- **CRE-027** [accepted] The concept MUST follow the exact schema in [Stage 2](#stage-2--concept).
 
 ## Open questions
 

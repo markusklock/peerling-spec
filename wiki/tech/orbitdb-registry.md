@@ -16,12 +16,13 @@ sources:
   - raw/conversations/2026-10-05-proposal-review-1.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/encounters.md
   - wiki/decisions/D-0010-no-content-moderation.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Peerling Registry (OrbitDB)
@@ -81,7 +82,26 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
   own, and records it as `removedAtSeq`. [accepted] The server then unpins the
   species' **image, model and thumbnail**, but keeps the small **species
   record** pinned: old catches of the species stay verifiable by replay, which
-  needs its stats and moves (2026-10-06).
+  needs its stats and moves (2026-10-06). [accepted] Unpinning the assets is
+  required, not optional (2026-10-28).
+- [accepted] **What delisting changes for players** (2026-10-28, designer's
+  choice, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). The aim is that nobody keeps or serves the species'
+  image or model any more, while nothing a player owns breaks:
+  - **Assets:** every client deletes the species' image, model and thumbnail
+    from its storage and stops providing them; the species record stays.
+  - **Owned Peerlings** of the species stay owned, in the team or collection.
+    They are shown as a silhouette named *"Delisted Peerling"* (the player's
+    nickname, if any, stays), and they still battle: wild, guardian and PvP
+    battles take stats and moves from the kept species record.
+  - **Not allowed:** offering them in a trade, choosing them as the following
+    Peerling (the next team member follows instead), or sharing their card;
+    an existing card link shows *"This Peerling has been delisted"*.
+  - **Encounters:** the species is no longer eligible from the tombstone's
+    `seq` on ([REG-005](#requirements)); a prefetched candidate of it is
+    dropped. Guardian teams keep it until the week ends, shown as a silhouette
+    ([guardians](../gameplay/guardians.md#the-weekly-team)); the Peerling of
+    the Day loses its boost.
+  - **Its creator** sees it in *My creations* marked as delisted.
 - **Sequence numbers:** the server gives each new entry the next `seq` (1, 2,
   3, …) when it signs the listing. Together with `removedAtSeq`, this lets every client and the server
   agree exactly on which species were eligible at a given registry height
@@ -120,7 +140,8 @@ they read them through snapshots, indexes and the server's log endpoint
 - **REG-007** [accepted] Each registry entry MUST carry a unique, gap-free sequence number `seq` assigned by the server; takedowns MUST record `removedAtSeq`.
 - **REG-008** [accepted] The operator MUST be able to delist a species with a tombstone entry, and clients MUST honor it (REG-005).
 - **REG-009** [accepted] Any player MAY append registry entries, but nodes MUST accept (and replicate) only entries carrying a valid server listing signature.
-- **REG-010** [accepted] A tombstone MUST take its own new `seq`; after delisting, the server MUST keep the species record pinned and MAY unpin its assets.
+- ~~**REG-010**~~ (removed 2026-10-28, replaced by REG-011; see D-0028)
+- **REG-011** [accepted] A tombstone MUST take its own new `seq`; after delisting, the server MUST keep the species record pinned and MUST unpin its assets, and clients MUST treat the species as in [What delisting changes for players](#design).
 
 ## Open questions
 

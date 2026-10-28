@@ -11,12 +11,14 @@ related:
   - wiki/gameplay/guardians.md
   - wiki/gameplay/peerling-of-the-day.md
   - wiki/gameplay/creator-feedback.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # D-0022: Follower, guardians, Peerling of the Day and first finds
 
-**Status:** accepted (2026-10-06)
+**Status:** accepted (2026-10-06). Partly superseded by [D-0028](D-0028-medium-low-review-fixes.md)
+(2026-10-28): the Peerling of the Day's encounter weight
+([peerling-of-the-day § In encounters](../gameplay/peerling-of-the-day.md#in-encounters)).
 
 ## Context
 The designer asked for features that would make the first version more fun.

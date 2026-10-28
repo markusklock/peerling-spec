@@ -10,12 +10,13 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/battle.md
   - wiki/world/procedural-generation.md
   - wiki/tech/player-data.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Landmark Guardians and Badges
@@ -95,12 +96,14 @@ guard somewhere in the world.
   all, the team is smaller (all of them); with none, the site is quiet.
 - [accepted] **Delisted during the week:** the team stays fixed for the whole
   week, so badges stay verifiable (a delisted species' record stays pinned,
-  [REG-010](../tech/orbitdb-registry.md#requirements)). Its plinth shows a
+  [REG-011](../tech/orbitdb-registry.md#requirements)). Its plinth shows a
   silhouette instead of the model, which may no longer be available.
 - **Individuals:** every member is at the guardian level, with all traits 0
   and no shimmer. Team order is the draw order.
 - **Guardian level** = min(50, the base level at the site's statue tile + 3)
-  ([encounters § Wild level](encounters.md#wild-level)).
+  ([encounters § Wild level](encounters.md#wild-level)). [accepted] The statue
+  tile is the one in the generator version active at the battle's epoch
+  record ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)).
 - **Creators:** a creator whose species is drawn sees *"Your Mossnap guards
   the Forest this week!"* (worked out by their own client).
 

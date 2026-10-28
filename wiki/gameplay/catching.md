@@ -17,10 +17,11 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Catching
@@ -102,7 +103,7 @@ A fainted wild Peerling can't be caught; it gives XP
 [accepted] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)
 in the player's save, referencing its species by CID
 ([D-0006](../decisions/D-0006-species-vs-instance.md)); its assets are then
-retained by the player's node ([NODE-004](../tech/ipfs-helia.md#requirements)).
+retained by the player's node ([NODE-009](../tech/ipfs-helia.md#requirements)).
 Caught Peerlings can later be [traded](trading.md).
 
 Creators are notified when their species is caught

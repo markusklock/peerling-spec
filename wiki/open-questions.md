@@ -3,7 +3,7 @@ title: Open Questions
 type: reference
 status: draft
 tags: [questions, backlog]
-updated: 2026-10-12
+updated: 2026-10-28
 ---
 
 # Open Questions
@@ -61,6 +61,29 @@ Proposal [proposed]: make TRELLIS.2 the default, since it is the one tested.
 Before launch, run the same test images through Pixal3D in single-image mode
 and switch if its models look better. The other stays available behind the
 same stage interface (SRV-003).
+
+### Q-059
+**Which of the remaining image-pipeline proposals are approved?**
+Affects: [image-prompting](peerlings/image-prompting.md),
+[creation-pipeline § Stage 5](peerlings/creation-pipeline.md#stage-5--3d-model),
+[creation-api § The job object](tech/creation-api.md#the-job-object).
+Context:
+- On 2026-10-28 the designer approved SRV-007, the `name-reserved` and
+  `wish-refused` errors (IMG-015), the OpenAI outage handling, the concept
+  LLM's originality rules, the provenance `imagePrompt` fields and the
+  IMG-001 exceptions ([D-0028](decisions/D-0028-medium-low-review-fixes.md)).
+- Still [proposed]: everything else on the draft image-prompting page (the
+  enhancer's system prompt and output schema, the prompt templates, the image
+  settings, the image checks (IMG-013), the franchise name list and its
+  matching rules, the resemblance check running on every image (IMG-010),
+  failure handling (IMG-009), provenance (IMG-005), finding the model's front
+  (IMG-017)); the job object's `originalityChanged` field; and "no background
+  removal" in stage 5 of the pipeline.
+- Implementers should treat these as the intended design, but they may change
+  before approval.
+
+Proposal [proposed]: review the image-prompting page as a whole once the
+default 3D generator ([Q-058](#q-058)) is settled, and approve it in one step.
 
 ## Resolved
 

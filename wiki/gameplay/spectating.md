@@ -9,12 +9,13 @@ sources:
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/battle.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Spectating PvP Battles
@@ -41,9 +42,12 @@ Exact messages: [protocols](../tech/protocols.md).
   messages while the battle runs.
 - **What the fighters publish.** At the start: both teams, the level mode and
   the shared RNG seed (once revealed). After each turn: both revealed actions
-  and the resulting battle-state hash. Each turn message also carries all
-  earlier actions, so a spectator who joins late catches up from any single
-  message. Battles are short, so this stays small. Exact messages:
+  and the resulting battle-state hash. [accepted] Each turn message also names
+  two blocks by CID: the `start` message and the history of all actions so far
+  (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A spectator who joins late fetches those two
+  blocks and catches up from any single turn message, while every message
+  stays far below the 16 KiB battle-topic limit, even in a 200-turn battle.
+  Exact messages:
   [protocols](../tech/protocols.md#peerlingsv1battlebattle-id--spectating).
 - **What spectators do.** They run the same deterministic battle engine
   ([BTL-002](battle.md#requirements)) on the published actions, so they see
@@ -62,9 +66,10 @@ Exact messages: [protocols](../tech/protocols.md).
 ## Requirements
 
 - **SPT-001** [accepted] Players MUST be able to watch nearby PvP battles live.
-- **SPT-002** [accepted] Fighters MUST publish the teams, level mode, RNG seed and each turn's revealed actions with the battle-state hash on a per-battle pubsub topic; each turn message MUST include all earlier actions.
+- ~~**SPT-002**~~ (removed 2026-10-28, replaced by SPT-005; see D-0028)
 - **SPT-003** [accepted] Spectators MUST render battles by running the deterministic battle engine on the published actions and MUST check the state hashes.
 - **SPT-004** [accepted] A PvP challenge MUST include a *Spectators allowed* option, on by default.
+- **SPT-005** [accepted] Fighters MUST publish the teams, level mode, RNG seed and each turn's revealed actions with the battle-state hash on a per-battle pubsub topic; each turn message MUST name the `start` message and the battle history by CID, and both fighters MUST provide those blocks.
 
 ## Open questions
 

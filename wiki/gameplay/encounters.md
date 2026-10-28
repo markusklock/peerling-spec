@@ -22,13 +22,14 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-helia.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/battle.md
   - wiki/tech/resilience.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Wild Encounters
@@ -79,6 +80,20 @@ an encounter never counts its own species as seen. A verifier starting from a
 [verification checkpoint](../tech/network-performance.md#5-verification-checkpoints)
 takes the seen species up to `upTo` from the checkpoint's server-computed
 snapshot.
+
+[accepted] **What writes a `seen` event** (2026-10-28, designer's choice,
+[D-0028](../decisions/D-0028-medium-low-review-fixes.md)): meeting a species in a battle or receiving one.
+- In a battle: the first time an opposing Peerling of a species is sent out,
+  in a wild battle (at once, right after the `encounter` event), a guardian
+  battle or a PvP battle.
+- On receiving one: right after a `starter`, `created` or incoming `trade`
+  event, for a species not yet seen.
+- `biome` is the biome of the tile the player is standing on at that moment
+  (for a wild encounter, its foliage tile). `shimmer` is the Peerling's
+  shimmer flag; a first shimmer sighting writes `seen` again.
+- Nothing else counts: other players' following Peerlings, the Peerling of the
+  Day pedestal, guardian previews, galleries and species cards don't write
+  `seen`.
 
 The candidates (below) are drawn with these weights using the encounter
 seed. The wild level depends on where it is met ([Wild level](#wild-level)),
@@ -174,6 +189,10 @@ one is almost always ready when an encounter triggers.
 [accepted] Exact prefetching (2026-10-06,
 [network-performance § Operation by operation](../tech/network-performance.md#operation-by-operation)):
 - keep at least 3 upcoming encounters ready;
+- [accepted] work their candidate lists out again whenever an encounter or
+  another sighting writes a new `seen` event, since it changes later novelty
+  weights; species already fetched stay in the cache and are reused by CID
+  (2026-10-28);
 - fetch all 5 candidates' species records (tiny), but their models **one at a
   time in list order**, moving to the next only if one fails or takes over
   5 s. This cuts an uncached encounter from ~3 MB to ~0.6 MB, and fits the
@@ -194,6 +213,7 @@ one is almost always ready when an encounter triggers.
 - **ENC-008** [accepted] Wild Peerlings MUST be generated from the encounter seed in the order given in [Wild Peerling generation](#wild-peerling-generation).
 - ~~**ENC-009**~~ (removed 2026-10-27, replaced by ENC-010; see D-0027)
 - **ENC-010** [accepted] The novelty weight MUST use the seen species defined in [What counts as seen](#selection), and the client MUST write an encounter's events in the order `encounter`, `seen` when the battle starts and `catch`, `battle-result` when it ends.
+- **ENC-011** [accepted] A `seen` event MUST be written exactly for the sightings listed in [What writes a `seen` event](#selection), with the biome of the player's tile.
 
 ## Open questions
 _None at the moment._

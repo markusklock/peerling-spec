@@ -17,13 +17,14 @@ sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Data Formats
@@ -45,7 +46,9 @@ updated: 2026-10-27
 - **No floating-point numbers** anywhere: all numbers are integers (stats,
   percentages, tile coordinates, times). This keeps hashing and replays
   identical on every platform.
-- Text is UTF-8 in Unicode NFC form.
+- Text is UTF-8 in Unicode NFC form. [accepted] Every string length on this
+  page and in other record definitions ("≤ N characters") counts Unicode code
+  points after NFC (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)).
 - This page shows records as DAG-JSON for readability: a link is
   `{ "/": "bafy…" }`, bytes are `{ "/": { "bytes": "<base64>" } }`.
 - Unknown fields are ignored. Every record has a version field `v`. A reader
@@ -149,7 +152,7 @@ envelope. Meaning: [peerling-species](../peerlings/peerling-species.md).
 | `name` | string | 1–20 characters, unique in normalized form ([CRE-025](../peerlings/creation-pipeline.md#requirements)) |
 | `summary` | string | ≤ 200 characters |
 | `lore` | string | ≤ 600 characters |
-| `types` | [string] | 1–2 of `Normal Fire Water Grass Electric Earth Air Ice Metal Light Shadow Spirit`; first = primary |
+| `types` | [string] | 1–2 different ones of `Normal Fire Water Grass Electric Earth Air Ice Metal Light Shadow Spirit`; first = primary |
 | `baseStats` | map | `hp`, `attack`, `defense`, `speed`: uint, 40–130, multiples of 5, sum 320 |
 | `moves` | [Move] | exactly 3, one per slot |
 | `assets` | map | `image`, `model`, `thumbnail`: CID |
@@ -157,7 +160,7 @@ envelope. Meaning: [peerling-species](../peerlings/peerling-species.md).
 | `createdAt` | time | |
 | `sizeClass` | string | `"small"`, `"medium"` or `"large"` ([peerling-species § Size and temperament](../peerlings/peerling-species.md#size-and-temperament)) |
 | `temperament` | string | ≤ 60 characters, from the concept |
-| `provenance` | map | `wish`: string ≤ 300; `concept`: map; `imagePrompt`: map ([proposed] `version`: string, e.g. `"peerlings-enhancer/v1"`; `hero`: the full image prompt, string ≤ 3,000; `originality`: the enhancer's `originality` output, [image-prompting](../peerlings/image-prompting.md#provenance)); `models`: map of `concept`, `enhancer`, `image`, `to3d` → string `"<name>@<version>"` (`"none"` when the step didn't use a model); `seeds`: map of stage (e.g. `image`) → uint |
+| `provenance` | map | `wish`: string ≤ 300; `concept`: map with exactly the concept fields of [creation-pipeline § Stage 2](../peerlings/creation-pipeline.md#stage-2--concept); `imagePrompt`: map ([accepted] `version`: string, e.g. `"peerlings-enhancer/v1"`; `hero`: the full image prompt, string ≤ 3,000; `originality`: the enhancer's `originality` output, [image-prompting](../peerlings/image-prompting.md#provenance)); `models`: map of `concept`, `enhancer`, `image`, `to3d`, `profile` ([accepted] the stats-and-moves step) → string `"<name>@<version>"` (`"none"` when the step didn't use a model); `seeds`: map of stage (e.g. `image`) → uint |
 
 **Move:** `slot` (`"quick"` \| `"strong"` \| `"signature"`), `template` (template
 ID, [moves](../peerlings/moves.md#template-table)), `name` (≤ 24), `description`
@@ -309,12 +312,13 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
 | `trade-void` | [accepted] (2026-10-27) `transferEntry` (CID of the void trade entry), `restored` ([instance]: the player's own Peerlings that come back, with their data from before the trade), `removed` ([instance ID]: the Peerlings received in it). Written when a trade the player took part in turns out void ([Which transfers count](#transfer-and-transfer-log-entry--peerlingstransfer)) |
-| `seen` | `species` (CID), `biome` (uint: [biome index](../world/procedural-generation.md#biomes) where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer |
+| `seen` | `species` (CID), `biome` (uint: [biome index](../world/procedural-generation.md#biomes) where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer; [accepted] what counts as meeting: [encounters § Selection](../gameplay/encounters.md#selection) |
+| `rest` | [accepted] (2026-10-28) `tile` (the rest point's tile). Written when the player uses a rest point: the team is fully healed and this becomes the last rest point ([player-data § Save log](player-data.md#save-log)) |
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
 | `badge` | [accepted] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
-| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles and draws are not recorded. [accepted] Conflicting results for the same battle ID: a valid `win` always beats a `forfeit` claim, and two `forfeit` claims naming different winners are both void |
+| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`; [accepted] `turn` may be 0, the state signed before the first turn). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles and draws are not recorded. [accepted] Conflicting results for the same battle ID: a valid `win` always beats a `forfeit` claim, and two `forfeit` claims naming different winners are both void |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
 | `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log; its `player` must be the log's owner) |
 
@@ -341,6 +345,7 @@ save log).
 | `lastRestPoint` | tile |
 | `explored` | bytes: bit set of 63 × 63 chunks (the last chunk row and column are 16 tiles wide, since the world is 2,000 tiles). Chunk (cx, cy) is bit number i = cy × 63 + cx: byte i div 8, bit i mod 8 counted from the least significant bit; 1 = revealed |
 | `nextEncounter` | uint |
+| `generator` | uint: [accepted] the world-generator version that `position` and `lastRestPoint` refer to ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)) |
 | `pvp` | PvP counters, as in the profile document |
 | `badges` | [uint]: biome indices of the badges held ([accepted]) |
 
@@ -377,6 +382,12 @@ it); copies with the same envelope CID count once. A **double trade** is two
 transfer (their `prev` entries hold the same envelope). The one whose
 **envelope CID** is lower wins ([SAVE-015](player-data.md#requirements)), and
 its signer is flagged.
+
+[accepted] **Equivalent `prev`** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): two envelopes
+whose bodies differ only in `prev`, where both `prev` entries hold the same
+previous envelope, are the **same transfer**: they never conflict and count
+once. A signer SHOULD name the entry with the lowest CID among those it knows
+that hold the previous transfer.
 
 [accepted] **Which transfers count** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)). Readers apply
 these rules in order, so every node reaches the same result from the same log:
@@ -501,6 +512,7 @@ A **CAR v1** file (`.car`) whose single root is a DAG-CBOR block:
 | `snapshot` | CID of the latest save snapshot |
 | `saveLog` | string: OrbitDB address |
 | `saveHeads` | [CID]: [accepted] the save log's heads when the backup was made |
+| `entropy` | bytes(16): [accepted] the recovery phrase's entropy, so the phrase can be shown again ([Recovery phrase](#recovery-phrase)) |
 | `created` | time |
 
 The CAR also contains every block of the snapshot document, and [accepted]
@@ -520,7 +532,10 @@ private key in the clear: the game must say so when exporting. File name:
 
 12 words from the BIP-39 English word list (128 bits of entropy). The key is
 derived as: BIP-39 seed (empty passphrase) → HKDF-SHA256 with info
-`"peerlings-identity-v1"` → 32-byte Ed25519 seed.
+`"peerlings-identity-v1"` → 32-byte Ed25519 seed. [accepted] The client
+stores the 16 bytes of entropy on the device next to the private key, and
+backups carry them, so the phrase can be shown again on any device the account
+is on (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)).
 
 ## Requirements
 
@@ -528,6 +543,7 @@ derived as: BIP-39 seed (empty passphrase) → HKDF-SHA256 with info
 - **FMT-002** [accepted] Each player MUST have one Ed25519 key that is their player ID, libp2p peer ID, OrbitDB identity and IPNS name.
 - **FMT-003** [accepted] Records that need standalone verification MUST use the signed envelope with the `"peerlings-sig-v1\n"` prefix.
 - **FMT-004** [accepted] The OrbitDB databases, record types and fields MUST be exactly as defined on this page; readers MUST ignore unknown fields and records with an unknown `v`.
+- **FMT-005** [accepted] String lengths MUST be counted in Unicode code points after NFC, and a species' two types MUST differ.
 
 ## Open questions
 

@@ -9,12 +9,14 @@ sources:
 related:
   - wiki/tech/tech-stack.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-04
+updated: 2026-10-28
 ---
 
 # D-0011: Modern web platform first
 
-**Status:** accepted (2026-10-04)
+**Status:** accepted (2026-10-04). Extended by [D-0028](D-0028-medium-low-review-fixes.md) (2026-10-28):
+networks that block UDP are unsupported in v1
+([tech-stack § Networking](../tech/tech-stack.md#networking)).
 
 ## Context
 Peerlings is mainly a tech demo for IPFS and peer-to-peer technology. Older

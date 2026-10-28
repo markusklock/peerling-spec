@@ -22,12 +22,13 @@ sources:
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/world/visual-style.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Exploration
@@ -89,8 +90,10 @@ never does. Each biome's foliage is listed in
   step onto foliage outside the spawn hub always starts an encounter, so
   onboarding can teach battling and catching right away
   ([onboarding](onboarding.md#creating-a-starter)). Only the 1-in-10 roll is
-  skipped: it is an ordinary encounter (encounter number 0) with the usual
-  seed and verification.
+  skipped: it is an ordinary encounter with the usual seed and verification,
+  usually encounter number 0. [accepted] A guardian battle fought before it
+  doesn't end the guarantee, even though it uses up encounter number 0
+  (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)).
 - Foliage rustles visibly when the player walks through it, so players learn
   that grass means Peerlings.
 
@@ -105,7 +108,8 @@ someone's creation.
 
 [accepted] Details (approved 2026-10-06):
 - **Which one:** the first team member that hasn't fainted. It is shown as a
-  shimmer if it is one.
+  shimmer if it is one. [accepted] A Peerling of a delisted species is skipped
+  ([orbitdb-registry § Design](../tech/orbitdb-registry.md#design)).
 - **Where:** it always stands on the tile the player last left, one step
   behind, and moves when the player moves. It never blocks anyone; players
   can walk through it. After a respawn it appears behind the player.
@@ -151,6 +155,8 @@ battles and is restored at **rest points**:
   team gets a healing sparkle, the rest-point jingle plays
   ([audio](../world/audio.md#sound-effects)), and a message says: *"Your team is
   fully healed. This is now your rest point."*
+- [accepted] Visiting a rest point writes a `rest` event, which is what heals
+  the team in the save ([player-data § Save log](../tech/player-data.md#save-log)).
 - Visiting a rest point also writes a save **snapshot**
   ([player-data § Save log](../tech/player-data.md#save-log)), and now and then
   reminds the player to refresh their backup (file or phone).
@@ -172,14 +178,16 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-003** [accepted] When the whole team faints, the player MUST return to the last rest point with the team fully healed, losing nothing.
 - **EXP-004** [accepted] The player MUST move on an invisible grid, one tile at a time.
 - **EXP-005** [accepted] Wild encounters MUST only be triggered by walking through biome-specific encounter foliage.
-- **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle and for the guaranteed first encounter (EXP-011).
+- **EXP-006** [accepted] Tiles MUST be 2 m × 2 m; movement MUST be 4-directional at 3 tiles per second; a step onto foliage MUST trigger an encounter with probability 1/10, except during the 3 grace steps after a battle and for the guaranteed first encounter (EXP-014).
 - **EXP-007** [accepted] The game MUST have a minimap and a world map that reveal explored areas and mark discovered rest points and landmarks.
 - **EXP-008** [accepted] Interacting with a rest point MUST heal the team, set it as the last rest point, and write a save snapshot.
 - **EXP-009** [accepted] There MUST NOT be fast travel.
 - **EXP-010** [accepted] A new player's last rest point MUST be the spawn hub's rest point.
-- **EXP-011** [accepted] A player's first step onto foliage outside the spawn hub MUST start an encounter (encounter number 0), regardless of the 1-in-10 roll; the guarantee lasts until encounter 0 has been logged.
+- ~~**EXP-011**~~ (removed 2026-10-28, replaced by EXP-014; see D-0028)
 - **EXP-012** [accepted] The first non-fainted Peerling in the player's team MUST follow the player in the world, drawn at its size class, and other players MUST see it unless the player has turned it off.
 - **EXP-013** [accepted] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
+- **EXP-014** [accepted] A player's first step onto foliage outside the spawn hub MUST start a wild encounter, regardless of the 1-in-10 roll; the guarantee lasts until the player's first wild encounter has been logged, and a guardian battle MUST NOT end it.
+- **EXP-015** [accepted] Using a rest point MUST write a `rest` event.
 
 ## Open questions
 

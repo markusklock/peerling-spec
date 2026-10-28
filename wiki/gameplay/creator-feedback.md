@@ -14,12 +14,13 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Creator Feedback
@@ -39,9 +40,12 @@ can check them:
 - Every **trade** is in the open transfer log.
 
 So the server can keep trustworthy counters per species and publish them with
-IPFS snapshots and pubsub. Counters can't be inflated by fake clients, because only
-events that pass verification count. That answers the spam worry raised in
-Q-021.
+IPFS snapshots and pubsub. Only events that pass verification count, so catch,
+owner and trade counts can't be inflated by fake clients. That answers the spam
+worry raised in Q-021. [accepted] Encounter counts are checked too, but a
+modified client can push them up by logging fast fled encounters, an accepted
+gap ([player-data § Known gaps](../tech/player-data.md#known-gaps-accepted-risks);
+corrected 2026-10-28).
 
 [accepted] The feature is wanted (2026-10-04). The design below was approved 2026-10-05.
 
@@ -65,6 +69,15 @@ Each species' stats:
 | `catches` | Verified catches |
 | `owners` | Instances currently owned (not released) |
 | `trades` | Trades involving this species |
+
+[accepted] **How they are counted** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)):
+- `encounters`: `encounter` events of wild encounters whose tile, epoch and
+  candidate the server has checked (as for a catch, without a battle replay).
+- `trades`: one per valid trade entry that moves at least one Peerling of the
+  species, however many it moves.
+- Each hourly snapshot counts from the transfer log as it then stands, so a
+  trade that becomes void ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades))
+  drops out of `trades`, and `owners` follows the restored owners.
 | `providers` | Approximate number of IPFS nodes currently providing the species (from content-routing lookups) |
 
 Any client can read any species' stats, so every species card can show them.
@@ -101,6 +114,11 @@ Every new species becomes a small race.
   CID of the `catch` save-log entry. [accepted] Once the server has named a
   finder, the title is **final**: a catch made offline and synced later
   doesn't take it, even if its epoch is earlier (2026-10-06).
+- [accepted] **When it is decided** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): at each
+  hourly stats snapshot, the server looks at every wild catch of the species
+  it has verified by then and applies the rule above to them. The first
+  snapshot that finds any catch names the finder, so within that hour the
+  epoch decides, not the order in which catches arrived.
 - **Checkable:** the stats name the `catch` entry's CID, so any client can
   verify the catch by replay.
 - **Card:** *"First found in the wild by Mia · 2026-10-07"*
@@ -126,6 +144,7 @@ Every new species becomes a small race.
 - **CFB-006** [accepted] The first wild finder MUST be determined and announced as in [First found in the wild](#first-found-in-the-wild).
 - **CFB-007** [accepted] A species' creator MUST NOT be credited as its first wild finder.
 - **CFB-008** [accepted] Species statistics MUST be published by the server as the hourly species stats snapshot and MUST only count events that pass verification.
+- **CFB-009** [accepted] Encounters, trades and the first wild finder MUST be counted as defined in [How they are counted](#species-stats-snapshot) and [First found in the wild](#first-found-in-the-wild).
 
 ## Open questions
 

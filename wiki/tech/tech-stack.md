@@ -17,13 +17,14 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0011-modern-web-platform-first.md
   - wiki/tech/architecture.md
   - wiki/tech/ipfs-helia.md
   - wiki/tech/realtime-networking.md
   - wiki/tech/generation-server.md
-updated: 2026-10-12
+updated: 2026-10-28
 ---
 
 # Tech Stack
@@ -55,7 +56,14 @@ them except Firefox on Linux, which is why WebGL2 is kept as a fallback (see
 | Browser ↔ browser | **WebRTC**, set up through the server's circuit relay, then direct | [accepted] (the only option; browsers can't accept WebTransport) |
 | WebSockets | Not used | [accepted] |
 | IP version | **IPv6 preferred**, IPv4 kept for players without IPv6 | [accepted] |
-| Creation API (HTTPS) | HTTP/3 | [accepted] |
+| Creation API (HTTPS) | HTTP/3; [accepted] the server also serves HTTP/2, which browsers fall back to on their own (2026-10-28) | [accepted] |
+
+[accepted] **Networks that block UDP** (2026-10-28, designer's choice,
+[D-0028](../decisions/D-0028-medium-low-review-fixes.md)) are unsupported in v1: WebTransport and WebRTC-direct both need
+UDP, and there are no WebSockets and no TURN servers. When both transports
+fail within the connection budget while HTTPS to the server works, the client
+shows *"Peerlings can't connect on this network. It may block the
+connections the game needs; try another network."*
 
 Connection details (bootstrap, relay, fallbacks) are canonical in
 [ipfs-helia § Connectivity](ipfs-helia.md#connectivity).
@@ -177,7 +185,23 @@ What that means in practice:
 - **Client cache:** the browser keeps up to **1 GB** of game content
   (roughly 1,500 species at typical size) and evicts the least recently used
   beyond that, except the player's own creations and collection
-  ([NODE-004](ipfs-helia.md#requirements)).
+  ([NODE-009](ipfs-helia.md#requirements)).
+- [accepted] **What counts toward the cap** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): only
+  evictable content. Retained content (own creations, owned species), the save
+  log and the peer save backups (their own 100 MB limit,
+  [SAVE-020](player-data.md#requirements)) sit outside it. Retention is per
+  species, so it grows with the number of different species owned, not with
+  the number of Peerlings.
+- [accepted] **When the browser's storage is full** (a write fails with a
+  quota error), the client frees space in this order and retries:
+  1. evictable cache content, least recently used first;
+  2. peer save backups, least recently refreshed first.
+
+  Save-log events are always written first; they are tiny. If space still runs
+  out, the client shows *"Your browser's storage is full"* and refuses actions
+  that add retained content (accepting a trade, using the shrine, publishing a
+  creation) until space is free. A catch is still recorded; its species
+  content is kept when space allows.
 - **Server storage:** about 0.6 MB per species, so even 100,000 species are
   about 60 GB pinned.
 
@@ -201,6 +225,8 @@ oversized files.
 - **STK-012** [accepted] Every species asset MUST fit the [asset budgets](#asset-budgets); clients MUST refuse content that exceeds them.
 - **STK-013** [accepted] The client content cache MUST be capped at 1 GB, evicting least-recently-used content except the player's own creations, team and collection.
 - **STK-014** [accepted] The client MUST request persistent storage (`navigator.storage.persist()`) and SHOULD encourage installing the PWA.
+- **STK-015** [accepted] Retained content, the save log and peer save backups MUST NOT count toward the 1 GB cache cap, and the client MUST handle a full storage quota as defined in [Asset budgets](#asset-budgets).
+- **STK-016** [accepted] Networks that block UDP MUST be treated as unsupported in v1: the client MUST detect them and tell the player, as in [Networking](#networking).
 
 ## Open questions
 

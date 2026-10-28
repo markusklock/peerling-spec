@@ -32,6 +32,7 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -43,7 +44,7 @@ related:
   - wiki/tech/architecture.md
   - wiki/tech/orbitdb-registry.md
   - wiki/decisions/D-0027-high-severity-review-fixes.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Player Data: Saves, Identity and Ownership
@@ -111,6 +112,7 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 | `team` | Team changed | ordered instance IDs |
 | `session-start` | The game starts on a computer | device ID ([Using the same account on several computers](#using-the-same-account-on-several-computers)) |
 | `nickname` | Peerling renamed | instance ID, nickname |
+| `rest` | The player uses a rest point | the rest point's tile |
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
 | `trade-void` | A trade the player took part in turned out void ([Transfer log and trades](#transfer-log-and-trades)) | the void entry; own Peerlings restored; received Peerlings removed |
 | `seen` | First sighting of a species, and first sighting as a shimmer | species CID, biome, shimmer flag |
@@ -121,6 +123,18 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 
 Loading a save means reading the latest `snapshot` and applying the events
 after it. The server replicates every player's log and pins the snapshots.
+
+[accepted] **Events are the save; snapshots are caches** (2026-10-28,
+[D-0028](../decisions/D-0028-medium-low-review-fixes.md)). Every change to the save comes from an event:
+- a `rest` event heals the whole team and makes that rest point the last rest
+  point ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points));
+- a `battle-result` with outcome `lost` (wild or guardian) heals the whole
+  team and moves the player to the last rest point;
+- otherwise HP comes from the `team` field of each `battle-result`.
+
+A snapshot holds the result of applying every event up to its `upTo` entry.
+Readers may load from it, but if it ever differs from the events, the events
+win. The server computes a checkpoint's `state` from the events.
 Other players fetch a save log when they need to verify one of its catches.
 
 ## Account recovery
@@ -134,7 +148,7 @@ pins (SAVE-001). The key is recovered with the **recovery phrase** or a
 
 | Method | How | Strength |
 |--------|-----|----------|
-| **Recovery phrase** | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
+| **Recovery phrase** | 12 random words shown at onboarding; the key is derived from them. Nothing secret is stored on any server. [accepted] The device keeps the phrase's entropy next to the key, and backups carry it, so *Backup → Show recovery phrase* works on every device the account is on (2026-10-28) | Very strong: the words are random |
 | **Backup file** | Export or import the key as a file | Strong, if the file is kept safe |
 | **Phone backup** | Scan a QR code with your phone; it carries the key and the save ([Phone backup](#phone-backup)) | Strong; whoever has the phone has the account |
 
@@ -462,6 +476,10 @@ events: [data-formats § Save-log events](data-formats.md#save-log-events)).
   numbers makes every later catch fail verification.
 - The only way to get a different encounter for the same n is to wait for a new
   epoch before triggering it, which costs up to 5 minutes. See *Known gaps*.
+- [accepted] This stops re-rolling the *same* encounter. It doesn't stop a
+  player from moving on to the next one: fleeing always succeeds, so anyone can
+  flee until a good trait or a shimmer turns up, and a modified client can do
+  it without walking or battling (2026-10-28; see *Known gaps*).
 
 **Registry state.**
 - The server gives each registry entry a sequence number `seq` (1, 2, 3, …)
@@ -609,8 +627,9 @@ instead:
 - Two *different* transfers of the same Peerling that follow the same previous
   transfer are a **double trade**. Both are signed by the same player, so the
   pair is cryptographic proof of cheating. Identical copies of one transfer
-  (re-posted, or appended by both trade partners) count once and are never a
-  conflict ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
+  (re-posted, or appended by both trade partners), and [accepted] copies that
+  differ only in which equivalent entry `prev` names, count once and are never
+  a conflict ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
 - **Resolution:** the transfer whose envelope CID sorts lower is the valid
   one; the other loses. Every node reaches the same result from the same
   data.
@@ -697,6 +716,12 @@ once per battle ID.
   above). An edited level lets a player meet the level-20 rule early, and the
   new Peerling's level comes from the offered levels. Accepted: the offering is
   still given up, and the 7-day limit still applies.
+- **Fast fled encounters** ([accepted] 2026-10-28, designer's choice,
+  [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A `battle-result` that isn't a catch carries no battle to
+  replay, and fleeing always succeeds. So a modified client can log one fled
+  encounter after another without walking or battling, until the encounter
+  seed gives a trait or shimmer it wants. Honest players can do the same by
+  fleeing, only more slowly; the cost is time, not a re-roll of one encounter.
 - **Choice among encounter candidates.** A modified client could claim the first
   candidates failed to download and pick a later one: at most a choice of 1 in
   5. Only the species differs between candidates: level, traits and shimmer
@@ -763,6 +788,9 @@ D-0013, mostly checks any player can run).
 - **SAVE-036** [accepted] Peerlings in a trade whose entry hasn't appeared MUST be locked against trades, releases and PvP until the entry appears or the trade expires; an entry for an expired trade MUST be void and MUST NOT count as a double trade.
 - **SAVE-037** [accepted] If no copy of a recovered player's save exists, the client MUST NOT start a new save on that key; it MUST offer to keep looking or to start a new account.
 - **SAVE-038** [accepted] Species eligibility at a registry height MUST use listing and delisting `seq` values as defined in [Encounter seeds](#encounter-seeds), and draws MUST sort eligible species by listing seq.
+- **SAVE-039** [accepted] Every change to the save MUST come from an event as defined in [Save log](#save-log), including a `rest` event for each rest-point visit; a snapshot MUST equal the result of the events up to its `upTo`, and where they differ the events MUST win.
+- **SAVE-040** [accepted] The client MUST keep the recovery phrase's entropy on the device next to the private key and in every backup, so the phrase can be shown again.
+- **SAVE-041** [accepted] Transfers that differ only in which equivalent entry `prev` names MUST count as one transfer and MUST NOT count as a double trade.
 
 ## Open questions
 

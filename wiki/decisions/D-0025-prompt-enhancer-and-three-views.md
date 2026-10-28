@@ -14,7 +14,7 @@ related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0010-no-content-moderation.md
   - wiki/decisions/D-0026-single-image-to-3d.md
-updated: 2026-10-12
+updated: 2026-10-28
 ---
 
 # D-0025: Prompt enhancer, transparent images and three views for 3D
@@ -23,7 +23,9 @@ updated: 2026-10-12
 details on [image-prompting](../peerlings/image-prompting.md) are
 [proposed] until the designer reviews them. Partly superseded by
 [D-0026](D-0026-single-image-to-3d.md) (2026-10-12): one image goes to the 3D generator, TRELLIS.2 or
-Pixal3D, instead of three views.
+Pixal3D, instead of three views. Partly superseded by [D-0028](D-0028-medium-low-review-fixes.md)
+(2026-10-28): a hero image flagged twice by the resemblance check can't be
+accepted, and IMG-001 names its exceptions.
 
 ## Context
 
@@ -51,9 +53,10 @@ Pixal3D, instead of three views.
 - ~~[accepted] **Three images from different angles** are given to the
   image-to-3D generator.~~ Replaced by [D-0026](D-0026-single-image-to-3d.md): the hero image alone.
 - [proposed] How: the enhancer's system prompt, fixed prompt templates,
-  layered originality rules, image settings and checks, the camera layout of
-  the three views and a silhouette check with a single-view fallback, as
-  described on [image-prompting](../peerlings/image-prompting.md).
+  layered originality rules, image settings and checks, ~~the camera layout of
+  the three views and a silhouette check with a single-view fallback~~
+  (removed by D-0026), as described on
+  [image-prompting](../peerlings/image-prompting.md).
 
 ## Consequences
 
@@ -74,9 +77,10 @@ Pixal3D, instead of three views.
   are not filtered"). Nothing is rejected and taste isn't judged, so the
   game stays otherwise unmoderated.
 - **Stage 5** no longer needs background removal for normal images.
-- **Species record:** provenance now holds three prompts and the
-  enhancer's originality notes, so the typical record grows from about 4 KB
-  to about 8 KB, still within the 16 KB budget.
+- **Species record:** provenance now holds ~~three prompts~~ the hero
+  prompt (since D-0026) and the enhancer's originality notes, so the typical
+  record grows from about 4 KB to about 6–8 KB, still within the 16 KB
+  budget.
 - **Licences:** Qwen-Image-2.1's licence is non-commercial, and the 3D
   models depend on components with restrictive licences
   ([Q-057](../open-questions.md#q-057)).

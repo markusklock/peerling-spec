@@ -585,3 +585,33 @@ List all entries with `grep "^## \[" wiki/log.md`.
   SAVE-026 and ENC-009 (replaced by SAVE-028, ENC-010); added SAVE-029–038,
   BTL-015, PRT-004, TRD-006, CAT-010, API-007–009. New glossary term: genesis
   record. REVIEW-036 and 045 partly addressed.
+
+## [2026-10-28] design | Resolve the medium- and low-severity review findings (D-0028)
+- Source: raw/conversations/2026-10-28-medium-low-resolutions.md.
+- Changed: wiki/decisions/D-0028-medium-low-review-fixes.md (new),
+  wiki/tech/player-data.md, wiki/tech/data-formats.md, wiki/tech/protocols.md,
+  wiki/tech/creation-api.md, wiki/tech/realtime-networking.md,
+  wiki/tech/orbitdb-registry.md, wiki/tech/generation-server.md,
+  wiki/tech/ipfs-helia.md, wiki/tech/tech-stack.md,
+  wiki/gameplay/encounters.md, wiki/gameplay/peerdex.md,
+  wiki/gameplay/exploration.md, wiki/gameplay/peerling-of-the-day.md,
+  wiki/gameplay/guardians.md, wiki/gameplay/multiplayer.md,
+  wiki/gameplay/spectating.md, wiki/gameplay/pvp-battles.md,
+  wiki/gameplay/trading.md, wiki/gameplay/catching.md,
+  wiki/gameplay/creation-shrine.md, wiki/gameplay/sharing.md,
+  wiki/gameplay/creator-feedback.md, wiki/world/procedural-generation.md,
+  wiki/peerlings/creation-pipeline.md, wiki/peerlings/image-prompting.md,
+  wiki/peerlings/peerling-species.md, wiki/decisions/D-0006, D-0010, D-0011,
+  D-0022, D-0025 (status notes), wiki/open-questions.md,
+  wiki/specification-review.md, wiki/index.md, wiki/log.md.
+- Notes: All 31 remaining findings marked Fixed; all 47 are now Fixed. Eight
+  designer choices (fast fled encounters accepted, day weight
+  max(2 × N, W div 19), delisted Peerlings hidden but usable, flagged images
+  blocked, UDP-blocked networks unsupported, phrase entropy kept, seen =
+  battles and ownership, listed proposals approved). Opened Q-059 for the
+  remaining image-pipeline proposals. Replaced SRV-002, REG-010, NODE-004,
+  EXP-011, SPT-002 by SRV-008, REG-011, NODE-009, EXP-014, SPT-005; added
+  SAVE-039–041, ENC-011, EXP-015, NET-005, MPL-010, CFB-009,
+  LNK-004, PVP-013, TRD-007, API-010–012, IMG-018, STK-015–016, WGN-022,
+  CRE-026–027, FMT-005; approved SRV-007 and IMG-015; IMG-001 names its
+  exceptions.

@@ -13,6 +13,7 @@ sources:
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -20,7 +21,7 @@ related:
   - wiki/gameplay/trading.md
   - wiki/gameplay/spectating.md
   - wiki/tech/player-data.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Network Protocols
@@ -74,6 +75,7 @@ most 4 per second), a heartbeat every 5 s when idle. Meaning:
 | `session` | bytes(16) | device ID of the active session ([SAVE-023](player-data.md#requirements)) |
 | `battle` | bytes(32), optional | battle ID while in a PvP battle that allows spectators |
 | `follower` | map, optional | [accepted] `species` (CID), `shimmer` (bool): the player's [following Peerling](../gameplay/exploration.md#following-peerling); omitted when hidden |
+| `jump` | bool, optional | [accepted] (2026-10-28) true on the first message after a respawn at a rest point or a move by a generator update, so receivers accept the long move ([NET-005](realtime-networking.md#requirements)) |
 | `t` | time | |
 
 ### `peerlings/v1/epoch` — epoch records
@@ -103,8 +105,20 @@ by both fighters. Meaning: [spectating](../gameplay/spectating.md).
 | `kind` | Fields |
 |--------|--------|
 | `"start"` | `players` [2 player IDs], `mode` (`"fair"` \| `"real"`), `rules` (uint), `teams` (two lists of team members, as in the battle `team` message) |
-| `"turn"` | `turn` (uint), `seed` (bytes(32), once revealed), `actions` (all revealed decisions so far, in order: [map: `player` (0 or 1), `turn`, `action`]), `state` (bytes(32), state hash after this turn) |
+| `"turn"` | `turn` (uint), `seed` (bytes(32), once revealed), `actions` ([accepted] 2026-10-28: this turn's revealed decisions, in order: [map: `player` (0 or 1), `turn`, `action`]), `state` (bytes(32), state hash after this turn), `start` (CID of the `start` message as a DAG-CBOR block), `history` (CID of the [battle history](#battle-history-block) after this turn) |
 | `"end"` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null) |
+
+[accepted] **Late spectators** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A `turn` message
+stays small at any length of battle. A spectator who joins late fetches the
+two blocks it names by CID (bitswap, from either fighter, who both provide
+them). The CIDs come from a message signed by a fighter, so the blocks are
+authenticated by their hashes.
+
+#### Battle history block
+A DAG-CBOR block `{ "v": 1, "type": "peerlings/battle-history", "battle":
+<battle ID>, "actions": [all revealed decisions so far, as in `turn`] }`. Each
+fighter builds it after every turn; both get the same bytes and CID, since the
+encoding is deterministic.
 
 ### `peerlings/v1/session/<player ID>` — active session
 Published by the computer that is currently playing, every 15 s:
@@ -179,7 +193,11 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
   [pvp-battles § Win record](../gameplay/pvp-battles.md#win-record)), Ed25519
   with the sender's player key:
   - state signature over `"peerlings/pvp-state/v1"` ‖ battle ID (32 bytes) ‖
-    turn (8-byte big-endian) ‖ hash;
+    mode (`"fair"` or `"real"`, as UTF-8) ‖ turn (8-byte big-endian) ‖ hash
+    ([accepted] mode added 2026-10-28, so a state can't be relabelled either);
+  - [accepted] (2026-10-28) right after `seed-reveal`, both sides send a
+    signed `state` for turn 0, the starting state, so a forfeit can be proven
+    even before the first turn is resolved;
   - end signature over `"peerlings/pvp-end/v1"` ‖ battle ID ‖
     DAG-CBOR(`{ "result", "winner", "turn", "hash", "mode" }`), where `mode`
     is the challenge's mode, so a result can't be relabelled.
@@ -266,6 +284,13 @@ and either side may ask the server to expire the trade
   origin from the **original owner's** save log (`originalOwner`, where the
   catch is) or the origin attestation, ownership from the transfer log, and
   traits; level, XP and HP are taken from the offer.
+- [accepted] (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)) The confirmation commits to the
+  instance IDs only; the rest of the offer is unverified data, like levels. A
+  client MUST store the other side's final offer data durably before it sends
+  its own `transfers`. If that copy is lost (e.g. when recovering on another
+  computer), the client rebuilds each received instance from the sender's save
+  log: its state there just before the sender's `trade` event for this entry,
+  or at the log's head if the sender hasn't written one.
 
 ### `/peerlings/profile/1.0.0` — profile
 
@@ -285,8 +310,14 @@ message `{ "kind": "save-held", "player": <player ID>, "snapshot": <CID>,
 
 Meaning: [player-data § Phone backup](player-data.md#phone-backup).
 
-**QR code** (shown on the computer):
-`peerlings-backup:?mode=<backup|restore>&peer=<computer peer ID>&addr=<relay multiaddr>&s=<secret, base64url, 32 bytes>&exp=<time>`
+**QR code** (shown on the computer; [accepted] a Viewer URL since
+2026-10-28, so the phone's normal camera opens it):
+`https://view.<domain>/#/backup?mode=<backup|restore>&peer=<computer peer ID>&addr=<relay multiaddr>&s=<secret, base64url, 32 bytes>&exp=<time>`
+
+Everything after `#` stays on the phone: browsers never send the fragment to
+the web server. The Viewer's own scanner reads the same URL. Next to the QR
+code, the computer shows *"Scan this with your phone's camera"* and the
+Viewer's address.
 
 The phone always dials the computer.
 

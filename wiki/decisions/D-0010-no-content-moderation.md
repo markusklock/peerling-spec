@@ -12,7 +12,7 @@ related:
   - wiki/peerlings/moderation.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-10
+updated: 2026-10-28
 ---
 
 # D-0010: No content moderation
@@ -21,6 +21,8 @@ updated: 2026-10-10
 partly superseded by [D-0025](D-0025-prompt-enhancer-and-three-views.md):
 wishes and designs are steered away from existing characters such as
 Pokémon ([originality rules](../peerlings/image-prompting.md#originality-rules)).
+Partly superseded by [D-0028](D-0028-medium-low-review-fixes.md) (2026-10-28): what delisting does to
+Peerlings players already own ([orbitdb-registry § Design](../tech/orbitdb-registry.md#design)).
 
 ## Context
 Earlier drafts proposed moderating players' wishes, generated images, names and

@@ -7,12 +7,17 @@ sources:
   - raw/conversations/2026-10-04-answers-round-4.md
 related:
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-04
+updated: 2026-10-28
 ---
 
 # D-0006: Separate immutable species from owned instances
 
-**Status:** accepted (2026-10-04)
+**Status:** accepted (2026-10-04). Partly superseded: since
+[D-0012](D-0012-starter-choice-and-extra-creations.md) a starter can also be
+an existing species the player chose, and since
+[D-0009](D-0009-player-data-on-orbitdb.md) instance data lives in a save log
+that the server and other players replicate, so it is public, not private
+(note added 2026-10-28).
 
 ## Context
 A player's creation must appear in many players' worlds, be caught many times,

@@ -21,11 +21,12 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # PvP Battles
@@ -132,6 +133,12 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
   different winners cancel each other. The **in-game profile screen** counts
   only `pvp-result` events that verify, from the save log it fetches; the
   numbers in the shared profile document are the player's own claim.
+  [accepted] For a forfeit win, the profile screen also fetches the
+  opponent's save log and looks for a conflicting result for the same battle
+  ID; until it has it, that win shows as unconfirmed (2026-10-28,
+  [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). Every state signature covers the mode, and a signed state for
+  turn 0 exists, so a forfeit can be proven from the start
+  ([protocols § PvP battle](../tech/protocols.md#peerlingsbattle100--pvp-battle)).
 - **No rewards.** It is a stat only; there are still no XP or items for PvP.
 - **Known gap:** two friends (or one person with two accounts) can still
   play fixed battles to raise a win count. Since it gives no reward, this is
@@ -152,6 +159,7 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
 - **PVP-010** [accepted] A PvP challenge MUST state a level mode, Fair (all Peerlings at level 50, the default) or Real levels (actual levels, unverified), and both players MUST agree to it.
 - **PVP-011** [accepted] The game MUST count each player's PvP wins and show the count on their profile.
 - **PVP-012** [accepted] Only wins proven as in [Win record](#win-record) MUST be counted.
+- **PVP-013** [accepted] A forfeit win MUST only count on the profile screen after the opponent's save log has been checked for a conflicting result for the same battle.
 
 ## Open questions
 

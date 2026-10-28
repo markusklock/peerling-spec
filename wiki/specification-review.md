@@ -7,6 +7,7 @@ sources:
   - raw/conversations/2026-10-27-specification-review-tracker.md
   - raw/conversations/2026-10-27-specification-review-verification.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/index.md
   - wiki/open-questions.md
@@ -15,7 +16,8 @@ related:
   - wiki/tech/protocols.md
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0027-high-severity-review-fixes.md
-updated: 2026-10-27
+  - wiki/decisions/D-0028-medium-low-review-fixes.md
+updated: 2026-10-28
 ---
 
 # Specification Review
@@ -346,7 +348,7 @@ change. All reference links resolved to existing headings.
 
 ### REVIEW-002: Save reconstruction is not fully specified
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 2
 
@@ -358,11 +360,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Player data: Save log](tech/player-data.md#save-log); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): a `rest` event; a lost battle heals and returns the player; events define the save and snapshots are caches (SAVE-039; [Player data: Save log](tech/player-data.md#save-log)).
 
 ### REVIEW-005: Showing the recovery phrase again is unsupported
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 5
 
@@ -374,11 +376,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [UI: Pause menu](gameplay/ui.md#pause-menu-esc); [Data formats: Recovery phrase](tech/data-formats.md#recovery-phrase); [Backup format](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: the device and every backup keep the phrase's entropy, so it can be shown again (SAVE-040; [Data formats: Recovery phrase](tech/data-formats.md#recovery-phrase)).
 
 ### REVIEW-010: Anti-reroll guarantees exceed what the evidence proves
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 10
 
@@ -390,11 +392,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Player data: Encounter seeds](tech/player-data.md#encounter-seeds); [Known gaps](tech/player-data.md#known-gaps-accepted-risks); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: accepted as a known gap (fast fled encounters), with the anti-reroll text and the base-record gap corrected ([Player data: Known gaps](tech/player-data.md#known-gaps-accepted-risks)).
 
 ### REVIEW-014: Equivalent previous-transfer entries can produce different next-transfer signatures
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 14
 
@@ -406,11 +408,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Data formats: Transfer and transfer-log entry](tech/data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): transfers that differ only in an equivalent `prev` are one transfer; signers name the lowest-CID entry (SAVE-041; [Data formats: Transfer](tech/data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
 
 ### REVIEW-015: Trade confirmation binds IDs rather than the offered instance state
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 15
 
@@ -422,11 +424,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Protocols: Trade and offers hash](tech/protocols.md#peerlingstrade100--trade); [Trading: Flow](gameplay/trading.md#flow).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): confirmation commits to IDs only; the receiver stores the offer data before signing and can rebuild it from the sender's save log (TRD-007; [Protocols: Trade](tech/protocols.md#peerlingstrade100--trade)).
 
 ### REVIEW-018: PvP result proofs leave important cases unresolved
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 18
 
@@ -438,11 +440,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Protocols: PvP signatures](tech/protocols.md#peerlingsbattle100--pvp-battle); [Data formats: Save-log events](tech/data-formats.md#save-log-events); [PvP: Win record](gameplay/pvp-battles.md#win-record).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): a signed turn-0 state, the mode in every state signature, and profiles check the opponent's log before counting a forfeit (PVP-013; [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle)).
 
 ### REVIEW-019: Late spectators cannot obtain the initial battle setup
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 19
 
@@ -454,11 +456,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Protocols: Spectating](tech/protocols.md#peerlingsv1battlebattle-id--spectating); [Spectating design](gameplay/spectating.md#design).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): turn messages name the `start` message and the battle history by CID; late spectators fetch both blocks (SPT-005; [Protocols: Spectating](tech/protocols.md#peerlingsv1battlebattle-id--spectating)).
 
 ### REVIEW-020: Spectator messages exceed their mandatory size limit
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 20
 
@@ -470,11 +472,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Spectating requirements](gameplay/spectating.md#requirements); [Data formats: Size limits](tech/data-formats.md#size-limits); [Protocols: Spectating](tech/protocols.md#peerlingsv1battlebattle-id--spectating).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): turn messages carry only that turn's actions; the full history is a separate block, so messages stay small at 200 turns (SPT-005; [Spectating: Design](gameplay/spectating.md#design)).
 
 ### REVIEW-022: Peerling of the Day can become less common instead of more common
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 22
 
@@ -486,11 +488,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Peerling of the Day: In encounters](gameplay/peerling-of-the-day.md#in-encounters); [Encounters: Selection](gameplay/encounters.md#selection).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: weight = max(2 × normal weight, W div 19) ([Peerling of the Day: In encounters](gameplay/peerling-of-the-day.md#in-encounters)).
 
 ### REVIEW-025: Seen is not fully defined outside wild encounters
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 25
 
@@ -502,11 +504,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Peerdex: What it lists](gameplay/peerdex.md#what-it-lists); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave); [Encounters: Selection](gameplay/encounters.md#selection).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: wild, guardian and PvP opponents' Peerlings and every received Peerling write `seen`, with the biome of the player's tile (ENC-011; [Encounters: Selection](gameplay/encounters.md#selection)).
 
 ### REVIEW-027: Delisting has inconsistent scope
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 27
 
@@ -518,11 +520,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [D-0010: Decision](decisions/D-0010-no-content-moderation.md#decision); [Registry: Design](tech/orbitdb-registry.md#design); [Generation server requirements](tech/generation-server.md#requirements); [Guardians: Weekly team](gameplay/guardians.md#the-weekly-team).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: owned Peerlings become a silhouette named "Delisted Peerling", still battle, can't be traded, followed or shared; everyone deletes the assets; SRV-002, REG-010 and NODE-004 replaced by SRV-008, REG-011 and NODE-009 ([Registry: Design](tech/orbitdb-registry.md#design)).
 
 ### REVIEW-029: World updates need rules for ongoing battles and saved map state
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 29
 
@@ -534,11 +536,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave); [Guardians: Weekly team](gameplay/guardians.md#the-weekly-team).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): a guardian battle uses its epoch record's generator version; "nearest" is defined; snapshots name their `generator` (WGN-022; [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates)).
 
 ### REVIEW-031: Implementation-critical proposals remain unapproved inside accepted pages
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 31
 
@@ -550,11 +552,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Generation server requirements](tech/generation-server.md#requirements); [Creation pipeline: Job handling](peerlings/creation-pipeline.md#job-handling); [Open questions](open-questions.md#open).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: the listed proposals in accepted pages are approved; the remaining image-pipeline proposals are tracked as [Q-059](open-questions.md#q-059).
 
 ### REVIEW-033: The originality guarantee conflicts with proposed fail-open behavior
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 33
 
@@ -566,11 +568,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Image prompting: Originality rules](peerlings/image-prompting.md#originality-rules); [Requirements](peerlings/image-prompting.md#requirements).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: a hero image flagged again after the automatic retry can't be accepted (IMG-018; [Image prompting: Originality rules](peerlings/image-prompting.md#originality-rules)).
 
 ### REVIEW-035: Franchise matching uses incompatible normalization and matching rules
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 35
 
@@ -582,11 +584,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Image prompting: Originality rules](peerlings/image-prompting.md#originality-rules); [Creation pipeline: Final review and naming](peerlings/creation-pipeline.md#final-review).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): exact normalization order, word splitting before normalization, scripts without spaces, and empty names refused (CRE-026; [Creation pipeline: Final review](peerlings/creation-pipeline.md#final-review); [Image prompting: Originality rules](peerlings/image-prompting.md#originality-rules)).
 
 ### REVIEW-036: Creation jobs lack complete retry and recovery operations
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 36
 
@@ -598,11 +600,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Creation pipeline: Job handling](peerlings/creation-pipeline.md#job-handling); [Creation API: Job object](tech/creation-api.md#the-job-object); [Creating a Peerling](tech/creation-api.md#creating-a-peerling).
 
-**Resolution:** Partly addressed by [D-0027](decisions/D-0027-high-severity-review-fixes.md): `GET /v1/starter` finds a lost starter job. Retry transitions and the expiry distinction remain open.
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): `POST /v1/jobs/{id}/retry`, an open event stream counts as activity, and `GET /v1/starter` finds a lost starter job (API-010; [Creation API: The job object](tech/creation-api.md#the-job-object)).
 
 ### REVIEW-038: The operator's seed-species workflow is absent from the API
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 38
 
@@ -614,11 +616,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Creation pipeline: Who uses the pipeline](peerlings/creation-pipeline.md#who-uses-the-pipeline); [Stage 8](peerlings/creation-pipeline.md#stage-8--the-new-peerling-joins-the-player); [Creation API](tech/creation-api.md#creating-a-peerling).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): a `seed` job kind for operator accounts, with no instance and the operator account as creator (API-011; [Creation API: Creating a Peerling](tech/creation-api.md#creating-a-peerling)).
 
 ### REVIEW-039: Shrine credits lack lifecycle details
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 39
 
@@ -630,11 +632,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Creation Shrine: Rules](gameplay/creation-shrine.md#rules); [Creation API: Shrine status](tech/creation-api.md#creating-a-peerling).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): a credit holds the reward level, the release entry and its expiry; it is used up when a job starts and returned with its original expiry ([Creation Shrine: Rules](gameplay/creation-shrine.md#rules)).
 
 ### REVIEW-040: Several exact schemas remain descriptive rather than exact
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 40
 
@@ -646,11 +648,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Creation pipeline: Concept](peerlings/creation-pipeline.md#stage-2--concept); [Data formats: Species record](tech/data-formats.md#species-record--peerlingsspecies); [Image prompting: Input object](peerlings/image-prompting.md#input-object).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): exact concept schema, distinct types, code-point lengths everywhere, `models.profile` in provenance (CRE-027, FMT-005; [Creation pipeline: Stage 2](peerlings/creation-pipeline.md#stage-2--concept)).
 
 ### REVIEW-041: Network fallback policy leaves UDP-blocked environments unresolved
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 41
 
@@ -662,11 +664,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Tech stack: Networking](tech/tech-stack.md#networking); [Network performance: What can be slow](tech/network-performance.md#what-can-be-slow); [Creation API: General rules](tech/creation-api.md#general-rules).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): designer's choice: unsupported in v1 with a clear message; the API is also served over HTTP/2 (STK-016, API-012; [Tech stack: Networking](tech/tech-stack.md#networking)).
 
 ### REVIEW-042: Unlimited ownership and permanent retention need a storage-exhaustion policy
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 42
 
@@ -678,11 +680,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Tech stack: Asset budgets](tech/tech-stack.md#asset-budgets); [IPFS node: Retention requirements](tech/ipfs-helia.md#requirements); [Catching: Team and collection](gameplay/catching.md#team-and-collection).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): retained content, the save log and peer backups sit outside the 1 GB cap; a defined order for a full quota (STK-015; [Tech stack: Asset budgets](tech/tech-stack.md#asset-budgets)).
 
 ### REVIEW-043: Profile links can expire despite continuous server republication
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 43
 
@@ -694,11 +696,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Sharing: summary](gameplay/sharing.md); [Data formats: Player profile document](tech/data-formats.md#player-profile-document--peerlingsprofile); [Sharing: Player profile](gameplay/sharing.md#player-profile).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): the link never changes; after expiry the Viewer shows the last signed profile with its date (LNK-004; [Sharing: Player profile](gameplay/sharing.md#player-profile)).
 
 ### REVIEW-045: Creator statistics claim stronger verification than source events support
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Original review item:** 45
 
@@ -710,13 +712,13 @@ change. All reference links resolved to existing headings.
 
 **References:** [Creator feedback: Feasibility](gameplay/creator-feedback.md#is-it-possible-with-ipfs); [Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
 
-**Resolution:** Partly addressed by [D-0027](decisions/D-0027-high-severity-review-fixes.md): `encounter` events now log the tile, so a non-catch encounter's species can be checked. Trade counting and conflict reversal remain open.
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): encounters are checked from `encounter` events, trades count once per trade entry, void trades drop out of the hourly counts (CFB-009; [Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot)).
 
 ## Low severity
 
 ### REVIEW-023: The guaranteed first wild encounter conflicts with guardians consuming encounter zero
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 23
 
@@ -728,11 +730,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Exploration: Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage); [Guardians: Badges and logging](gameplay/guardians.md#badges).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): a guardian battle doesn't end the first-encounter guarantee; EXP-011 replaced by EXP-014 ([Exploration: Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage)).
 
 ### REVIEW-024: Encounter prefetching needs invalidation rules
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 24
 
@@ -744,11 +746,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Encounters: Selection](gameplay/encounters.md#selection); [Latency](gameplay/encounters.md#latency).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): candidate lists are worked out again after every new `seen` event; fetched species are reused by CID ([Encounters: Latency](gameplay/encounters.md#latency)).
 
 ### REVIEW-030: Movement and interaction rules have uncovered boundary cases
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 30
 
@@ -760,11 +762,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Multiplayer: What players experience](gameplay/multiplayer.md#what-players-experience); [Realtime networking requirements](tech/realtime-networking.md#requirements); [Protocols: Presence](tech/protocols.md#peerlingsv1presencerx_ry--presence).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): "within 3 m" means the 4 tiles directly next to the player; presence `jump` for respawns and relocations (MPL-010, NET-005; [Multiplayer](gameplay/multiplayer.md#what-players-experience)).
 
 ### REVIEW-032: Enhancer invocation rules conflict
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 32
 
@@ -776,11 +778,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Image prompting: Pipeline placement](peerlings/image-prompting.md#where-it-sits-in-the-pipeline); [Failure handling](peerlings/image-prompting.md#failure-handling); [Requirements](peerlings/image-prompting.md#requirements).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): IMG-001 names its exceptions (reused descriptions for regenerations and check retries, and the D-0025 fallback) ([Image prompting: Requirements](peerlings/image-prompting.md#requirements)).
 
 ### REVIEW-034: Image-quality checks contradict their own requirement
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 34
 
@@ -792,11 +794,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Image prompting: Image checks and clean-up](peerlings/image-prompting.md#image-checks-and-clean-up); [Requirements](peerlings/image-prompting.md#requirements).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): only a missing transparency after matting blocks an image; the other failed checks are shown and the player decides (IMG-013, still proposed under Q-059; [Image prompting: Image checks](peerlings/image-prompting.md#image-checks-and-clean-up)).
 
 ### REVIEW-044: Phone-backup entry into the Viewer needs clarification
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 44
 
@@ -808,11 +810,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Protocols: Phone backup](tech/protocols.md#peerlingsphone-backup100--phone-backup); [Player data: Phone backup](tech/player-data.md#phone-backup).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): the QR code is a Viewer URL with the data in the fragment, so the phone's camera opens the Viewer ([Protocols: Phone backup](tech/protocols.md#peerlingsphone-backup100--phone-backup)).
 
 ### REVIEW-046: First-finder finalization needs a collection window
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 46
 
@@ -824,11 +826,11 @@ change. All reference links resolved to existing headings.
 
 **References:** [Creator feedback: First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): each hourly snapshot considers the catches verified by then (CFB-009; [Creator feedback: First found in the wild](gameplay/creator-feedback.md#first-found-in-the-wild)).
 
 ### REVIEW-047: Examples and historical summaries contradict current rules
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Original review item:** 47
 
@@ -840,7 +842,7 @@ change. All reference links resolved to existing headings.
 
 **References:** [Peerling species: Example](peerlings/peerling-species.md#species-record); [D-0006](decisions/D-0006-species-vs-instance.md); [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md); [D-0026](decisions/D-0026-single-image-to-3d.md).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): the species example sums to 320 and names the `profile` model; D-0006 and D-0025 carry notes on what changed ([Peerling species](peerlings/peerling-species.md#species-record)).
 
 ## See also
 

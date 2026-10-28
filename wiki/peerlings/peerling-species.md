@@ -20,6 +20,7 @@ sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0006-species-vs-instance.md
   - wiki/peerlings/creation-pipeline.md
@@ -27,7 +28,7 @@ related:
   - wiki/peerlings/moves.md
   - wiki/tech/orbitdb-registry.md
   - wiki/gameplay/trading.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Peerling Species and Instances (Data Model)
@@ -62,7 +63,7 @@ JSON for readability (exact format:
   "types": ["Grass"],
   "sizeClass": "small",
   "temperament": "Sleepy and gentle, wakes up for shiny things",
-  "baseStats": { "hp": 80, "attack": 55, "defense": 70, "speed": 45 },
+  "baseStats": { "hp": 95, "attack": 70, "defense": 90, "speed": 65 },
   "moves": [
     { "slot": "quick", "template": "quick-jab", "name": "Moss Swipe", "type": "Normal", "description": "…" },
     { "slot": "strong", "template": "strong-recoil", "name": "Lantern Slam", "type": "Grass", "description": "…" },
@@ -79,7 +80,7 @@ JSON for readability (exact format:
     "wish": "a small sleepy fox made of moss that carries a lantern",
     "concept": { "…": "…" },
     "imagePrompt": { "version": "peerlings-enhancer/v1", "hero": "This is an RGBA image …", "originality": { "…": "…" } },
-    "models": { "concept": "<name@version>", "enhancer": "gpt-6-luna@<snapshot>", "image": "<name@version>", "to3d": "<name@version>" },
+    "models": { "concept": "gpt-6-luna@<snapshot>", "enhancer": "gpt-6-luna@<snapshot>", "image": "<name@version>", "to3d": "<name@version>", "profile": "gpt-6-luna@<snapshot>" },
     "seeds": { "image": 1234567 }
   }
   },

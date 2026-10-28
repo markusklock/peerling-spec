@@ -24,13 +24,14 @@ sources:
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/types.md
   - wiki/world/visual-style.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Procedural World Generation
@@ -320,7 +321,15 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
   past generator version, and verifiers use the one that was active.
 - **Nobody gets stuck.** A player standing on a tile that became blocked is
   moved to the nearest walkable tile. A last rest point that no longer exists
-  becomes the nearest one.
+  becomes the nearest one. [accepted] (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)) "Nearest"
+  means the smallest straight-line distance between tile centres from the old
+  tile, ties going to the lower y, then the lower x. The client applies this
+  when it loads a save whose snapshot names an older `generator`; a player
+  moved this way writes a `position` event and sends a presence `jump`.
+- [accepted] **Battles across a switch.** A guardian battle uses the generator
+  version active at its epoch record's epoch, for the statue tile and the
+  guardian level, even if the switch happens during the battle; verifiers use
+  the same version (2026-10-28).
 - **Prefer additive changes:** new landmarks and details rather than
   reshaping existing land, so players' knowledge of the world stays valid.
 
@@ -347,6 +356,7 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-019** [accepted] The spawn hub MUST have a Peerling of the Day pedestal ([POD-002](../gameplay/peerling-of-the-day.md#requirements)).
 - **WGN-020** [accepted] Each biome sector MUST have one guardian site ([guardians](../gameplay/guardians.md)).
 - **WGN-021** [accepted] Tile kind, height level and biome MUST be computed with integer maths only, from a fixed 32-byte world seed per generator version, as in [Deterministic world maths](#deterministic-world-maths).
+- **WGN-022** [accepted] After a generator update, relocated players and rest points MUST go to the nearest valid tile as defined in [Generator updates](#generator-updates), and a guardian battle MUST use the generator version of its epoch record.
 
 ## Open questions
 

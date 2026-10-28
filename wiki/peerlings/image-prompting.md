@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/decisions/D-0025-prompt-enhancer-and-three-views.md
@@ -15,7 +16,7 @@ related:
   - wiki/world/visual-style.md
   - wiki/peerlings/types.md
   - wiki/decisions/D-0026-single-image-to-3d.md
-updated: 2026-10-12
+updated: 2026-10-28
 ---
 
 # Image Prompting and the Prompt Enhancer
@@ -68,7 +69,7 @@ stage 5:
 | 4 | Review | client | The player accepts the hero image or regenerates |
 | 5 | 3D model | server: image-to-3D | Hero image → textured mesh, then post-processing |
 
-[proposed] A plain **regenerate** reuses the same enhanced description with a
+[accepted] (approved 2026-10-28) A plain **regenerate** reuses the same enhanced description with a
 new seed, so the player gets a new drawing of the same idea without another
 enhancer call. An **edited wish** runs the concept stage and the enhancer
 again ([creation-pipeline § Stage 4](creation-pipeline.md#stage-4--review)).
@@ -112,12 +113,19 @@ Details [proposed]:
     Temtem, Monster Hunter, Sonic, Mario, Disney, Studio Ghibli, Sanrio and
     the like). Each name is listed in every official language, with common
     romanizations, plus the franchise names themselves ("Pokémon", "ポケモン").
-  - **Normalization:** entries and wishes use the same normalized form as
-    species names ([CRE-025](creation-pipeline.md#requirements)).
-  - **Matching:**
-    - A hit is a whole word or two adjacent words matching an entry.
-    - Entries of 6 or more characters also match at one edit away.
+  - **Normalization:** entries use the normalized form of species names
+    ([creation-pipeline § Final review](creation-pipeline.md#final-review)).
+    Wishes are split into words first (below), since that normalization drops
+    spaces.
+  - **Matching** (made exact 2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)):
     - Leetspeak digits (0→o, 1→i, 3→e, 4→a, 5→s, 7→t) are mapped first.
+    - The wish is split into words at whitespace and at punctuation (P) and
+      symbol (S) characters. Each word gets steps 1–5 of the name
+      normalization; empty words are dropped.
+    - A hit is one word, or two adjacent words joined together, equal to an
+      entry. Entries of 6 or more characters also match at one edit away.
+    - In scripts written without spaces (Han, Hiragana, Katakana, Thai), a
+      hit is any part of a word equal to an entry of at least 2 characters.
   - **Why the list exists:** GPT-6 Luna's knowledge ends in May 2026, so
     creatures released later are only caught by the list.
   - **False alarms are harmless:** a hit is only a hint, and the LLM decides
@@ -137,8 +145,12 @@ Details [proposed]:
   - **On a hit:** the server runs the enhancer once more, with the features
     it reported in the input field `avoid`, and draws a new hero image. This
     doesn't count toward the 30 s cooldown.
-  - **Limit:** it happens at most once per generation; the second image is
-    shown to the player whatever the check says.
+  - **Limit:** it happens at most once per generation.
+  - [accepted] **A second hit blocks the image** (2026-10-28, designer's
+    choice, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): if the regenerated image is flagged too, it is
+    shown with the notice *"This one still looks too much like an existing
+    character"*, and it can't be accepted. The player regenerates (with the
+    usual cooldown) or edits the wish ([IMG-018](#requirements)).
   - **Cost:** the check adds about 2–4 s.
 - **Names:** a Peerling name whose normalized form is on the list is refused
   with `name-reserved` ([creation-api](../tech/creation-api.md#creating-a-peerling)).
@@ -417,11 +429,15 @@ Here "opaque" means alpha ≥ 0.5.
 
 - **When a check fails:** the image is regenerated with the next seed, up to
   2 times, without counting toward the cooldown. If the hero image still
-  fails, it is shown anyway and the player decides.
+  fails *Not cut off*, *Big enough* or *One creature*, it is shown with a note
+  of what failed, and the player may accept it or regenerate (made consistent
+  2026-10-28). Transparency is the only hard rule: see the next point.
 - **Missing alpha:** if only the transparency check fails after the
   retries, the server cuts the subject out with a matting model whose licence
   allows the game's use (e.g. BiRefNet, MIT). The pipeline never uses
-  RMBG-2.0 ([Q-057](../open-questions.md#q-057)).
+  RMBG-2.0 ([Q-057](../open-questions.md#q-057)). If the image still fails
+  the transparency check after matting, it can't be accepted: the 3D stage
+  needs it, so the player regenerates.
 - **Clean-up:**
   - alpha below 0.04 becomes 0;
   - the colour of every fully transparent pixel becomes black.
@@ -502,7 +518,7 @@ before launch. See [Q-057](../open-questions.md#q-057).
 
 ## Requirements
 
-- **IMG-001** [accepted] The server MUST send every new image request through the prompt enhancer (GPT-6 Luna, via OpenAI's API) before Qwen-Image-2.1 generates the image.
+- **IMG-001** [accepted] The server MUST send every new image request through the prompt enhancer (GPT-6 Luna, via OpenAI's API) before Qwen-Image-2.1 generates the image. [accepted] (2026-10-28) A regeneration without an edited wish, and an automatic retry after a failed image check, reuse the job's existing enhanced description, which counts as going through the enhancer; if the enhancer fails, the concept's appearance is used instead ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md), [Failure handling](#failure-handling)).
 - **IMG-002** [accepted] Species images MUST be generated by Qwen-Image-2.1 with a transparent background.
 - **IMG-003** [accepted] The pipeline MUST stop players from cloning an existing Pokémon or other existing character into a Peerling, whether they name it or describe it.
 - ~~**IMG-004**~~ (removed 2026-10-12: one image goes to the image-to-3D generator, see [D-0026](../decisions/D-0026-single-image-to-3d.md) and IMG-016)
@@ -514,16 +530,18 @@ before launch. See [Q-057](../open-questions.md#q-057).
 - **IMG-010** [proposed] The server SHOULD run the [resemblance check](#resemblance-check-prompt) on every hero image and regenerate once on a hit.
 - **IMG-011** [proposed] Final image prompts MUST be built from the fixed [prompt templates](#prompt-templates).
 - **IMG-012** [proposed] Images MUST be generated with the [settings](#image-generation-settings) on this page, without a negative prompt.
-- **IMG-013** [proposed] Every generated image MUST pass the [image checks and clean-up](#image-checks-and-clean-up) before use, and the pipeline MUST NOT use RMBG-2.0.
+- **IMG-013** [proposed] Every generated image MUST go through the [image checks and clean-up](#image-checks-and-clean-up) before use; an image that fails the transparency check after matting MUST NOT be used, other failed checks MAY be accepted by the player, and the pipeline MUST NOT use RMBG-2.0.
 - ~~**IMG-014**~~ (removed 2026-10-12: no reference views, see [D-0026](../decisions/D-0026-single-image-to-3d.md))
-- **IMG-015** [proposed] The server MUST refuse a Peerling name whose normalized form is on the franchise name list (`name-reserved`).
+- **IMG-015** [accepted] (approved 2026-10-28) The server MUST refuse a Peerling name whose normalized form is on the franchise name list (`name-reserved`).
 - **IMG-016** [accepted] The image-to-3D generator (TRELLIS.2 or Pixal3D) MUST get the accepted hero image as its only input image; no other views are generated.
 - **IMG-017** [proposed] Post-processing MUST find the model's front as described in [§ Image to 3D](#image-to-3d) before normalizing its orientation.
+- **IMG-018** [accepted] A hero image that the resemblance check flags again after its automatic retry MUST NOT be accepted; the player MUST regenerate or edit the wish.
 
 ## Open questions
 
 - [Q-057](../open-questions.md#q-057) — Licences of Qwen-Image-2.1 and of the image-to-3D generators' dependencies.
 - [Q-058](../open-questions.md#q-058) — TRELLIS.2 or Pixal3D as the default image-to-3D generator.
+- [Q-059](../open-questions.md#q-059) — Approving the remaining proposals on this page.
 
 ## See also
 

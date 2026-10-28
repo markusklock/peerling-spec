@@ -12,12 +12,13 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/player-data.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Creation Shrine
@@ -71,7 +72,15 @@ offering. After 30 days the credit is gone.
 - A player has at most **one open shrine job or one shrine credit** at a time,
   so two jobs can't run in parallel to get around the 7-day limit.
 - A job that ends in `FAILED` (e.g. a generation or publishing error) also
-  gives a shrine credit.
+  gives a shrine credit. [accepted] A failed job can first be retried
+  ([creation-api § The job object](../tech/creation-api.md#the-job-object));
+  the credit comes when it is abandoned or expires (2026-10-28).
+- [accepted] **What a credit holds** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): the reward
+  level (the offering's average level, SHR-004), the offering's release entry,
+  and its expiry. Starting a shrine job with the credit uses it up; that job
+  keeps the same level and release entry. If that job also ends without
+  publishing, the credit comes back with its original expiry: it is never
+  renewed, so 30 days after the offering it is gone.
 - The client can ask the server for the player's shrine status: an open job,
   a credit and when it expires, and when the 7-day limit ends
   ([creation-api](../tech/creation-api.md#creating-a-peerling)).
