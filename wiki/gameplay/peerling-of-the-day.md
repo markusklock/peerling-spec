@@ -8,12 +8,14 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/encounters.md
   - wiki/world/procedural-generation.md
   - wiki/gameplay/world-feed.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Peerling of the Day
@@ -44,10 +46,12 @@ Peerling yet?") and gives every creator a chance at a moment in the spotlight.
   lasts long enough for everyone to join.
 - The choice uses the [epoch record](../tech/data-formats.md#epoch-record--peerlingsepoch)
   of epoch 288 × D (the server-signed one if it exists, otherwise
-  client-derived: [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)): one species drawn uniformly from
+  client-derived: [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds);
+  [accepted] the [genesis record](../glossary.md#genesis-record) for a day that
+  began before the game launched): one species drawn uniformly from
   the eligible species at its `registryHeight`
   ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)),
-  sorted by registry `seq`, with the
+  sorted by listing `seq`, with the
   [random number generator](battle.md#random-number-generator) seeded with
   SHA-256(`"peerlings/spotlight/v1"` ‖ the record's randomness).
 - Every client works it out on its own, so all players agree without any
@@ -56,16 +60,21 @@ Peerling yet?") and gives every creator a chance at a moment in the spotlight.
 ## In encounters
 
 [accepted] During its day, in every biome, the Peerling of the Day gets the
-selection weight max(1, W div 19), where W is the total weight of all other
-eligible species ([encounters § Selection](encounters.md#selection)). It is
-then about 1 in 20 of all draws, wherever the player is. Its biome and novelty
-multipliers don't apply. Encounters use the day of the epoch record they use.
+selection weight max(2 × N, W div 19), where N is its normal weight (with its
+biome and novelty multipliers) and W is the total weight of all other eligible
+species ([encounters § Selection](encounters.md#selection)). So it is always
+at least twice as likely as on other days, and once the registry is large it
+is about 1 in 20 of all draws, wherever the player is (formula changed
+2026-10-28, designer's choice, [D-0028](../decisions/D-0028-medium-low-review-fixes.md); the earlier max(1, W div 19) made
+it rarer than normal in a small registry). Encounters use the day of the epoch record they use.
 
 [accepted] If the Peerling of the Day is delisted during its day, its boost
 stops (it is no longer eligible at the encounter's registry height,
 [ENC-004](encounters.md#requirements)), and the pedestal stays empty until the
 next day. A catch's evidence includes the day's record
-([data-formats § Catch evidence](../tech/data-formats.md#catch-evidence)).
+([data-formats § Catch evidence](../tech/data-formats.md#catch-evidence)), and
+[accepted] it is verified with that record even if a different (signed)
+record for the day turns up later (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)).
 
 ## In the world
 

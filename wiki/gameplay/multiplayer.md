@@ -18,13 +18,14 @@ sources:
   - raw/conversations/2026-10-05-showcase-features.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Multiplayer — The Shared World
@@ -48,6 +49,9 @@ updated: 2026-10-06
   **next to each other** in the world, meaning within 3 metres.
 - [accepted] With grid movement, "within 3 metres" means standing on a
   neighbouring tile ([exploration § Grid movement](exploration.md#grid-movement)).
+  [accepted] Exactly: the other player stands on one of the 4 tiles directly
+  north, east, south or west of the player's tile; diagonal tiles don't count,
+  since the player can only face those 4 (2026-10-28).
   The player starts an interaction by facing the other player and pressing
   the interact key.
 - [accepted] Interacting with an adjacent player's character opens a menu:
@@ -115,6 +119,7 @@ Network rates and region size are in
 - **MPL-004** [accepted] Wild encounters MUST be local to each player; other players MUST NOT be able to interfere with them.
 - **MPL-005** [accepted] Battle and trade requests MUST require explicit acceptance by the receiving player, who MUST be able to block or ignore a player.
 - **MPL-006** [accepted] A battle or trade request MUST only be possible when the two players are within 3 m of each other in the world.
+- **MPL-010** [accepted] "Within 3 m" MUST mean that the other player stands on one of the 4 tiles directly next to the player's tile, which the player faces.
 - **MPL-007** [accepted] There MUST NOT be free-text chat between players; players communicate only with emotes from a fixed set.
 - **MPL-008** [accepted] A client MUST hide a blocked player's character, name and emotes and MUST decline their requests with the reason "busy"; the block list MUST be stored only locally.
 - **MPL-009** [accepted] A client already in a battle or trade MUST decline new requests with the reason "busy".

@@ -14,11 +14,13 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Trading
@@ -48,7 +50,9 @@ Exact messages: [protocols](../tech/protocols.md).
    ([peerling-species § Individual variation](../peerlings/peerling-species.md#individual-variation)). Each
    client fetches the offered species by CID and **verifies the offered
    Peerlings**: genuine origin, a valid ownership chain ending at the other
-   player, and the other player not flagged
+   player, and the other player not flagged. [accepted] Peerlings of a
+   delisted species can't be offered
+   ([orbitdb-registry § Design](../tech/orbitdb-registry.md#design))
    ([player-data § Verified Peerlings](../tech/player-data.md#verified-peerlings)).
 3. Both confirm. Any change to an offer resets both confirmations.
 4. Both sign their transfers (each one names the hash of both final offers, so
@@ -60,14 +64,21 @@ Exact messages: [protocols](../tech/protocols.md).
    [accepted] Once both sides have exchanged their signed transfers, the trade
    can no longer be cancelled: either side may write the entry, and does so if
    it hasn't appeared, even if the session dropped (2026-10-06).
+   [accepted] If the session drops before one side has the other's transfers,
+   that side's offered Peerlings are locked until the trade appears, and after
+   10 minutes the player can ask the server to cancel (expire) it; then both
+   keep what they offered and nobody is flagged (2026-10-27, designer's choice,
+   [player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
 5. Each side then appends a `trade` event to its save, removing the outgoing
    instances and adding the incoming ones (their `origin` stays as it was;
    trades don't change it). A client keeps the received offer data until it
-   has written this event, and at every session start it checks the transfer
+   has written this event ([accepted] stored durably before it signs; if lost,
+   it is rebuilt from the sender's save log:
+   [protocols § Trade](../tech/protocols.md#peerlingstrade100--trade)), and at every session start it checks the transfer
    log (or the ownership index) for its own Peerlings and writes any `trade`
    event that is missing.
 6. After the trade, the receiving player's node fetches and keeps
-   ([NODE-004](../tech/ipfs-helia.md#requirements)) the species content of what
+   ([NODE-009](../tech/ipfs-helia.md#requirements)) the species content of what
    it received.
 
 ## Integrity
@@ -79,7 +90,9 @@ without the operator server.
 A modified client that "keeps a copy" can't trade it again: the transfer log
 shows it already belongs to someone else. A player who gives the same Peerling
 to two people at once is detected by their two conflicting signatures and
-flagged; one transfer stays valid and the other is void. Re-posting someone's
+flagged; one transfer stays valid, and [accepted] the trade holding the other
+is void as a whole, so its players keep what they offered (2026-10-27,
+[D-0027](../decisions/D-0027-high-severity-review-fixes.md)). Re-posting someone's
 old, identical transfer is never a conflict, so it can't get an honest player
 flagged
 ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades)).
@@ -91,6 +104,8 @@ flagged
 - **TRD-003** [accepted] A completed trade MUST produce a trade record signed by both players.
 - **TRD-004** [accepted] Trades MUST NOT require the operator server; each side MUST verify the other's offered Peerlings before signing.
 - **TRD-005** [accepted] A trade MUST NOT be cancellable once both sides have exchanged signed transfers; either side MUST append the entry if it is missing, and each client MUST at session start write any `trade` event missing for its own Peerlings.
+- **TRD-006** [accepted] A client MUST lock the Peerlings it offered from sending its signed transfers until the trade's entry appears or the trade expires, and MUST let the player ask the server to expire a trade whose entry hasn't appeared ([SAVE-036](../tech/player-data.md#requirements)).
+- **TRD-007** [accepted] A client MUST store the other side's final offer data durably before sending its own signed transfers, and MUST be able to rebuild it from the sender's save log ([protocols § Trade](../tech/protocols.md#peerlingstrade100--trade)).
 
 ## Open questions
 

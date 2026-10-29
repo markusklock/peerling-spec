@@ -21,6 +21,7 @@ sources:
   - raw/conversations/2026-10-10-image-prompt-enhancer.md
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0004-single-operator-server.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
@@ -30,7 +31,7 @@ related:
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0026-single-image-to-3d.md
-updated: 2026-10-12
+updated: 2026-10-28
 ---
 
 # Generation Server
@@ -84,12 +85,13 @@ it generated, is canonical in
 ## Requirements
 
 - **SRV-001** [accepted] The server MUST host the image generator and image-to-3D generator itself. [accepted] Every LLM step (concept, prompt enhancer, stats and moves) MUST use GPT-6 Luna through OpenAI's API ([D-0025](../decisions/D-0025-prompt-enhancer-and-three-views.md)).
-- **SRV-002** [accepted] The server MUST pin every game asset and species record so each CID is always available from at least one node.
+- ~~**SRV-002**~~ (removed 2026-10-28, replaced by SRV-008; see D-0028)
 - **SRV-003** [accepted] Each AI model MUST be behind a stage interface so it can be swapped without changing the species record format.
 - **SRV-004** [accepted] GPU work MUST go through a job queue; the client MUST be able to see job status and queue position.
 - **SRV-005** [accepted] The server MUST rate-limit creation requests per player identity.
 - **SRV-006** [accepted] The server MUST run a dual-stack (IPv6 + IPv4) libp2p node reachable from browsers over WebTransport and WebRTC-direct ([tech-stack](tech-stack.md#networking)), acting as bootstrap peer and circuit relay.
-- **SRV-007** [proposed] Only the server MAY call OpenAI's API (the API key never leaves it). Requests MUST carry only the game data the step needs (wish, concept, hints, generated text, or the hero image), never the player ID, keys, display name or IP address, and MUST set `store: false`.
+- **SRV-007** [accepted] (approved 2026-10-28) Only the server MAY call OpenAI's API (the API key never leaves it). Requests MUST carry only the game data the step needs (wish, concept, hints, generated text, or the hero image), never the player ID, keys, display name or IP address, and MUST set `store: false`.
+- **SRV-008** [accepted] The server MUST pin every species record and every game asset, except the assets of delisted species ([REG-011](orbitdb-registry.md#requirements)), so each such CID is always available from at least one node.
 
 ## Open questions
 

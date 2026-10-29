@@ -9,18 +9,19 @@ sources:
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/player-data.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Shareable Peerling Cards and Player Profiles
 
-> Every Peerling species and every player has a permanent link that opens
-> outside the game, in any browser, loaded straight from IPFS and checked
+> Every Peerling species and every player has a link that never changes and
+> opens outside the game, in any browser, loaded straight from IPFS and checked
 > against its CID: good for showing creations to friends and on social media.
 
 [accepted] Peerling cards and player profiles can be shared as links that open
@@ -55,6 +56,8 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
   caught, nodes holding it). Plus the CID and a verified badge.
 - [accepted] *"First found in the wild by …"* once someone has found it
   ([creator-feedback § First found in the wild](creator-feedback.md#first-found-in-the-wild)).
+- [accepted] A delisted species' card shows only *"This Peerling has been
+  delisted"* ([orbitdb-registry § Design](../tech/orbitdb-registry.md#design)).
 
 ### Player profile
 
@@ -69,8 +72,16 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
   IPNS records must be republished regularly to stay findable, so the client
   republishes on every session. The operator server stores and republishes the
   latest signed record for every player, which it can do without the player's
-  key. If both stop, an old profile link stops resolving until the player
-  plays again.
+  key.
+- [accepted] **When a record expires** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): a record
+  is valid for 30 days from when the player's client signed it, and
+  republishing doesn't extend that; only the player's client can, by signing
+  a new one. So a player who hasn't played for 30 days has an expired record.
+  The Viewer then fetches the last record from the server
+  (`GET /v1/ipns/{name}`, [creation-api](../tech/creation-api.md#network)) or
+  its own cache, checks its signature, and shows that profile with
+  *"Last updated 2026-09-14"*. Only if no copy of the record exists anywhere
+  does the link fail to open. The link itself never changes.
 
 ### In the game
 
@@ -82,6 +93,7 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 - **LNK-001** [accepted] Players MUST be able to share links to Peerling cards and player profiles that open outside the game.
 - **LNK-002** [accepted] Links MUST open in a separate viewer web app published on IPFS (with DNSLink), which fetches and verifies all content by CID in the visitor's browser.
 - **LNK-003** [accepted] A player's profile MUST be published as a profile document behind an IPNS name derived from their identity key; the client MUST republish it each session and the server MUST republish the latest signed record.
+- **LNK-004** [accepted] When a player's IPNS record has expired, the Viewer MUST show the last validly signed profile it can get, marked with the date it was last updated.
 
 ## Open questions
 

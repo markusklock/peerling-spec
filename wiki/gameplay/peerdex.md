@@ -7,13 +7,14 @@ tags: [gameplay, collection, ui]
 sources:
   - raw/conversations/2026-10-06-peerdex-ui-audio-restpoints.md
   - raw/conversations/2026-10-06-review-decisions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/gameplay/catching.md
   - wiki/gameplay/sharing.md
   - wiki/gameplay/creator-feedback.md
   - wiki/tech/player-data.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Peerdex
@@ -36,6 +37,9 @@ The registry keeps growing, so the Peerdex lists only species the player has
 
 - [accepted] Starters, shrine creations and Peerlings received in trades count
   as seen and caught, just like wild catches.
+- [accepted] Which sightings make a species *seen*, and its first biome:
+  [encounters § Selection](encounters.md#selection) (wild, guardian and PvP
+  opponents, and every Peerling the player receives; 2026-10-28).
 - **Shimmer badge:** shown on species the player has seen or caught as a
   shimmer.
 - **Counters:** "Seen 143 · Caught 61 · Species in the world 2,310" (the last is

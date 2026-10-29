@@ -16,6 +16,7 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0003-browser-client-is-ipfs-node.md
   - wiki/decisions/D-0007-players-publish-assets.md
@@ -24,7 +25,7 @@ related:
   - wiki/tech/realtime-networking.md
   - wiki/tech/tech-stack.md
   - wiki/decisions/D-0011-modern-web-platform-first.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Browser IPFS Node (Helia)
@@ -108,18 +109,21 @@ library defaults:
   wait on the network. See [encounters](../gameplay/encounters.md).
 - **Eviction:** cache size is bounded ([tech-stack § Asset budgets](tech-stack.md#asset-budgets)); least-recently-used content is evicted,
   except the player's own species and the species of every Peerling they own
-  (team and collection).
+  (team and collection). [accepted] The assets of a delisted species are the
+  exception: they are deleted even when owned
+  ([orbitdb-registry § Design](orbitdb-registry.md#design), 2026-10-28).
 
 ## Requirements
 
 - **NODE-001** [accepted] The client MUST run a Helia node that can both retrieve content from and provide content to the IPFS network.
 - **NODE-002** [accepted] All content fetched from the network MUST be verified against its CID before use.
 - **NODE-003** [accepted] The client MUST persist fetched blocks across sessions and keep serving them to peers while the game is open.
-- **NODE-004** [accepted] The client MUST always retain (never evict) the records and assets of its own created species and of the species of every Peerling it owns (team and collection).
+- ~~**NODE-004**~~ (removed 2026-10-28, replaced by NODE-009; see D-0028)
 - **NODE-005** [accepted] The client MUST connect to the operator server's node as a bootstrap/relay peer (over WebTransport or WebRTC-direct) and SHOULD connect directly to other players via WebRTC when possible.
 - **NODE-006** [accepted] The client MAY fall back to trustless HTTP gateways when peer retrieval times out.
 - **NODE-007** [accepted] The client MUST add its newly created species record and assets to IPFS through its own node. [accepted] It MUST provide them at least until the server confirms pinning.
 - **NODE-008** [accepted] Server and client MUST import game content with the fixed parameters in [Content import parameters](#content-import-parameters).
+- **NODE-009** [accepted] The client MUST always retain (never evict) the records and assets of its own created species and of the species of every Peerling it owns (team and collection), except the assets of delisted species, which it MUST delete and stop providing.
 
 ## Open questions
 

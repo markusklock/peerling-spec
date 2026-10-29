@@ -11,14 +11,17 @@ related:
   - wiki/tech/player-data.md
   - wiki/tech/data-formats.md
   - wiki/gameplay/pvp-battles.md
-updated: 2026-10-06
+updated: 2026-10-27
 ---
 
 # D-0024: Determinism, verification and edge-case rules from the second review
 
 **Status:** accepted (2026-10-06). Changes parts of D-0013 (transfer conflict
 resolution), D-0017 (world generation), D-0021 (PvP win proof) and D-0022
-(guardians, Peerling of the Day, first finds).
+(guardians, Peerling of the Day, first finds). Partly superseded by
+[D-0027](D-0027-high-severity-review-fixes.md) (2026-10-27): encounter
+events and their order, the `battle-result` fields, day and week records,
+PvP timers and disconnects.
 
 ## Context
 A second full review found rules that two honest clients could compute

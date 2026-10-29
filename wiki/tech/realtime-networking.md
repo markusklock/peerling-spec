@@ -19,13 +19,14 @@ sources:
   - raw/conversations/2026-10-05-phone-backup.md
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/multiplayer.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/ipfs-helia.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Realtime Peer-to-Peer Networking
@@ -73,6 +74,10 @@ updated: 2026-10-06
   [multiplayer § Communication](../gameplay/multiplayer.md#communication)),
   rate-limited like other presence messages. Receivers ignore unknown emote IDs.
 - A player not heard from for **15 s** is removed from view.
+- [accepted] **Jumps** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): a respawn at a rest point
+  after a lost battle, or a move by a generator update, puts a player far from
+  their last tile. Their first presence message after it carries `jump`, and
+  receivers show them at the new tile at once instead of dropping the message.
 - Budget: a message is about 200 bytes, so 30 visible moving players cost about
   30 × 4 × 200 B ≈ 24 KB/s of download, which is fine on desktop.
 - [accepted] The operator server also joins the topics, to help gossip reach
@@ -96,6 +101,7 @@ Exact message formats: [protocols](protocols.md).
 - **NET-002** [accepted] Presence MUST be distributed via pubsub topics scoped to world regions, so a client only receives nearby players.
 - **NET-003** [accepted] Presence messages MUST be signed with the player's identity key and rate-limited by the sender; receivers MUST drop messages that are unsigned, too frequent or impossibly far from the previous position.
 - **NET-004** [accepted] Battles, trades and profile requests MUST use versioned libp2p protocol IDs.
+- **NET-005** [accepted] The first presence message after a respawn or a generator relocation MUST carry `jump`, and receivers MUST accept such a message however far it moved.
 
 ## Open questions
 

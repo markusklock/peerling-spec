@@ -31,6 +31,8 @@ sources:
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -41,7 +43,8 @@ related:
   - wiki/peerlings/peerling-species.md
   - wiki/tech/architecture.md
   - wiki/tech/orbitdb-registry.md
-updated: 2026-10-06
+  - wiki/decisions/D-0027-high-severity-review-fixes.md
+updated: 2026-10-28
 ---
 
 # Player Data: Saves, Identity and Ownership
@@ -104,11 +107,14 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 | `release` | Peerlings offered at the [Creation Shrine](../gameplay/creation-shrine.md) | instance IDs, transfer-log entry reference |
 | `created` | A shrine creation was published | the new instance + the server's origin attestation |
 | `catch` | A wild Peerling is caught | the new instance + **catch evidence** (see below) |
-| `battle-result` | After a wild battle | for each participating instance: XP gained, new level, HP |
+| `encounter` | A wild or guardian battle starts | encounter number, epoch used, tile, and the candidate and species met (or the guardian's biome) |
+| `battle-result` | A wild or guardian battle ends | outcome; for each participating instance: XP gained, new level, HP |
 | `team` | Team changed | ordered instance IDs |
 | `session-start` | The game starts on a computer | device ID ([Using the same account on several computers](#using-the-same-account-on-several-computers)) |
 | `nickname` | Peerling renamed | instance ID, nickname |
+| `rest` | The player uses a rest point | the rest point's tile |
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
+| `trade-void` | A trade the player took part in turned out void ([Transfer log and trades](#transfer-log-and-trades)) | the void entry; own Peerlings restored; received Peerlings removed |
 | `seen` | First sighting of a species, and first sighting as a shimmer | species CID, biome, shimmer flag |
 | `position` | Every 30 s while moving, and on exit | position, facing |
 | `explored` | The player enters a chunk for the first time | the newly revealed chunks ([exploration § Map](../gameplay/exploration.md#map)) |
@@ -117,6 +123,18 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 
 Loading a save means reading the latest `snapshot` and applying the events
 after it. The server replicates every player's log and pins the snapshots.
+
+[accepted] **Events are the save; snapshots are caches** (2026-10-28,
+[D-0028](../decisions/D-0028-medium-low-review-fixes.md)). Every change to the save comes from an event:
+- a `rest` event heals the whole team and makes that rest point the last rest
+  point ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points));
+- a `battle-result` with outcome `lost` (wild or guardian) heals the whole
+  team and moves the player to the last rest point;
+- otherwise HP comes from the `team` field of each `battle-result`.
+
+A snapshot holds the result of applying every event up to its `upTo` entry.
+Readers may load from it, but if it ever differs from the events, the events
+win. The server computes a checkpoint's `state` from the events.
 Other players fetch a save log when they need to verify one of its catches.
 
 ## Account recovery
@@ -130,7 +148,7 @@ pins (SAVE-001). The key is recovered with the **recovery phrase** or a
 
 | Method | How | Strength |
 |--------|-----|----------|
-| **Recovery phrase** | 12 random words shown once at onboarding; the key is derived from them. Nothing secret is stored anywhere | Very strong: the words are random |
+| **Recovery phrase** | 12 random words shown at onboarding; the key is derived from them. Nothing secret is stored on any server. [accepted] The device keeps the phrase's entropy next to the key, and backups carry it, so *Backup → Show recovery phrase* works on every device the account is on (2026-10-28) | Very strong: the words are random |
 | **Backup file** | Export or import the key as a file | Strong, if the file is kept safe |
 | **Phone backup** | Scan a QR code with your phone; it carries the key and the save ([Phone backup](#phone-backup)) | Strong; whoever has the phone has the account |
 
@@ -153,7 +171,8 @@ the game isn't played on it (designer, 2026-10-05; replaces the earlier
   connects to the computer over libp2p (WebRTC, through a relay if needed) and
   proves it knows the secret. The computer asks the player to confirm, then
   sends the **identity key** and the **save** (the latest save snapshot, packed
-  as a CAR file, the IPFS archive format that keeps every CID intact; exact
+  as a CAR file, the IPFS archive format that keeps every CID intact,
+  together with the save log and the proofs of the player's Peerlings; exact
   contents: [data-formats § Backup file](data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup)),
   encrypted with a key derived from the secret. The phone stores it in its
   browser storage and shows the date of the backup.
@@ -186,6 +205,19 @@ computer"*). A crashed computer's session simply stops sending heartbeats and
 counts as ended after 60 s. Two computers playing while both are offline
 can't be detected in time; restoring shows a warning about this.
 
+[accepted] **Starting and competing sessions** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md);
+messages in [protocols](protocols.md#peerlingsv1sessionplayer-id--active-session)):
+- Before starting play, the client also publishes a `session-probe` on that
+  topic. An active session answers at once with a heartbeat, so the client
+  waits only 3 s for an answer instead of a full heartbeat interval.
+- Every heartbeat carries the time its session started (`since`). If a playing
+  client receives a heartbeat from another device of the same account, the
+  session that started earlier keeps playing (on a tie, the lower device ID).
+  The other stops at once, writes no further events and shows *"You're playing
+  on another computer"*.
+- What remains is two computers starting within the same few seconds, or
+  playing while offline. A fork there is an accepted risk.
+
 ### Finding the save again
 
 [accepted] The save log's OrbitDB address is computed from the player ID alone
@@ -195,9 +227,19 @@ player chooses *Recover account*, enters the phrase or loads the file, and the
 client fetches the save log from whichever node holds it and loads the latest
 snapshot.
 
-If no node holds the save any more, the key still works: the player keeps
-their identity, and every species they created still names them as creator.
-Only progress is lost.
+If no node holds the save any more, the key still works as an identity: every
+species the player created still names it as creator. The progress can't be
+rebuilt, and the key can't start a new save either: the save log's address is
+fixed by the player ID ([SAVE-018](#requirements)), so a fresh log would clash
+with any old copy that turns up later, and the player has already had their one
+starter. [accepted] So (2026-10-27, designer's choice, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)) the client
+explains that the progress is lost and offers two choices:
+- **Keep looking:** try the server and the `save-wanted` request again later.
+- **Start a new account:** a new key and recovery phrase, so a new player ID
+  and a new starter, as for any new player. The old key isn't used to play
+  again. The client MAY keep the old player ID to show the
+  [creator notifications](../gameplay/creator-feedback.md) of the species it
+  created.
 
 ### Who actually holds a save
 
@@ -248,12 +290,23 @@ to make saves more durable are in [Keeping saves available](#keeping-saves-avail
   none, and a holder can only help while their game is open. This is a
   safety net next to the server, not a replacement.
 
-**2. Save snapshot in the backup file**
+**2. The save in the backup file**
 
-The backup file holds the key *and* the latest save snapshot. The game reminds
-the player to refresh it now and then (at rest points,
+The backup file holds the key, the latest save snapshot and [accepted]
+(2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)) the whole save log plus the proofs of every Peerling
+the player owns (exact contents:
+[data-formats § Backup file](data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup)).
+The phone backup carries the same file. The game reminds the player to refresh
+it now and then (at rest points,
 [exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
-This works even if every network copy is gone.
+This works even if every network copy of the save is gone:
+- the save loads, and the signed log proves the snapshot is the player's own;
+- the player's own catches, starters, creations, badges and PvP results can be
+  verified again by anyone the restored client shares the log with;
+- every owned Peerling keeps its ownership chain. A Peerling received in a
+  trade is verified against its original owner's save log, so its origin can
+  be checked again once that log is reachable (from the server, the original
+  owner or a peer backup).
 
 Not recommended: buddy pinning of assigned saves (browsers are offline most of
 the time), and paid pinning or Filecoin storage (costs money).
@@ -275,6 +328,20 @@ battling, and the Creation Shrine before accepting an offering. The client
 caches results per Peerling and checks only the new part of an ownership chain
 later. The server also verifies catches it sees, for the species stats
 ([creator-feedback](../gameplay/creator-feedback.md)).
+
+[accepted] **Results** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)). A check gives one of three
+results:
+
+| Result | When | Effect |
+|--------|------|--------|
+| **Verified** | Every check passed | Usable in trades and PvP |
+| **Invalid** | A check failed on complete data: the verifier had every save-log entry in the causal history of the entry it checked (back to the start of the log, or to the `upTo` of the checkpoint it uses), every block the checks need, and a rules version it supports. A server checkpoint's `invalid` list also counts | Never usable in trades or PvP; it stays in its owner's collection |
+| **Pending** | Something is missing: a log entry or block that can't be fetched yet, an epoch record, or a rules version newer than the verifier's game (the player is then asked to reload the game) | Not usable for now; checked again the next time it is needed. The UI says *"This Peerling can't be checked right now"* |
+
+Verified and invalid results are cached by entry CID. A cached verified catch
+is checked again only for what can still change: save-log entries the verifier
+didn't have before (a fork shows up as duplicate encounter numbers) and new
+transfers.
 
 [accepted] **Verification checkpoints** (2026-10-06,
 [D-0023](../decisions/D-0023-network-performance.md)): the server signs a
@@ -302,8 +369,10 @@ the whole log ([network-performance § Verification checkpoints](network-perform
 3. Any verifier fetches the catcher's save log, replays the battle with the
    deterministic engine ([BTL-002](../gameplay/battle.md#requirements)), and runs
    the checks in [Encounter seeds](#encounter-seeds). The result is the same
-   for every verifier. A catch that fails is invalid forever: the Peerling stays
-   in its owner's collection but can never be traded or used in PvP.
+   for every verifier that has the same data. A catch that is
+   [invalid](#verified-peerlings) stays invalid: the Peerling stays in its
+   owner's collection but can never be traded or used in PvP. A *pending*
+   check is tried again later.
 
 [accepted] **Guardian badges** are verified the same way: the verifier
 recomputes the week's guardian team from the `weekRecord`, replays the battle
@@ -372,7 +441,7 @@ without the server, and the server can check everything afterwards.
 - Every encounter has an **encounter number** n: 0 for the player's first
   encounter, increasing by exactly 1 for each encounter. *Every* encounter is
   logged in the save log, including ones the player flees from or loses
-  (`battle-result` carries n).
+  (its `encounter` event carries n).
 - encounter seed = SHA-256("peerlings/encounter/v1" ‖ epoch randomness ‖ player
   ID ‖ n).
 - The seed drives the [random number generator](../gameplay/battle.md#random-number-generator)
@@ -381,6 +450,25 @@ without the server, and the server can check everything afterwards.
 - An encounter uses the latest epoch record the client has when the encounter
   starts. Epoch numbers must never decrease from one encounter to the next.
 
+**Recording an encounter** ([accepted] 2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md); exact
+events: [data-formats § Save-log events](data-formats.md#save-log-events)).
+- When a wild or guardian battle starts (a candidate has arrived, or the
+  player accepted a guardian challenge), the client appends an `encounter`
+  event with n, the epoch used, the tile, and the candidate and species met (or
+  the guardian's biome). This uses up n and fixes the tile and epoch, even if
+  the game reloads.
+- A first sighting's `seen` event follows at once
+  ([encounters § Selection](../gameplay/encounters.md#selection)).
+- When the battle ends, the client appends the `catch` event (if caught), then
+  the `battle-result`, so the evidence is saved before the result.
+- **Interrupted battles** (designer's choice). If the game closes or crashes
+  during a battle, the next start finds an `encounter` with no
+  `battle-result`. If a `catch` for n exists, the client replays its evidence
+  and writes the matching `battle-result`. Otherwise the battle counts as
+  fled: the client writes a `battle-result` with outcome `fled`, no XP, and
+  each Peerling's HP as it was when the battle started. Fleeing always
+  succeeds anyway, so closing the game during a battle gains nothing.
+
 **Why this stops re-rolling.**
 - Same epoch + same n → same encounter, so reloading the page gives exactly the
   same encounter.
@@ -388,13 +476,28 @@ without the server, and the server can check everything afterwards.
   numbers makes every later catch fail verification.
 - The only way to get a different encounter for the same n is to wait for a new
   epoch before triggering it, which costs up to 5 minutes. See *Known gaps*.
+- [accepted] This stops re-rolling the *same* encounter. It doesn't stop a
+  player from moving on to the next one: fleeing always succeeds, so anyone can
+  flee until a good trait or a shimmer turns up, and a modified client can do
+  it without walking or battling (2026-10-28; see *Known gaps*).
 
 **Registry state.**
 - The server gives each registry entry a sequence number `seq` (1, 2, 3, …)
   when adding it; a takedown records `removedAtSeq`
   ([orbitdb-registry](orbitdb-registry.md)).
-- During epoch E, the eligible species are the entries with
-  seq ≤ registryHeight(E), minus those with removedAtSeq ≤ registryHeight(E).
+- [accepted] **Eligible at registry height H** (exact, 2026-10-27,
+  [D-0027](../decisions/D-0027-high-severity-review-fixes.md)): a species is eligible if its listing has a `seq` ≤ H and it has
+  no delisting with a `seq` ≤ H. Its **listing seq** is the `seq` of its
+  original listing: a tombstone keeps it as `listedSeq`, and the registry index
+  has the listing as its own entry. During epoch E, H = registryHeight(E).
+  Every draw that sorts eligible species by registry `seq` (encounter
+  candidates, the Peerling of the Day, guardian teams) sorts them by listing
+  seq.
+- [accepted] The [registry index](network-performance.md#1-registry-index) is
+  authoritative for this: it holds every listing and delisting by `seq`, and
+  the signed epoch record names it. A reader that uses the OrbitDB registry
+  instead takes `listedSeq` and `removedAtSeq` from the tombstones, never just
+  the current documents' `seq`.
 - A client that doesn't yet know the registry up to that height doesn't start
   encounters until it does. [accepted] The compact registry index named in
   the epoch record is enough, so this takes a second or two
@@ -419,10 +522,22 @@ records itself (rules tightened 2026-10-06):
   the base record's. A cheater could choose an older base record during an
   outage; that is accepted (see [Known gaps](#known-gaps-accepted-risks)).
 - [accepted] **Day and week records** (Peerling of the Day, guardian teams):
-  the server-signed record for that epoch always wins if it exists. A client
-  that doesn't have it tries `GET /v1/epochs/{E}` and the epoch log; if it
-  still has none, it derives the record for that epoch at once (without the
-  10-minute wait), and switches to the signed record if one turns up later.
+  for its own new encounters, a client uses the server-signed record for that
+  epoch if it exists. A client that doesn't have it tries `GET /v1/epochs/{E}`
+  and the epoch log; if it still has none, it derives the record for that epoch
+  at once (without the 10-minute wait), and switches to the signed record for
+  later encounters if one turns up.
+- [accepted] **Evidence keeps its records** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)): a catch
+  or badge is verified with the epoch, day and week records its evidence
+  carries. A valid client-derived record stays valid even if a signed record
+  for the same epoch turns up later, so finished catches and badges never
+  change meaning.
+- [accepted] **Launch** (2026-10-27): the game app ships the CID of the
+  [genesis record](../glossary.md#genesis-record), the first epoch record the
+  operator published. A day or week that began before it uses the genesis
+  record as its day or week record. Clients can't derive records until a
+  server-signed record at least 2 epochs old exists, so right at launch
+  encounters need the server.
 
 This keeps wild encounters working with nothing from the operator server.
 Because the randomness still comes from drand, a client-derived record gives
@@ -433,21 +548,39 @@ record it has. That gives no extra choice (same epoch and same n give the same
 encounter), so offline play needs no time limit. Catches made offline are
 verified like any other: by whoever needs to check them, from the save log.
 
-**What a verifier checks for a catch.**
+**What a verifier checks for a catch** ([accepted]; checks 3, 4 and 6 made
+exact 2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)). The verifier first needs complete data
+([Results](#verified-peerlings)); then:
 1. The epoch record is genuine: drand signature, plus either the server's
-   signature or the client-derived validity rule above.
-2. Encounter numbers run from 0 with no gaps and appear only once (counting
-   `battle-result` events; a `catch` repeats the number of its own
-   `battle-result`); epochs never decrease (from the newest verification checkpoint on, if there is one: the
-   checkpoint covers the part before it) (every `battle-result` records its epoch, so this can be checked for
-   all encounters, not just catches). (A save log with two conflicting branches shows up as duplicate
-   encounter numbers, so every catch after the fork fails.)
-3. The logged tile is an encounter-foliage tile (the world is deterministic,
-   so any verifier can check). The species is the logged candidate from the
-   deterministic candidate list, and the wild level matches, for (seed, tile,
-   registry height, save log).
-4. Replaying the battle with the logged actions ends in this catch.
-5. The instance ID is SHA-256(player ID ‖ encounter number).
+   signature or the client-derived validity rule above. The same holds for the
+   day record.
+2. Encounter numbers run from 0 with no gaps and appear only once, counting
+   `encounter` events; each `catch` and `battle-result` repeats the number of
+   the `encounter` before it. Epochs never decrease (from the newest
+   verification checkpoint on, if there is one: the checkpoint covers the
+   part before it); every `encounter` records its epoch, so this is checked
+   for all encounters, not just catches. (A save log with two conflicting
+   branches shows up as duplicate encounter numbers, so every catch after the
+   fork fails.)
+3. The `encounter` event agrees with the evidence (number, epoch, tile,
+   candidate). The tile is an encounter-foliage tile (the world is
+   deterministic, so any verifier can check). The species is the logged
+   candidate from the deterministic candidate list, and the wild level
+   matches, for (seed, tile, registry height, save log).
+4. **The starting team.** Each member of the evidence `team` is a Peerling the
+   catcher owned when the encounter started (in their save state before the
+   `encounter` event), with the same instance ID, species and traits. Its
+   level must be 1–50 and its HP between 1 and its max HP at that level;
+   levels aren't checked further ([Known gaps](#known-gaps-accepted-risks)).
+   The team members' own verification isn't required: like levels, they only
+   affect the catcher's own battle.
+5. Replaying the battle with the logged actions ends in this catch.
+6. **The caught instance** is exactly what the replay gives: `id` =
+   SHA-256(player ID ‖ encounter number); `species` = the candidate met;
+   `level` = the wild level; `traits` and `shimmer` = the encounter's draws;
+   `hp` = the wild Peerling's HP at the end of the replay; `xp` = 0;
+   `nickname` = null; `origin` = `"wild"`; `originalOwner` = the log's owner.
+   Any difference makes the catch invalid.
 
 ### Starters and shrine creations
 
@@ -494,18 +627,53 @@ instead:
 - Two *different* transfers of the same Peerling that follow the same previous
   transfer are a **double trade**. Both are signed by the same player, so the
   pair is cryptographic proof of cheating. Identical copies of one transfer
-  (re-posted, or appended by both trade partners) count once and are never a
-  conflict ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
+  (re-posted, or appended by both trade partners), and [accepted] copies that
+  differ only in which equivalent entry `prev` names, count once and are never
+  a conflict ([data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
 - **Resolution:** the transfer whose envelope CID sorts lower is the valid
-  one; the other is void. Every node reaches the same result from the same
+  one; the other loses. Every node reaches the same result from the same
   data.
 - **Flagging:** the cheating player ID is flagged. Clients refuse trades and
   PvP battles with flagged players.
-- The player who received the void transfer loses that Peerling. This is
-  acceptable: nothing in the game is scarce, every species can be caught again,
-  and the cheater is exposed. Individual variation ([D-0014](../decisions/D-0014-individual-variation.md)) makes
-  a lost Peerling more valuable, so this rule may need revisiting if double
-  trades turn out to be common.
+- [accepted] **The whole trade is undone** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)): a trade
+  entry with a losing or invalid transfer is void as a whole, so every
+  Peerling in it stays with the player who offered it, and trades that built
+  on a void entry become void in turn (exact rules:
+  [data-formats § Transfer](data-formats.md#transfer-and-transfer-log-entry--peerlingstransfer)).
+  Each player in a void trade appends a `trade-void` event that puts back their
+  own Peerlings and removes the ones they received. Clients look for void
+  entries at every session start and whenever they sync the transfer log. A
+  team that loses a member this way is refilled
+  ([catching § Team and collection](../gameplay/catching.md#team-and-collection)).
+- The victim loses the Peerling they received but gets back what they gave.
+  This is acceptable: nothing in the game is scarce, every species can be
+  caught again, and the cheater is exposed. Individual variation
+  ([D-0014](../decisions/D-0014-individual-variation.md)) makes a lost
+  Peerling more valuable, so this rule may need revisiting if double trades
+  turn out to be common.
+
+[accepted] **Unfinished trades** (2026-10-27, designer's choice,
+[D-0027](../decisions/D-0027-high-severity-review-fixes.md)). If a trade stream drops while the signed transfers are being
+exchanged, one player may hold both sides' transfers and the other only their
+own, and the second can't tell whether the trade will happen.
+- **Locked:** from the moment a client sends its signed transfers until the
+  trade's entry appears in the transfer log or the trade expires, the Peerlings
+  it offered are locked: they can't be offered in another trade, released at
+  the shrine or used in PvP. Exploration and wild battles are unaffected.
+- **Finishing:** a player who holds both sides appends the entry at once
+  ([TRD-005](../gameplay/trading.md#requirements)).
+- **Expiring:** either player can ask the server to expire the trade
+  ([creation-api § Trades](creation-api.md#trades)). If the server holds no
+  entry for that trade ID, it appends a signed
+  [trade-expired record](data-formats.md#trade-expired-record--peerlingstrade-expired)
+  to the transfer log. Any entry for that trade that arrives later is void,
+  both players keep what they offered, and a player who already wrote a
+  `trade` event for it appends `trade-void`. An expired trade never counts as
+  a double trade, so nobody is flagged. If the server already holds the entry,
+  it returns it and the trade is complete.
+- The client offers *Cancel this trade* 10 minutes after the stream dropped if
+  the entry still hasn't appeared. Expiring needs the server; until it is
+  reachable, the Peerlings stay locked.
 
 ### PvP
 
@@ -538,14 +706,22 @@ once per battle ID.
   (the receiver gets the level shown), and in Real-levels PvP, which both
   players opt into ([D-0015](../decisions/D-0015-pvp-level-modes.md)).
 - **Double trades** are detected, not prevented ([Transfer log and trades](#transfer-log-and-trades)).
-- **Base record choice during outages.** A client-derived epoch record may copy
-  any server-signed record at least 2 epochs older, so a cheater could pick an
-  older registry state (fewer species). It only changes which species can
-  appear, and only while the server is offline.
+- **Base record choice.** A client-derived epoch record may copy any
+  server-signed record at least 2 epochs older, so a cheater could pick an
+  older registry state (fewer species). [accepted] Verifiers can't tell
+  whether the server was reachable, so a modified client can do this at any
+  time, not only during an outage (corrected 2026-10-27). It only changes
+  which species can appear.
 - **Shrine offering levels aren't verified** (levels in general aren't, see
   above). An edited level lets a player meet the level-20 rule early, and the
   new Peerling's level comes from the offered levels. Accepted: the offering is
   still given up, and the 7-day limit still applies.
+- **Fast fled encounters** ([accepted] 2026-10-28, designer's choice,
+  [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A `battle-result` that isn't a catch carries no battle to
+  replay, and fleeing always succeeds. So a modified client can log one fled
+  encounter after another without walking or battling, until the encounter
+  seed gives a trait or shimmer it wants. Honest players can do the same by
+  fleeing, only more slowly; the cost is time, not a re-roll of one encounter.
 - **Choice among encounter candidates.** A modified client could claim the first
   candidates failed to download and pick a later one: at most a choice of 1 in
   5. Only the species differs between candidates: level, traits and shimmer
@@ -599,8 +775,22 @@ D-0013, mostly checks any player can run).
 - **SAVE-023** [accepted] Only one computer per player MUST be able to play at a time: a client MUST sync the save log and MUST refuse to start play while another computer's session for the same account is active.
 - **SAVE-024** [accepted] A player MUST be able to back up the identity key and save to a phone by scanning a QR code (one-time secret, 5 minutes) shown on the computer, and restore them to a computer the same way; the phone side runs in the Peerlings Viewer.
 - **SAVE-025** [accepted] A transfer that carries a trade ID MUST only be valid inside a transfer-log entry that holds the complete set of transfers for both confirmed offers.
-- **SAVE-026** [accepted] Every `battle-result` MUST record the epoch used, and verifiers MUST check that epochs never decrease across all encounters.
+- ~~**SAVE-026**~~ (removed 2026-10-27, replaced by SAVE-028; see D-0027)
 - **SAVE-027** [accepted] The client MUST append the newest server verification checkpoint to its save log, and verifiers MUST accept a valid checkpoint for the entries it covers and verify the entries after it.
+- **SAVE-028** [accepted] Every wild and guardian battle MUST be recorded by an `encounter` event written when it starts, with its encounter number and the epoch used; when it ends, the client MUST write the `catch` event (if any) before the `battle-result`. Verifiers MUST count encounter numbers from `encounter` events and MUST check that epochs never decrease across all encounters.
+- **SAVE-029** [accepted] At start, the client MUST complete an `encounter` that has no `battle-result`: from its `catch` by replay if there is one, otherwise as fled with no XP and the HP from the battle's start.
+- **SAVE-030** [accepted] The backup file and the phone backup MUST contain the whole save log and, for every owned Peerling, its origin proof and its ownership-chain entries, as defined in [data-formats § Backup file](data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup).
+- **SAVE-031** [accepted] Before starting play the client MUST probe for an active session of the same account; when two sessions meet, the one that started later MUST stop at once.
+- **SAVE-032** [accepted] Verifiers MUST check a catch's starting team and caught instance as listed in [What a verifier checks for a catch](#encounter-seeds).
+- **SAVE-033** [accepted] Verification MUST give verified, invalid or pending as defined in [Verified Peerlings](#verified-peerlings); a result MUST be invalid only when a check fails on complete data, and pending checks MUST be retried.
+- **SAVE-034** [accepted] Verifiers MUST verify evidence with the epoch, day and week records it carries, accepting a valid client-derived record even if a signed record exists for that epoch; a day or week that began before the genesis record MUST use the genesis record.
+- **SAVE-035** [accepted] A trade entry with an invalid or losing transfer MUST be void as a whole, entries that depend on it MUST be void in turn, and each player in a void trade MUST append a `trade-void` event.
+- **SAVE-036** [accepted] Peerlings in a trade whose entry hasn't appeared MUST be locked against trades, releases and PvP until the entry appears or the trade expires; an entry for an expired trade MUST be void and MUST NOT count as a double trade.
+- **SAVE-037** [accepted] If no copy of a recovered player's save exists, the client MUST NOT start a new save on that key; it MUST offer to keep looking or to start a new account.
+- **SAVE-038** [accepted] Species eligibility at a registry height MUST use listing and delisting `seq` values as defined in [Encounter seeds](#encounter-seeds), and draws MUST sort eligible species by listing seq.
+- **SAVE-039** [accepted] Every change to the save MUST come from an event as defined in [Save log](#save-log), including a `rest` event for each rest-point visit; a snapshot MUST equal the result of the events up to its `upTo`, and where they differ the events MUST win.
+- **SAVE-040** [accepted] The client MUST keep the recovery phrase's entropy on the device next to the private key and in every backup, so the phrase can be shown again.
+- **SAVE-041** [accepted] Transfers that differ only in which equivalent entry `prev` names MUST count as one transfer and MUST NOT count as a double trade.
 
 ## Open questions
 

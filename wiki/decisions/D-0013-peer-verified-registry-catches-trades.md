@@ -14,7 +14,7 @@ related:
   - wiki/tech/resilience.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
-updated: 2026-10-05
+updated: 2026-10-27
 ---
 
 # D-0013: Peer-verified registry, catches and trades
@@ -23,6 +23,9 @@ updated: 2026-10-05
 writer" part of [D-0005](D-0005-server-sole-registry-writer.md), and the
 server-signed catches and ownership ledger of
 [D-0009](D-0009-player-data-on-orbitdb.md). Details are [accepted].
+Partly superseded by [D-0027](D-0027-high-severity-review-fixes.md)
+(2026-10-27): after a double trade, the whole trade holding the losing
+transfer is void, so its players keep what they offered.
 
 ## Context
 The designer wants the game to work as far as possible without the operator

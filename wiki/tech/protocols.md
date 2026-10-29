@@ -12,6 +12,8 @@ sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-10-28-medium-low-resolutions.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -19,7 +21,7 @@ related:
   - wiki/gameplay/trading.md
   - wiki/gameplay/spectating.md
   - wiki/tech/player-data.md
-updated: 2026-10-06
+updated: 2026-10-28
 ---
 
 # Network Protocols
@@ -73,6 +75,7 @@ most 4 per second), a heartbeat every 5 s when idle. Meaning:
 | `session` | bytes(16) | device ID of the active session ([SAVE-023](player-data.md#requirements)) |
 | `battle` | bytes(32), optional | battle ID while in a PvP battle that allows spectators |
 | `follower` | map, optional | [accepted] `species` (CID), `shimmer` (bool): the player's [following Peerling](../gameplay/exploration.md#following-peerling); omitted when hidden |
+| `jump` | bool, optional | [accepted] (2026-10-28) true on the first message after a respawn at a rest point or a move by a generator update, so receivers accept the long move ([NET-005](realtime-networking.md#requirements)) |
 | `t` | time | |
 
 ### `peerlings/v1/epoch` — epoch records
@@ -102,15 +105,35 @@ by both fighters. Meaning: [spectating](../gameplay/spectating.md).
 | `kind` | Fields |
 |--------|--------|
 | `"start"` | `players` [2 player IDs], `mode` (`"fair"` \| `"real"`), `rules` (uint), `teams` (two lists of team members, as in the battle `team` message) |
-| `"turn"` | `turn` (uint), `seed` (bytes(32), once revealed), `actions` (all revealed decisions so far, in order: [map: `player` (0 or 1), `turn`, `action`]), `state` (bytes(32), state hash after this turn) |
+| `"turn"` | `turn` (uint), `seed` (bytes(32), once revealed), `actions` ([accepted] 2026-10-28: this turn's revealed decisions, in order: [map: `player` (0 or 1), `turn`, `action`]), `state` (bytes(32), state hash after this turn), `start` (CID of the `start` message as a DAG-CBOR block), `history` (CID of the [battle history](#battle-history-block) after this turn) |
 | `"end"` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null) |
+
+[accepted] **Late spectators** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A `turn` message
+stays small at any length of battle. A spectator who joins late fetches the
+two blocks it names by CID (bitswap, from either fighter, who both provide
+them). The CIDs come from a message signed by a fighter, so the blocks are
+authenticated by their hashes.
+
+#### Battle history block
+A DAG-CBOR block `{ "v": 1, "type": "peerlings/battle-history", "battle":
+<battle ID>, "actions": [all revealed decisions so far, as in `turn`] }`. Each
+fighter builds it after every turn; both get the same bytes and CID, since the
+encoding is deterministic.
 
 ### `peerlings/v1/session/<player ID>` — active session
 Published by the computer that is currently playing, every 15 s:
-`{ "kind": "session", "device": <bytes(16)>, "t": <time> }`. A computer with
-the same account subscribes to its own player's topic before starting play; a
-session counts as active while heartbeats arrive, and as ended after 60 s
-without one ([player-data § Using the same account on several computers](player-data.md#using-the-same-account-on-several-computers)).
+`{ "kind": "session", "device": <bytes(16)>, "since": <time>, "t": <time> }`,
+where `since` ([accepted] 2026-10-27) is when this session started. A computer
+with the same account subscribes to its own player's topic before starting
+play; a session counts as active while heartbeats arrive, and as ended after
+60 s without one ([player-data § Using the same account on several computers](player-data.md#using-the-same-account-on-several-computers)).
+
+[accepted] (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)) Before starting play, a computer also
+publishes `{ "kind": "session-probe", "device": <bytes(16)>, "t": <time> }`;
+an active session answers at once with a `session` heartbeat. The prober
+starts play if no heartbeat arrives within 3 s. A playing computer that
+receives a heartbeat from another device keeps playing only if its own
+`since` is lower (on a tie, its device ID is lower); otherwise it stops.
 
 ### `peerlings/v1/save-wanted` — save recovery
 `{ "kind": "save-wanted", "player": <player ID>, "t": <time> }`. Rate: 1 per
@@ -135,8 +158,8 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 | 3 | both | `team` | `members`: [map: `instanceId`, `species`, `level`, `traits`, `shimmer`, `originProof`, `saveLog` (address of the original owner's save log, where `originProof` is)] (up to 4, team order) |
 | 4 | both | `seed-commit` | `hash`: SHA-256(value) |
 | 5 | both | `seed-reveal` | `value`: bytes(32) |
-| 6 | each deciding side, per decision | `commit` | `turn` (uint), `hash`: SHA-256(DAG-CBOR bytes of the action ‖ nonce) |
-| 7 | each deciding side, per decision | `reveal` | `turn`, `action` ([data-formats § Action](data-formats.md#catch-evidence)), `nonce` (bytes(16)) |
+| 6 | each deciding side, per decision | `commit` | `turn` (uint), `phase` (`"action"` \| `"replace"`), `hash`: SHA-256(DAG-CBOR bytes of the action ‖ nonce) |
+| 7 | each deciding side, per decision | `reveal` | `turn`, `phase`, `action` ([data-formats § Action](data-formats.md#catch-evidence)), `nonce` (bytes(16)) |
 | 8 | both, per turn | `state` | `turn`, `hash`: SHA-256 of the battle state after the turn, `sig`: state signature (below) |
 | 9 | both | `end` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null), `turn` (the last resolved turn), `hash` (the battle-state hash after it), `sig`: end signature (below) |
 
@@ -155,8 +178,12 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
   - the `state` message for a turn is exchanged after its replacements. In the
     battle state, `active` is the Peerling currently out (a fainted one stays
     `active` until it is replaced);
+  - [accepted] (2026-10-27) a decision is identified by its `turn` and its
+    `phase`: `"action"` for the turn action, `"replace"` for a replacement
+    after a faint. `commit`, `reveal` and `timeout` all carry both;
   - once a side has sent or received `timeout` for a decision, both ignore any
-    later `commit` for that decision, and the late player drops its own.
+    later `commit` or `reveal` for that decision, and the late player drops
+    its own.
 - Battle seed = SHA-256(`"peerlings/pvp-seed/v1"` ‖ value of the lower player
   ID ‖ value of the higher player ID).
 - Replacing a fainted Peerling is also a commit/reveal decision (`replace`
@@ -166,7 +193,11 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
   [pvp-battles § Win record](../gameplay/pvp-battles.md#win-record)), Ed25519
   with the sender's player key:
   - state signature over `"peerlings/pvp-state/v1"` ‖ battle ID (32 bytes) ‖
-    turn (8-byte big-endian) ‖ hash;
+    mode (`"fair"` or `"real"`, as UTF-8) ‖ turn (8-byte big-endian) ‖ hash
+    ([accepted] mode added 2026-10-28, so a state can't be relabelled either);
+  - [accepted] (2026-10-28) right after `seed-reveal`, both sides send a
+    signed `state` for turn 0, the starting state, so a forfeit can be proven
+    even before the first turn is resolved;
   - end signature over `"peerlings/pvp-end/v1"` ‖ battle ID ‖
     DAG-CBOR(`{ "result", "winner", "turn", "hash", "mode" }`), where `mode`
     is the challenge's mode, so a result can't be relabelled.
@@ -178,22 +209,47 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
   first, where `side` = `{ "active": <instance ID bytes>, "members": [member, …] }`
   in team order and `member` = `{ "id": <instance ID bytes>, "hp": uint,
   "stages": [attack, defense, speed] (ints −3…3), "charging": bool }`.
-- **Timers and timeouts** ([accepted] 2026-10-06; rules in
+- **Timers and timeouts** ([accepted] 2026-10-06, deadlines made exact
+  2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md); rules in
   [battle § PvP turn timer](../gameplay/battle.md#pvp-turn-timer)):
-  - every decision (turn action or replacement) has a 30 s timer, started when
-    the previous turn's `state` messages have been exchanged;
-  - a side that hasn't received the other's `commit` in time sends
-    `{ "kind": "timeout", "turn": uint }`; both sides then use the action
-    `{ "kind": "timeout" }` for the late player. When the turn resolves, a
-    timed-out turn action becomes a random move from the battle RNG, and a
-    timed-out replacement becomes the first non-fainted team member in team
-    order;
-  - two timeouts in a row by the same player end the battle as a forfeit;
+  - **commit deadline:** every decision has a 30 s timer. It starts, for the
+    action of turn 1, when both `seed-reveal` messages have been exchanged;
+    for the action of a later turn, when both `state` messages of the previous
+    turn have been exchanged; for a replacement, when both reveals of that
+    turn's actions have been exchanged (the moves are resolved at that point);
+  - **reveal deadline:** a side sends its `reveal` as soon as it has both
+    commits of a decision; the other's `reveal` must arrive within 10 s after
+    that;
+  - a side that hasn't received the other's `commit` or `reveal` in time sends
+    `{ "kind": "timeout", "turn": uint, "phase": …, "stage": "commit" |
+    "reveal" }`; both sides then use the action `{ "kind": "timeout" }` for the
+    late player in that decision. When the turn resolves, a timed-out turn
+    action becomes a random move from the battle RNG, and a timed-out
+    replacement becomes the first non-fainted team member in team order;
+  - two timeouts in a row by the same player (in any phase) end the battle as
+    a forfeit;
   - a charging Peerling's second turn needs no decision (its strike is
     automatic);
-  - if the stream drops, the player who dropped may reopen it within 60 s with
-    `{ "kind": "resume", "battle": <battle ID>, "turn": uint }`; otherwise the
-    battle ends as a forfeit by that player.
+  - **state deadline:** each side sends its `state` as soon as the turn,
+    including its replacements, is resolved; a `state` that hasn't arrived
+    within 10 s counts as a dropped stream.
+- **Disconnects** ([accepted] 2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)):
+  - if the stream drops, both sides try to reopen it for 60 s. Either may
+    dial; if two streams open, the one opened by the lower player ID is kept;
+  - each side then sends `{ "kind": "resume", "battle": <battle ID>, "have":
+    uint }`, where `have` is the last turn whose `state` it has received from
+    the other side (0 if none);
+  - on receiving `resume`, a side resends, in their original order, all the
+    messages it sent after its own `state` for turn `have` (for 0: after its
+    `seed-reveal`). Receivers ignore messages they already have. The RNG
+    position and timeout counts follow from the replayed actions, and the
+    current decision's timer restarts at 30 s;
+  - if no stream is reopened within 60 s, each client ends the battle as a
+    forfeit by the other player. Nobody can tell objectively who dropped: if
+    both clients record a forfeit win, the two claims name different winners
+    and cancel each other
+    ([data-formats § Save-log events](data-formats.md#save-log-events)), so
+    a drop on both sides records nothing.
 
 ### `/peerlings/trade/1.0.0` — trade
 
@@ -211,7 +267,10 @@ Meaning: [trading](../gameplay/trading.md).
 
 After step 5 the trade can't be cancelled. If B doesn't receive `done` (or
 the stream drops), B appends the entry itself; both entries hold identical
-transfers, which never count as a conflict.
+transfers, which never count as a conflict. [accepted] (2026-10-27) Until the
+entry appears in the transfer log, each side's offered Peerlings are locked,
+and either side may ask the server to expire the trade
+([player-data § Transfer log and trades](player-data.md#transfer-log-and-trades)).
 
 - **Offers hash** = SHA-256 of the DAG-CBOR list `[offer of the lower player
   ID, offer of the higher player ID]`, where each offer is the list of its
@@ -225,6 +284,13 @@ transfers, which never count as a conflict.
   origin from the **original owner's** save log (`originalOwner`, where the
   catch is) or the origin attestation, ownership from the transfer log, and
   traits; level, XP and HP are taken from the offer.
+- [accepted] (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)) The confirmation commits to the
+  instance IDs only; the rest of the offer is unverified data, like levels. A
+  client MUST store the other side's final offer data durably before it sends
+  its own `transfers`. If that copy is lost (e.g. when recovering on another
+  computer), the client rebuilds each received instance from the sender's save
+  log: its state there just before the sender's `trade` event for this entry,
+  or at the log's head if the sender hasn't written one.
 
 ### `/peerlings/profile/1.0.0` — profile
 
@@ -244,8 +310,14 @@ message `{ "kind": "save-held", "player": <player ID>, "snapshot": <CID>,
 
 Meaning: [player-data § Phone backup](player-data.md#phone-backup).
 
-**QR code** (shown on the computer):
-`peerlings-backup:?mode=<backup|restore>&peer=<computer peer ID>&addr=<relay multiaddr>&s=<secret, base64url, 32 bytes>&exp=<time>`
+**QR code** (shown on the computer; [accepted] a Viewer URL since
+2026-10-28, so the phone's normal camera opens it):
+`https://view.<domain>/#/backup?mode=<backup|restore>&peer=<computer peer ID>&addr=<relay multiaddr>&s=<secret, base64url, 32 bytes>&exp=<time>`
+
+Everything after `#` stays on the phone: browsers never send the fragment to
+the web server. The Viewer's own scanner reads the same URL. Next to the QR
+code, the computer shows *"Scan this with your phone's camera"* and the
+Viewer's address.
 
 The phone always dials the computer.
 
@@ -268,6 +340,7 @@ The phone always dials the computer.
 - **PRT-001** [accepted] All pubsub topics and their messages MUST be exactly as defined on this page, with gossipsub strict signing.
 - **PRT-002** [accepted] All direct streams MUST use length-prefixed DAG-CBOR messages in the order defined per protocol.
 - **PRT-003** [accepted] PvP seeds, commitments and state hashes MUST be computed exactly as defined here, so that every client and spectator gets the same results.
+- **PRT-004** [accepted] Every PvP decision MUST carry its turn and phase and follow the commit, reveal and state deadlines defined here, and a resumed battle MUST resend the messages the other side hasn't confirmed, as defined in [PvP battle](#peerlingsbattle100--pvp-battle).
 
 ## Open questions
 
