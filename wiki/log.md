@@ -615,3 +615,15 @@ List all entries with `grep "^## \[" wiki/log.md`.
   LNK-004, PVP-013, TRD-007, API-010–012, IMG-018, STK-015–016, WGN-022,
   CRE-026–027, FMT-005; approved SRV-007 and IMG-015; IMG-001 names its
   exceptions.
+
+## [2026-11-10] lint | Full specification review after D-0027 and D-0028
+- Source: raw/conversations/2026-11-10-specification-review.md.
+- Changed: wiki/specification-review.md, wiki/index.md, wiki/log.md.
+- Notes: Reviewed all 75 wiki pages (four parallel reviewers by area, each
+  finding checked against the cited text). Mechanical checks found no broken
+  local links or heading targets, unindexed pages, duplicate requirement IDs
+  or unregistered prefixes (370 declared requirement IDs, 29 removed). Added
+  35 findings as REVIEW-048 to REVIEW-082, all Open: 4 High, 18 Medium,
+  13 Low. About half are incomplete or unpropagated D-0027/D-0028 fixes.
+  Findings are review proposals; no game rules, requirements, Q-NNN or
+  decisions were changed.

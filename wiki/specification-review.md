@@ -8,6 +8,7 @@ sources:
   - raw/conversations/2026-10-27-specification-review-verification.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-specification-review.md
 related:
   - wiki/index.md
   - wiki/open-questions.md
@@ -17,15 +18,16 @@ related:
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0027-high-severity-review-fixes.md
   - wiki/decisions/D-0028-medium-low-review-fixes.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Specification Review
 
-> Tracks all 47 findings from the specification review of 2026-10-19, with
-> severity, editable status, evidence links, verification notes and resolution
-> notes. Finding IDs preserve the original review numbering so each issue can
-> be followed through later changes.
+> Tracks the findings of the specification reviews: REVIEW-001 to REVIEW-047
+> from the review of 2026-10-19 (all Fixed) and REVIEW-048 to REVIEW-082 from
+> the review of 2026-11-10 (all Open). Each finding has a severity, an editable
+> status, evidence links and resolution notes. Finding IDs are stable, so each
+> issue can be followed through later changes.
 
 ## How to use this tracker
 
@@ -41,11 +43,11 @@ The designer will change statuses to **Fixed** or **Will-Not-Fix** after review.
 
 [proposed] Severity is the reviewer's assessment of implementation impact:
 
-| Severity | Meaning | Findings |
-|----------|---------|---------:|
-| High | Can block a core flow, lose progress or ownership, invalidate verification, or make clients disagree on authoritative state. | 16 |
-| Medium | Leaves a feature incomplete, contradicts intended behavior, or requires a consequential implementation choice. | 23 |
-| Low | A localized tutorial, navigation, example, or documentation issue with a clear broader design. | 8 |
+| Severity | Meaning | Review of 2026-10-19 | Review of 2026-11-10 |
+|----------|---------|---------:|---------:|
+| High | Can block a core flow, lose progress or ownership, invalidate verification, or make clients disagree on authoritative state. | 16 | 4 |
+| Medium | Leaves a feature incomplete, contradicts intended behavior, or requires a consequential implementation choice. | 23 | 18 |
+| Low | A localized tutorial, navigation, example, or documentation issue with a clear broader design. | 8 | 13 |
 
 The **Status** field on each finding is its only status record on this page.
 Keep IDs stable when updating severity or status; do not delete resolved items.
@@ -85,6 +87,30 @@ Medium, and REVIEW-024, 030, 032, 034 and 046 from Medium to Low. No severity
 was raised. Finding text that misstated the spec was corrected, and each
 finding's **Verification** note records the verdict, extra evidence and any
 change. All reference links resolved to existing headings.
+
+## Review of 2026-11-10
+
+[proposed] At the designer's request the whole specification (75 wiki pages)
+was reviewed again after D-0027 and D-0028. Four reviewers each read one area
+line by line: persistence and encounters; battle, PvP, trading and protocols;
+the creation pipeline and registry; world, UI, glossary, questions and
+decisions. Every finding they reported was checked against the cited text
+before it was recorded here. Things already fixed, already listed as an open
+question or already recorded as an accepted risk were left out.
+
+Mechanical checks found no broken local links or heading targets, no page
+missing from the index, no duplicate requirement IDs and no unregistered
+prefixes, across 370 declared requirement IDs (29 of them removed). The one
+reference to a removed requirement outside history text is in
+[REVIEW-079](#review-079-decision-status-lines-and-resolved-questions-miss-later-changes).
+
+The 35 new findings are REVIEW-048 to REVIEW-082, in the three
+[second-review sections](#second-review-high-severity) below. About half are
+places where a D-0027 or D-0028 fix is incomplete or was not carried to every
+page; each of those names the earlier finding. The recommended first priority
+is the four High findings, which can make honest catches invalid or make
+battle replays diverge, followed by the PvP protocol findings (REVIEW-056 to
+REVIEW-058).
 
 ## High severity
 
@@ -843,6 +869,588 @@ change. All reference links resolved to existing headings.
 **References:** [Peerling species: Example](peerlings/peerling-species.md#species-record); [D-0006](decisions/D-0006-species-vs-instance.md); [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md); [D-0026](decisions/D-0026-single-image-to-3d.md).
 
 **Resolution:** Fixed 2026-10-28 in [D-0028](decisions/D-0028-medium-low-review-fixes.md): the species example sums to 320 and names the `profile` model; D-0006 and D-0025 carry notes on what changed ([Peerling species](peerlings/peerling-species.md#species-record)).
+
+## Second review: High severity
+
+### REVIEW-048: The catch check rejects an honest catch made with a fainted team member
+
+- **Status:** Open
+- **Severity:** High
+- **Review:** 2026-11-10 (regression from the REVIEW-008 fix)
+
+**Finding [proposed]:** Verifier check 4 requires every member of the evidence `team` to have HP between 1 and its max HP. The evidence `team` holds the battle-start state of every team member, and a team may start a wild battle with fainted members (HP carries over; only one non-fainted member is required, CAT-009). Such a catch fails on complete data, so it is invalid for good and can never be traded or used in PvP.
+
+**Checked:** No rule heals or removes fainted members before a battle, and nothing says the evidence team leaves them out. Guardian evidence is verified "the same way", so badges are affected too.
+
+**Resolution needed [proposed]:** Allow HP from 0 to max in check 4 (with at least one member above 0), or define the evidence team as the non-fainted members only.
+
+**References:** [Player data: Catches](tech/player-data.md#catches) (check 4, SAVE-032); [Data formats: Catch evidence](tech/data-formats.md#catch-evidence); [Battle: Formats](gameplay/battle.md#formats); [Catching: Team and collection](gameplay/catching.md#team-and-collection).
+
+**Resolution:** —
+
+### REVIEW-049: Day and week records have no usable base-record rule
+
+- **Status:** Open
+- **Severity:** High
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** A client-derived record copies its fields from "the latest server-signed epoch record the client has", but verifiers accept only a base record with an epoch of at most E − 2. A missing day or week record (epoch 288 × D or 2016 × W) is derived "at once", usually by a client whose latest signed record is newer than that epoch. Followed literally, this gives a day or week record that fails the validity rule, so every catch of that day and every badge of that week is invalid. If the implementer picks an older record instead, honest clients can pick different ones and disagree on the Peerling of the Day or the guardian team. SAVE-013 adds a third wording ("the latest server-signed epoch record before that epoch", which can be E − 1). Nothing says the server publishes a missed day or week epoch later, so a short server outage across 00:00 UTC is enough to trigger this.
+
+**Checked:** The normal 10-minute path always has a base at E − 2 or older, so only the day and week path is affected. The REVIEW-011 fix (evidence keeps its records) covers later replacement, not which base to pick. The accepted "base record choice" gap covers cheaters, not honest clients.
+
+**Resolution needed [proposed]:** Define one base record for a derived record of epoch E (for example the newest signed record with epoch ≤ E − 2, and how a client gets it), align SAVE-013 with it, and say whether the server fills in missed day and week epochs.
+
+**References:** [Player data: Encounter seeds](tech/player-data.md#encounter-seeds) (SAVE-013); [Data formats: Epoch record](tech/data-formats.md#epoch-record--peerlingsepoch); [Peerling of the Day](gameplay/peerling-of-the-day.md); [Creation API: Network](tech/creation-api.md#network).
+
+**Resolution:** —
+
+### REVIEW-050: A save-log owner can invalidate Peerlings they have already traded away
+
+- **Status:** Open
+- **Severity:** High
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** A fork of a save log shows up as duplicate encounter numbers, "so every catch after the fork fails", and cached verified catches are checked again against save-log entries the verifier didn't have before. The original catcher can at any time sign a new branch with an `encounter` whose number is at or below an old catch's number. A Peerling they caught and then traded to an honest player becomes invalid for every verifier that receives the branch, while other verifiers still hold it as verified. The trade is not void, nobody is flagged and the new owner gets nothing back. It is also not defined which catches count as "after the fork", or what happens when the duplicate number lies below a checkpoint's range.
+
+**Checked:** Known gaps, D-0027, D-0028 and the open questions have no entry for this. Only the accidental two-computer fork is accepted, and that concerns the player's own Peerlings.
+
+**Resolution needed [proposed]:** Define exactly which catches a fork invalidates, and either protect catches already transferred or covered by a checkpoint, or record this as an accepted risk.
+
+**References:** [Player data: Verified Peerlings](tech/player-data.md#verified-peerlings); [Player data: Catches](tech/player-data.md#catches) (check 2); [Player data: Known gaps](tech/player-data.md#known-gaps-accepted-risks).
+
+**Resolution:** —
+
+### REVIEW-051: A move against a Peerling that already fainted this turn is undefined
+
+- **Status:** Open
+- **Severity:** High
+- **Review:** 2026-11-10 (a case next to those fixed for REVIEW-021)
+
+**Finding [proposed]:** With `strong-recoil` the first mover can hit, leave the opponent standing and faint from its own recoil. The second mover then has no standing target, and replacements happen only after the turn. The spec does not say whether that second move runs, or whether its accuracy, damage and stat-effect rolls are drawn. It also does not say whether a charge setup or strike is used up, whether `sig-empower` still triggers, or whether `sig-drain` heals. Two engines that differ here draw different RNG values, so a catch replay fails or a PvP battle ends void.
+
+**Checked:** "A Peerling that faints before its move doesn't act and draws nothing" covers the fainted Peerling, not the move aimed at it. The D-0027 rules cover `quick-flurry`'s second hit and the charge strike on a replacement. Recoil is the only way a Peerling other than the target faints during the move phase, so this is the whole gap.
+
+**Resolution needed [proposed]:** State whether a move against a fainted opposing Peerling fails, and exactly which rolls and side effects (charge state, drain, empower) still happen.
+
+**References:** [Battle: A turn](gameplay/battle.md#a-turn); [Battle: Move mechanics](gameplay/battle.md#move-mechanics); [Battle: Random number generator](gameplay/battle.md#random-number-generator) (BTL-012, BTL-015).
+
+**Resolution:** —
+
+## Second review: Medium severity
+
+### REVIEW-052: Encounters that aren't catches can't be checked when their epoch record is client-derived
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-003 and REVIEW-045 fixes incomplete)
+
+**Finding [proposed]:** The `encounter` event stores only the epoch number. Recomputing its candidate list needs the epoch record's registry height and the day record. When either was client-derived (any server outage), the base record is in the log only for catches, inside the catch evidence. For fled, lost and won encounters nobody can recompute the species, yet the creator-stats rule counts `encounter` events "whose tile, epoch and candidate the server has checked", and D-0027 says the species of non-catch encounters can now be checked.
+
+**Checked:** Verifier checks 1 to 6 require the species check only for catches; `GET /v1/epochs/{E}` returns only signed records.
+
+**Resolution needed [proposed]:** Add the record references to the `encounter` event when a record is client-derived, or state that such encounters are not checked and not counted.
+
+**References:** [Data formats: Save-log events](tech/data-formats.md#save-log-events); [Data formats: Catch evidence](tech/data-formats.md#catch-evidence); [Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot); [D-0027](decisions/D-0027-high-severity-review-fixes.md).
+
+**Resolution:** —
+
+### REVIEW-053: Guardian badges have no write order or crash recovery
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-003 fix incomplete)
+
+**Finding [proposed]:** `catch` is ordered before `battle-result`, but nothing orders `badge` against `battle-result`, and start-up recovery (SAVE-029) knows only `catch`. After a crash at the end of a won guardian battle, either a `badge` exists whose battle is then logged as fled with no XP, or the badge is lost. Badge verification is only "like a catch": nothing says the `encounter` event must name the same `guardian` biome or that the replay must end in a win.
+
+**Checked:** No other ordering or recovery rule mentions `badge`.
+
+**Resolution needed [proposed]:** Write `badge` before `battle-result`, extend SAVE-029 to rebuild a guardian result from the badge evidence, and list the badge-specific checks.
+
+**References:** [Guardians: Badges](gameplay/guardians.md#badges); [Player data: Encounter seeds](tech/player-data.md#encounter-seeds) (SAVE-029); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
+
+**Resolution:** —
+
+### REVIEW-054: Several state changes have no event rule, though events are the save
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-002 fix incomplete)
+
+**Finding [proposed]:** SAVE-039 requires every change to come from an event, and the server computes a checkpoint's `state` from the events. Several changes have no defined event or implied rule, so a client and the server can build different snapshots:
+- **Team membership:** whether `catch`, `starter`, `created` or an incoming `trade` adds the Peerling to the team by itself, or a `team` event is needed. Catching says only that a catch with a full team goes to the collection.
+- **Refill after a void trade** (CAT-010): no event is named, there is no tie-break for equal `obtainedAt`, and the case where every collection Peerling has fainted is open.
+- **Generator update:** a last rest point that no longer exists "becomes the nearest one" with no event (a `rest` event would also heal).
+- **Snapshot field `generator`:** no event sets it.
+
+**Checked:** Trading step 5, D-0028 item 9 and the save-log event list.
+
+**Resolution needed [proposed]:** Give the effect of each event type on team, collection and position, and an event or derivation rule for a moved rest point and for `generator`.
+
+**References:** [Player data: Save log](tech/player-data.md#save-log) (SAVE-039); [Catching: Team and collection](gameplay/catching.md#team-and-collection); [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave).
+
+**Resolution:** —
+
+### REVIEW-055: A stale or chosen epoch record also selects the world and rules version
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-029 fix incomplete)
+
+**Finding [proposed]:** Verifiers take the generator and rules version from the epoch of the epoch record an encounter used. Two cases are not covered:
+- **Honest stale record.** Offline, or while drand is down, a client keeps using its last record. If that record is from before a generator switch and the clock has passed the switch ("every client switches at that epoch"), the spec does not say which world the client shows. If it switches by the clock, an encounter on a tile that is foliage only in the new version is checked against the old version and fails; a guardian's statue tile and level have the same problem.
+- **Known gap understated.** A client-derived record copies `generator` and `rules` from its base record, so a cheater choosing an old base record also chooses older battle rules and an older world. The known gap says it "only changes which species can appear".
+
+**Checked:** WGN-022 and D-0028 item 16 cover a guardian battle that spans a switch and the snapshot `generator` field, not these cases.
+
+**Resolution needed [proposed]:** State that the world a client plays in is the version active at the epoch of the record it uses for encounters (or forbid encounters with a pre-switch record after the switch), and correct the known-gap text.
+
+**References:** [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates); [Battle: Rules versions](gameplay/battle.md#rules-versions); [Player data: Encounter seeds](tech/player-data.md#encounter-seeds); [Player data: Known gaps](tech/player-data.md#known-gaps-accepted-risks).
+
+**Resolution:** —
+
+### REVIEW-056: A forfeit win can be recorded from a battle that ended void or drawn
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-018 fix incomplete)
+
+**Finding [proposed]:** A `forfeit` result is valid with the claimant's own end signature plus any state signature by the opponent. Nothing ties that state to the claimed turn, or shows that a timeout or drop happened. Since D-0028 every battle gives both sides a signed turn-0 state. A modified client can start a battle, receive the turn-0 state and then send a wrong state hash or a bad signature. The honest client ends the battle void and records nothing, so the check for a conflicting claim (PVP-013) finds none and the forged forfeit counts. The same works after a 200-turn draw. The victims are real, different opponents, so the "different opponents beaten" figure does not show it.
+
+**Checked:** The recorded known gap covers only two colluding players; "conflicting forfeit claims cancel" needs the honest side to have recorded something.
+
+**Resolution needed [proposed]:** Make void and draw outcomes provable or recorded, or define what a forfeit proof must show beyond a state the opponent once signed.
+
+**References:** [PvP battles: Win record](gameplay/pvp-battles.md#win-record) (PVP-012, PVP-013); [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
+
+**Resolution:** —
+
+### REVIEW-057: A `timeout` message binds the accused side without any check
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-016 fix incomplete)
+
+**Finding [proposed]:** Either side declares the other late by sending `timeout`, and "both sides then use the action `timeout` for the late player". The only rule about late messages covers a `commit` or `reveal` that arrives after the timeout. Nothing covers a `timeout` sent for a message the accused side delivered in time. A modified client can read the opponent's reveal, then send `timeout` for it and turn that action into a random move; twice in a row forces a forfeit that passes the forfeit proof. If the honest client instead rejects the claim, the two states differ and the battle ends void. The spec picks neither, and the first reading breaks "neither can react to the other's choice" (PVP-005).
+
+**Checked:** Disconnects are handled evenly (claims cancel); timeout claims have no such rule, and the case is not a recorded known gap.
+
+**Resolution needed [proposed]:** Define what a side does when it receives a `timeout` for a decision whose message it already sent, and whether a disputed timeout voids the battle.
+
+**References:** [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle); [PvP battles: Protocol](gameplay/pvp-battles.md#protocol); [Battle: PvP turn timer](gameplay/battle.md#pvp-turn-timer).
+
+**Resolution:** —
+
+### REVIEW-058: PvP resume is undefined before the turn-0 state
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-017 fix not reconciled with the turn-0 state of D-0028)
+
+**Finding [proposed]:** In `resume`, `have` is "the last turn whose `state` it has received (0 if none)", so 0 means both "I have your turn-0 state" and "I have nothing". The reply to 0 resends only what followed `seed-reveal`, so a stream that drops during the team exchange, team verification or the seed exchange never gets `team`, `seed-commit` or `seed-reveal` again. The "forfeit by the other player after 60 s" rule has no starting condition; in that window one side may hold the other's turn-0 state while the other holds none, so only one side can claim a forfeit and the "claims cancel" safeguard fails. The turn-1 timer also still starts at the `seed-reveal` messages, not at the turn-0 states, unlike every later turn.
+
+**Checked:** Battle § PvP turn timer, PvP battles § Protocol and PRT-004; none says when a battle counts as started.
+
+**Resolution needed [proposed]:** Define the point from which a battle can be resumed and forfeited, what a drop before it means, and a `have` value that tells "no state" from "turn-0 state".
+
+**References:** [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle) (PRT-004).
+
+**Resolution:** —
+
+### REVIEW-059: The unfinished-trade lock exists only in local client state
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-013 fix incomplete)
+
+**Finding [proposed]:** The lock on offered Peerlings, and the data needed to expire a trade (the trade ID and the client's own signed transfer), are in no save-log event, snapshot or backup. Only the other side's offer data must be stored durably (TRD-007). A player who sends signed transfers, loses the stream and continues on a second computer, after cleared storage or after a restore has a client that knows nothing of the pending trade and lets the Peerling be traded or released again. When the partner later appends the original entry, the player has two transfers with the same `prev` and is flagged for a double trade, which bars trading and PvP. That client also can't call the expire endpoint, which needs one of the caller's own signed transfers.
+
+**Checked:** The session-start check covers only entries already in the transfer log; no rule removes a flag.
+
+**Resolution needed [proposed]:** Record the pending trade (trade ID, own signed transfers, locked instance IDs) in the save log before sending `transfers`, or define another way for the lock to survive a device change or storage loss.
+
+**References:** [Player data: Transfer log and trades](tech/player-data.md#transfer-log-and-trades) (SAVE-036); [Trading: Requirements](gameplay/trading.md#requirements) (TRD-006, TRD-007); [Creation API: Trades](tech/creation-api.md#trades).
+
+**Resolution:** —
+
+### REVIEW-060: The relay rule conflicts with late-spectator block fetches and the larger phone backup
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (side effects of the REVIEW-019 and REVIEW-004 fixes)
+
+**Finding [proposed]:** Clients may use a relayed connection only for the five game streams, "never for gossipsub, Bitswap or OrbitDB sync" (PERF-006). D-0028 makes a late spectator fetch the `start` and history blocks by bitswap from a fighter, and those blocks exist only on the two fighters. A spectator whose connections to both fighters stay relayed has no allowed path to them. Separately, the relay must carry at least 4 MB per connection, phone backup may run over a relay, and since D-0027 the backup holds the whole save log plus proofs. A long-time player's backup can pass 4 MB (the page's own scale figure is about 20,000 entries after 100 hours; the size per entry is the reviewer's estimate), and the phone-backup stream has no resume.
+
+**Checked:** The retrieval ladder has no step that reaches a block held only by a relayed browser peer, and nothing says the operator fetches or pins battle blocks.
+
+**Resolution needed [proposed]:** Give late spectators a relay-safe source for the two blocks (the operator, or a stated exception), and size the relay limit or the phone-backup transfer for a whole-log backup.
+
+**References:** [Network performance: Connections](tech/network-performance.md#connections) (PERF-006); [Protocols: spectating](tech/protocols.md#peerlingsv1battlebattle-id--spectating) (SPT-005); [Data formats: Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup); [Player data: Phone backup](tech/player-data.md#phone-backup).
+
+**Resolution:** —
+
+### REVIEW-061: The wild Peerling's "best move" target is unclear on a turn where the player switches
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** The wild or guardian Peerling picks the move with the highest expected damage "against the player's active Peerling", and that choice is the first draw of the turn. Switches resolve before moves in the same turn. The text does not say whether the score uses the Peerling that is out when actions are chosen or the one that comes in. The two give different moves whenever the switch changes types, so a verifier's replay can differ from the player's battle.
+
+**Checked:** Guardians and encounters add nothing; no page says "before the switch" or "after the switch". Ties between equal scores are defined.
+
+**Resolution needed [proposed]:** State whether the score is computed against the Peerling that is out before or after this turn's switch.
+
+**References:** [Battle: Wild Peerling behaviour](gameplay/battle.md#wild-peerling-behaviour); [Battle: A turn](gameplay/battle.md#a-turn) (BTL-009, BTL-012).
+
+**Resolution:** —
+
+### REVIEW-062: A refused wish has no job transition, and the FAILED state is unclear in the job object
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-036 fix incomplete)
+
+**Finding [proposed]:** `wish-refused` is listed as an HTTP error code, but the concept stage runs after `POST /v1/jobs` has returned, so it can only appear in the job's `error` field, whose format is not defined. The player is to "edit" the wish, but no endpoint takes a new wish in that state: `retry` runs the same step with the same wish, and `regenerate` exists only from `IMAGE_READY`. For a starter, a new `POST /v1/jobs` is blocked by `starter-job-open`. Also, "keeps the state it failed from" does not say whether `state` reads `FAILED` or the earlier state, and the job object has no field for the failed-from state, so a client that reconnects (CRE-014) can't tell which step failed.
+
+**Checked:** No page defines the `error` object or a wish-edit transition; deleting the job and starting again is not stated, and for a shrine job it would go through the credit.
+
+**Resolution needed [proposed]:** Define the `error` field, how the failed-from state appears in the job object, and the endpoint that submits an edited wish after `wish-refused`.
+
+**References:** [Creation API: The job object](tech/creation-api.md#the-job-object) (API-010); [Creation pipeline: Job handling](peerlings/creation-pipeline.md#job-handling).
+
+**Resolution:** —
+
+### REVIEW-063: The job object can't carry the image-check results the client must show
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-033 and REVIEW-034 fixes not carried to the API)
+
+**Finding [proposed]:** D-0028 made two image outcomes visible to the player: an image that "can't be accepted" (a second resemblance hit, IMG-018, or a transparency failure after matting) and an image "shown with a note of what failed" that may still be accepted. The job object has only `originalityChanged`. No field says which checks failed, or that the current image is blocked and why, so the client can't show the notices or disable Accept. `accept-image` names an error only for the resemblance case.
+
+**Checked:** Q-059 lists `originalityChanged` and IMG-013 as awaiting approval but not the missing fields; IMG-018 is accepted.
+
+**Resolution needed [proposed]:** Add job-object fields for failed image checks and for a blocked image with its reason, and name the `accept-image` error for a transparency-blocked image.
+
+**References:** [Image prompting: Originality rules](peerlings/image-prompting.md#originality-rules); [Image prompting: Image checks and clean-up](peerlings/image-prompting.md#image-checks-and-clean-up); [Creation API: The job object](tech/creation-api.md#the-job-object).
+
+**Resolution:** —
+
+### REVIEW-064: The creator's display name in the species record has no source
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** The species record, signed by the server at `finalize`, requires `creator.displayName`. No creation-API request carries a display name and no rule says where the server takes it from. The `profile` save-log event is not a safe source for starters: the wish is sent before the character exists, and save replication runs in the background and never blocks. A source is stated only for seed jobs.
+
+**Checked:** Every other use of a display name (first finder, creator topic, presence) comes from logs or messages the server already holds.
+
+**Resolution needed [proposed]:** State where the server gets the creator's display name at `finalize` and what happens when none is available yet.
+
+**References:** [Data formats: Species record](tech/data-formats.md#species-record--peerlingsspecies); [Creation API: Creating a Peerling](tech/creation-api.md#creating-a-peerling); [Onboarding: Creating a starter](gameplay/onboarding.md#creating-a-starter).
+
+**Resolution:** —
+
+### REVIEW-065: The Viewer can't tell that a species is delisted
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-027 fix incomplete)
+
+**Finding [proposed]:** D-0028 requires an existing card link to show only "This Peerling has been delisted". The Viewer fetches by CID with verified-fetch; nothing says it reads the registry, the registry index or any other listing status. A delisted species' record stays pinned and correctly signed, so by the stated mechanism its card loads with a verified badge. The same holds for a record signed at `finalize` whose job never reached listing: it carries a valid signature, and its name is later freed.
+
+**Checked:** No page gives the Viewer a registry lookup, and the species-stats value has no delisted flag.
+
+**Resolution needed [proposed]:** Specify how the Viewer and the in-game species card check a species CID's listing status, including while the server is offline.
+
+**References:** [Sharing: The viewer](gameplay/sharing.md#the-viewer); [Sharing: Peerling card](gameplay/sharing.md#peerling-card); [OrbitDB registry: Design](tech/orbitdb-registry.md#design).
+
+**Resolution:** —
+
+### REVIEW-066: The world generator is not specified, yet every verifier must reproduce it exactly
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** The page gives determinism rules (integer maths, SHA-256 noise, Voronoi ties) but no algorithm: noise parameters, area seed points, foliage patches, heights, paths, rest-point and statue placement and the integer sector constants are absent. It says the algorithm "is defined by that version's implementation, which every client ships". But the server also verifies every save log, and no rule makes one generator module or a set of test vectors binding on the client, the server and other verifiers. Two generators written from this page would disagree on which tiles are foliage, and honest catches would fail. The "exact" 30° sectors and pointy-top hexagon (WGN-018) can't be exact in integer vectors either; the constants that approximate them are not given. The first review's scope note raised this as advice; it was never tracked as a finding.
+
+**Checked:** No page mentions a reference implementation, shared module or conformance vectors for the generator. The battle engine, by contrast, is fully specified in integers.
+
+**Resolution needed [proposed]:** Either specify the verification-relevant functions exactly (tile kind, biome, area, rest-point and statue tiles, with constants), or state that one generator module per version is the single artefact every client, the server and any verifier must run, with test vectors.
+
+**References:** [Procedural generation: Deterministic world maths](world/procedural-generation.md#deterministic-world-maths) (WGN-002, WGN-018, WGN-021); [Player data: Catches](tech/player-data.md#catches); [Guardians: Guardian sites](gameplay/guardians.md#guardian-sites).
+
+**Resolution:** —
+
+### REVIEW-067: Respawn and start tiles are undefined
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-002 fix incomplete)
+
+**Finding [proposed]:** D-0028 made "a lost battle moves the player to the last rest point" a state change that follows from events and that the server recomputes for a checkpoint. But `lastRestPoint` and the `rest` event hold "the rest point's tile", and a rest point is used by facing its beacon, so that tile is not clearly one the player can stand on. No page says which tile and facing the player has after a respawn. The same gap covers a new player's first position and the tile of the spawn hub's rest point as the first `lastRestPoint`.
+
+**Checked:** The "nearest" rule of the generator-update section covers only relocations after an update.
+
+**Resolution needed [proposed]:** Define the rest-point tile versus the tile the player stands on, the position and facing after a respawn, and the new player's start tile and first `lastRestPoint`.
+
+**References:** [Player data: Save log](tech/player-data.md#save-log); [Exploration: Healing and rest points](gameplay/exploration.md#healing-and-rest-points); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
+
+**Resolution:** —
+
+### REVIEW-068: The map's first revealed area and its landmark marks are not defined in the save
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** "The spawn hub and the paths leading out of it are revealed from the start", but paths connect every rest point in the world, so the first set of revealed chunks has no stated end and is not given as starting `explored` state. A rest point "marks the landmark on the player's map" and the map shows "discovered rest points and landmarks", but the save holds only the chunk bit set and `lastRestPoint`. "Discovered" is never defined, and a mark that doesn't follow from revealed chunks is lost when the save is loaded.
+
+**Checked:** EXP-007 only restates the feature; the snapshot field list has no landmark field.
+
+**Resolution needed [proposed]:** Define the chunks revealed at the start exactly, and define "discovered" (for example, derived from revealed chunks) or add the marks to the snapshot.
+
+**References:** [Exploration: Map](gameplay/exploration.md#map); [Exploration: Healing and rest points](gameplay/exploration.md#healing-and-rest-points); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave).
+
+**Resolution:** —
+
+### REVIEW-069: Four glossary definitions still describe behaviour from before D-0027 and D-0028
+
+- **Status:** Open
+- **Severity:** Medium
+- **Review:** 2026-11-10 (REVIEW-004, REVIEW-005 and REVIEW-027 fixes not carried to the glossary)
+
+**Finding [proposed]:** The glossary is the canonical home of term definitions, and four entries contradict their pages:
+- **Recovery phrase:** "shown to the player once". The phrase can be shown again on every device (SAVE-040).
+- **Backup file:** "private key and latest save snapshot". It holds the whole save log plus origin proofs and ownership chains (SAVE-030).
+- **Delisting:** "clients stop showing it". Owned Peerlings stay, are shown as "Delisted Peerling", still battle, and can't be traded, followed or shared.
+- **XP:** "earns from wild battles". Guardian wins give XP too.
+
+**Checked:** The other entries touched by the two decisions (encounter number, double trade, genesis record, shrine credit) match their pages.
+
+**Resolution needed [proposed]:** Update the four definitions and the glossary's sources and date.
+
+**References:** [Glossary](glossary.md); [Player data: Account recovery](tech/player-data.md#account-recovery); [Data formats: Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup); [OrbitDB registry: Design](tech/orbitdb-registry.md#design); [Guardians: The battle](gameplay/guardians.md#the-battle).
+
+**Resolution:** —
+
+## Second review: Low severity
+
+### REVIEW-070: The save-log table in player-data omits `badge` and `pvp-result`
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** SAVE-007 ("event-based as listed in Save log") and SAVE-039 point to the Save log table as the event list. The table lacks two events that the format page defines and that change snapshot fields (`badges`, `pvp`).
+
+**Checked:** Data formats wins on conflict, so this is a documentation gap only.
+
+**Resolution needed [proposed]:** Add the two rows, or make the table an explicit pointer to data-formats.
+
+**References:** [Player data: Save log](tech/player-data.md#save-log); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
+
+**Resolution:** —
+
+### REVIEW-071: The onboarding flow has no step for the key and the recovery phrase
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** Player data says the 12 words are "shown at onboarding", and every server call needs the player key, but the six-step flow has no such step. The "choose an existing starter" path also doesn't say when the character is created relative to the choice (ONB-005 requires both).
+
+**Checked:** The phrase appears elsewhere only for title-screen recovery and the Backup menu.
+
+**Resolution needed [proposed]:** Add the key and phrase step to the flow, and the step order for the choose path.
+
+**References:** [Onboarding: Flow](gameplay/onboarding.md#flow); [Player data: Account recovery](tech/player-data.md#account-recovery).
+
+**Resolution:** —
+
+### REVIEW-072: PvP deadlines are written only for decisions both sides make
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10 (REVIEW-016 fix incomplete)
+
+**Finding [proposed]:** A side sends its `reveal` "as soon as it has both commits", and the replacement timer starts "when both reveals of that turn's actions have been exchanged". The same section defines decisions only one side makes (the other is charging, or only one side replaces) and turns with no decision (both charging). Read literally, a single decider never has "both commits", and a replacement after a turn with fewer than two action reveals has no timer start.
+
+**Checked:** Battle § PvP turn timer says only that the charge turn has no timer.
+
+**Resolution needed [proposed]:** Word the deadlines as "all commits or reveals this decision requires", and define the replacement-timer start for turns with fewer than two action reveals.
+
+**References:** [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle).
+
+**Resolution:** —
+
+### REVIEW-073: Crossing or pending requests are not covered by the "busy" rule
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** A request is declined as "busy" only when the player is "already in a battle or trade" (MPL-009). A player with an unanswered `challenge` or `propose`, sent or received, is in neither. Two players challenging each other at once, or a third player's request arriving while one is pending, has no defined outcome.
+
+**Checked:** Multiplayer, UI, PvP battles, trading and protocols say nothing about pending or simultaneous requests.
+
+**Resolution needed [proposed]:** Say whether a pending request counts as busy, and how two crossing requests between the same pair resolve.
+
+**References:** [Multiplayer: Communication](gameplay/multiplayer.md#communication) (MPL-009); [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle).
+
+**Resolution:** —
+
+### REVIEW-074: Who "took part" in a battle for XP is not defined
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** XP goes to every Peerling "that took part in the battle and didn't faint". "Took part" could mean in the team at the start, sent out, or having used a move. The `xpGained` values of `battle-result` depend on it, and so does the replay that rebuilds a missing `battle-result` after a crash (SAVE-029).
+
+**Checked:** This is the only use of the phrase in a battle context.
+
+**Resolution needed [proposed]:** Define taking part exactly (for example "was the active Peerling at any point in the battle").
+
+**References:** [Battle: Experience and levelling](gameplay/battle.md#experience-and-levelling).
+
+**Resolution:** —
+
+### REVIEW-075: SHR-005 contradicts the shrine-credit text, and the 30 days have two start points
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10 (REVIEW-036 and REVIEW-039 fixes not carried to the requirement)
+
+**Finding [proposed]:** SHR-005 still gives a credit when a shrine job "fails". The text above it now says a failed job stays open and can be retried, and the credit comes only when it is abandoned or expires. Read literally, SHR-005 gives an open job and a credit together, against SHR-006. Separately, the credit lasts 30 days from when the job ends, yet the returned-credit rule says it is gone "30 days after the offering"; the two differ by the first job's lifetime, which has no upper limit while the player is active.
+
+**Checked:** Creation API and D-0028 item 22 don't fix the start of the 30 days.
+
+**Resolution needed [proposed]:** Reword SHR-005 to match the text, and state whether the 30 days run from the offering or from the end of the first job.
+
+**References:** [Creation Shrine: Rules](gameplay/creation-shrine.md#rules) (SHR-005, SHR-006).
+
+**Resolution:** —
+
+### REVIEW-076: The enhancer system prompt has a broken example and lengths that don't match the schema
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** IMG-005 requires the system prompt word for word, and it contains errors:
+- the third example output is not valid JSON: the `originality` object is never closed, so `subject` sits inside it;
+- that example's `subject` is 588 characters, under the schema's minimum of 600, so the page's own failure handling would reject it;
+- the prompt asks for "100-250 words" while the schema requires 600 to 1,600 characters; short answers within the word range fall under 600 characters;
+- the three example inputs have an `appearance` of 72 to 88 characters, under the concept schema's minimum of 100 (CRE-027).
+
+**Checked:** Each example line was parsed and counted by script; examples 1 and 2 parse and are in range. The page is still proposed under Q-059, which does not list these errors.
+
+**Resolution needed [proposed]:** Fix example 3, align the word and character ranges, and make the example concepts valid.
+
+**References:** [Image prompting: System prompt](peerlings/image-prompting.md#system-prompt); [Image prompting: Output schema](peerlings/image-prompting.md#output-schema); [Creation pipeline: Stage 2](peerlings/creation-pipeline.md#stage-2--concept).
+
+**Resolution:** —
+
+### REVIEW-077: The registry page lists fewer signed listing fields than the format
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** The registry page says the server signs "species CID, `seq`, name, types, thumbnail CID, `createdAt`". Data formats signs the whole envelope body, which also holds `nameKey`, `status`, `removedAtSeq` and `listedSeq`. An access controller built from the registry page would leave `status` unsigned, so a tombstone could be forged or stripped.
+
+**Checked:** Data formats wins on conflict, which keeps this Low.
+
+**Resolution needed [proposed]:** Replace the field list on the registry page with "the whole listing body" and a link.
+
+**References:** [OrbitDB registry: Design](tech/orbitdb-registry.md#design); [Data formats: Registry entry](tech/data-formats.md#registry-entry--peerlingslisting); [Data formats: Signed envelope](tech/data-formats.md#signed-envelope).
+
+**Resolution:** —
+
+### REVIEW-078: The species-stats table in creator-feedback was split in two
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10 (regression from the REVIEW-045 fix)
+
+**Finding [proposed]:** The "How they are counted" block was inserted in the middle of the stats table. The `providers` row now follows a bullet list with no table header, so it renders as stray text and the table appears to define four fields instead of five.
+
+**Checked:** Read in the raw file: no blank line or header precedes the row.
+
+**Resolution needed [proposed]:** Move the `providers` row back into the table, above the counting rules.
+
+**References:** [Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot).
+
+**Resolution:** —
+
+### REVIEW-079: Decision status lines and resolved questions miss later changes
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** Bookkeeping that the schema requires (AGENTS.md §7) is missing in two places:
+- **Decisions.** D-0024 says it changes parts of D-0013, D-0017, D-0021 and D-0022. None of their Status lines names D-0024 (D-0013 and D-0022 name only D-0027 or D-0028; D-0017 and D-0021 name nothing), and the index rows follow them.
+- **Resolved questions.** Q-052 cites EXP-011, which was removed and replaced by EXP-014, and says the first encounter is always number 0, which a guardian battle can now use up. Q-043 says the backup file holds the latest snapshot (now the whole log). Q-021 says the species stats are in OrbitDB (replaced by the snapshot in D-0023). Other resolved entries carry a "since" note for such changes; these three don't.
+
+**Checked:** The four decision texts are high-level and not contradicted in substance; the other resolved questions checked still match their pages.
+
+**Resolution needed [proposed]:** Add "partly changed by D-0024" to the four Status lines and index rows, add notes to the three resolved questions, and point Q-052 at EXP-014.
+
+**References:** [D-0024](decisions/D-0024-review-2-decisions.md); [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md); [D-0017](decisions/D-0017-world-features.md); [D-0021](decisions/D-0021-pvp-win-counter.md); [D-0022](decisions/D-0022-v1-fun-features.md); [Open questions: Q-052](open-questions.md#q-052); [Q-043](open-questions.md#q-043); [Q-021](open-questions.md#q-021).
+
+**Resolution:** —
+
+### REVIEW-080: The signpost example can't occur under the stated range rule
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** A signpost's range is the lowest base level in the area minus 2 to the highest plus 2. Areas are about 300 to 500 m across and the base level rises with distance, so an area inside the level-scaling zone spans clearly more than 4 levels. The example "level 22–26" needs one base level across the whole area, so a reader may take the range as tile-local.
+
+**Checked:** Only areas where the base level is constant (at the cap) give a 4-level span, and there the range would end at 50.
+
+**Resolution needed [proposed]:** Replace the example with a range the rule can produce.
+
+**References:** [Procedural generation: Points of interest](world/procedural-generation.md#points-of-interest); [Encounters: Wild level](gameplay/encounters.md#wild-level).
+
+**Resolution:** —
+
+### REVIEW-081: The list of cry triggers omits petting
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** Audio lists when a cry plays: entering a battle, opening a card, and being chosen as starter. Exploration adds a fourth trigger: petting the following Peerling plays its cry.
+
+**Checked:** No other trigger list exists.
+
+**Resolution needed [proposed]:** Add petting to the list in audio.
+
+**References:** [Audio: Peerling cries](world/audio.md#peerling-cries); [Exploration: Following Peerling](gameplay/exploration.md#following-peerling).
+
+**Resolution:** —
+
+### REVIEW-082: The phone-backup menu path contradicts the UI page
+
+- **Status:** Open
+- **Severity:** Low
+- **Review:** 2026-11-10
+
+**Finding [proposed]:** Player data puts phone backup under "Settings → Back up to phone". The UI page puts it under the pause menu's Backup item, has no backup entry in Settings, and player data itself uses "Backup → Show recovery phrase".
+
+**Checked:** No other page names the menu path.
+
+**Resolution needed [proposed]:** Change the path in player data to the Backup menu.
+
+**References:** [Player data: Phone backup](tech/player-data.md#phone-backup); [UI: Pause menu](gameplay/ui.md#pause-menu-esc).
+
+**Resolution:** —
 
 ## See also
 

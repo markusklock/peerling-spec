@@ -13,7 +13,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [overview](overview.md) | accepted | Vision, the two equal goals, design pillars, v1 scope |
 | [glossary](glossary.md) | accepted | Canonical definitions of all terms |
 | [open-questions](open-questions.md) | draft | All unresolved questions (Q-NNN) |
-| [specification-review](specification-review.md) | draft | 47 review findings with severity, status and resolution tracking |
+| [specification-review](specification-review.md) | draft | 82 review findings with severity, status and resolution tracking: 47 from 2026-10-19 (all Fixed), 35 from 2026-11-10 (Open) |
 | [log](log.md) | — | Append-only change log |
 
 ## Gameplay
@@ -166,3 +166,4 @@ D-0029. Next free question ID: Q-060.
 | [2026-10-27-specification-review-verification](../raw/conversations/2026-10-27-specification-review-verification.md) | 2026-10-27 | Verify all 47 review findings; lower 13 severities (16 High, 23 Medium, 8 Low) and correct finding wording |
 | [2026-10-27-high-severity-resolutions](../raw/conversations/2026-10-27-high-severity-resolutions.md) | 2026-10-27 | Resolve the 16 high-severity findings (D-0027): new account after a lost save, server-expired trades, interrupted battles count as fled, the rest approved as proposed |
 | [2026-10-28-medium-low-resolutions](../raw/conversations/2026-10-28-medium-low-resolutions.md) | 2026-10-28 | Resolve the 31 medium- and low-severity findings (D-0028): eight designer choices, the rest clear fixes; Q-059 opened |
+| [2026-11-10-specification-review](../raw/conversations/2026-11-10-specification-review.md) | 2026-11-10 | New full review after D-0027 and D-0028: 35 findings (4 High, 18 Medium, 13 Low) recorded as Open in the review tracker |
