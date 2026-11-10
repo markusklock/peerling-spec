@@ -627,3 +627,37 @@ List all entries with `grep "^## \[" wiki/log.md`.
   13 Low. About half are incomplete or unpropagated D-0027/D-0028 fixes.
   Findings are review proposals; no game rules, requirements, Q-NNN or
   decisions were changed.
+
+## [2026-11-10] design | Resolve the findings of the second review (D-0029)
+- Source: raw/conversations/2026-11-10-second-review-resolutions.md.
+- Changed: wiki/decisions/D-0029-second-review-fixes.md (new),
+  wiki/specification-review.md, wiki/tech/player-data.md,
+  wiki/tech/data-formats.md, wiki/tech/protocols.md,
+  wiki/tech/creation-api.md, wiki/tech/network-performance.md,
+  wiki/tech/orbitdb-registry.md, wiki/gameplay/battle.md,
+  wiki/gameplay/pvp-battles.md, wiki/gameplay/catching.md,
+  wiki/gameplay/guardians.md, wiki/gameplay/exploration.md,
+  wiki/gameplay/creation-shrine.md, wiki/gameplay/creator-feedback.md,
+  wiki/gameplay/trading.md, wiki/gameplay/multiplayer.md,
+  wiki/gameplay/onboarding.md, wiki/gameplay/sharing.md,
+  wiki/gameplay/spectating.md, wiki/world/procedural-generation.md,
+  wiki/world/audio.md, wiki/peerlings/creation-pipeline.md,
+  wiki/peerlings/image-prompting.md, wiki/glossary.md,
+  wiki/open-questions.md, wiki/index.md, wiki/log.md, and the Status lines
+  of D-0013, D-0017, D-0021, D-0022, D-0024, D-0027 and D-0028.
+- Notes: All 35 findings (REVIEW-048 to REVIEW-082) set to Fixed. Designer's
+  choices: a fork invalidates only catches from the lowest duplicated number
+  on and never one a checkpoint covers; one binding generator module per
+  version with test vectors; void and drawn PvP battles are recorded and
+  cancel a forfeit claim; a shrine credit's 30 days start when the first job
+  ends. The other fixes were made under the request to solve them as seen
+  fit. New: save-log events `generator` and `trade-pending`, `encounter`
+  fields `base` and `dayBase`, the `battle-blocks` stream,
+  `GET /v1/listings/{species CID}`, job fields `failedFrom` and
+  `imageChecks`. Removed SAVE-013, SAVE-029 and SHR-005 (replaced by
+  SAVE-042, SAVE-043 and SHR-007); added SAVE-044 to SAVE-049, BTL-016 to BTL-018,
+  PRT-005 to PRT-008, PVP-014, TRD-008, MPL-011, ONB-009, EXP-016, EXP-017,
+  API-013 to API-016, LNK-005 and WGN-023 to WGN-025. Glossary: four
+  definitions corrected; Arrival tile, Base record, Fork and Generator module
+  added. Q-059 now also lists `imageChecks.failed`; no question opened or
+  closed.

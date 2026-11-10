@@ -15,12 +15,13 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Creator Feedback
@@ -69,16 +70,20 @@ Each species' stats:
 | `catches` | Verified catches |
 | `owners` | Instances currently owned (not released) |
 | `trades` | Trades involving this species |
+| `providers` | Approximate number of IPFS nodes currently providing the species (from content-routing lookups) |
 
 [accepted] **How they are counted** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)):
 - `encounters`: `encounter` events of wild encounters whose tile, epoch and
   candidate the server has checked (as for a catch, without a battle replay).
+  [accepted] When the encounter used a client-derived epoch or day record,
+  the event names its base record, so the server can rebuild the record and
+  check the candidate; an encounter it can't check isn't counted (2026-11-10,
+  [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
 - `trades`: one per valid trade entry that moves at least one Peerling of the
   species, however many it moves.
 - Each hourly snapshot counts from the transfer log as it then stands, so a
   trade that becomes void ([player-data § Transfer log and trades](../tech/player-data.md#transfer-log-and-trades))
   drops out of `trades`, and `owners` follows the restored owners.
-| `providers` | Approximate number of IPFS nodes currently providing the species (from content-routing lookups) |
 
 Any client can read any species' stats, so every species card can show them.
 

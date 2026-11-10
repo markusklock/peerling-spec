@@ -6,17 +6,21 @@ tags: [gameplay, world, social]
 sources:
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-06-fun-features-approved.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/guardians.md
   - wiki/gameplay/peerling-of-the-day.md
   - wiki/gameplay/creator-feedback.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # D-0022: Follower, guardians, Peerling of the Day and first finds
 
-**Status:** accepted (2026-10-06). Partly superseded by [D-0028](D-0028-medium-low-review-fixes.md)
+**Status:** accepted (2026-10-06). Partly changed by
+[D-0024](D-0024-review-2-decisions.md) (2026-10-06): guardian XP and team
+size, a delisted Peerling of the Day, and the first-finder credit being
+final. Partly superseded by [D-0028](D-0028-medium-low-review-fixes.md)
 (2026-10-28): the Peerling of the Day's encounter weight
 ([peerling-of-the-day § In encounters](../gameplay/peerling-of-the-day.md#in-encounters)).
 

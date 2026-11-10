@@ -6,17 +6,23 @@ tags: [world, gameplay, showcase]
 sources:
   - raw/conversations/2026-10-05-world-details.md
   - raw/conversations/2026-10-05-world-details-approved.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/world/visual-style.md
   - wiki/gameplay/exploration.md
-updated: 2026-10-05
+updated: 2026-11-10
 ---
 
 # D-0017: World features: spawn hub, landmarks, map, day/night, weather
 
 **Status:** accepted (2026-10-05); smaller details approved the same day
-([Q-046](../open-questions.md#q-046))
+([Q-046](../open-questions.md#q-046)). Partly changed by
+[D-0024](D-0024-review-2-decisions.md) (2026-10-06): world generation uses
+integer maths only. Partly changed by
+[D-0029](D-0029-second-review-fixes.md) (2026-11-10): one binding generator
+module per version, and a client switches generator version by its latest
+epoch record, not by its clock.
 
 ## Context
 The world had biomes, tiles, foliage and rest points, but no places to go, no

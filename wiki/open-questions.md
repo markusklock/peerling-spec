@@ -3,7 +3,7 @@ title: Open Questions
 type: reference
 status: draft
 tags: [questions, backlog]
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Open Questions
@@ -77,8 +77,12 @@ Context:
   settings, the image checks (IMG-013), the franchise name list and its
   matching rules, the resemblance check running on every image (IMG-010),
   failure handling (IMG-009), provenance (IMG-005), finding the model's front
-  (IMG-017)); the job object's `originalityChanged` field; and "no background
-  removal" in stage 5 of the pipeline.
+  (IMG-017)); the job object's `originalityChanged` field and its
+  `imageChecks.failed` list (added 2026-11-10; `imageChecks.blocked` is
+  accepted, [D-0029](decisions/D-0029-second-review-fixes.md)); and "no
+  background removal" in stage 5 of the pipeline.
+- On 2026-11-10 the system prompt's examples and length wording were
+  corrected (REVIEW-076); the prompt as a whole is still [proposed].
 - Implementers should treat these as the intended design, but they may change
   before approval.
 
@@ -251,7 +255,9 @@ from image generation in the final review. Resolved 2026-10-04 →
 
 ### Q-021
 **Creator feedback.** Yes: server-verified species stats in OrbitDB, live pubsub
-notifications, and a "since you were last here" summary. Resolved 2026-10-04 →
+notifications, and a "since you were last here" summary. (Since 2026-10-06 the
+stats are an hourly snapshot instead of an OrbitDB database,
+[D-0023](decisions/D-0023-network-performance.md).) Resolved 2026-10-04 →
 [creator-feedback](gameplay/creator-feedback.md).
 
 ### Q-019
@@ -320,7 +326,9 @@ no password recovery. The save contents list is approved. Resolved 2026-10-05 �
 ### Q-043
 **Keeping saves available.** Inspecting, trading with or battling a player
 keeps a persistent backup of their save, served back on request via pubsub; the
-backup file holds the latest save snapshot; the client requests persistent
+backup file holds the latest save snapshot (since 2026-10-27 also the whole
+save log and the proofs of every owned Peerling,
+[D-0027](decisions/D-0027-high-severity-review-fixes.md)); the client requests persistent
 storage. No reliance on community mirrors. Resolved 2026-10-05 →
 [player-data § Keeping saves available](tech/player-data.md#keeping-saves-available).
 
@@ -353,7 +361,10 @@ per player (D-0018), the phone backup flow and the text limits. Resolved
 **How does the guaranteed first encounter work?** The first step onto
 foliage outside the spawn hub always starts an ordinary encounter (number 0).
 Approved as proposed (the designer's comment under "12" was meant for item 7).
-Resolved 2026-10-06 → [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage) (EXP-011).
+(Since 2026-10-28 a guardian battle fought first uses up number 0 without
+ending the guarantee, and EXP-011 was replaced by EXP-014,
+[D-0028](decisions/D-0028-medium-low-review-fixes.md).)
+Resolved 2026-10-06 → [exploration § Wild encounters in foliage](gameplay/exploration.md#wild-encounters-in-foliage) (EXP-014).
 
 ### Q-053
 **World layout.** Option B: a central Plains spawn hexagon with 12 wedge-shaped

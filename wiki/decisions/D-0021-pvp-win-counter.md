@@ -7,16 +7,21 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-06-proposals-approved.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/gameplay/pvp-battles.md
   - wiki/tech/player-data.md
-updated: 2026-10-06
+updated: 2026-11-10
 ---
 
 # D-0021: PvP win counter
 
 **Status:** accepted (2026-10-06). Changes the "no rewards" rule in
-[pvp-battles § Rewards](../gameplay/pvp-battles.md#rewards).
+[pvp-battles § Rewards](../gameplay/pvp-battles.md#rewards). Partly changed by
+[D-0024](D-0024-review-2-decisions.md) (2026-10-06): how a win is proven and
+how conflicting claims are settled. Partly changed by
+[D-0029](D-0029-second-review-fixes.md) (2026-11-10): void and drawn battles
+are recorded and cancel a forfeit claim.
 
 ## Context
 PvP battles start at full HP and change nothing afterwards, and they give no

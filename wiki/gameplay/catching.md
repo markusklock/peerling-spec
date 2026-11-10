@@ -18,10 +18,11 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Catching
@@ -84,6 +85,10 @@ A fainted wild Peerling can't be caught; it gives XP
   player can swap Peerlings between team and collection at any time outside
   battle.
 - A Peerling caught while the team is full goes to the collection.
+  [accepted] Exactly (2026-11-10): a caught, created or received Peerling
+  joins the end of the team if the team holds fewer than 4, otherwise it is
+  in the collection; no `team` event is needed
+  ([player-data § Save log](../tech/player-data.md#save-log)).
 - [accepted] The team always holds **at least 1** Peerling: the last team
   member can't be moved to the collection or offered in a trade.
 - [accepted] Outside battle, the team always holds at least one Peerling that
@@ -98,6 +103,20 @@ A fainted wild Peerling can't be caught; it gives XP
   collection into it (oldest `obtainedAt` first) until it holds one. A void
   trade always returns what the player offered, so the player never ends up
   with no Peerlings.
+- [accepted] **The refill, exactly** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)). It is part of what a
+  `trade-void` event does to the save, so no further event is written and
+  the server computes the same team:
+  1. The received Peerlings leave the team; the others keep their order.
+  2. The restored Peerlings are added like received ones: each joins the end
+     of the team while it holds fewer than 4.
+  3. If the team now holds no non-fainted Peerling, the non-fainted Peerling
+     in the collection with the oldest `obtainedAt` joins it (ties: the lower
+     instance ID, compared byte by byte): at the end if the team holds fewer
+     than 4, otherwise in place of the last team member, which moves to the
+     collection.
+  4. If the player owns no non-fainted Peerling at all, the whole team is set
+     to full HP instead.
 - The team is stored in the [save](../tech/player-data.md#save-contents).
 
 [accepted] A caught Peerling becomes a new [instance](../glossary.md#peerling-instance)

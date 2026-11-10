@@ -10,11 +10,12 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-proposals-approved.md
   - raw/conversations/2026-10-06-review-2-fixes.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0019-peerdex-ui-audio.md
   - wiki/world/visual-style.md
   - wiki/peerlings/types.md
-updated: 2026-10-06
+updated: 2026-11-10
 ---
 
 # Music, Sound Effects and Peerling Cries
@@ -94,7 +95,9 @@ Audio API, so no audio files are generated or downloaded.
   | Spirit | Echoing, reverberant |
 
 - **When it plays** [accepted]: when a Peerling enters a battle, when its card is opened,
-  and when the player's own Peerling is chosen as starter.
+  when the player's own Peerling is chosen as starter, and when the player
+  pets their following Peerling
+  ([exploration § Following Peerling](../gameplay/exploration.md#following-peerling)).
 
 ## Requirements
 

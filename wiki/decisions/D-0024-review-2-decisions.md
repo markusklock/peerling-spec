@@ -6,12 +6,13 @@ tags: [tech, verification, gameplay, world]
 sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/tech/player-data.md
   - wiki/tech/data-formats.md
   - wiki/gameplay/pvp-battles.md
-updated: 2026-10-27
+updated: 2026-11-10
 ---
 
 # D-0024: Determinism, verification and edge-case rules from the second review
@@ -21,7 +22,10 @@ resolution), D-0017 (world generation), D-0021 (PvP win proof) and D-0022
 (guardians, Peerling of the Day, first finds). Partly superseded by
 [D-0027](D-0027-high-severity-review-fixes.md) (2026-10-27): encounter
 events and their order, the `battle-result` fields, day and week records,
-PvP timers and disconnects.
+PvP timers and disconnects. Partly changed by
+[D-0029](D-0029-second-review-fixes.md) (2026-11-10): which base record a
+client-derived record copies (item 3), what cancels a forfeit claim (item 7),
+and when a failed shrine job gives a credit (item 8).
 
 ## Context
 A second full review found rules that two honest clients could compute

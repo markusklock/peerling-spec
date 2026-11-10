@@ -13,12 +13,13 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0012-starter-choice-and-extra-creations.md
   - wiki/peerlings/creation-pipeline.md
   - wiki/tech/player-data.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Creation Shrine
@@ -66,21 +67,26 @@ offering is never refunded.
 [accepted] If the job is abandoned or expires
 ([creation-api](../tech/creation-api.md#the-job-object)), the player keeps a
 **shrine credit** for 30 days: they can start a new shrine job without a new
-offering. After 30 days the credit is gone.
+offering. After 30 days the credit is gone. [accepted] The 30 days start when
+the **first** shrine job for that offering was abandoned or expired
+(2026-11-10, designer's choice, [D-0029](../decisions/D-0029-second-review-fixes.md)).
 
 [accepted] Further rules (2026-10-06):
 - A player has at most **one open shrine job or one shrine credit** at a time,
   so two jobs can't run in parallel to get around the 7-day limit.
-- A job that ends in `FAILED` (e.g. a generation or publishing error) also
-  gives a shrine credit. [accepted] A failed job can first be retried
+- A job in `FAILED` (e.g. a generation or publishing error) stays open and
+  can be retried
   ([creation-api § The job object](../tech/creation-api.md#the-job-object));
-  the credit comes when it is abandoned or expires (2026-10-28).
+  it gives no credit by itself. The credit comes when the job is abandoned or
+  expires (2026-10-28; wording made consistent 2026-11-10).
 - [accepted] **What a credit holds** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)): the reward
   level (the offering's average level, SHR-004), the offering's release entry,
   and its expiry. Starting a shrine job with the credit uses it up; that job
   keeps the same level and release entry. If that job also ends without
   publishing, the credit comes back with its original expiry: it is never
-  renewed, so 30 days after the offering it is gone.
+  renewed, so 30 days after the first job ended it is gone. A job started with
+  the credit before its expiry may still finish after it; if it ends without
+  publishing after the expiry, no credit comes back.
 - The client can ask the server for the player's shrine status: an open job,
   a credit and when it expires, and when the 7-day limit ends
   ([creation-api](../tech/creation-api.md#creating-a-peerling)).
@@ -95,8 +101,9 @@ The server must be online to use the shrine.
 - **SHR-002** [accepted] The offering MUST be 3 verified Peerlings of 3 different primary types, each at least level 20; they MUST be released (signed transfers to `released` in the transfer log) when the creation starts.
 - **SHR-003** [accepted] A player MUST be limited to one shrine creation per 7 days, counted from the publishing of their previous shrine creation.
 - **SHR-004** [accepted] The new Peerling MUST start at the average level of the offered Peerlings, rounded down.
-- **SHR-005** [accepted] When a shrine job is abandoned, expires or fails, the server MUST keep a shrine credit for the player for 30 days, which lets them start one new shrine job without an offering.
+- ~~**SHR-005**~~ (removed 2026-11-10, replaced by SHR-007; see D-0029)
 - **SHR-006** [accepted] A player MUST have at most one open shrine job or shrine credit at a time.
+- **SHR-007** [accepted] When a shrine job is abandoned or expires without publishing, the server MUST keep a shrine credit for the player, which lets them start one new shrine job without an offering. The credit MUST expire 30 days after the first job for that offering was abandoned or expired and MUST NOT be renewed. A job in `FAILED` stays open and MUST NOT give a credit until it is abandoned or expires.
 
 ## Open questions
 

@@ -7,6 +7,7 @@ sources:
   - raw/conversations/2026-10-04-answers-round-8.md
   - raw/conversations/2026-10-04-decentralize-level-3.md
   - raw/conversations/2026-10-05-proposal-review-1.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
@@ -14,7 +15,7 @@ related:
   - wiki/tech/resilience.md
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
-updated: 2026-10-27
+updated: 2026-11-10
 ---
 
 # D-0013: Peer-verified registry, catches and trades
@@ -25,7 +26,10 @@ server-signed catches and ownership ledger of
 [D-0009](D-0009-player-data-on-orbitdb.md). Details are [accepted].
 Partly superseded by [D-0027](D-0027-high-severity-review-fixes.md)
 (2026-10-27): after a double trade, the whole trade holding the losing
-transfer is void, so its players keep what they offered.
+transfer is void, so its players keep what they offered. Partly changed by
+[D-0024](D-0024-review-2-decisions.md) (2026-10-06): how transfer conflicts
+are resolved. Partly changed by [D-0029](D-0029-second-review-fixes.md)
+(2026-11-10): which catches a forked save log invalidates.
 
 ## Context
 The designer wants the game to work as far as possible without the operator

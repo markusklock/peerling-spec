@@ -16,11 +16,12 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/peerling-species.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Trading
@@ -64,6 +65,13 @@ Exact messages: [protocols](../tech/protocols.md).
    [accepted] Once both sides have exchanged their signed transfers, the trade
    can no longer be cancelled: either side may write the entry, and does so if
    it hasn't appeared, even if the session dropped (2026-10-06).
+   [accepted] Just before a client sends its signed transfers, it writes a
+   `trade-pending` event to its save log (2026-11-10,
+   [D-0029](../decisions/D-0029-second-review-fixes.md)). It holds the trade
+   ID, the client's own signed transfers and the other side's offer data, and
+   it is what locks the offered Peerlings. Because it is in the save, the
+   lock and the means to finish or cancel the trade are still there after a
+   reload, a restore or a move to another computer.
    [accepted] If the session drops before one side has the other's transfers,
    that side's offered Peerlings are locked until the trade appears, and after
    10 minutes the player can ask the server to cancel (expire) it; then both
@@ -72,7 +80,8 @@ Exact messages: [protocols](../tech/protocols.md).
 5. Each side then appends a `trade` event to its save, removing the outgoing
    instances and adding the incoming ones (their `origin` stays as it was;
    trades don't change it). A client keeps the received offer data until it
-   has written this event ([accepted] stored durably before it signs; if lost,
+   has written this event ([accepted] stored durably before it signs, in its
+   `trade-pending` event; if lost,
    it is rebuilt from the sender's save log:
    [protocols § Trade](../tech/protocols.md#peerlingstrade100--trade)), and at every session start it checks the transfer
    log (or the ownership index) for its own Peerlings and writes any `trade`
@@ -106,6 +115,7 @@ flagged
 - **TRD-005** [accepted] A trade MUST NOT be cancellable once both sides have exchanged signed transfers; either side MUST append the entry if it is missing, and each client MUST at session start write any `trade` event missing for its own Peerlings.
 - **TRD-006** [accepted] A client MUST lock the Peerlings it offered from sending its signed transfers until the trade's entry appears or the trade expires, and MUST let the player ask the server to expire a trade whose entry hasn't appeared ([SAVE-036](../tech/player-data.md#requirements)).
 - **TRD-007** [accepted] A client MUST store the other side's final offer data durably before sending its own signed transfers, and MUST be able to rebuild it from the sender's save log ([protocols § Trade](../tech/protocols.md#peerlingstrade100--trade)).
+- **TRD-008** [accepted] Before sending its signed transfers, a client MUST write a `trade-pending` event with the trade ID, its own signed transfers and the other side's offer data ([SAVE-047](../tech/player-data.md#requirements)).
 
 ## Open questions
 

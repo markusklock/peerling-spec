@@ -9,6 +9,7 @@ sources:
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
   - raw/conversations/2026-11-10-specification-review.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/index.md
   - wiki/open-questions.md
@@ -18,14 +19,15 @@ related:
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0027-high-severity-review-fixes.md
   - wiki/decisions/D-0028-medium-low-review-fixes.md
+  - wiki/decisions/D-0029-second-review-fixes.md
 updated: 2026-11-10
 ---
 
 # Specification Review
 
 > Tracks the findings of the specification reviews: REVIEW-001 to REVIEW-047
-> from the review of 2026-10-19 (all Fixed) and REVIEW-048 to REVIEW-082 from
-> the review of 2026-11-10 (all Open). Each finding has a severity, an editable
+> from the review of 2026-10-19 and REVIEW-048 to REVIEW-082 from
+> the review of 2026-11-10 (all Fixed, the second batch in D-0029). Each finding has a severity, an editable
 > status, evidence links and resolution notes. Finding IDs are stable, so each
 > issue can be followed through later changes.
 
@@ -111,6 +113,12 @@ page; each of those names the earlier finding. The recommended first priority
 is the four High findings, which can make honest catches invalid or make
 battle replays diverge, followed by the PvP protocol findings (REVIEW-056 to
 REVIEW-058).
+
+[accepted] All 35 were resolved on 2026-11-10 in
+[D-0029](decisions/D-0029-second-review-fixes.md). The designer decided
+REVIEW-050, REVIEW-056, REVIEW-066 and REVIEW-075; the others were fixed
+under the designer's request to solve them as seen fit. Each finding's
+**Resolution** names what changed.
 
 ## High severity
 
@@ -874,7 +882,7 @@ REVIEW-058).
 
 ### REVIEW-048: The catch check rejects an honest catch made with a fainted team member
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** High
 - **Review:** 2026-11-10 (regression from the REVIEW-008 fix)
 
@@ -886,11 +894,11 @@ REVIEW-058).
 
 **References:** [Player data: Catches](tech/player-data.md#catches) (check 4, SAVE-032); [Data formats: Catch evidence](tech/data-formats.md#catch-evidence); [Battle: Formats](gameplay/battle.md#formats); [Catching: Team and collection](gameplay/catching.md#team-and-collection).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the starting-team check allows 0 HP for fainted members, with at least one member above 0; the evidence `team` lists fainted members with `hp` 0 (check 4, [Player data: Encounter seeds](tech/player-data.md#encounter-seeds); [Data formats: Catch evidence](tech/data-formats.md#catch-evidence)).
 
 ### REVIEW-049: Day and week records have no usable base-record rule
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** High
 - **Review:** 2026-11-10
 
@@ -902,11 +910,11 @@ REVIEW-058).
 
 **References:** [Player data: Encounter seeds](tech/player-data.md#encounter-seeds) (SAVE-013); [Data formats: Epoch record](tech/data-formats.md#epoch-record--peerlingsepoch); [Peerling of the Day](gameplay/peerling-of-the-day.md); [Creation API: Network](tech/creation-api.md#network).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the base record of a derived record of epoch E is the newest signed record with an epoch of at most E − 2 that the client can get, also for day and week records; clients keep 8 days of signed records; the server publishes a missed day or week record later; SAVE-013 replaced by SAVE-042 ([Player data: Encounter seeds](tech/player-data.md#encounter-seeds)).
 
 ### REVIEW-050: A save-log owner can invalidate Peerlings they have already traded away
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** High
 - **Review:** 2026-11-10
 
@@ -918,11 +926,11 @@ REVIEW-058).
 
 **References:** [Player data: Verified Peerlings](tech/player-data.md#verified-peerlings); [Player data: Catches](tech/player-data.md#catches) (check 2); [Player data: Known gaps](tech/player-data.md#known-gaps-accepted-risks).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): designer's choice: a fork invalidates only catches and badges from the lowest duplicated encounter number on, and never one a server checkpoint covers as valid; a catch traded away before any checkpoint covered it is a recorded accepted risk (SAVE-044; [Player data: Verified Peerlings](tech/player-data.md#verified-peerlings); [Known gaps](tech/player-data.md#known-gaps-accepted-risks)).
 
 ### REVIEW-051: A move against a Peerling that already fainted this turn is undefined
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** High
 - **Review:** 2026-11-10 (a case next to those fixed for REVIEW-021)
 
@@ -934,13 +942,13 @@ REVIEW-058).
 
 **References:** [Battle: A turn](gameplay/battle.md#a-turn); [Battle: Move mechanics](gameplay/battle.md#move-mechanics); [Battle: Random number generator](gameplay/battle.md#random-number-generator) (BTL-012, BTL-015).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a move against a Peerling that already fainted this turn fails with no rolls and no effects; a charge setup still charges, and a charge strike with no target is used up (BTL-016; [Battle: Move mechanics](gameplay/battle.md#move-mechanics)).
 
 ## Second review: Medium severity
 
 ### REVIEW-052: Encounters that aren't catches can't be checked when their epoch record is client-derived
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-003 and REVIEW-045 fixes incomplete)
 
@@ -952,11 +960,11 @@ REVIEW-058).
 
 **References:** [Data formats: Save-log events](tech/data-formats.md#save-log-events); [Data formats: Catch evidence](tech/data-formats.md#catch-evidence); [Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot); [D-0027](decisions/D-0027-high-severity-review-fixes.md).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): an `encounter` event that uses a client-derived epoch or day record names the epoch of its base record (`base`, `dayBase`), so the record can be rebuilt; an encounter the server can't check isn't counted (SAVE-046; [Data formats: Save-log events](tech/data-formats.md#save-log-events); [Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot)).
 
 ### REVIEW-053: Guardian badges have no write order or crash recovery
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-003 fix incomplete)
 
@@ -968,11 +976,11 @@ REVIEW-058).
 
 **References:** [Guardians: Badges](gameplay/guardians.md#badges); [Player data: Encounter seeds](tech/player-data.md#encounter-seeds) (SAVE-029); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): `badge` is written before `battle-result`; a crashed first win is rebuilt from the badge's evidence; the badge-specific checks are listed (SAVE-043, SAVE-049; [Player data: Catches](tech/player-data.md#catches); [Guardians: Badges](gameplay/guardians.md#badges)).
 
 ### REVIEW-054: Several state changes have no event rule, though events are the save
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-002 fix incomplete)
 
@@ -988,11 +996,11 @@ REVIEW-058).
 
 **References:** [Player data: Save log](tech/player-data.md#save-log) (SAVE-039); [Catching: Team and collection](gameplay/catching.md#team-and-collection); [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): every save-log event has an exact effect, including who joins the team, the refill after a void trade (with tie-break and the all-fainted case) and a new `generator` event that sets the snapshot's `generator` and moves a vanished rest point (SAVE-045; [Player data: Save log](tech/player-data.md#save-log); [Catching: Team and collection](gameplay/catching.md#team-and-collection)).
 
 ### REVIEW-055: A stale or chosen epoch record also selects the world and rules version
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-029 fix incomplete)
 
@@ -1006,11 +1014,11 @@ REVIEW-058).
 
 **References:** [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates); [Battle: Rules versions](gameplay/battle.md#rules-versions); [Player data: Encounter seeds](tech/player-data.md#encounter-seeds); [Player data: Known gaps](tech/player-data.md#known-gaps-accepted-risks).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a client plays in the generator and rules version active at the epoch of its latest epoch record, not of its clock, so a stale record means the old world; the base-record known gap now names the world and the rules too (SAVE-048, WGN-025; [Procedural generation: Generator updates](world/procedural-generation.md#generator-updates); [Player data: Known gaps](tech/player-data.md#known-gaps-accepted-risks)).
 
 ### REVIEW-056: A forfeit win can be recorded from a battle that ended void or drawn
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-018 fix incomplete)
 
@@ -1022,11 +1030,11 @@ REVIEW-058).
 
 **References:** [PvP battles: Win record](gameplay/pvp-battles.md#win-record) (PVP-012, PVP-013); [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): designer's choice: void and drawn battles are written as `pvp-result` events that change no counter, and a forfeit claim is cancelled by a void, a draw or a competing forfeit in the other player's log; a forfeit's loser state must be for the claimed turn or the one before (PVP-014; [PvP battles: Win record](gameplay/pvp-battles.md#win-record); [Data formats: Save-log events](tech/data-formats.md#save-log-events)).
 
 ### REVIEW-057: A `timeout` message binds the accused side without any check
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-016 fix incomplete)
 
@@ -1038,11 +1046,11 @@ REVIEW-058).
 
 **References:** [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle); [PvP battles: Protocol](gameplay/pvp-battles.md#protocol); [Battle: PvP turn timer](gameplay/battle.md#pvp-turn-timer).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a side waits 2 s past a deadline before sending `timeout`, and a `timeout` for a message that was already sent ends the battle void (`timeout-disputed`), so it can never replace a choice the other side has seen (PRT-005; [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle)).
 
 ### REVIEW-058: PvP resume is undefined before the turn-0 state
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-017 fix not reconciled with the turn-0 state of D-0028)
 
@@ -1054,11 +1062,11 @@ REVIEW-058).
 
 **References:** [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle) (PRT-004).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a battle can be resumed from any point after `accept`; an absent `have` means no state and 0 the turn-0 state; a battle has started once a side sent its turn-0 state; a forfeit needs a signed state from the other player, otherwise the side records a void; the turn-1 timer starts at the turn-0 states (PRT-006; [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle)).
 
 ### REVIEW-059: The unfinished-trade lock exists only in local client state
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-013 fix incomplete)
 
@@ -1070,11 +1078,11 @@ REVIEW-058).
 
 **References:** [Player data: Transfer log and trades](tech/player-data.md#transfer-log-and-trades) (SAVE-036); [Trading: Requirements](gameplay/trading.md#requirements) (TRD-006, TRD-007); [Creation API: Trades](tech/creation-api.md#trades).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a `trade-pending` save-log event, written before the signed transfers are sent, holds the trade ID, the client's own transfers and the received offer data, and is what locks the Peerlings on every device (SAVE-047, TRD-008; [Player data: Transfer log and trades](tech/player-data.md#transfer-log-and-trades)).
 
 ### REVIEW-060: The relay rule conflicts with late-spectator block fetches and the larger phone backup
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (side effects of the REVIEW-019 and REVIEW-004 fixes)
 
@@ -1086,11 +1094,11 @@ REVIEW-058).
 
 **References:** [Network performance: Connections](tech/network-performance.md#connections) (PERF-006); [Protocols: spectating](tech/protocols.md#peerlingsv1battlebattle-id--spectating) (SPT-005); [Data formats: Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup); [Player data: Phone backup](tech/player-data.md#phone-backup).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): late spectators get the two blocks over the new `/peerlings/battle-blocks/1.0.0` stream, which may run over a relay; a phone backup that is cut off continues from the last chunk with the same secret (PRT-007, PRT-008; [Protocols](tech/protocols.md#peerlingsbattle-blocks100--blocks-for-late-spectators); [Network performance: Connections](tech/network-performance.md#connections)).
 
 ### REVIEW-061: The wild Peerling's "best move" target is unclear on a turn where the player switches
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10
 
@@ -1102,11 +1110,11 @@ REVIEW-058).
 
 **References:** [Battle: Wild Peerling behaviour](gameplay/battle.md#wild-peerling-behaviour); [Battle: A turn](gameplay/battle.md#a-turn) (BTL-009, BTL-012).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the best-move score uses the player's Peerling that is out when actions are chosen, before the turn's switch (BTL-017; [Battle: Wild Peerling behaviour](gameplay/battle.md#wild-peerling-behaviour)).
 
 ### REVIEW-062: A refused wish has no job transition, and the FAILED state is unclear in the job object
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-036 fix incomplete)
 
@@ -1118,11 +1126,11 @@ REVIEW-058).
 
 **References:** [Creation API: The job object](tech/creation-api.md#the-job-object) (API-010); [Creation pipeline: Job handling](peerlings/creation-pipeline.md#job-handling).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a failed job reads `FAILED` with `failedFrom` and an `error` object (`code`, `message`); `wish-refused` is a job error code, and `retry` takes an edited wish when the concept stage failed (API-013; [Creation API: The job object](tech/creation-api.md#the-job-object)).
 
 ### REVIEW-063: The job object can't carry the image-check results the client must show
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-033 and REVIEW-034 fixes not carried to the API)
 
@@ -1134,11 +1142,11 @@ REVIEW-058).
 
 **References:** [Image prompting: Originality rules](peerlings/image-prompting.md#originality-rules); [Image prompting: Image checks and clean-up](peerlings/image-prompting.md#image-checks-and-clean-up); [Creation API: The job object](tech/creation-api.md#the-job-object).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the job object has `imageChecks` with `blocked` (`resemblance` or `transparency`, accepted) and `failed` (proposed under [Q-059](open-questions.md#q-059)); `accept-image` answers `image-blocked` (API-014; [Creation API: The job object](tech/creation-api.md#the-job-object)).
 
 ### REVIEW-064: The creator's display name in the species record has no source
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10
 
@@ -1150,11 +1158,11 @@ REVIEW-058).
 
 **References:** [Data formats: Species record](tech/data-formats.md#species-record--peerlingsspecies); [Creation API: Creating a Peerling](tech/creation-api.md#creating-a-peerling); [Onboarding: Creating a starter](gameplay/onboarding.md#creating-a-starter).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): `finalize` carries the creator's `displayName`, which the server writes into the species record (API-015; [Creation API: Creating a Peerling](tech/creation-api.md#creating-a-peerling)).
 
 ### REVIEW-065: The Viewer can't tell that a species is delisted
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-027 fix incomplete)
 
@@ -1166,11 +1174,11 @@ REVIEW-058).
 
 **References:** [Sharing: The viewer](gameplay/sharing.md#the-viewer); [Sharing: Peerling card](gameplay/sharing.md#peerling-card); [OrbitDB registry: Design](tech/orbitdb-registry.md#design).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the Viewer checks a species' current listing with the new `GET /v1/listings/{species CID}` and the game uses its registry copy; removed shows only the delisted message, never listed shows no card, and an unreachable operator shows the card with a note and no verified badge (LNK-005, API-016; [Sharing: Peerling card](gameplay/sharing.md#peerling-card)).
 
 ### REVIEW-066: The world generator is not specified, yet every verifier must reproduce it exactly
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10
 
@@ -1182,11 +1190,11 @@ REVIEW-058).
 
 **References:** [Procedural generation: Deterministic world maths](world/procedural-generation.md#deterministic-world-maths) (WGN-002, WGN-018, WGN-021); [Player data: Catches](tech/player-data.md#catches); [Guardians: Guardian sites](gameplay/guardians.md#guardian-sites).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): designer's choice: each generator version is one binding generator module, the same artefact for the client, the server and every verifier, identified by its hash and published with test vectors; the page lists the queries it answers and states that its integer vectors define the sector borders (WGN-023; [Procedural generation: Deterministic world maths](world/procedural-generation.md#deterministic-world-maths)).
 
 ### REVIEW-067: Respawn and start tiles are undefined
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-002 fix incomplete)
 
@@ -1198,11 +1206,11 @@ REVIEW-058).
 
 **References:** [Player data: Save log](tech/player-data.md#save-log); [Exploration: Healing and rest points](gameplay/exploration.md#healing-and-rest-points); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a rest point's tile is its blocked beacon tile; the tile south of it is its arrival tile, where players respawn facing north and new players start facing south (EXP-016, WGN-024; [Exploration: Healing and rest points](gameplay/exploration.md#healing-and-rest-points)).
 
 ### REVIEW-068: The map's first revealed area and its landmark marks are not defined in the save
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10
 
@@ -1214,11 +1222,11 @@ REVIEW-058).
 
 **References:** [Exploration: Map](gameplay/exploration.md#map); [Exploration: Healing and rest points](gameplay/exploration.md#healing-and-rest-points); [Data formats: Save snapshot](tech/data-formats.md#save-snapshot--peerlingssave).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the chunks revealed from the start are those with a spawn-hub tile or a path tile inside the spawn hexagon; a rest point or landmark is discovered once its chunk is revealed, and using a rest point reveals its landmark's chunk (EXP-017; [Exploration: Map](gameplay/exploration.md#map)).
 
 ### REVIEW-069: Four glossary definitions still describe behaviour from before D-0027 and D-0028
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Medium
 - **Review:** 2026-11-10 (REVIEW-004, REVIEW-005 and REVIEW-027 fixes not carried to the glossary)
 
@@ -1234,13 +1242,13 @@ REVIEW-058).
 
 **References:** [Glossary](glossary.md); [Player data: Account recovery](tech/player-data.md#account-recovery); [Data formats: Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup); [OrbitDB registry: Design](tech/orbitdb-registry.md#design); [Guardians: The battle](gameplay/guardians.md#the-battle).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the four definitions were corrected, and Arrival tile, Base record, Fork and Generator module were added ([Glossary](glossary.md)).
 
 ## Second review: Low severity
 
 ### REVIEW-070: The save-log table in player-data omits `badge` and `pvp-result`
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1252,11 +1260,11 @@ REVIEW-058).
 
 **References:** [Player data: Save log](tech/player-data.md#save-log); [Data formats: Save-log events](tech/data-formats.md#save-log-events).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the table has rows for `badge`, `pvp-result` and the new `generator` and `trade-pending` events, and says that data-formats holds the complete list ([Player data: Save log](tech/player-data.md#save-log)).
 
 ### REVIEW-071: The onboarding flow has no step for the key and the recovery phrase
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1268,11 +1276,11 @@ REVIEW-058).
 
 **References:** [Onboarding: Flow](gameplay/onboarding.md#flow); [Player data: Account recovery](tech/player-data.md#account-recovery).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the key is created when *New game* is chosen, a *Save your recovery phrase* step follows character creation, and the choose path has its step order (ONB-009; [Onboarding: Flow](gameplay/onboarding.md#flow)).
 
 ### REVIEW-072: PvP deadlines are written only for decisions both sides make
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10 (REVIEW-016 fix incomplete)
 
@@ -1284,11 +1292,11 @@ REVIEW-058).
 
 **References:** [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a decision requires a commit and a reveal only from the sides that decide in it; the reveal and replacement deadlines are worded for one decider and for turns with no action decision ([Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle)).
 
 ### REVIEW-073: Crossing or pending requests are not covered by the "busy" rule
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1300,11 +1308,11 @@ REVIEW-058).
 
 **References:** [Multiplayer: Communication](gameplay/multiplayer.md#communication) (MPL-009); [Protocols: PvP battle](tech/protocols.md#peerlingsbattle100--pvp-battle).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a pending request, sent or received, counts as busy; of two crossing requests the one from the lower player ID stands; an unanswered request is withdrawn after 60 s (MPL-011; [Multiplayer: What players experience](gameplay/multiplayer.md#what-players-experience)).
 
 ### REVIEW-074: Who "took part" in a battle for XP is not defined
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1316,11 +1324,11 @@ REVIEW-058).
 
 **References:** [Battle: Experience and levelling](gameplay/battle.md#experience-and-levelling).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): a Peerling took part if it was the active Peerling at any point in the battle (BTL-018; [Battle: Experience and levelling](gameplay/battle.md#experience-and-levelling)).
 
 ### REVIEW-075: SHR-005 contradicts the shrine-credit text, and the 30 days have two start points
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10 (REVIEW-036 and REVIEW-039 fixes not carried to the requirement)
 
@@ -1332,11 +1340,11 @@ REVIEW-058).
 
 **References:** [Creation Shrine: Rules](gameplay/creation-shrine.md#rules) (SHR-005, SHR-006).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): designer's choice: the 30 days start when the first job for the offering was abandoned or expired; SHR-005 replaced by SHR-007, under which a failed job gives no credit until it is abandoned or expires ([Creation Shrine: Rules](gameplay/creation-shrine.md#rules)).
 
 ### REVIEW-076: The enhancer system prompt has a broken example and lengths that don't match the schema
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1352,11 +1360,11 @@ REVIEW-058).
 
 **References:** [Image prompting: System prompt](peerlings/image-prompting.md#system-prompt); [Image prompting: Output schema](peerlings/image-prompting.md#output-schema); [Creation pipeline: Stage 2](peerlings/creation-pipeline.md#stage-2--concept).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): example 3 is valid JSON with a `subject` of 654 characters, the prompt asks for 120-250 words (600 to 1,600 characters), and the three example concepts have an `appearance` of 131 to 140 characters; all checked by script. The prompt stays proposed under [Q-059](open-questions.md#q-059) ([Image prompting: System prompt](peerlings/image-prompting.md#system-prompt)).
 
 ### REVIEW-077: The registry page lists fewer signed listing fields than the format
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1368,11 +1376,11 @@ REVIEW-058).
 
 **References:** [OrbitDB registry: Design](tech/orbitdb-registry.md#design); [Data formats: Registry entry](tech/data-formats.md#registry-entry--peerlingslisting); [Data formats: Signed envelope](tech/data-formats.md#signed-envelope).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the registry page says the server signs the whole listing body and links to the format ([OrbitDB registry: Design](tech/orbitdb-registry.md#design)).
 
 ### REVIEW-078: The species-stats table in creator-feedback was split in two
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10 (regression from the REVIEW-045 fix)
 
@@ -1384,11 +1392,11 @@ REVIEW-058).
 
 **References:** [Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the `providers` row is back in the table, above the counting rules ([Creator feedback: Species stats snapshot](gameplay/creator-feedback.md#species-stats-snapshot)).
 
 ### REVIEW-079: Decision status lines and resolved questions miss later changes
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1402,11 +1410,11 @@ REVIEW-058).
 
 **References:** [D-0024](decisions/D-0024-review-2-decisions.md); [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md); [D-0017](decisions/D-0017-world-features.md); [D-0021](decisions/D-0021-pvp-win-counter.md); [D-0022](decisions/D-0022-v1-fun-features.md); [Open questions: Q-052](open-questions.md#q-052); [Q-043](open-questions.md#q-043); [Q-021](open-questions.md#q-021).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the Status lines and index rows of D-0013, D-0017, D-0021 and D-0022 name D-0024; Q-021, Q-043 and Q-052 carry "since" notes, and Q-052 points to EXP-014 ([Open questions](open-questions.md#resolved)).
 
 ### REVIEW-080: The signpost example can't occur under the stated range rule
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1418,11 +1426,11 @@ REVIEW-058).
 
 **References:** [Procedural generation: Points of interest](world/procedural-generation.md#points-of-interest); [Encounters: Wild level](gameplay/encounters.md#wild-level).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the example is now "level 18–31", for an area whose base levels run from 20 to 29 ([Procedural generation: Points of interest](world/procedural-generation.md#points-of-interest)).
 
 ### REVIEW-081: The list of cry triggers omits petting
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1434,11 +1442,11 @@ REVIEW-058).
 
 **References:** [Audio: Peerling cries](world/audio.md#peerling-cries); [Exploration: Following Peerling](gameplay/exploration.md#following-peerling).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): petting the following Peerling is in the list of cry triggers ([Audio: Peerling cries](world/audio.md#peerling-cries)).
 
 ### REVIEW-082: The phone-backup menu path contradicts the UI page
 
-- **Status:** Open
+- **Status:** Fixed
 - **Severity:** Low
 - **Review:** 2026-11-10
 
@@ -1450,7 +1458,7 @@ REVIEW-058).
 
 **References:** [Player data: Phone backup](tech/player-data.md#phone-backup); [UI: Pause menu](gameplay/ui.md#pause-menu-esc).
 
-**Resolution:** —
+**Resolution:** Fixed 2026-11-10 in [D-0029](decisions/D-0029-second-review-fixes.md): the path in player data is now *Backup → Back up to phone* ([Player data: Phone backup](tech/player-data.md#phone-backup)).
 
 ## See also
 

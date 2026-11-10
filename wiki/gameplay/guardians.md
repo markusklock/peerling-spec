@@ -11,12 +11,13 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0022-v1-fun-features.md
   - wiki/gameplay/battle.md
   - wiki/world/procedural-generation.md
   - wiki/tech/player-data.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Landmark Guardians and Badges
@@ -142,8 +143,16 @@ guard somewhere in the world.
   `battle-result` when it ends; the
   first win per biome also writes a `badge` event with the evidence needed to
   replay it ([data-formats § Save-log events](../tech/data-formats.md#save-log-events)).
-- A badge counts only if the replay verifies, like a catch
-  ([player-data § Verification](../tech/player-data.md#verification)).
+- [accepted] The `badge` event is written **before** the `battle-result`, as
+  a `catch` is, so a crash between the two loses nothing: at the next start
+  the client replays the badge's evidence and writes the missing result
+  (2026-11-10, [player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
+  A later win against the same guardian writes no `badge`; if the game
+  crashes at its end, it counts as fled, like any interrupted battle.
+- A badge counts only if the replay verifies, like a catch. [accepted] The
+  exact checks, including that the logged encounter names this biome's
+  guardian and that the replay ends in a win, are listed in
+  [player-data § Catches](../tech/player-data.md#catches).
 - Badges appear in a badge case on the player's profile, in game and in the
   shared [profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile).
 - Earning all 12 badges posts a world feed event

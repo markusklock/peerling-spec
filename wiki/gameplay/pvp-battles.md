@@ -22,11 +22,12 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/gameplay/battle.md
   - wiki/gameplay/multiplayer.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # PvP Battles
@@ -85,6 +86,9 @@ Exact messages: [protocols](../tech/protocols.md).
 4. **Turns.** Each turn, both sides commit to their action (send a hash), then
    reveal it. Neither can react to the other's choice. Both run the engine and
    exchange a hash of the resulting battle state. A mismatch voids the battle.
+   [accepted] So does a timeout claimed for a choice the other side had
+   already sent, so a false timeout claim can't undo PVP-005 (2026-11-10,
+   [protocols § PvP battle](../tech/protocols.md#peerlingsbattle100--pvp-battle)).
 5. **End.** The result is shown to both players. Timeouts follow
    [battle § PvP turn timer](battle.md#pvp-turn-timer) (a random move, two in a
    row forfeit). After a disconnect either side may resume within 60 s;
@@ -122,20 +126,29 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
 - **Recording.** Each player, winner and loser, appends a `pvp-result` event
   to their own [save log](../tech/player-data.md#save-log) with the battle
   ID, both player IDs, the mode, the winner and the signatures that prove it.
-  Verifiers check the signatures, so anyone can count a player's wins. A void
-  battle is not recorded.
+  Verifiers check the signatures, so anyone can count a player's wins.
+- [accepted] **Void and drawn battles are recorded too** (2026-11-10,
+  designer's choice, [D-0029](../decisions/D-0029-second-review-fixes.md)).
+  A player whose client ended a started battle as void or as a draw writes a
+  `pvp-result` with that result and their own signed `end`. It changes no
+  counter and isn't shown; its only job is to cancel a forfeit win the other
+  player might claim for the same battle. Without it, a modified client could
+  make a battle end void and then present the state the honest player signed
+  at its start as proof of a forfeit.
 - **Showing it.** Wins and losses (Fair and Real-levels counted separately)
   appear on the player profile (in game and in the shared
   [profile document](../tech/data-formats.md#player-profile-document--peerlingsprofile)),
   with wins by forfeit and the number of different opponents beaten.
 - [accepted] **Conflicting claims** (2026-10-06): a win the loser signed always
   beats a forfeit claim for the same battle, and two forfeit claims naming
-  different winners cancel each other. The **in-game profile screen** counts
+  different winners cancel each other. [accepted] A forfeit claim is also
+  cancelled by a void or a draw that the other player recorded for the same
+  battle (2026-11-10). The **in-game profile screen** counts
   only `pvp-result` events that verify, from the save log it fetches; the
   numbers in the shared profile document are the player's own claim.
   [accepted] For a forfeit win, the profile screen also fetches the
   opponent's save log and looks for a conflicting result for the same battle
-  ID; until it has it, that win shows as unconfirmed (2026-10-28,
+  ID (a competing forfeit, a void or a draw); until it has it, that win shows as unconfirmed (2026-10-28,
   [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). Every state signature covers the mode, and a signed state for
   turn 0 exists, so a forfeit can be proven from the start
   ([protocols § PvP battle](../tech/protocols.md#peerlingsbattle100--pvp-battle)).
@@ -160,6 +173,7 @@ in [data-formats § Save-log events](../tech/data-formats.md#save-log-events)):
 - **PVP-011** [accepted] The game MUST count each player's PvP wins and show the count on their profile.
 - **PVP-012** [accepted] Only wins proven as in [Win record](#win-record) MUST be counted.
 - **PVP-013** [accepted] A forfeit win MUST only count on the profile screen after the opponent's save log has been checked for a conflicting result for the same battle.
+- **PVP-014** [accepted] A client MUST record a started PvP battle that it ended as void or as a draw, and a forfeit claim MUST NOT count when the other player's log holds a valid void, draw or competing forfeit for the same battle.
 
 ## Open questions
 

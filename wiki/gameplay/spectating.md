@@ -10,12 +10,13 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/battle.md
   - wiki/tech/realtime-networking.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Spectating PvP Battles
@@ -44,8 +45,9 @@ Exact messages: [protocols](../tech/protocols.md).
   the shared RNG seed (once revealed). After each turn: both revealed actions
   and the resulting battle-state hash. [accepted] Each turn message also names
   two blocks by CID: the `start` message and the history of all actions so far
-  (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A spectator who joins late fetches those two
-  blocks and catches up from any single turn message, while every message
+  (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A spectator who joins late gets those two
+  blocks from either fighter ([accepted] over a small direct stream that also
+  works through a relay, 2026-11-10) and catches up from any single turn message, while every message
   stays far below the 16 KiB battle-topic limit, even in a 200-turn battle.
   Exact messages:
   [protocols](../tech/protocols.md#peerlingsv1battlebattle-id--spectating).
@@ -69,7 +71,7 @@ Exact messages: [protocols](../tech/protocols.md).
 - ~~**SPT-002**~~ (removed 2026-10-28, replaced by SPT-005; see D-0028)
 - **SPT-003** [accepted] Spectators MUST render battles by running the deterministic battle engine on the published actions and MUST check the state hashes.
 - **SPT-004** [accepted] A PvP challenge MUST include a *Spectators allowed* option, on by default.
-- **SPT-005** [accepted] Fighters MUST publish the teams, level mode, RNG seed and each turn's revealed actions with the battle-state hash on a per-battle pubsub topic; each turn message MUST name the `start` message and the battle history by CID, and both fighters MUST provide those blocks.
+- **SPT-005** [accepted] Fighters MUST publish the teams, level mode, RNG seed and each turn's revealed actions with the battle-state hash on a per-battle pubsub topic; each turn message MUST name the `start` message and the battle history by CID, and both fighters MUST provide those blocks ([PRT-007](../tech/protocols.md#requirements)).
 
 ## Open questions
 

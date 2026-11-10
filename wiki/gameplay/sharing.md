@@ -10,12 +10,13 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-v1-fun-features.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0016-showcase-features.md
   - wiki/tech/ipfs-showcase.md
   - wiki/tech/player-data.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Shareable Peerling Cards and Player Profiles
@@ -58,6 +59,21 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
   ([creator-feedback § First found in the wild](creator-feedback.md#first-found-in-the-wild)).
 - [accepted] A delisted species' card shows only *"This Peerling has been
   delisted"* ([orbitdb-registry § Design](../tech/orbitdb-registry.md#design)).
+- [accepted] **Checking the listing** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)). A species record
+  stays on IPFS with a valid signature after delisting, so the card can't
+  tell from the record alone. Before showing a card:
+  - the **Viewer** asks the operator for the species' current listing
+    (`GET /v1/listings/{species CID}`,
+    [creation-api § Network](../tech/creation-api.md#network)) and checks its
+    signature. `active`: the card is shown. `removed`: only the delisted
+    message. `not-found` (a record that was signed but never listed): *"This
+    Peerling isn't published"*, and no card;
+  - the **game** uses its own copy of the registry in the same way;
+  - if the operator can't be reached, the Viewer shows the card with the
+    note *"Couldn't check whether this Peerling is still listed"* and without
+    the verified badge. A listing it checked within the last 24 hours may be
+    reused from its cache.
 
 ### Player profile
 
@@ -94,6 +110,7 @@ outside the game ([D-0016](../decisions/D-0016-showcase-features.md)).
 - **LNK-002** [accepted] Links MUST open in a separate viewer web app published on IPFS (with DNSLink), which fetches and verifies all content by CID in the visitor's browser.
 - **LNK-003** [accepted] A player's profile MUST be published as a profile document behind an IPNS name derived from their identity key; the client MUST republish it each session and the server MUST republish the latest signed record.
 - **LNK-004** [accepted] When a player's IPNS record has expired, the Viewer MUST show the last validly signed profile it can get, marked with the date it was last updated.
+- **LNK-005** [accepted] The Viewer and the game MUST check a species' current listing before showing its card, and MUST show only the delisted message for a removed species and no card for a species that was never listed.
 
 ## Open questions
 

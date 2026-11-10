@@ -14,6 +14,7 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/tech/data-formats.md
   - wiki/tech/realtime-networking.md
@@ -21,7 +22,7 @@ related:
   - wiki/gameplay/trading.md
   - wiki/gameplay/spectating.md
   - wiki/tech/player-data.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Network Protocols
@@ -109,10 +110,16 @@ by both fighters. Meaning: [spectating](../gameplay/spectating.md).
 | `"end"` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null) |
 
 [accepted] **Late spectators** (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)). A `turn` message
-stays small at any length of battle. A spectator who joins late fetches the
-two blocks it names by CID (bitswap, from either fighter, who both provide
-them). The CIDs come from a message signed by a fighter, so the blocks are
-authenticated by their hashes.
+stays small at any length of battle. A spectator who joins late gets the
+two blocks it names from either fighter. The CIDs come from a message signed
+by a fighter, so the blocks are authenticated by their hashes. [accepted]
+(2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md)) The
+spectator asks for them over the direct stream
+[`/peerlings/battle-blocks/1.0.0`](#peerlingsbattle-blocks100--blocks-for-late-spectators),
+which is one of the game's own streams and so also works over a relayed
+connection ([network-performance § Connections](network-performance.md#connections)).
+Fighters also provide both blocks over bitswap, for peers with a direct
+connection.
 
 #### Battle history block
 A DAG-CBOR block `{ "v": 1, "type": "peerlings/battle-history", "battle":
@@ -163,6 +170,10 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
 | 8 | both, per turn | `state` | `turn`, `hash`: SHA-256 of the battle state after the turn, `sig`: state signature (below) |
 | 9 | both | `end` | `result` (`"win"` \| `"void"` \| `"forfeit"` \| `"draw"`), `winner` (player ID or null), `turn` (the last resolved turn), `hash` (the battle-state hash after it), `sig`: end signature (below) |
 
+- Steps 1–2: an unanswered `challenge` counts as busy, and crossing requests
+  between the same two players are settled by player ID
+  ([multiplayer § What players experience](../gameplay/multiplayer.md#what-players-experience)).
+  The sender withdraws a request by closing the stream.
 - Step 3: each side verifies the other's team (origin and ownership,
   [player-data § Verified Peerlings](player-data.md#verified-peerlings)) before
   sending step 4; on failure it sends `error` with code `"unverified"`, and if
@@ -183,7 +194,12 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
     after a faint. `commit`, `reveal` and `timeout` all carry both;
   - once a side has sent or received `timeout` for a decision, both ignore any
     later `commit` or `reveal` for that decision, and the late player drops
-    its own.
+    its own;
+  - [accepted] (2026-11-10) a decision **requires** a `commit` and a `reveal`
+    from each side that decides in it, and from nobody else. If only one side
+    decides (the other is charging, or only one side replaces), that side
+    sends its `commit` and then its `reveal` at once. A turn in which both
+    sides are charging has no action decision.
 - Battle seed = SHA-256(`"peerlings/pvp-seed/v1"` ‖ value of the lower player
   ID ‖ value of the higher player ID).
 - Replacing a fainted Peerling is also a commit/reveal decision (`replace`
@@ -213,19 +229,31 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
   2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md); rules in
   [battle § PvP turn timer](../gameplay/battle.md#pvp-turn-timer)):
   - **commit deadline:** every decision has a 30 s timer. It starts, for the
-    action of turn 1, when both `seed-reveal` messages have been exchanged;
-    for the action of a later turn, when both `state` messages of the previous
-    turn have been exchanged; for a replacement, when both reveals of that
-    turn's actions have been exchanged (the moves are resolved at that point);
-  - **reveal deadline:** a side sends its `reveal` as soon as it has both
-    commits of a decision; the other's `reveal` must arrive within 10 s after
-    that;
+    action of a turn, when both `state` messages of the previous turn have
+    been exchanged ([accepted] 2026-11-10: for turn 1 these are the turn-0
+    states, no longer the `seed-reveal` messages); for a replacement, when
+    that turn's moves are resolved, which is when every action `reveal` the
+    turn requires has been exchanged (in a turn with no action decision, at
+    the same moment as the turn itself starts);
+  - **reveal deadline:** a side sends its `reveal` as soon as it has every
+    `commit` the decision requires; every other required `reveal` must arrive
+    within 10 s after that;
   - a side that hasn't received the other's `commit` or `reveal` in time sends
     `{ "kind": "timeout", "turn": uint, "phase": …, "stage": "commit" |
     "reveal" }`; both sides then use the action `{ "kind": "timeout" }` for the
     late player in that decision. When the turn resolves, a timed-out turn
     action becomes a random move from the battle RNG, and a timed-out
     replacement becomes the first non-fainted team member in team order;
+  - [accepted] **Late and disputed timeouts** (2026-11-10,
+    [D-0029](../decisions/D-0029-second-review-fixes.md)). A side waits 2 s
+    past a deadline before it sends `timeout`, and a side whose own deadline
+    has passed on its own clock no longer sends that `commit` or `reveal`: it
+    uses `timeout` for itself and waits for the other's `timeout` message. A
+    side that receives a `timeout` for a `commit` or `reveal` it had already
+    sent before the `timeout` arrived doesn't accept it: it sends `error`
+    with code `"timeout-disputed"` and ends the battle as void. So a
+    `timeout` can never turn a choice the other side already saw into a
+    random move; the worst a false claim does is void the battle;
   - two timeouts in a row by the same player (in any phase) end the battle as
     a forfeit;
   - a charging Peerling's second turn needs no decision (its strike is
@@ -237,19 +265,41 @@ other player). Meaning: [pvp-battles](../gameplay/pvp-battles.md).
   - if the stream drops, both sides try to reopen it for 60 s. Either may
     dial; if two streams open, the one opened by the lower player ID is kept;
   - each side then sends `{ "kind": "resume", "battle": <battle ID>, "have":
-    uint }`, where `have` is the last turn whose `state` it has received from
-    the other side (0 if none);
+    uint or absent }`, where `have` is the last turn whose `state` it has
+    received from the other side. [accepted] (2026-11-10) 0 means the turn-0
+    state; `have` is absent when it has received no `state` at all;
   - on receiving `resume`, a side resends, in their original order, all the
-    messages it sent after its own `state` for turn `have` (for 0: after its
-    `seed-reveal`). Receivers ignore messages they already have. The RNG
+    messages it sent after its own `state` for turn `have`; for an absent
+    `have`, every message it sent after `accept` (its `team`, `seed-commit`,
+    `seed-reveal` and turn-0 `state`, as far as it had got). Receivers ignore
+    messages they already have. The RNG
     position and timeout counts follow from the replayed actions, and the
     current decision's timer restarts at 30 s;
-  - if no stream is reopened within 60 s, each client ends the battle as a
-    forfeit by the other player. Nobody can tell objectively who dropped: if
-    both clients record a forfeit win, the two claims name different winners
-    and cancel each other
+  - [accepted] **When a battle has started** (2026-11-10,
+    [D-0029](../decisions/D-0029-second-review-fixes.md)): for a side, the
+    battle has started once it has sent its turn-0 `state`. A stream that
+    drops before `accept` just ends the request. A stream that drops after
+    `accept` can be resumed as above at any point;
+  - if no stream is reopened within 60 s:
+    - a side for which the battle hasn't started drops it; nothing is
+      recorded;
+    - a side that holds a signed `state` from the other player ends the
+      battle as a forfeit by the other player;
+    - a side for which the battle has started but that holds no signed
+      `state` from the other can't prove a forfeit; it ends the battle as
+      void and records that.
+
+    Nobody can tell objectively who dropped: if both clients record a forfeit
+    win, the two claims name different winners and cancel each other, and a
+    recorded void cancels the other side's forfeit claim too
     ([data-formats § Save-log events](data-formats.md#save-log-events)), so
-    a drop on both sides records nothing.
+    a drop on both sides counts for nobody.
+- [accepted] **Recording void and drawn battles** (2026-11-10, designer's
+  choice, [D-0029](../decisions/D-0029-second-review-fixes.md)): a side that
+  ends a started battle as void (a state mismatch, a bad signature, a disputed
+  timeout, or the case above) or as a draw signs an `end` with that result and
+  `winner` null, sends it if the stream is still open, and writes a
+  `pvp-result` with it. The other side doesn't need to agree.
 
 ### `/peerlings/trade/1.0.0` — trade
 
@@ -271,6 +321,10 @@ transfers, which never count as a conflict. [accepted] (2026-10-27) Until the
 entry appears in the transfer log, each side's offered Peerlings are locked,
 and either side may ask the server to expire the trade
 ([player-data § Transfer log and trades](player-data.md#transfer-log-and-trades)).
+[accepted] (2026-11-10) Before a side sends its `transfers` (step 5), it
+appends a `trade-pending` event to its save log, which holds the lock, its own
+signed transfers and the other side's final offer data. An unanswered
+`propose` counts as busy, like an unanswered `challenge`.
 
 - **Offers hash** = SHA-256 of the DAG-CBOR list `[offer of the lower player
   ID, offer of the higher player ID]`, where each offer is the list of its
@@ -287,10 +341,22 @@ and either side may ask the server to expire the trade
 - [accepted] (2026-10-28, [D-0028](../decisions/D-0028-medium-low-review-fixes.md)) The confirmation commits to the
   instance IDs only; the rest of the offer is unverified data, like levels. A
   client MUST store the other side's final offer data durably before it sends
-  its own `transfers`. If that copy is lost (e.g. when recovering on another
-  computer), the client rebuilds each received instance from the sender's save
+  its own `transfers` ([accepted] 2026-11-10: in the `in` field of its
+  `trade-pending` event). If that copy can't be read (e.g. a backup made
+  before the event), the client rebuilds each received instance from the sender's save
   log: its state there just before the sender's `trade` event for this entry,
   or at the log's head if the sender hasn't written one.
+
+### `/peerlings/battle-blocks/1.0.0` — blocks for late spectators
+
+[accepted] (2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md))
+Opened by a spectator to either fighter of a battle that allows spectators.
+Request `{ "kind": "battle-blocks", "battle": <battle ID>, "want": [<CID>] }`
+(at most 2 CIDs, taken from a `turn` message) → response `{ "kind":
+"battle-blocks", "blocks": [<bytes>] }` with the raw blocks in the order
+asked, or `error` with code `"not-found"`. The spectator checks each block
+against its CID. A fighter answers at most one request per peer every 5 s and
+only for its own current battle.
 
 ### `/peerlings/profile/1.0.0` — profile
 
@@ -334,6 +400,17 @@ The phone always dials the computer.
   12-byte big-endian integer.
 - The secret is single-use: the computer rejects a second `hello` with the same
   secret, or any `hello` after `exp`.
+- [accepted] **Continuing an interrupted transfer** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)). A backup holds the
+  whole save log, so it can be larger than one relayed connection may carry
+  ([network-performance § Connections](network-performance.md#connections)).
+  The one exception to the single-use rule: the same phone peer ID may send
+  `hello` again with the same secret, up to 30 minutes after `exp`, to
+  continue a transfer that broke off. The receiver says how many chunks it
+  already holds in a field `have` (uint): the phone in its `hello` (backup),
+  the computer in its `ready` (restore). The sender continues with chunk
+  `have`; the player isn't asked to confirm again. The sender keeps the same
+  CAR file for that time, so the chunks and the final `sha256` match.
 
 ## Requirements
 
@@ -341,6 +418,10 @@ The phone always dials the computer.
 - **PRT-002** [accepted] All direct streams MUST use length-prefixed DAG-CBOR messages in the order defined per protocol.
 - **PRT-003** [accepted] PvP seeds, commitments and state hashes MUST be computed exactly as defined here, so that every client and spectator gets the same results.
 - **PRT-004** [accepted] Every PvP decision MUST carry its turn and phase and follow the commit, reveal and state deadlines defined here, and a resumed battle MUST resend the messages the other side hasn't confirmed, as defined in [PvP battle](#peerlingsbattle100--pvp-battle).
+- **PRT-005** [accepted] A side that receives a `timeout` for a `commit` or `reveal` it had already sent MUST end the battle as void, and MUST NOT accept the timeout action.
+- **PRT-006** [accepted] A PvP battle MUST be resumable from any point after `accept`; a side MUST claim a forfeit only if it holds a signed `state` from the other player, and MUST record a started battle that ends void or drawn.
+- **PRT-007** [accepted] Fighters MUST serve the `start` and battle-history blocks of their current battle over `/peerlings/battle-blocks/1.0.0`.
+- **PRT-008** [accepted] An interrupted phone-backup transfer MUST be continuable from the last chunk received, by the same phone and with the same secret.
 
 ## Open questions
 

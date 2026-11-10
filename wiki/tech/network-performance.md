@@ -10,6 +10,7 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/tech/ipfs-helia.md
   - wiki/tech/orbitdb-registry.md
@@ -17,7 +18,7 @@ related:
   - wiki/tech/resilience.md
   - wiki/tech/realtime-networking.md
   - wiki/gameplay/encounters.md
-updated: 2026-10-27
+updated: 2026-11-10
 ---
 
 # Network Performance, Scale and Timeouts
@@ -292,9 +293,20 @@ shown only, never trusted for ownership, so a light check is enough.
   least 60 minutes and carry at least 4 MB; the default limits (2 minutes,
   128 KB) would cut a PvP battle short. To stay within that, clients use a
   relayed connection **only** for the game's own streams (battle, trade,
-  profile, save-backup, phone-backup): never for gossipsub, Bitswap or OrbitDB
+  profile, save-backup, phone-backup, battle-blocks): never for gossipsub,
+  Bitswap or OrbitDB
   sync. Large content (models, save logs) comes from the operator, a gateway
   or a direct connection instead.
+- [accepted] **Two things that would otherwise not fit** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)):
+  - a late spectator gets the battle's `start` and history blocks over the
+    `battle-blocks` stream, not Bitswap, so it works when its connections to
+    both fighters are relayed
+    ([protocols](protocols.md#peerlingsbattle-blocks100--blocks-for-late-spectators));
+  - a phone backup holds the whole save log and can pass 4 MB. Over a relay
+    the transfer then breaks off at the limit, and the phone reconnects and
+    continues from the last chunk it has
+    ([protocols § phone backup](protocols.md#peerlingsphone-backup100--phone-backup)).
 - Public relays (used while the server is offline) keep their default limits.
   So does a battle that never gets a direct connection while the server is
   offline: it may be cut off, and the resume rule then applies.

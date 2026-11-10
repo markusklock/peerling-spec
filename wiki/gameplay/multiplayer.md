@@ -19,13 +19,14 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0008-shared-multiplayer-world.md
   - wiki/gameplay/pvp-battles.md
   - wiki/gameplay/trading.md
   - wiki/tech/realtime-networking.md
   - wiki/world/procedural-generation.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Multiplayer — The Shared World
@@ -64,6 +65,17 @@ updated: 2026-10-28
 - [accepted] **Busy players:** a request to a player who is already in a
   battle or trade is declined automatically with the reason "busy"
   ([protocols](../tech/protocols.md#peerlingsbattle100--pvp-battle)).
+- [accepted] **Pending requests** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)). A player with an
+  unanswered battle or trade request, sent or received, also counts as busy:
+  any further request is declined with "busy". Two rules keep this from
+  getting stuck:
+  - **Crossing requests.** If two players send each other a request at the
+    same moment, the request of the player with the lower player ID stands.
+    The other player's client withdraws its own request and shows the
+    incoming one instead.
+  - **Time limit.** A request that isn't answered within 60 s is withdrawn by
+    its sender's client, and the prompt disappears for the receiver.
 - [accepted] **Blocking:** *Block* is in the same menu and on the profile
   screen. A blocked player's character, display name and emotes are hidden,
   and their requests are declined automatically with the reason "busy", so
@@ -123,6 +135,7 @@ Network rates and region size are in
 - **MPL-007** [accepted] There MUST NOT be free-text chat between players; players communicate only with emotes from a fixed set.
 - **MPL-008** [accepted] A client MUST hide a blocked player's character, name and emotes and MUST decline their requests with the reason "busy"; the block list MUST be stored only locally.
 - **MPL-009** [accepted] A client already in a battle or trade MUST decline new requests with the reason "busy".
+- **MPL-011** [accepted] A client with an unanswered request, sent or received, MUST decline further requests with the reason "busy"; of two crossing requests between the same players the one from the lower player ID MUST stand; and an unanswered request MUST be withdrawn after 60 s.
 
 ## Open questions
 

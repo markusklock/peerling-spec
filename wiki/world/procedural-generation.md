@@ -25,13 +25,14 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/gameplay/exploration.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/peerlings/types.md
   - wiki/world/visual-style.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Procedural World Generation
@@ -105,6 +106,45 @@ same last bit, so:
 The exact algorithm of a generator version is defined by that version's
 implementation, which every client ships; the rules above are what make it
 give identical results in every browser.
+
+[accepted] **One binding generator module per version** (2026-11-10,
+designer's choice, [D-0029](../decisions/D-0029-second-review-fixes.md)).
+This specification deliberately doesn't define the generation algorithm
+(noise parameters, area points, foliage patches, paths, placement). Two
+generators written from a description would differ on some tile, and an
+honest catch on that tile would fail. Instead:
+- **One artefact.** Each generator version is one **generator module**: a
+  single build artefact (for example one WebAssembly module) that holds the
+  algorithm and every constant it uses, including the world seed and the
+  integer sector vectors. The game client, the operator server and any other
+  verifier run this same artefact. Nobody reimplements it.
+- **Identified by its hash.** A version is named by its number and the
+  SHA-256 of the artefact. The game app ships the artefacts of all versions;
+  the operator also publishes each one on IPFS with the list of version
+  numbers and hashes, so an independent verifier can fetch exactly the code
+  the game uses.
+- **Test vectors.** Each version comes with a published file of test vectors:
+  the expected answers to the queries below for at least 1,000 tiles spread
+  over the whole world, every biome area and every guardian site. A client or
+  server build checks them before it uses the module.
+- **What the module answers.** Everything that verification or the save
+  depends on comes from these queries, and from nowhere else:
+
+  | Query | Answer |
+  |-------|--------|
+  | A tile `[x, y]` | Its kind, height level, whether it is a slope or stairs, its biome index, its area, and whether it is a path or spawn-hub tile |
+  | An area | Its biome, its rest point's beacon tile and arrival tile, its landmark's centre tile and name, and its lowest and highest base level |
+  | A biome index | The statue tile of that biome's guardian site |
+  | The world | The spawn hub's rest point, the Creation Shrine's tile, and the chunks revealed from the start ([exploration § Map](../gameplay/exploration.md#map)) |
+
+- **The rules on this page still bind the module.** It must follow the
+  layout, sizes, distances and placement rules given here and on the linked
+  pages; where an exact figure can't be met in integer maths, the module's
+  result is the one that counts. That holds for the 30° sectors and the
+  hexagon in [Layout](#layout): the module's integer direction vectors
+  approximate those angles, and the borders are where the vectors put them.
+- Visuals (props, colours, blending) aren't part of the module and may
+  differ between implementations.
 
 ## Size and shape
 
@@ -233,6 +273,10 @@ nobody meets wild Peerlings in the crowd.
   biome (snow-covered in the Tundra, vine-wrapped in the Forest, rusted in
   Scrapyard Ruins…). They heal the team and set the respawn point
   ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)).
+  [accepted] (2026-11-10) The beacon stands on one blocked tile, the rest
+  point's tile. The tile directly south of it is the rest point's **arrival
+  tile**; the generator always makes it plain walkable ground (never foliage,
+  water or blocked), reachable from the path network.
 - **Landmarks:** one large, unique landmark per biome area (a crater, giant
   waterfall, ancient crystal, wrecked machine, haunted tower…), built from the
   biome's kit and placed by the seed. Each has a **generated name** (e.g.
@@ -249,7 +293,8 @@ nobody meets wild Peerlings in the crowd.
 - **Guardian sites:** [accepted] one per biome sector, replacing that area's
   landmark ([guardians § Guardian sites](../gameplay/guardians.md#guardian-sites)).
 - **Signposts:** at path junctions and area borders, showing the area's landmark
-  name, biome and level range (e.g. *"Gloomwood: wild Peerlings level 22–26"*).
+  name, biome and level range (e.g. *"Gloomwood: wild Peerlings level 18–31"*,
+  for an area whose base levels run from 20 to 29).
   [accepted] The range is the lowest base level in the area minus 2 to the
   highest base level plus 2 (the random offset), clamped to 1–50
   ([encounters § Wild level](../gameplay/encounters.md#wild-level)).
@@ -316,6 +361,22 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
   ([player-data § Encounter seeds](../tech/player-data.md#encounter-seeds)).
   Every client switches at that epoch; a client without the new version asks
   the player to reload, and the installed app updates itself.
+- [accepted] **The epoch record decides, not the clock** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)). A client shows the
+  generator version that is active at the epoch of the latest epoch record it
+  has (signed or client-derived), which is also the record its next encounter
+  uses. So it switches when it first holds a record whose epoch has reached
+  X. A client that is offline, or waiting while drand is down, stays in the
+  old world until a newer record arrives, even if its clock has passed the
+  switch; its encounters are then checked against that old world, which is
+  the one it showed. Its presence messages carry the old version, so players
+  on the new one don't see it (WGN-004).
+- [accepted] **In the save** (2026-11-10): when a client starts using a newer
+  version, it writes a `generator` event
+  ([data-formats § Save-log events](../tech/data-formats.md#save-log-events)).
+  That event is what moves a blocked position and a vanished last rest point
+  in the save, by the "nearest" rule below, so the server computes the same
+  result.
 - **Old versions are kept.** Verifying a catch needs the world as it was at
   the catch's epoch (was that tile foliage?), so the game app contains every
   past generator version, and verifiers use the one that was active.
@@ -326,6 +387,10 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
   tile, ties going to the lower y, then the lower x. The client applies this
   when it loads a save whose snapshot names an older `generator`; a player
   moved this way writes a `position` event and sends a presence `jump`.
+  [accepted] (2026-11-10) For a rest point, "nearest" compares beacon tiles,
+  and a rest point still exists if the new version has a beacon on the same
+  tile. The move is the effect of the `generator` event; it doesn't heal the
+  team.
 - [accepted] **Battles across a switch.** A guardian battle uses the generator
   version active at its epoch record's epoch, for the statue tile and the
   guardian level, even if the switch happens during the battle; verifiers use
@@ -357,6 +422,9 @@ different worlds ([D-0017](../decisions/D-0017-world-features.md)):
 - **WGN-020** [accepted] Each biome sector MUST have one guardian site ([guardians](../gameplay/guardians.md)).
 - **WGN-021** [accepted] Tile kind, height level and biome MUST be computed with integer maths only, from a fixed 32-byte world seed per generator version, as in [Deterministic world maths](#deterministic-world-maths).
 - **WGN-022** [accepted] After a generator update, relocated players and rest points MUST go to the nearest valid tile as defined in [Generator updates](#generator-updates), and a guardian battle MUST use the generator version of its epoch record.
+- **WGN-023** [accepted] Each generator version MUST be one generator module, identified by its version number and SHA-256 hash and published with test vectors; the client, the server and every verifier MUST run that same module and MUST take every answer listed in [Deterministic world maths](#deterministic-world-maths) from it.
+- **WGN-024** [accepted] Every rest point MUST have a blocked beacon tile and, directly south of it, an arrival tile of plain walkable ground.
+- **WGN-025** [accepted] A client MUST use the generator version active at the epoch of the latest epoch record it has, and MUST write a `generator` event when it starts using a newer version.
 
 ## Open questions
 

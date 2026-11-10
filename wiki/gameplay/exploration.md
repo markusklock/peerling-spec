@@ -23,12 +23,13 @@ sources:
   - raw/conversations/2026-10-06-review-2-fixes.md
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/world/procedural-generation.md
   - wiki/gameplay/encounters.md
   - wiki/gameplay/multiplayer.md
   - wiki/world/visual-style.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Exploration
@@ -137,6 +138,19 @@ revealed once the player has been in it, and the set of revealed chunks is
 stored in the save ([player-data § Save contents](../tech/player-data.md#save-contents)).
 The spawn hub and the paths leading out of it are revealed from the start.
 
+[accepted] Exactly (2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md)):
+- **Revealed from the start:** every chunk that contains a spawn-hub tile, or
+  a path tile that lies inside the spawn hexagon
+  ([procedural-generation § Layout](../world/procedural-generation.md#layout)).
+  These chunks are the starting value of the save's `explored` bit set; no
+  event writes them.
+- **Discovered:** a rest point or a landmark is discovered, and marked by
+  name, once the chunk that contains its tile is revealed (the rest point's
+  beacon tile; the landmark's centre tile). Nothing else is stored: the marks
+  follow from the revealed chunks, so they survive loading the save.
+- Using a rest point also reveals the chunk of its area's landmark, so that
+  landmark is marked even if the player hasn't walked up to it.
+
 ## Healing and rest points
 
 [accepted] There are no healing items. A Peerling's HP carries over between wild
@@ -149,6 +163,17 @@ battles and is restored at **rest points**:
   point with the team fully healed. Nothing is lost.
 - [accepted] Until the player visits a rest point, their last rest point is
   the spawn hub's.
+- [accepted] **Tiles** (2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md)).
+  A rest point's tile is its **beacon tile**, which is blocked; that is the
+  tile in a `rest` event and in `lastRestPoint`. The player uses the rest
+  point from any of the 4 tiles next to the beacon, facing it. Every rest
+  point also has an **arrival tile**: the tile directly south of the beacon,
+  which the world generator keeps as plain walkable ground
+  ([procedural-generation § Points of interest](../world/procedural-generation.md#points-of-interest)).
+  - **Respawn:** a player whose whole team fainted appears on the arrival
+    tile of their last rest point, facing north (towards the beacon).
+  - **New player:** starts on the arrival tile of the spawn hub's rest point,
+    facing south.
 
 [accepted] Up close ([D-0019](../decisions/D-0019-peerdex-ui-audio.md)):
 - The player faces the beacon and presses interact. The beacon flares, the
@@ -188,6 +213,8 @@ Points of interest, landmarks, paths and the spawn hub are defined in
 - **EXP-013** [accepted] The following Peerling MUST follow the rules in [Following Peerling](#following-peerling).
 - **EXP-014** [accepted] A player's first step onto foliage outside the spawn hub MUST start a wild encounter, regardless of the 1-in-10 roll; the guarantee lasts until the player's first wild encounter has been logged, and a guardian battle MUST NOT end it.
 - **EXP-015** [accepted] Using a rest point MUST write a `rest` event.
+- **EXP-016** [accepted] A respawning player MUST appear on the arrival tile of their last rest point facing north, and a new player MUST start on the arrival tile of the spawn hub's rest point facing south.
+- **EXP-017** [accepted] The chunks revealed from the start and the marks for discovered rest points and landmarks MUST follow the exact rules in [Map](#map).
 
 ## Open questions
 

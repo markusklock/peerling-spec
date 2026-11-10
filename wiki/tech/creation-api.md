@@ -15,6 +15,7 @@ sources:
   - raw/conversations/2026-10-12-single-image-to-3d.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/peerlings/creation-pipeline.md
@@ -22,7 +23,7 @@ related:
   - wiki/tech/data-formats.md
   - wiki/gameplay/onboarding.md
   - wiki/gameplay/creation-shrine.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Creation API
@@ -61,8 +62,8 @@ updated: 2026-10-28
 - **Errors:** status code plus `{ "error": "<code>", "message": "<text>" }`.
   Codes include `rate-limited` (with `Retry-After`), `cooldown`, `name-taken`,
   `name-reserved` ([accepted] the name of an existing character, [IMG-015](../peerlings/image-prompting.md#requirements)),
-  `wish-refused` ([accepted] GPT-6 Luna declined the wish; the player edits it,
-  [creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling)),
+  `image-blocked` ([accepted] 2026-11-10: the current image can't be accepted,
+  [The job object](#the-job-object)),
   `invalid`, `not-found`, `job-expired`, `verification-failed`,
   `starter-taken` (the player already has a starter), `starter-job-open`
   ([accepted] a starter job is already open; the body also carries its `job`
@@ -85,6 +86,7 @@ updated: 2026-10-28
   "concept": { "summary": "…", "lore": "…", "types": ["Grass"], "nameSuggestions": ["Mossnap", "Lumifox", "Glowtail"] },
   "image": "/v1/jobs/job_7f3a…/files/image",
   "originalityChanged": false,
+  "imageChecks": { "failed": [], "blocked": null },
   "nextImageAt": 1791234567000,
   "model": null,
   "profile": null,
@@ -92,6 +94,7 @@ updated: 2026-10-28
   "listing": null,
   "origin": null,
   "releaseEntry": null,
+  "failedFrom": null,
   "error": null,
   "expiresAt": 1791238167000
 }
@@ -106,6 +109,36 @@ expire while it is open, and the 24 h run from when it closes (2026-10-28,
 [accepted] A job in `FAILED` has `error` set and keeps the state it failed
 from; `POST /v1/jobs/{id}/retry` returns it there and runs the failed step
 again. A failed job stays open and can be retried until it expires.
+
+[accepted] **Failed jobs, exactly** (2026-11-10,
+[D-0029](../decisions/D-0029-second-review-fixes.md)):
+- `state` reads `"FAILED"`, and `failedFrom` holds the name of the state the
+  job was in when the step failed (e.g. `"WISH_SUBMITTED"` when the concept
+  stage failed); in every other state `failedFrom` is null. A client that
+  reconnects reads both.
+- `error` is null or `{ "code": "<code>", "message": "<text>" }`. Codes:
+
+  | `code` | Meaning | What the player can do |
+  |--------|---------|------------------------|
+  | `wish-refused` | GPT-6 Luna declined the wish ([creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling)) | Edit the wish: `retry` with a new `wish` |
+  | `service-unavailable` | OpenAI's API stayed unreachable for 10 minutes | `retry` later |
+  | `generation-failed` | A generation step failed after its own retries | `retry` |
+  | `publish-mismatch` | The published content wasn't byte-identical ([CRE-020](../peerlings/creation-pipeline.md#requirements)) | `retry` (publishes again) |
+
+- `wish-refused` is never an HTTP error: the concept stage runs after
+  `POST /v1/jobs` has returned, so it only appears here.
+
+**Image checks in the job object.** `imageChecks` describes the current
+image ([image-prompting § Image checks and clean-up](../peerlings/image-prompting.md#image-checks-and-clean-up)):
+- [accepted] `blocked` (2026-11-10): null, or the reason the image can't be
+  accepted: `"resemblance"` (flagged again after the automatic retry,
+  [IMG-018](../peerlings/image-prompting.md#requirements)) or
+  `"transparency"` (still not transparent after matting). The client shows
+  the matching notice and disables *Accept*; `accept-image` fails with
+  `image-blocked`.
+- [proposed] `failed`: the checks the image failed but that the player may
+  accept anyway, any of `"not-cut-off"`, `"big-enough"`, `"one-creature"`;
+  the client shows a note for each ([Q-059](../open-questions.md#q-059)).
 
 `state` follows the job state machine in
 [creation-pipeline § Job handling](../peerlings/creation-pipeline.md#job-handling).
@@ -129,12 +162,12 @@ transfer-log entry that released the offering.
 | `GET /v1/shrine` | — | The player's shrine status: `{ "openJob": <job ID or null>, "credit": { "expiresAt": <time>, "level": <uint: the new Peerling's level>, "releaseEntry": <CID of the offering's release entry> } or null, "nextShrineAt": <time or null: when the 7-day limit ends> }` ([accepted] `level` and `releaseEntry` added 2026-10-28) |
 | `GET /v1/jobs/{id}/events` | — | Server-Sent Events, as above |
 | `POST /v1/jobs/{id}/regenerate` | `wish` (optional: an edited wish) | New image; respects the 30 s cooldown (`nextImageAt`) |
-| `POST /v1/jobs/{id}/accept-image` | — | Starts 3D generation, then stats and moves; [accepted] `invalid` if the image is flagged by the resemblance check ([IMG-018](../peerlings/image-prompting.md#requirements)) |
-| `POST /v1/jobs/{id}/retry` | — | [accepted] Only in `FAILED`: back to the state the job failed from, running the failed step again |
+| `POST /v1/jobs/{id}/accept-image` | — | Starts 3D generation, then stats and moves; [accepted] `image-blocked` if the job's `imageChecks.blocked` is set (2026-11-10; before that, `invalid` for the resemblance case) |
+| `POST /v1/jobs/{id}/retry` | `wish` (optional: an edited wish, ≤ 300 characters) | [accepted] Only in `FAILED`: back to the state the job failed from (`failedFrom`), running the failed step again. [accepted] (2026-11-10) A `wish` is allowed only when `failedFrom` is `WISH_SUBMITTED`, and required when `error.code` is `wish-refused`; it replaces the job's wish. This also works for a starter job, which can't be replaced by a new one |
 | `POST /v1/jobs/{id}/back-to-image` | — | From the final review, back to image generation; keeps the name |
 | `GET /v1/names/{name}` | — | `{ "available": bool, "nameKey": "…" }` |
 | `POST /v1/jobs/{id}/name` | `name` | Reserves the name for as long as the job lives; `name-taken` if not free; [accepted] `name-reserved` for an existing character's name; `invalid` if the name's normalized form is empty |
-| `POST /v1/jobs/{id}/finalize` | — | [accepted] The player confirms publishing (needs a name). The server signs the species record; the job goes from `PROFILE_READY` to `PUBLISHING`, and `files/record` becomes available |
+| `POST /v1/jobs/{id}/finalize` | `displayName` (string, 1–20 characters) | [accepted] The player confirms publishing (needs a name). [accepted] (2026-11-10) `displayName` is the creator's display name, which the server writes into the species record's `creator.displayName`; the client sends the name of the player's character, which exists by then ([onboarding](../gameplay/onboarding.md#creating-a-starter)). The server signs the species record; the job goes from `PROFILE_READY` to `PUBLISHING`, and `files/record` becomes available |
 | `GET /v1/jobs/{id}/files/{file}` | — | `image`, `model`, `thumbnail` or `record` (the signed species record, DAG-CBOR) |
 | `POST /v1/jobs/{id}/upload` | CAR file (`application/vnd.ipld.car`) with the species record and assets | [accepted] Fallback when the server can't fetch the content peer to peer within 20 s of `published` ([network-performance](network-performance.md#fast-paths-through-the-operator)). The server checks the blocks against the expected CIDs, then continues as for `published` |
 | `POST /v1/jobs/{id}/published` | `species` (CID) | Called after the client added everything to IPFS (stage 7). The server fetches, compares, pins and signs the listing; returns the job with `listing` |
@@ -144,7 +177,8 @@ transfer-log entry that released the offering.
 is accepted only from player IDs on the server's list of operator accounts.
 It runs the normal pipeline with no starter or shrine rules and creates no
 instance (no stage 8). The species' `creator` is that operator account, whose
-display name the operator chooses. The operator publishes it (stage 7) from
+display name the operator chooses (sent with `finalize`, like any creator's).
+The operator publishes it (stage 7) from
 the game client signed in with that account.
 
 ### Starters
@@ -186,7 +220,8 @@ client:
 | Method and path | Does |
 |-----------------|------|
 | `GET /v1/epochs/latest` | The latest server-signed [epoch record](data-formats.md#epoch-record--peerlingsepoch) envelope (DAG-CBOR) |
-| `GET /v1/epochs/{E}` | The server-signed epoch record for epoch E; `not-found` if the server published none |
+| `GET /v1/epochs/{E}` | The server-signed epoch record for epoch E; `not-found` if the server published none. [accepted] The record of a day's or week's first epoch that the server missed appears here once the server has filled it in ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
+| `GET /v1/listings/{species CID}` | [accepted] (2026-11-10) The species' current registry listing: the valid [listing envelope](data-formats.md#registry-entry--peerlingslisting) with the highest `seq` (DAG-CBOR), which says whether the species is `active` or `removed`; `not-found` if the species was never listed. Used by the Peerlings Viewer ([sharing § Peerling card](../gameplay/sharing.md#peerling-card)) |
 | `GET /v1/logs/{manifest CID}/entries?after=<CID>,<CID>…` | For the OrbitDB log whose address is `/orbitdb/<manifest CID>`: a CAR file (`application/vnd.ipld.car`) of its entry blocks newer than the given heads (all entries if `after` is empty), oldest first, at most 5,000 entries per response; the header `Peerlings-More: true` means the client should ask again with the new heads. Works for the registry, transfer log, epoch log and any save log |
 | `GET /v1/checkpoints/{player}` | The newest [verification checkpoint](data-formats.md#verification-checkpoint--peerlingscheckpoint) envelope (DAG-CBOR) for that player; `not-found` if none |
 | `GET /v1/ipns/{name}` | The latest signed IPNS record the server holds for that name (`application/vnd.ipfs.ipns-record`) |
@@ -205,6 +240,10 @@ client:
 - **API-010** [accepted] A job in `FAILED` MUST be retryable with `POST /v1/jobs/{id}/retry` until it expires, and an open event stream MUST count as activity for expiry.
 - **API-011** [accepted] The server MUST accept jobs of kind `seed` only from its operator accounts, and MUST NOT create an instance for them.
 - **API-012** [accepted] The server MUST also serve the API over HTTP/2.
+- **API-013** [accepted] A failed job MUST report `state` `FAILED`, the state it failed from in `failedFrom` and an `error` object with a code; `retry` MUST accept an edited wish when the concept stage failed.
+- **API-014** [accepted] The job object MUST say in `imageChecks.blocked` when the current image can't be accepted, and `accept-image` MUST then fail with `image-blocked`.
+- **API-015** [accepted] `finalize` MUST carry the creator's display name, and the server MUST use it for the species record.
+- **API-016** [accepted] The server MUST serve a species' current listing envelope at `GET /v1/listings/{species CID}`.
 
 ## Open questions
 

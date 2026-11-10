@@ -33,6 +33,7 @@ sources:
   - raw/conversations/2026-10-06-review-2-decisions.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0009-player-data-on-orbitdb.md
   - wiki/decisions/D-0013-peer-verified-registry-catches-trades.md
@@ -44,7 +45,8 @@ related:
   - wiki/tech/architecture.md
   - wiki/tech/orbitdb-registry.md
   - wiki/decisions/D-0027-high-severity-review-fixes.md
-updated: 2026-10-28
+  - wiki/decisions/D-0029-second-review-fixes.md
+updated: 2026-11-10
 ---
 
 # Player Data: Saves, Identity and Ownership
@@ -98,6 +100,8 @@ order. OrbitDB *events* databases are append-only and every entry is signed by
 the writer, so the log is also a tamper-evident history.
 
 Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-events).
+That page holds the complete event list; this table says when each event is
+written.
 
 | Event | Written when | Payload |
 |-------|-------------|---------|
@@ -113,6 +117,10 @@ Exact payloads: [data-formats § Save-log events](data-formats.md#save-log-event
 | `session-start` | The game starts on a computer | device ID ([Using the same account on several computers](#using-the-same-account-on-several-computers)) |
 | `nickname` | Peerling renamed | instance ID, nickname |
 | `rest` | The player uses a rest point | the rest point's tile |
+| `badge` | The first win against a biome's guardian, before that battle's `battle-result` ([guardians § Badges](../gameplay/guardians.md#badges)) | biome index, guardian evidence |
+| `pvp-result` | A PvP battle ends, with any result ([PvP](#pvp)) | battle ID, players, mode, result and the signatures that prove it |
+| `generator` | The client starts using a world-generator version: before a new player's first step, and whenever it switches to a newer one ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)) | the version number |
+| `trade-pending` | Just before the client sends its signed transfers in a trade ([Transfer log and trades](#transfer-log-and-trades)) | trade ID, partner, instances out, own signed transfers, the other side's offer data |
 | `trade` | A trade entry was written to the transfer log | transfer-log entry reference; instances out; full data of instances in |
 | `trade-void` | A trade the player took part in turned out void ([Transfer log and trades](#transfer-log-and-trades)) | the void entry; own Peerlings restored; received Peerlings removed |
 | `seen` | First sighting of a species, and first sighting as a shimmer | species CID, biome, shimmer flag |
@@ -136,6 +144,39 @@ A snapshot holds the result of applying every event up to its `upTo` entry.
 Readers may load from it, but if it ever differs from the events, the events
 win. The server computes a checkpoint's `state` from the events.
 Other players fetch a save log when they need to verify one of its catches.
+
+[accepted] **What each event does to the save** (2026-11-10,
+[D-0029](../decisions/D-0029-second-review-fixes.md)). The client and the
+server must build the same snapshot from the same events, so every effect is
+exact. Fields are those of the
+[save snapshot](data-formats.md#save-snapshot--peerlingssave).
+
+*Before any event:* no Peerlings, an empty team and Peerdex, no badges, PvP
+counters 0, `nextEncounter` 0, `position` and `lastRestPoint` as for a new
+player ([exploration § Healing and rest points](../gameplay/exploration.md#healing-and-rest-points)),
+and `explored` holding the chunks revealed from the start
+([exploration § Map](../gameplay/exploration.md#map)).
+
+| Event | Effect |
+|-------|--------|
+| `profile` | Sets `profile` |
+| `generator` | Sets `generator`. If the version is newer than the one before, `position` and `lastRestPoint` are moved by the "nearest" rule of [procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates) |
+| `species-created` | Adds the CID to `created` |
+| `starter`, `created`, `catch`, incoming `trade` | Adds each instance to `instances`. It joins the **end of the team** if the team holds fewer than 4 Peerlings, otherwise it is in the collection only. A `catch` also marks the species as caught in the Peerdex |
+| `release`, outgoing `trade` | Removes the instances from `instances` and from the team; the other team members keep their order |
+| `team` | Sets the team to the listed order |
+| `nickname` | Sets that instance's nickname |
+| `encounter` | Sets `nextEncounter` to its number + 1 |
+| `battle-result` | For each listed instance: adds `xpGained`, applies level-ups ([battle § Experience and levelling](../gameplay/battle.md#experience-and-levelling)) and sets its HP. Outcome `lost`: the whole team is set to full HP and `position` becomes the respawn position of `lastRestPoint` |
+| `rest` | Sets the whole team to full HP, sets `lastRestPoint`, and reveals the chunk of that area's landmark in `explored` |
+| `seen` | Adds the species to the Peerdex `seen` list with its biome, or sets its `shimmerSeen` |
+| `position` | Sets `position` |
+| `explored` | Sets the listed chunks in `explored` |
+| `badge` | Adds the biome index to `badges` |
+| `pvp-result` | Updates the `pvp` counters, if the result counts ([PvP](#pvp)) |
+| `trade-pending` | Locks its outgoing instances until a `trade` or `trade-void` event for the same trade follows, or the trade expires ([Transfer log and trades](#transfer-log-and-trades)). Locks aren't part of the snapshot; a client works them out from the events |
+| `trade-void` | Removes the `removed` instances (also from the team) and adds the `restored` ones like received ones; then the team is refilled as in [catching § Team and collection](../gameplay/catching.md#team-and-collection) |
+| `session-start`, `snapshot`, `checkpoint` | No effect on the snapshot fields |
 
 ## Account recovery
 
@@ -165,7 +206,8 @@ the game isn't played on it (designer, 2026-10-05; replaces the earlier
   (the small web app published on IPFS), which has a **Backup** section. It
   runs its own Helia node in the phone's browser, so the phone is another IPFS
   node for a moment. It can be installed on the home screen.
-- **Making a backup:** on the computer, *Settings → Back up to phone* shows a QR
+- **Making a backup:** on the computer, *Backup → Back up to phone* (in the
+  pause menu, [ui § Pause menu](../gameplay/ui.md#pause-menu-esc)) shows a QR
   code with the computer's peer ID, a relay address and a one-time secret
   (32 random bytes, valid for 5 minutes). The phone scans it with its camera,
   connects to the computer over libp2p (WebRTC, through a relay if needed) and
@@ -343,6 +385,26 @@ is checked again only for what can still change: save-log entries the verifier
 didn't have before (a fork shows up as duplicate encounter numbers) and new
 transfers.
 
+[accepted] **Forks** (2026-11-10, designer's choice,
+[D-0029](../decisions/D-0029-second-review-fixes.md)). A save log is forked
+when two different `encounter` entries carry the same encounter number. Let
+*d* be the lowest encounter number that appears more than once in the entries
+a verifier has.
+- Every catch and badge of that log with an encounter number of *d* or higher
+  is invalid, in every branch. Catches and badges with a lower number are not
+  affected.
+- **A checkpoint protects what it covers.** A catch or badge whose entry is in
+  the causal history of the `upTo` of any valid server checkpoint for that
+  player, and that isn't on that checkpoint's `invalid` list, stays verified
+  whatever is appended or found later, even if *d* is at or below its number.
+  So once the server has checked a catch, its catcher can no longer make it
+  invalid by signing a new branch.
+- The server keeps to this itself: a later checkpoint never lists as
+  `invalid` a Peerling that an earlier checkpoint for the same player covered
+  as valid.
+- What remains is a catch no checkpoint covers yet; see
+  [Known gaps](#known-gaps-accepted-risks).
+
 [accepted] **Verification checkpoints** (2026-10-06,
 [D-0023](../decisions/D-0023-network-performance.md)): the server signs a
 checkpoint whenever it has verified a save log up to some entry, and the
@@ -377,7 +439,19 @@ the whole log ([network-performance § Verification checkpoints](network-perform
 [accepted] **Guardian badges** are verified the same way: the verifier
 recomputes the week's guardian team from the `weekRecord`, replays the battle
 from the `badge` event's evidence, and checks the encounter-seed rules
-([guardians](../gameplay/guardians.md#badges)).
+([guardians](../gameplay/guardians.md#badges)). [accepted] Exactly
+(2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md)), a badge is
+valid when, on complete data:
+1. checks 1, 2 and 4 of [What a verifier checks for a catch](#encounter-seeds)
+   pass, with the `weekRecord` checked like the day record;
+2. the `encounter` event with the evidence's number has `guardian` equal to
+   the badge's `biome`, and the same epoch and tile as the evidence;
+3. the tile is that biome's statue tile in the generator version of the
+   evidence's epoch record;
+4. the guardian team and level are the ones the week record and that tile
+   give ([guardians § The weekly team](../gameplay/guardians.md#the-weekly-team));
+5. replaying the battle with the logged actions ends with every guardian
+   Peerling fainted.
 
 ### Encounter seeds
 
@@ -449,6 +523,13 @@ without the server, and the server can check everything afterwards.
   ([encounters](../gameplay/encounters.md)).
 - An encounter uses the latest epoch record the client has when the encounter
   starts. Epoch numbers must never decrease from one encounter to the next.
+- [accepted] (2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md))
+  That same record also fixes the world and the battle rules the client plays
+  with: the client shows the world-generator version, and uses the rules
+  version, that are active at the epoch of the latest epoch record it has,
+  never the ones its clock suggests. So an encounter's tile is always checked
+  against the world the player actually walked in
+  ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)).
 
 **Recording an encounter** ([accepted] 2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md); exact
 events: [data-formats § Save-log events](data-formats.md#save-log-events)).
@@ -457,17 +538,26 @@ events: [data-formats § Save-log events](data-formats.md#save-log-events)).
   event with n, the epoch used, the tile, and the candidate and species met (or
   the guardian's biome). This uses up n and fixes the tile and epoch, even if
   the game reloads.
+- [accepted] (2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md))
+  If the epoch record or the day record the encounter uses is client-derived,
+  the `encounter` event also names the epoch of its base record (`base`,
+  `dayBase`). Every base record is server-signed and can be fetched by its
+  epoch number, so the server and any other verifier can rebuild the derived
+  record and check the species of an encounter that didn't end in a catch.
 - A first sighting's `seen` event follows at once
   ([encounters § Selection](../gameplay/encounters.md#selection)).
-- When the battle ends, the client appends the `catch` event (if caught), then
-  the `battle-result`, so the evidence is saved before the result.
+- When the battle ends, the client appends the `catch` event (if caught) or
+  the `badge` event (a first guardian win), then the `battle-result`, so the
+  evidence is saved before the result.
 - **Interrupted battles** (designer's choice). If the game closes or crashes
   during a battle, the next start finds an `encounter` with no
-  `battle-result`. If a `catch` for n exists, the client replays its evidence
-  and writes the matching `battle-result`. Otherwise the battle counts as
-  fled: the client writes a `battle-result` with outcome `fled`, no XP, and
-  each Peerling's HP as it was when the battle started. Fleeing always
-  succeeds anyway, so closing the game during a battle gains nothing.
+  `battle-result`. If a `catch` for n exists, or a `badge` whose evidence has
+  the number n, the client replays its evidence and writes the matching
+  `battle-result` (`caught` or `won`, with the XP the replay gives). Otherwise
+  the battle counts as fled: the client writes a `battle-result` with outcome
+  `fled`, no XP, and each Peerling's HP as it was when the battle started.
+  Fleeing always succeeds anyway, so closing the game during a battle gains
+  nothing.
 
 **Why this stops re-rolling.**
 - Same epoch + same n → same encounter, so reloading the page gives exactly the
@@ -510,9 +600,18 @@ records itself (rules tightened 2026-10-06):
   drand endpoints (run by League of Entropy members) and checked against
   drand's public key as usual.
 - `registryHeight` (and the `generator` and `rules` versions and the snapshot
-  roots) are copied from the latest server-signed epoch record the client has
-  (its **base record**). While the server is down nothing can be added to the
+  roots) are copied from a server-signed epoch record, the **base record**.
+  While the server is down nothing can be added to the
   registry (only the server can sign listings), so nothing is missed.
+- [accepted] **Which base record** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)): for a derived record
+  of epoch E, the base record is the server-signed epoch record with the
+  **highest epoch that is at most E − 2** among those the client holds or can
+  get (its own store, `GET /v1/epochs/{n}`, the epoch log). So that it holds
+  one, a client keeps every server-signed epoch record it received during the
+  last 8 days, and always the newest one it ever received. If it can get no
+  such record, it can't derive one and doesn't start encounters until it can,
+  as with an unknown registry.
 - The record is marked as client-derived and has no server signature. Evidence
   that uses it also carries its base record (`baseRecord`), so verifiers never
   search the epoch log.
@@ -526,7 +625,17 @@ records itself (rules tightened 2026-10-06):
   epoch if it exists. A client that doesn't have it tries `GET /v1/epochs/{E}`
   and the epoch log; if it still has none, it derives the record for that epoch
   at once (without the 10-minute wait), and switches to the signed record for
-  later encounters if one turns up.
+  later encounters if one turns up. [accepted] (2026-11-10) The derived day
+  or week record follows the same base rule: for the day record of epoch
+  288 × D, the newest signed record with an epoch of at most 288 × D − 2, even
+  if the client holds newer signed records. Honest clients that can reach the
+  same records therefore derive the same day and week record.
+- [accepted] **The server fills in missed day and week records**
+  (2026-11-10): if the server published no record for the first epoch of a
+  day or week (epoch 288 × D or 2016 × W), it publishes it as soon as it can,
+  signed, with that epoch's drand value and the registry height, versions and
+  roots as they stood at that epoch's start. It is added to the epoch log and
+  served by `GET /v1/epochs/{E}`; it isn't sent on the epoch topic.
 - [accepted] **Evidence keeps its records** (2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)): a catch
   or badge is verified with the epoch, day and week records its evidence
   carries. A valid client-derived record stays valid even if a signed record
@@ -560,8 +669,8 @@ exact 2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)). 
    verification checkpoint on, if there is one: the checkpoint covers the
    part before it); every `encounter` records its epoch, so this is checked
    for all encounters, not just catches. (A save log with two conflicting
-   branches shows up as duplicate encounter numbers, so every catch after the
-   fork fails.)
+   branches shows up as duplicate encounter numbers; which catches then fail
+   is defined under [Forks](#verified-peerlings).)
 3. The `encounter` event agrees with the evidence (number, epoch, tile,
    candidate). The tile is an encounter-foliage tile (the world is
    deterministic, so any verifier can check). The species is the logged
@@ -570,8 +679,10 @@ exact 2026-10-27, [D-0027](../decisions/D-0027-high-severity-review-fixes.md)). 
 4. **The starting team.** Each member of the evidence `team` is a Peerling the
    catcher owned when the encounter started (in their save state before the
    `encounter` event), with the same instance ID, species and traits. Its
-   level must be 1–50 and its HP between 1 and its max HP at that level;
-   levels aren't checked further ([Known gaps](#known-gaps-accepted-risks)).
+   level must be 1–50 and its HP between 0 and its max HP at that level
+   ([accepted] 2026-11-10: a team may enter a battle with fainted members,
+   which have 0 HP); at least one member must have more than 0 HP. Levels
+   aren't checked further ([Known gaps](#known-gaps-accepted-risks)).
    The team members' own verification isn't required: like levels, they only
    affect the catcher's own battle.
 5. Replaying the battle with the logged actions ends in this catch.
@@ -660,6 +771,17 @@ own, and the second can't tell whether the trade will happen.
   trade's entry appears in the transfer log or the trade expires, the Peerlings
   it offered are locked: they can't be offered in another trade, released at
   the shrine or used in PvP. Exploration and wild battles are unaffected.
+- [accepted] **The lock is in the save log** (2026-11-10,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)): before it sends its
+  signed transfers, the client appends a `trade-pending` event with the trade
+  ID, the partner, the instances it gives, its own signed transfers and the
+  other side's final offer data
+  ([data-formats § Save-log events](data-formats.md#save-log-events)). The
+  lock follows from that event, so it survives a reload, cleared browser data,
+  a restore and a move to another computer, and any of the player's devices
+  can finish or expire the trade. The lock ends with the player's `trade` or
+  `trade-void` event for that trade, or when the transfer log holds a
+  trade-expired record for it.
 - **Finishing:** a player who holds both sides appends the entry at once
   ([TRD-005](../gameplay/trading.md#requirements)).
 - **Expiring:** either player can ask the server to expire the trade
@@ -686,7 +808,10 @@ win counter ([pvp-battles § Win record](../gameplay/pvp-battles.md#win-record),
 [D-0021](../decisions/D-0021-pvp-win-counter.md)). A `pvp-result` counts only
 if its signatures verify as defined in
 [data-formats § Save-log events](data-formats.md#save-log-events), and only
-once per battle ID.
+once per battle ID. [accepted] Void and drawn battles are recorded too
+(2026-11-10, designer's choice,
+[D-0029](../decisions/D-0029-second-review-fixes.md)): they change no counter,
+but they cancel a forfeit win the other player claims for the same battle.
 
 ## Known gaps (accepted risks)
 
@@ -710,8 +835,19 @@ once per battle ID.
   server-signed record at least 2 epochs older, so a cheater could pick an
   older registry state (fewer species). [accepted] Verifiers can't tell
   whether the server was reachable, so a modified client can do this at any
-  time, not only during an outage (corrected 2026-10-27). It only changes
-  which species can appear.
+  time, not only during an outage (corrected 2026-10-27). [accepted]
+  (corrected 2026-11-10) The derived record also copies the `generator` and
+  `rules` versions, so an old base record selects the species list, the world
+  and the battle rules of that time. All three were once valid for everyone,
+  so this gives an old state of the game, never a made-up one.
+- **Forks before a checkpoint** ([accepted] 2026-11-10, designer's choice,
+  [D-0029](../decisions/D-0029-second-review-fixes.md)). A player can sign a
+  second branch of their own save log and so make their own catches invalid
+  from the first duplicated encounter number on. A catch that a server
+  checkpoint already covers is safe ([Forks](#verified-peerlings)). A catch
+  that was traded away before any checkpoint covered it is not: its new owner
+  can lose the use of it in trades and PvP. The server checkpoints a log
+  whenever it has verified it, so the window is short while the server is up.
 - **Shrine offering levels aren't verified** (levels in general aren't, see
   above). An edited level lets a player meet the level-20 rule early, and the
   new Peerling's level comes from the offered levels. Accepted: the offering is
@@ -762,7 +898,7 @@ D-0013, mostly checks any player can run).
 - **SAVE-010** [accepted] Every wild encounter, including fled and lost ones, MUST be recorded in the save log with its encounter number.
 - **SAVE-011** [accepted] The server MUST publish a signed epoch record every 5 minutes, on pubsub and in a server-written OrbitDB epoch log.
 - **SAVE-012** [accepted] Starters and shrine-created Peerlings MUST receive a server origin attestation when they are created.
-- **SAVE-013** [accepted] When no server-signed epoch record has arrived for two epochs, clients MUST derive epoch records from drand, copying the registry height and versions from the latest server-signed epoch record before that epoch; verifiers MUST accept such records.
+- ~~**SAVE-013**~~ (removed 2026-11-10, replaced by SAVE-042; see D-0029)
 - **SAVE-014** [accepted] Ownership MUST be a chain of transfers signed by the current owner and stored in an open OrbitDB transfer log; a trade MUST be a single entry holding both players' signed transfers.
 - **SAVE-015** [accepted] Conflicting (different) transfers of the same Peerling MUST be detected, while identical copies of one transfer MUST NOT count as a conflict; [accepted] the transfer with the lower envelope CID wins, and the signer MUST be flagged and refused for trades and PvP.
 - **SAVE-016** [accepted] Any client MUST be able to verify a catch by replaying it from the catcher's save log; no server signature is required.
@@ -778,7 +914,7 @@ D-0013, mostly checks any player can run).
 - ~~**SAVE-026**~~ (removed 2026-10-27, replaced by SAVE-028; see D-0027)
 - **SAVE-027** [accepted] The client MUST append the newest server verification checkpoint to its save log, and verifiers MUST accept a valid checkpoint for the entries it covers and verify the entries after it.
 - **SAVE-028** [accepted] Every wild and guardian battle MUST be recorded by an `encounter` event written when it starts, with its encounter number and the epoch used; when it ends, the client MUST write the `catch` event (if any) before the `battle-result`. Verifiers MUST count encounter numbers from `encounter` events and MUST check that epochs never decrease across all encounters.
-- **SAVE-029** [accepted] At start, the client MUST complete an `encounter` that has no `battle-result`: from its `catch` by replay if there is one, otherwise as fled with no XP and the HP from the battle's start.
+- ~~**SAVE-029**~~ (removed 2026-11-10, replaced by SAVE-043; see D-0029)
 - **SAVE-030** [accepted] The backup file and the phone backup MUST contain the whole save log and, for every owned Peerling, its origin proof and its ownership-chain entries, as defined in [data-formats § Backup file](data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup).
 - **SAVE-031** [accepted] Before starting play the client MUST probe for an active session of the same account; when two sessions meet, the one that started later MUST stop at once.
 - **SAVE-032** [accepted] Verifiers MUST check a catch's starting team and caught instance as listed in [What a verifier checks for a catch](#encounter-seeds).
@@ -791,6 +927,14 @@ D-0013, mostly checks any player can run).
 - **SAVE-039** [accepted] Every change to the save MUST come from an event as defined in [Save log](#save-log), including a `rest` event for each rest-point visit; a snapshot MUST equal the result of the events up to its `upTo`, and where they differ the events MUST win.
 - **SAVE-040** [accepted] The client MUST keep the recovery phrase's entropy on the device next to the private key and in every backup, so the phrase can be shown again.
 - **SAVE-041** [accepted] Transfers that differ only in which equivalent entry `prev` names MUST count as one transfer and MUST NOT count as a double trade.
+- **SAVE-042** [accepted] When no server-signed epoch record has arrived for two epochs, or the record of a day's or week's first epoch is missing, clients MUST derive the epoch record from drand, copying the other fields from the base record defined in [Encounter seeds](#encounter-seeds): the server-signed record with the highest epoch at most E − 2 that the client holds or can get. Verifiers MUST accept such records under the validity rule there. The server MUST publish a missed day or week record once it can.
+- **SAVE-043** [accepted] The client MUST write a first guardian win's `badge` event before its `battle-result`. At start, the client MUST complete an `encounter` that has no `battle-result`: by replay from its `catch` or its `badge` if there is one, otherwise as fled with no XP and the HP from the battle's start.
+- **SAVE-044** [accepted] A fork MUST invalidate only the catches and badges with an encounter number at or above the lowest duplicated number, and MUST NOT invalidate one covered as valid by a server checkpoint, as defined in [Forks](#verified-peerlings).
+- **SAVE-045** [accepted] Applying a save-log event MUST have exactly the effect listed in [What each event does to the save](#save-log).
+- **SAVE-046** [accepted] An `encounter` event that uses a client-derived epoch or day record MUST name the epoch of its base record.
+- **SAVE-047** [accepted] A client MUST append a `trade-pending` event before sending its signed transfers, and the lock on the offered Peerlings MUST follow from that event on every device.
+- **SAVE-048** [accepted] A client MUST show the world-generator version and use the battle-rules version active at the epoch of the latest epoch record it has.
+- **SAVE-049** [accepted] Verifiers MUST check a badge as listed in [Catches](#catches).
 
 ## Open questions
 

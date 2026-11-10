@@ -18,13 +18,14 @@ sources:
   - raw/conversations/2026-10-12-single-image-to-3d.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/tech/protocols.md
   - wiki/tech/creation-api.md
   - wiki/tech/player-data.md
   - wiki/tech/orbitdb-registry.md
   - wiki/peerlings/peerling-species.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Data Formats
@@ -223,7 +224,8 @@ A **client-derived** epoch record has the same body, `"signer": null`, no
 `registryHeight`, `generator`, `rules`, `registryIndex`, `statsRoot` and
 `ownersRoot` are copied from its **base record**: a server-signed epoch record
 at least 2 epochs older, which evidence carries alongside it
-([player-data § Encounter seeds](player-data.md#encounter-seeds)), and its
+([player-data § Encounter seeds](player-data.md#encounter-seeds), which also
+says which base record a client picks), and its
 `drandRound` follows the round formula there.
 
 ### Peerling instance
@@ -272,7 +274,7 @@ Part of a `catch` save-log event. Meaning:
 | `epochRecord` | epoch record | the full record used (signed or client-derived) |
 | `tile` | tile | where the encounter started |
 | `candidate` | uint | 0–4, which candidate was met |
-| `team` | [map] | battle-start state of each team member: `instanceId`, `species`, `level`, `hp`, `traits` |
+| `team` | [map] | battle-start state of each team member, in team order: `instanceId`, `species`, `level`, `hp`, `traits`. [accepted] Fainted members are included, with `hp` 0 (2026-11-10) |
 | `actions` | [Action] | every action, in order |
 | `baseRecord` | epoch record, optional | only when `epochRecord` is client-derived: the server-signed record its copied fields come from, so verifiers needn't search the epoch log ([network-performance § Epoch records by number](network-performance.md#4-epoch-records-by-number)) |
 | `dayRecord`, `dayBaseRecord` | epoch record, optional | the record of epoch 288 × D for the encounter's day D (the genesis record for a day that began before it), which decides the [Peerling of the Day](../gameplay/peerling-of-the-day.md) and so the selection weights; `dayBaseRecord` only if `dayRecord` is client-derived. Omitted when `epochRecord` is itself that record |
@@ -306,19 +308,21 @@ Meaning: [player-data § Save log](player-data.md#save-log).
 | `created` | `instance`, `attestation` (origin attestation) |
 | `release` | `instances` ([instance ID]), `transferEntry` (CID) |
 | `catch` | `instance`, `evidence` (catch evidence) |
-| `encounter` | [accepted] (2026-10-27) `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `tile` (where the encounter started; the statue tile for a guardian battle), `candidate` (uint 0–4: which candidate was met; absent for a guardian battle), `species` (CID of the species met; absent for a guardian battle), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle). Written when the battle starts; it uses up the encounter number |
-| `battle-result` | `encounter` (uint), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`]). Written when the battle ends, after its `catch` if there is one; an interrupted battle is written as `"fled"` ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
+| `encounter` | [accepted] (2026-10-27) `encounter` (uint), `epoch` (uint: the epoch record's `epoch` used for this encounter), `tile` (where the encounter started; the statue tile for a guardian battle), `candidate` (uint 0–4: which candidate was met; absent for a guardian battle), `species` (CID of the species met; absent for a guardian battle), `guardian` (optional uint: the [biome index](../world/procedural-generation.md#biomes) for a guardian battle), [accepted] (2026-11-10) `base` (optional uint: only when the epoch record used is client-derived: the `epoch` of its base record) and `dayBase` (optional uint: only when the day record used is client-derived: the `epoch` of its base record; for a guardian battle, of the week record's base record). Written when the battle starts; it uses up the encounter number |
+| `battle-result` | `encounter` (uint), `outcome` (`"won"` \| `"caught"` \| `"fled"` \| `"lost"`), `team` ([map: `instanceId`, `xpGained`, `level`, `hp`], one per team member, in team order). Written when the battle ends, after its `catch` or `badge` if there is one; an interrupted battle is written as `"fled"` ([player-data § Encounter seeds](player-data.md#encounter-seeds)) |
 | `team` | `instances` ([instance ID], ≤ 4) |
 | `nickname` | `instanceId`, `nickname` (string ≤ 20 or null) |
+| `trade-pending` | [accepted] (2026-11-10) `trade` (bytes(16): the trade ID), `partner` (player ID), `out` ([instance ID]: the Peerlings the player gives), `transfers` ([transfer envelope]: the player's own signed transfers for this trade), `in` ([instance]: the other side's final offer data). Written just before the client sends its signed transfers; it locks the `out` Peerlings ([player-data § Transfer log and trades](player-data.md#transfer-log-and-trades)) |
 | `trade` | `transferEntry` (CID), `out` ([instance ID]), `in` ([instance]) |
 | `trade-void` | [accepted] (2026-10-27) `transferEntry` (CID of the void trade entry), `restored` ([instance]: the player's own Peerlings that come back, with their data from before the trade), `removed` ([instance ID]: the Peerlings received in it). Written when a trade the player took part in turns out void ([Which transfers count](#transfer-and-transfer-log-entry--peerlingstransfer)) |
 | `seen` | `species` (CID), `biome` (uint: [biome index](../world/procedural-generation.md#biomes) where first met), `shimmer` (bool: seen as a shimmer). Written the first time a species is met, and again the first time it is met as a shimmer; [accepted] what counts as meeting: [encounters § Selection](../gameplay/encounters.md#selection) |
-| `rest` | [accepted] (2026-10-28) `tile` (the rest point's tile). Written when the player uses a rest point: the team is fully healed and this becomes the last rest point ([player-data § Save log](player-data.md#save-log)) |
+| `rest` | [accepted] (2026-10-28) `tile` (the rest point's tile, which is its beacon tile: [procedural-generation § Points of interest](../world/procedural-generation.md#points-of-interest)). Written when the player uses a rest point: the team is fully healed and this becomes the last rest point ([player-data § Save log](player-data.md#save-log)) |
+| `generator` | [accepted] (2026-11-10) `version` (uint: the world-generator version the client now uses). Written before a new player's first `position` event and whenever the client switches to a newer version ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)) |
 | `position` | `tile`, `facing` (`"n"` \| `"e"` \| `"s"` \| `"w"`) |
 | `explored` | `chunks` ([[cx, cy]]: newly revealed chunks) |
 | `session-start` | `device` (16 random bytes, fixed per installation) |
 | `badge` | [accepted] `biome` (uint: biome index), `evidence` (guardian evidence, below). Written for the first win against each biome's guardian ([guardians](../gameplay/guardians.md#badges)) |
-| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"`), `winner` (player ID), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`; [accepted] `turn` may be 0, the state signed before the first turn). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser. Written by both players; void battles and draws are not recorded. [accepted] Conflicting results for the same battle ID: a valid `win` always beats a `forfeit` claim, and two `forfeit` claims naming different winners are both void |
+| `pvp-result` | `battle` (bytes(32): battle ID), `players` ([player ID, player ID], lower first), `t` (time: the `challenge` message's `t`, so anyone can recompute the battle ID), `mode` (`"fair"` \| `"real"`), `result` (`"win"` \| `"forfeit"` \| `"void"` \| `"draw"`), `winner` (player ID; null for `void` and `draw`), `turn` (uint), `hash` (bytes(32): final battle-state hash), `endSigs` (map: player ID → the `end` signature, [protocols](protocols.md#peerlingsbattle100--pvp-battle)), `loserState` (forfeit only: map `turn`, `hash`, `sig`: the loser's last signed `state`; [accepted] `turn` may be 0, the state signed before the first turn). Valid only if the log's owner is one of `players`, the battle ID matches, and: for `win`, `endSigs` holds the loser's valid end signature naming this winner; for `forfeit`, `endSigs` holds the winner's valid end signature and `loserState` a valid state signature by the loser whose `turn` is the result's `turn` or one less (and, when equal, whose `hash` is the result's `hash`); for `void` and `draw` ([accepted] 2026-11-10), `endSigs` holds the log owner's own valid end signature for that result. Written by both players. [accepted] Void battles and draws are recorded since 2026-11-10 ([D-0029](../decisions/D-0029-second-review-fixes.md)); they change no counter. [accepted] Conflicting results for the same battle ID: a valid `win` always beats every other result, and a `forfeit` claim is void when the other player's log holds a valid `void`, a valid `draw`, or a `forfeit` naming a different winner (which is then void too) |
 | `snapshot` | `state` (CID of a save snapshot), `upTo` (CID of the last log entry it includes) |
 | `checkpoint` | `checkpoint` (a [verification checkpoint](#verification-checkpoint--peerlingscheckpoint) envelope from the server, about this player's own log; its `player` must be the log's owner) |
 
@@ -342,10 +346,10 @@ save log).
 | `created` | [CID] |
 | `peerdex` | map: `seen` [map: `species`, `biome` (uint biome index), `shimmerSeen` bool], `caught` [map: `species`, `shimmerCaught` bool] |
 | `position` | map: `tile`, `facing` |
-| `lastRestPoint` | tile |
+| `lastRestPoint` | tile: the rest point's beacon tile |
 | `explored` | bytes: bit set of 63 × 63 chunks (the last chunk row and column are 16 tiles wide, since the world is 2,000 tiles). Chunk (cx, cy) is bit number i = cy × 63 + cx: byte i div 8, bit i mod 8 counted from the least significant bit; 1 = revealed |
 | `nextEncounter` | uint |
-| `generator` | uint: [accepted] the world-generator version that `position` and `lastRestPoint` refer to ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)) |
+| `generator` | uint: [accepted] the world-generator version that `position` and `lastRestPoint` refer to, set by the latest `generator` event ([procedural-generation § Generator updates](../world/procedural-generation.md#generator-updates)) |
 | `pvp` | PvP counters, as in the profile document |
 | `badges` | [uint]: biome indices of the badges held ([accepted]) |
 

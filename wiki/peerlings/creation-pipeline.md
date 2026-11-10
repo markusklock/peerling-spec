@@ -22,6 +22,7 @@ sources:
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/peerlings/image-prompting.md
   - wiki/decisions/D-0025-prompt-enhancer-and-three-views.md
@@ -36,7 +37,7 @@ related:
   - wiki/gameplay/creation-shrine.md
   - wiki/decisions/D-0007-players-publish-assets.md
   - wiki/decisions/D-0026-single-image-to-3d.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Peerling Creation Pipeline
@@ -338,7 +339,7 @@ WISH_SUBMITTED → CONCEPT_READY → IMAGE_READY ⇄ (regenerate)
   → (finalize) PUBLISHING → PUBLISHED
 PROFILE_READY → IMAGE_READY (player restarts from image generation)
 any state → FAILED (error, retryable) | EXPIRED (24 h without activity, or abandoned)
-FAILED → (retry) the state it failed from
+FAILED → (retry, with an edited wish after a refused wish) the state it failed from
 ```
 
 [accepted] (approved 2026-10-28) **When OpenAI's API is down** (timeouts or server errors after
@@ -349,7 +350,10 @@ the player can retry later ([creation-api § The job object](../tech/creation-ap
 wish** (OpenAI's own usage policies still apply, even though the game has no
 moderation of its own, [D-0010](../decisions/D-0010-no-content-moderation.md)),
 the concept stage fails with `wish-refused` and the player is asked to change
-the wish ([creation-api](../tech/creation-api.md#general-rules)).
+the wish. [accepted] (2026-11-10) The job goes to `FAILED` with that error
+code; the player edits the wish and the client sends it with `retry`, which
+runs the concept stage again in the same job
+([creation-api § The job object](../tech/creation-api.md#the-job-object)).
 
 [accepted] Onboarding overlaps waiting time with other activity (e.g. character
 creation runs while the 3D model generates) — see

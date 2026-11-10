@@ -5,20 +5,26 @@ status: accepted
 tags: [tech, verification, saves, trading, pvp, creation, world]
 sources:
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/specification-review.md
   - wiki/decisions/D-0027-high-severity-review-fixes.md
   - wiki/tech/player-data.md
   - wiki/tech/data-formats.md
   - wiki/peerlings/image-prompting.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # D-0028: Fixes for the medium- and low-severity specification review findings
 
 **Status:** accepted (2026-10-28). Changes parts of D-0010 (what delisting
 does to owned Peerlings), D-0011 (UDP-blocked networks), D-0022 (Peerling of
-the Day weight) and D-0025 (resemblance check, IMG-001 exceptions).
+the Day weight) and D-0025 (resemblance check, IMG-001 exceptions). Partly
+changed by [D-0029](D-0029-second-review-fixes.md) (2026-11-10): void and
+drawn PvP battles are now recorded, late spectators get their blocks over a
+direct stream, a blocked image answers `image-blocked`, a shrine credit's 30
+days start when the first job ends (SHR-005 replaced by SHR-007), and the
+snapshot's `generator` and a moved rest point come from a `generator` event.
 
 ## Context
 After [D-0027](D-0027-high-severity-review-fixes.md) fixed the high-severity

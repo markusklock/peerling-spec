@@ -17,12 +17,13 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-network-performance-approved.md
   - raw/conversations/2026-10-28-medium-low-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/decisions/D-0005-server-sole-registry-writer.md
   - wiki/peerlings/peerling-species.md
   - wiki/gameplay/encounters.md
   - wiki/decisions/D-0010-no-content-moderation.md
-updated: 2026-10-28
+updated: 2026-11-10
 ---
 
 # Peerling Registry (OrbitDB)
@@ -44,8 +45,10 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
   ([D-0013](../decisions/D-0013-peer-verified-registry-catches-trades.md); this replaced the earlier "server is the only writer" rule,
   [D-0005](../decisions/D-0005-server-sole-registry-writer.md)).
 - [accepted] **Listing signature:** at the end of publishing, the server signs
-  the entry's contents (species CID, `seq`, name, types, thumbnail CID,
-  `createdAt`). The registry's OrbitDB access controller checks this signature
+  the **whole listing body**, every field of it, including `nameKey`,
+  `status`, `removedAtSeq` and `listedSeq`
+  ([data-formats § Registry entry](data-formats.md#registry-entry--peerlingslisting);
+  corrected 2026-11-10: an earlier field list here left some out). The registry's OrbitDB access controller checks this signature
   on every entry, both when appending and when replicating, so invalid entries
   never spread. The player's browser appends the entry. If the entry hasn't
   appeared within a minute, the server appends the identical entry itself, so
@@ -95,7 +98,9 @@ player-created ones, read from OrbitDB and downloaded via IPFS.
     battles take stats and moves from the kept species record.
   - **Not allowed:** offering them in a trade, choosing them as the following
     Peerling (the next team member follows instead), or sharing their card;
-    an existing card link shows *"This Peerling has been delisted"*.
+    an existing card link shows *"This Peerling has been delisted"*
+    (how the card learns this:
+    [sharing § Peerling card](../gameplay/sharing.md#peerling-card)).
   - **Encounters:** the species is no longer eligible from the tombstone's
     `seq` on ([REG-005](#requirements)); a prefetched candidate of it is
     dropped. Guardian teams keep it until the week ends, shown as a silhouette

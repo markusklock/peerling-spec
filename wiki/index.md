@@ -13,7 +13,7 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [overview](overview.md) | accepted | Vision, the two equal goals, design pillars, v1 scope |
 | [glossary](glossary.md) | accepted | Canonical definitions of all terms |
 | [open-questions](open-questions.md) | draft | All unresolved questions (Q-NNN) |
-| [specification-review](specification-review.md) | draft | 82 review findings with severity, status and resolution tracking: 47 from 2026-10-19 (all Fixed), 35 from 2026-11-10 (Open) |
+| [specification-review](specification-review.md) | draft | 82 review findings with severity, status and resolution tracking: 47 from 2026-10-19 and 35 from 2026-11-10, all Fixed |
 | [log](log.md) | — | Append-only change log |
 
 ## Gameplay
@@ -93,22 +93,23 @@ Status legend: `stub` · `draft` · `proposed` · `accepted` · `deprecated`
 | [D-0010](decisions/D-0010-no-content-moderation.md) | accepted (partly superseded by D-0025, D-0028) | No content moderation |
 | [D-0011](decisions/D-0011-modern-web-platform-first.md) | accepted (extended by D-0028) | Modern web platform first |
 | [D-0012](decisions/D-0012-starter-choice-and-extra-creations.md) | accepted | Starter choice and additional creations |
-| [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted (partly superseded by D-0027) | Peer-verified registry, catches and trades |
+| [D-0013](decisions/D-0013-peer-verified-registry-catches-trades.md) | accepted (partly superseded by D-0024, D-0027, D-0029) | Peer-verified registry, catches and trades |
 | [D-0014](decisions/D-0014-individual-variation.md) | accepted | Individual variation: stat traits and shimmer variants |
 | [D-0015](decisions/D-0015-pvp-level-modes.md) | accepted | PvP level modes: Fair or Real levels |
 | [D-0016](decisions/D-0016-showcase-features.md) | accepted | Spectating, shareable links, phone backup and a world feed |
-| [D-0017](decisions/D-0017-world-features.md) | accepted | World features: spawn hub, landmarks, map, day/night, weather |
+| [D-0017](decisions/D-0017-world-features.md) | accepted (partly changed by D-0024, D-0029) | World features: spawn hub, landmarks, map, day/night, weather |
 | [D-0018](decisions/D-0018-one-key-per-player.md) | accepted | One key per player for every identity |
 | [D-0019](decisions/D-0019-peerdex-ui-audio.md) | accepted | Peerdex, menus, audio and rest points |
 | [D-0020](decisions/D-0020-hexagon-spawn-biome-sectors.md) | accepted | Central Plains spawn hexagon with 12 biome sectors |
-| [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted | PvP win counter on the player profile |
-| [D-0022](decisions/D-0022-v1-fun-features.md) | accepted (partly superseded by D-0028) | Following Peerling, guardians, Peerling of the Day, first finds |
+| [D-0021](decisions/D-0021-pvp-win-counter.md) | accepted (partly changed by D-0024, D-0029) | PvP win counter on the player profile |
+| [D-0022](decisions/D-0022-v1-fun-features.md) | accepted (partly superseded by D-0024, D-0028) | Following Peerling, guardians, Peerling of the Day, first finds |
 | [D-0023](decisions/D-0023-network-performance.md) | accepted | Network performance failsafes, snapshots and indexes |
-| [D-0024](decisions/D-0024-review-2-decisions.md) | accepted (partly superseded by D-0027) | Determinism, verification and edge-case rules from the second review |
+| [D-0024](decisions/D-0024-review-2-decisions.md) | accepted (partly superseded by D-0027, D-0029) | Determinism, verification and edge-case rules from the second review |
 | [D-0025](decisions/D-0025-prompt-enhancer-and-three-views.md) | accepted (details proposed; partly superseded by D-0026, D-0028) | GPT-6 Luna for every LLM step (no self-hosted LLM), Qwen-Image-2.1 with transparency, Pixal3D, originality rules, three views for 3D |
 | [D-0026](decisions/D-0026-single-image-to-3d.md) | accepted (details proposed) | One image (the accepted hero image) to TRELLIS.2 or Pixal3D; no reference views |
-| [D-0027](decisions/D-0027-high-severity-review-fixes.md) | accepted | Fixes for the 16 high-severity review findings: encounter events, backups, sessions, verification results, whole-trade voids and trade expiry, PvP deadlines and resume, battle edge cases, one starter |
-| [D-0028](decisions/D-0028-medium-low-review-fixes.md) | accepted | Fixes for the 31 medium- and low-severity review findings: rest events, delisting, spectating blocks, PvP proofs, day weight, seen, originality block, storage, schemas, profile links |
+| [D-0027](decisions/D-0027-high-severity-review-fixes.md) | accepted (partly changed by D-0029) | Fixes for the 16 high-severity review findings: encounter events, backups, sessions, verification results, whole-trade voids and trade expiry, PvP deadlines and resume, battle edge cases, one starter |
+| [D-0028](decisions/D-0028-medium-low-review-fixes.md) | accepted (partly changed by D-0029) | Fixes for the 31 medium- and low-severity review findings: rest events, delisting, spectating blocks, PvP proofs, day weight, seen, originality block, storage, schemas, profile links |
+| [D-0029](decisions/D-0029-second-review-fixes.md) | accepted | Fixes for the 35 findings of the second review: forks and checkpoints, one generator module per version, recorded void and drawn PvP battles, base records, event effects, pending trades in the save, PvP timeouts and resume, job errors, listing checks |
 
 ## Registered requirement prefixes
 
@@ -167,3 +168,4 @@ D-0029. Next free question ID: Q-060.
 | [2026-10-27-high-severity-resolutions](../raw/conversations/2026-10-27-high-severity-resolutions.md) | 2026-10-27 | Resolve the 16 high-severity findings (D-0027): new account after a lost save, server-expired trades, interrupted battles count as fled, the rest approved as proposed |
 | [2026-10-28-medium-low-resolutions](../raw/conversations/2026-10-28-medium-low-resolutions.md) | 2026-10-28 | Resolve the 31 medium- and low-severity findings (D-0028): eight designer choices, the rest clear fixes; Q-059 opened |
 | [2026-11-10-specification-review](../raw/conversations/2026-11-10-specification-review.md) | 2026-11-10 | New full review after D-0027 and D-0028: 35 findings (4 High, 18 Medium, 13 Low) recorded as Open in the review tracker |
+| [2026-11-10-second-review-resolutions](../raw/conversations/2026-11-10-second-review-resolutions.md) | 2026-11-10 | Resolve the 35 findings of the second review (D-0029): four designer choices (forks, generator module, void and drawn PvP battles, shrine credit), the rest solved as seen fit |

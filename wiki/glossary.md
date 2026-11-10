@@ -18,7 +18,8 @@ sources:
   - raw/conversations/2026-10-10-no-self-hosted-llm.md
   - raw/conversations/2026-10-12-single-image-to-3d.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
-updated: 2026-10-27
+  - raw/conversations/2026-11-10-second-review-resolutions.md
+updated: 2026-11-10
 ---
 
 # Glossary
@@ -27,6 +28,11 @@ updated: 2026-10-27
 > Pages link here on first use of a term. Terms are alphabetical; each heading is
 > a link anchor.
 
+### Arrival tile
+The tile directly south of a rest point's beacon, always plain walkable
+ground. Players respawn there, and new players start on the spawn hub's. See
+[exploration § Healing and rest points](gameplay/exploration.md#healing-and-rest-points).
+
 ### Attestation
 [accepted] A signature by the [generation server](#generation-server) over a
 [species record](#species-record), proving the record was produced by the
@@ -34,12 +40,20 @@ official pipeline and has not been altered. See
 [orbitdb-registry](tech/orbitdb-registry.md).
 
 ### Backup file
-A `.car` file the player can export, holding their private key and latest save
-snapshot. See [data-formats § Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup).
+A `.car` file the player can export, holding their private key, the recovery
+phrase's entropy, the latest save snapshot, the whole save log, and the origin
+proof and ownership chain of every Peerling they own. The phone backup carries
+the same file. See [data-formats § Backup file](tech/data-formats.md#backup-file-and-phone-backup-payload--peerlingsbackup).
 
 ### Badge
 One of 12 rewards, one per biome, for beating that biome's guardian. See
 [guardians](gameplay/guardians.md).
+
+### Base record
+The server-signed epoch record that a client-derived epoch record copies its
+registry height, versions and snapshot roots from: the newest one at least 2
+epochs older that the client can get. See
+[player-data § Encounter seeds](tech/player-data.md#encounter-seeds).
 
 ### Biome
 One of the 12 area types of the world, one per Peerling type (e.g. Forest
@@ -118,7 +132,10 @@ Two different days: the **in-game day** of the day/night cycle lasts 2 hours (24
 
 ### Delisting
 The operator's emergency removal of a species from the registry with a signed
-tombstone entry; clients stop showing it. Not moderation. See [orbitdb-registry
+tombstone entry. It no longer appears in encounters, and every node deletes
+its image and model. Peerlings of it that players own stay owned and still
+battle, shown as a silhouette named "Delisted Peerling"; they can't be traded,
+followed or shared. Not moderation. See [orbitdb-registry
 § Design](tech/orbitdb-registry.md#design).
 
 ### Double trade
@@ -196,6 +213,13 @@ The credit on a species card naming the first player with a verified wild catch 
 A player proven to have made a double trade; clients refuse trades and PvP battles with them. See
 [player-data § Transfer log and trades](tech/player-data.md#transfer-log-and-trades).
 
+### Fork
+A save log in which two different `encounter` entries carry the same encounter
+number, for example after playing on two computers at once. Catches from the
+first duplicated number on are invalid, unless a verification checkpoint
+already covers them. See
+[player-data § Verified Peerlings](tech/player-data.md#verified-peerlings).
+
 ### Following Peerling
 The first non-fainted Peerling in the player's team, which walks behind them in the world and is visible to others. See
 [exploration § Following Peerling](gameplay/exploration.md#following-peerling).
@@ -206,9 +230,15 @@ image-to-3D generator, calls GPT-6 Luna (concept LLM, prompt enhancer), and
 pins all game content on IPFS. See
 [generation-server](tech/generation-server.md).
 
+### Generator module
+The single build artefact that holds one version of the world generator, with
+all its constants. The client, the server and every verifier run the same
+module, identified by its hash, so they compute the same world. See
+[procedural-generation § Deterministic world maths](world/procedural-generation.md#deterministic-world-maths).
+
 ### Generator version
-The version of the world generator. All clients switch at an epoch announced in
-the epoch records. See [procedural-generation § Generator
+The version of the world generator. A client switches when the latest epoch
+record it has reaches the epoch announced in the epoch records. See [procedural-generation § Generator
 updates](world/procedural-generation.md#generator-updates).
 
 ### Genesis record
@@ -373,8 +403,9 @@ The opt-in PvP level mode where Peerlings fight at their actual (unverified)
 levels. See [pvp-battles § Fairness](gameplay/pvp-battles.md#fairness).
 
 ### Recovery phrase
-A list of words shown to the player once, from which their identity key can
-be restored on another device. See [player-data](tech/player-data.md#account-recovery).
+A list of 12 words from which a player's identity key can be restored on
+another device. It is shown at onboarding and can be shown again from the
+Backup menu on every device the account is on. See [player-data](tech/player-data.md#account-recovery).
 
 ### Region
 [accepted] A 64 m × 64 m square of the world (one chunk of 32 × 32 tiles). It is the unit
@@ -400,7 +431,8 @@ helia § Connectivity](tech/ipfs-helia.md#connectivity).
 
 ### Rest point
 A beacon in every biome area that fully heals the player's team and becomes
-their respawn point. See
+their respawn point. Its tile is the blocked tile the beacon stands on; the
+player respawns on its [arrival tile](#arrival-tile). See
 [exploration § Healing and rest points](gameplay/exploration.md#healing-and-rest-points).
 
 ### Retrieval ladder
@@ -430,7 +462,7 @@ A rare (1 in 500), purely cosmetic color variant of an individual Peerling. See
 [peerling-species § Individual variation](peerlings/peerling-species.md#individual-variation).
 
 ### Shrine credit
-The right to one new Creation Shrine job without a new offering, kept for 30 days when a shrine job is abandoned or expires. See
+The right to one new Creation Shrine job without a new offering, kept for 30 days from when the first shrine job for that offering was abandoned or expired. See
 [creation-shrine](gameplay/creation-shrine.md).
 
 ### Signature move
@@ -549,5 +581,6 @@ catches, first wild finds, all 12 badges, and the Peerling of the Day) spread
 over a world-wide pubsub topic or added locally. See [world-feed](gameplay/world-feed.md).
 
 ### XP
-Experience points a Peerling earns from wild battles; enough XP raises its
+Experience points a Peerling earns from wild battles and from guardian battles
+the player wins; PvP gives none. Enough XP raises its
 level. See [battle § Experience and levelling](gameplay/battle.md#experience-and-levelling).

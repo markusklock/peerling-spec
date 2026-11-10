@@ -14,10 +14,11 @@ sources:
   - raw/conversations/2026-10-06-review-decisions.md
   - raw/conversations/2026-10-06-pvp-wins-hex-world.md
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/peerlings/creation-pipeline.md
   - wiki/gameplay/player-character.md
-updated: 2026-10-27
+updated: 2026-11-10
 ---
 
 # New Player Onboarding
@@ -37,7 +38,10 @@ Peerling, once: a player can never get a second starter. [accepted] The player e
 
 [accepted] The server offers **3 species**, drawn at random (uniformly) from
 the registry, excluding removed species. The player picks one, or switches to
-creating their own instead. The server signs an attestation for the new starter
+creating their own instead. [accepted] Order of this path (2026-11-10): the
+Welcome step, the pick (the server issues the starter at that moment), then
+*Create your character*, *Save your recovery phrase* and *Into the world* as
+in the list below. The server signs an attestation for the new starter
 ([player-data § Verification](../tech/player-data.md#verification)). Players who
 choose can still create Peerlings later at the
 [Creation Shrine](creation-shrine.md).
@@ -48,7 +52,10 @@ choose can still create Peerlings later at the
 
 1. **Welcome** — short intro to the world and the idea that every Peerling was
    made by a player. The player chooses: create a Peerling, or pick an existing
-   one.
+   one. [accepted] When *New game* is chosen, before this step, the client
+   creates the player's key pair from a fresh recovery phrase, without showing
+   anything yet: every request to the server is signed with that key
+   (2026-11-10, [D-0029](../decisions/D-0029-second-review-fixes.md)).
 2. **Describe your Peerling** — the player writes a wish (stage 1 of the
    [creation pipeline](../peerlings/creation-pipeline.md)).
 3. **Meet your Peerling** — the image is shown; accept or regenerate (stages
@@ -56,6 +63,10 @@ choose can still create Peerlings later at the
 4. **Create your character** — while the 3D model, stats and moves generate
    in the background (stages 5–6), the player creates their
    [player character](player-character.md).
+   [accepted] Then, still while waiting, **Save your recovery phrase**: the
+   12 words are shown with a short explanation, and the player confirms they
+   have written them down. They can be shown again later from the Backup menu
+   ([player-data § Account recovery](../tech/player-data.md#account-recovery)).
 5. **Reveal** — the finished Peerling appears in 3D with its type(s), stats
    and moves. The player names it, or goes back to image generation
    ([final review](../peerlings/creation-pipeline.md#final-review)). Then the
@@ -79,6 +90,7 @@ choose can still create Peerlings later at the
 - **ONB-006** [accepted] The starter MUST be either an instance of a species the player creates, or an instance of an existing species the player chooses from a few random options.
 - **ONB-007** [accepted] When choosing, the player MUST be offered 3 random species from the registry.
 - **ONB-008** [accepted] Each player MUST get exactly one starter, ever ([API-004](../tech/creation-api.md#requirements)).
+- **ONB-009** [accepted] The client MUST create the player's key before the first request to the server, and onboarding MUST show the recovery phrase after character creation and before the player enters the world.
 
 ## Open questions
 

@@ -5,6 +5,7 @@ status: accepted
 tags: [tech, verification, saves, trading, pvp, battle, creation]
 sources:
   - raw/conversations/2026-10-27-high-severity-resolutions.md
+  - raw/conversations/2026-11-10-second-review-resolutions.md
 related:
   - wiki/specification-review.md
   - wiki/tech/player-data.md
@@ -13,14 +14,18 @@ related:
   - wiki/tech/creation-api.md
   - wiki/gameplay/battle.md
   - wiki/gameplay/trading.md
-updated: 2026-10-27
+updated: 2026-11-10
 ---
 
 # D-0027: Fixes for the high-severity specification review findings
 
 **Status:** accepted (2026-10-27). Changes parts of D-0013 (who loses a
 Peerling after a double trade) and D-0024 (event order, day and week records,
-PvP timers).
+PvP timers). Partly changed by [D-0029](D-0029-second-review-fixes.md)
+(2026-11-10): the HP range of the starting team in the catch check, which
+catches a fork invalidates, recovery of a crashed guardian win (SAVE-029
+replaced by SAVE-043), the lock of an unfinished trade (now a save-log
+event), and PvP resume before the first turn.
 
 ## Context
 The [specification review](../specification-review.md) found 16
